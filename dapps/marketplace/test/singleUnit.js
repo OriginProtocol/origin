@@ -123,6 +123,7 @@ export function singleUnitTests({
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
       if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
+      if (acceptedTokens.includes('USDT')) await clickByText(page, 'Tether')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -260,6 +261,7 @@ export function singleUnitTokenTests({
           dai: token === 'DAI' ? '100' : undefined,
           ogn: token === 'OGN' ? '100' : undefined,
           okb: token === 'OKB' ? '100' : undefined,
+          usdt: token === 'USDT' ? '100' : undefined,
           deployIdentity
         }
       } else if (!shouldExchangeTokens) {
@@ -312,6 +314,7 @@ export function singleUnitTokenTests({
       await clickByText(page, 'Maker Dai')
       await clickByText(page, 'Origin Token')
       await clickByText(page, 'OKB Token')
+      await clickByText(page, 'Tether')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')

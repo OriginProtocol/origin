@@ -16,16 +16,16 @@ const RecoveryPhraseScreen = ({ navigation, wallet }) => (
     <BackArrow onClick={() => navigation.goBack(null)} />
     <View style={styles.content}>
       <Text style={styles.title}>
-        <fbt desc="RecoveryPhrase.title">Your recovery phrase</fbt>
+        <fbt desc="RecoveryPhrase.title">Recovery Phrase</fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="RecoveryPhrase.subtitle">
-          Write down these 12 words in order and keep them somewhere safe.
+          Write down these 12 words in this order and keep them somewhere safe.
         </fbt>
       </Text>
       <Text style={{ ...styles.subtitle, fontWeight: 'bold' }}>
         <fbt desc="RecoveryPhrase.warning">
-          They are the ONLY way to recover your account.
+          This is the ONLY way to restore access to your account.
         </fbt>
       </Text>
       <View style={styles.recoveryContainer}>
@@ -40,8 +40,9 @@ const RecoveryPhraseScreen = ({ navigation, wallet }) => (
       </View>
       <Disclaimer>
         <fbt desc="RecoveryPhrase.disclaimer">
-          Remember: You are responsible for your recovery phrase and we will not
-          store it.
+          Remember: You are solely responsible for your recovery phrase. We
+          don&apos;t store it and there&apos;s no other way to recover your
+          account.
         </fbt>
       </Disclaimer>
     </View>

@@ -1,4 +1,3 @@
-{{- if ne .Release.Namespace "prod" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,5 +56,3 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
-
-{{- end }}

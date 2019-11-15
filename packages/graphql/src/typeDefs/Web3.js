@@ -45,6 +45,7 @@ module.exports = `
     messaging: MessagingConfigInput
     screenConsole: String
     centralizedIdentityEnabled: Boolean
+    authServer: String
   }
 
   input MessagingConfigInput {
@@ -72,6 +73,7 @@ module.exports = `
     marketplaceVersion: String
     messaging: MessagingConfig
     centralizedIdentityEnabled: Boolean
+    authServer: String
   }
 
   type MessagingConfig {

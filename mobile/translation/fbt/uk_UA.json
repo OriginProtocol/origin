@@ -1,584 +1,591 @@
 {
   "fb-locale": "uk_UA",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Address"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
-          "translation": "Copy"
+          "translation": "Скопіювати"
         }
       ]
     },
     "FZRVHsdXqI51WS0/rgsmvQ==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Скопійовано у буфер обміну!"
         }
       ]
     },
     "Z97eNnRtwWFrWlkTjsP9Dw==": {
       "translations": [
         {
-          "translation": "OK"
+          "translation": "гаразд"
         }
       ]
     },
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "Помилка аутентифікації"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Неправильний пін-код"
         }
       ]
     },
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "Потрібна автентифікація"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Повторіть спробу"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Повторіть зі шпилькою"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Необхідний штифт"
         }
       ]
     },
     "jakn3qdMee3dY1QQSnxPBw==": {
       "translations": [
         {
-          "translation": "Back up account"
+          "translation": "Резервне копіювання облікового запису"
         }
       ]
     },
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "Якщо ви втратите приватний ключ облікового запису, ви не зможете отримати доступ до своїх коштів."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "Якщо ви втратите фразу для відновлення облікового запису, ви не зможете отримати доступ до своїх коштів."
         }
       ]
     },
     "tnjbZFYtRWMI0Cvx7tUoLw==": {
       "translations": [
         {
-          "translation": "Back up private key"
+          "translation": "Створіть резервну копію приватного ключа"
         }
       ]
     },
     "NtSYu4dP1gx3Q867CPSNqA==": {
       "translations": [
         {
-          "translation": "Back up recovery phrase"
+          "translation": "Завантажте форму відновлення"
         }
       ]
     },
     "gS5uLfzsGn8W+iy1wGPcFA==": {
       "translations": [
         {
-          "translation": "Back up later"
+          "translation": "Створіть резервну копію пізніше"
         }
       ]
     },
     "leoyo7yPyqCZYLzdYarxVg==": {
       "translations": [
         {
-          "translation": "Blockchain & Your Personal Data"
+          "translation": "Блокчейн та ваші особисті дані"
         }
       ]
     },
     "TsWyCTUsQI/nO9f3+35sXw==": {
       "translations": [
         {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
+          "translation": "Створюючи профіль, ви пов’язуєте своє ім’я та фотографію зі своїм обліковим записом Ethereum. Це означає, що інші зможуть підключити ваші транзакції з blockchain до вашого імені та фотографії."
         }
       ]
     },
     "293hkFZBDThJ9B1cWDqFeA==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Зрозумів"
         }
       ]
     },
     "53OPnmUdKU2hcrljQxQZLA==": {
       "translations": [
         {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
+          "translation": "Під час завантаження Market Origin сталася помилка. Перевірте підключення до Інтернету."
         }
       ]
     },
     "y5hrsKtem9k4a3YYBARQUQ==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Повторіть спробу"
         }
       ]
     },
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Ви впевнені, що не хочете нагород за оригінали?"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "Ваш новий гаманець не зможе заробити OGN."
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "я впевнений"
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "Ні, чекай"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Увімкнути сповіщення"
         }
       ]
     },
     "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Вупи! Схоже, у вас вимкнено сповіщення. Щоб отримати останні оновлення ваших транзакцій, рекомендуємо включити їх у налаштуваннях програми Origin Marketplace."
         }
       ]
     },
     "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+          "translation": "Ми настійно рекомендуємо ввімкнути сповіщення, щоб отримувати останні оновлення вашої транзакції за допомогою своєчасних сповіщень."
         }
       ]
     },
     "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Відкрийте Налаштування"
         }
       ]
     },
     "cNC6HEwSQ2MTdQc9xbDrAw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Увімкнути сповіщення"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "Закрити"
         }
       ]
     },
     "21hMnXPcxTGJHmoWgpA7Og==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore Error"
+          "translation": "Помилка блокчейна Samsung Blockchain"
         }
       ]
     },
     "qzN5RGfNbk86/n/jcpMdfg==": {
       "translations": [
         {
-          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+          "translation": "Сталася помилка під час доступу до Samsung Blockchain Keystore."
         }
       ]
     },
     "DEMLFz9zBSsNpmhGgY6piw==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Повторіть спробу"
         }
       ]
     },
     "rCsEaxa+oEKoe7c42xpG0A==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Продовжуйте"
         }
       ]
     },
     "Hd7GnyffrmsytOC81wf1og==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Відкрийте Налаштування"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "Запит на підпис"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "Знак"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Скасувати"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "Створити лістинг"
         }
       ]
     },
     "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Make Offer"
+          "translation": "Зробити пропозицію"
         }
       ]
     },
     "8XqYinU0zAemee1+B/gY3g==": {
       "translations": [
         {
-          "translation": "Transfer Tokens"
+          "translation": "Передача жетонів"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "Опублікувати особистість"
         }
       ]
     },
     "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Grant Token Access"
+          "translation": "Надання доступу до токенів"
         }
       ]
     },
     "VqHNzpP2gO7q8zCyzsy2wA==": {
       "translations": [
         {
-          "translation": "We are requesting permission to move {currency} on your behalf"
+          "translation": "Ми просимо дозволу на переміщення {currency} від вашого імені"
         }
       ]
     },
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "Увімкнути мета транзакції"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "Блокчейн-транзакція"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "Оплата"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "Вартість газу"
         }
       ]
     },
     "aHqIW5wN2myfcutOuKhMCA==": {
       "translations": [
         {
-          "translation": "Boost"
+          "translation": "Підвищення"
         }
       ]
     },
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "Ваш рахунок"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "Ваші баланси"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "Ваш баланс"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "У вас недостатньо ETH, щоб надіслати цю транзакцію."
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "У вас недостатньо ETH для публікації вашої особи."
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "Підтвердіть"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Скасувати"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "Потрібне оновлення"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "Вупи! Схоже, ви використовуєте стару версію програми Origin Marketplace. Будь ласка, оновіть, щоб продовжити."
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "Оновлення доступне"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "Схоже, ви використовуєте стару версію програми Origin Marketplace. Для найкращого досвіду рекомендуємо оновити."
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "Оновлення"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "Не зараз"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "Що буде видно на блокчейні?"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "Інформація про рахунок"
         }
       ]
     },
     "63n7ZrjXs/xul67zZMRH6Q==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Важливо!"
         }
       ]
     },
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "В якості запобіжних заходів буфер обміну буде очищений через одну хвилину."
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Зрозумів"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Скопійовано у буфер обміну!"
         }
       ]
     },
     "ARxpkvUPK0jFYXwVrYuIMw==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Важливо!"
         }
       ]
     },
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "Ви створили резервну копію свого приватного ключа або фразу для відновлення цього облікового запису? Обліковий запис буде назавжди видалено, і для його відновлення потрібно мати приватний ключ або фразу відновлення. Ви впевнені, що хочете видалити цей рахунок?"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Скасувати"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
+          "translation": "Видалити"
+        }
+      ]
+    },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Адреса"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "Зробити активний рахунок"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "Показати фразу відновлення"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Відновлення фрази"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "Скопіюйте фразу відновлення"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "Показати приватний ключ"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Приватний ключ"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "Скопіюйте приватний ключ"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "Видалити аккаунт"
         }
       ]
     },
     "IiicX5WBjylfRHl57pd/cw==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Рахунки"
         }
       ]
     },
     "dcugbzsCXlIcz+MDEjVWhw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Відновлення фрази"
         }
       ]
     },
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "Імпортовано з приватного ключа"
         }
       ]
     },
@@ -592,203 +599,245 @@
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} Недоступно"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "Схоже, у вас {biometryType} інвалідів. Вам потрібно ввімкнути це в налаштуваннях для програми Origin Marketplace."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Відкрийте Налаштування"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "Захистіть свій гаманець"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "Додайте додатковий рівень безпеки, щоб захистити свою криптовалюту."
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Створіть пін-код"
         }
       ]
     },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Важливо!"
         }
       ]
     },
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "В якості запобіжних заходів буфер обміну буде очищений через одну хвилину."
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Зрозумів"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Скопійовано у буфер обміну!"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Приватний ключ"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "Запишіть свій приватний ключ"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Відновлення фрази"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "Запишіть свою фразу відновлення"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "Копіювати в буфер обміну"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Цей приватний ключ є ключем до вашого облікового запису. Запишіть його або скопіюйте у менеджер паролів. Ми рекомендуємо НЕ надсилати його електронною поштою."
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Ця фраза відновлення є ключовою для вашого облікового запису. Запишіть його або скопіюйте у менеджер паролів. Ми рекомендуємо НЕ надсилати його електронною поштою."
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Далі"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Скасувати"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Приватний ключ"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "Введіть свій приватний ключ"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Відновлення фрази"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "Виберіть слова у правильному порядку"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "Повертайся"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "Ви успішно створили резервну копію фрази для відновлення"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Зроблено"
+        }
+      ]
+    },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Введіть новий PIN-код"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Введіть свій старий PIN-код"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Повторно введіть PIN-код"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Створіть пін-код"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "Введіть свій PIN-код"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "Неправильний PIN-код"
         }
       ]
     },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Валюта"
         }
       ]
     },
     "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Use Recovery Phrase"
+          "translation": "Використовуйте відновлення фрази"
         }
       ]
     },
     "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use Private Key"
+          "translation": "Використовуйте приватний ключ"
         }
       ]
     },
@@ -802,273 +851,308 @@
     "YgQAbQzQfarXS32FHToKpA==": {
       "translations": [
         {
-          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+          "translation": "Вашим гаманцем керує блокчейн Samsung Blockchain."
         }
       ]
     },
     "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Import your wallet"
+          "translation": "Імпортуйте свій гаманець"
         }
       ]
     },
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "Ви можете імпортувати гаманець, використовуючи один із наведених нижче способів."
         }
       ]
     },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "Це не схоже на дійсну фразу відновлення."
         }
       ]
     },
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "Введіть фразу"
         }
       ]
     },
     "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Продовжуйте"
         }
       ]
     },
     "5/XzkOw7jsXF3hNFdAOfVw==": {
       "translations": [
         {
-          "translation": "That is not a valid private key."
+          "translation": "Це не дійсний приватний ключ."
         }
       ]
     },
     "6kOIRuFPg13nKeGrxENaaw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "Введіть приватний ключ"
         }
       ]
     },
     "Aw26GuAppbsDwcsIGOynqA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Продовжуйте"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Мова"
         }
       ]
     },
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "Помилка з'єднання"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Повторіть спробу"
         }
       ]
     },
     "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "Settings"
-        }
-      ]
-    },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Re-enter Pin Code"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Create a Pin Code"
+          "translation": "Налаштування"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "Шпильки не збігаються, спробуйте ще раз"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Ваш PIN-код буде використовуватися для входу в додаток."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "У дозволі відмовлено"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "Схоже, у вас {biometryType} інвалідів. Вам потрібно ввімкнути це в налаштуваннях для програми Origin Marketplace."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "гаразд"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "Скасувати"
         }
       ]
     },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "General"
+          "translation": "Загальні"
         }
       ]
     },
     "rRrFuJKbAi/LO7RrEyMt2Q==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Рахунки"
         }
       ]
     },
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Мова"
         }
       ]
     },
     "GHSZ2Asae082vH5nd+9RuA==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Валюта"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "Мережа"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "БЕЗПЕКА"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "PIN-код"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "Змінити PIN-код"
         }
       ]
     },
     "j5rIPEDyOjXyubSdCUgZ6A==": {
       "translations": [
         {
-          "translation": "Version"
+          "translation": "Версія"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "Налаштування"
         }
       ]
     },
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "Фінансування"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "Наразі вам потрібно буде перенести {currency} у свій кошелек Origin з іншого джерела."
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "Показати адресу"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Адреса гаманця"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "Копіювати адресу"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Скопійовано у буфер обміну!"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Адреса гаманця"
         }
       ]
     },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
-          "translation": "Add Account"
+          "translation": "Додати обліковий запис"
         }
       ]
     },
     "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Wallet"
+          "translation": "Гаманець"
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "Купуйте та продайте речі з криптовалютою."
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "Заробляйте нагороди."
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "Підписавшись, ви приймаєте Умови використання та Політику конфіденційності"
         }
       ]
     },
     "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Продовжуйте"
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "Створіть гаманець"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "У мене вже є гаманець"
         }
       ]
     }

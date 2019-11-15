@@ -31,7 +31,8 @@ const configurableFields = [
   'performanceMode',
   'screenConsole',
   'relayer',
-  'graphql'
+  'graphql',
+  'authServer'
 ]
 
 const configurableMessagingFields = ['messagingNamespace', 'globalKeyServer']
@@ -191,6 +192,10 @@ const Settings = props => {
               <fbt desc="settings.messagingNamespaceLabel">
                 Messaging Namespace
               </fbt>
+            </TextRow>
+
+            <TextRow {...input('authServer')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.authServerLabel">Auth Server</fbt>
             </TextRow>
 
             <ToggleRow config={config} field="performanceMode">

@@ -316,9 +316,7 @@ function setupAuthClient(config) {
     context.authClient = new AuthClient({
       authServer,
       web3,
-      pubsub,
-      personalSign: metaMask && metaMaskEnabled ? true : false,
-      autoRenew: context.mobileBridge ? true : false
+      personalSign: metaMask && metaMaskEnabled ? true : false
     })
   }
 }
