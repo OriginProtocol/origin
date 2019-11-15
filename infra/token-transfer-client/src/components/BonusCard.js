@@ -22,10 +22,9 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
       <BorderedCard shadowed={true}>
         <div className="text-center">
           <OgnTokens />
-          <h1 className="mt-3 mb-1">Earn bonus tokens</h1>
+          <h1 className="mt-3 mb-1">Earn Bonus Tokens</h1>
           <p>
-            Place your vested tokens into lockup periods to earn even more OGN
-            over time.
+            Place your vested tokens into lockup periods to earn even more OGN.
           </p>
         </div>
       </BorderedCard>
@@ -55,7 +54,7 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
             {locked.toLocaleString()}
           </strong>{' '}
           <span className="ml-1 ogn">OGN</span>
-          <div>Locked up</div>
+          <div>Locked Up</div>
         </div>
       </div>
       <div className="row mb-2">

@@ -132,7 +132,7 @@ class BonusModal extends Component {
                     cursor: 'pointer'
                   }}
                 >
-                  Max amount
+                  Max Amount
                 </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
@@ -146,7 +146,7 @@ class BonusModal extends Component {
             <div className="text-left">
               <div className="row">
                 <div className="col">
-                  <strong>Bonus tokens earned</strong>{' '}
+                  <strong>Bonus Tokens Earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
                     ({lockupBonusRate}% of lockup)
                   </span>
@@ -175,8 +175,8 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please enter a number of tokens to lock up for one year (minimum
-                10 OGN). Bonus tokens will be calculated based on that amount.
+                Please enter a number of tokens (minimum
+                10 OGN) to lock up for one year. Bonus tokens will be calculated based on that amount.
               </div>
               <hr />
             </>

@@ -18,7 +18,7 @@ const WithdrawalSummaryCard = props => {
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">Vested tokens to date</div>
+        <div className="col">Vested To Date</div>
         <div className="col text-right">
           <strong>{Number(props.vested).toLocaleString()} </strong>
           <span className="ogn">OGN</span>

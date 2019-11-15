@@ -45,7 +45,14 @@ const LockupConfirm = props => {
   return (
     <div className="text-center p-5 text-muted">
       <h1>
-        An error occurred confirming your token lockup, has the token expired?
+        An error occurred confirming your token lockup. Please try again or{' '}
+        <a
+          href="mailto:investor-relations@originprotocol.com?subject=Token Lockup Issue"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          contact support
+        </a>.
       </h1>
     </div>
   )

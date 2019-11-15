@@ -1,4 +1,4 @@
-Please confirm your lockup of Origin tokens by clicking the link below.
+Please confirm your lockup of Origin Tokens by clicking the link below.
 
 <%= url %>
 
