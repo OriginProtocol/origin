@@ -800,6 +800,7 @@
   "Zwcu3zpr3n5/gvuuGPLM7w==": "Nema dovoljno porijekla tokena",
   "mZyol0ZBIvZVwrMuiIQYEQ==": "Nema dovoljno OKB tokena. {E_VAR_GET_MORE_B64_R2V0IE1vcmU}",
   "GjBu2vHFw0ZvH+4WgZAzvQ==": "Dobiti više",
+  "0Vu+Bjsw4nD9rCFmP670og==": "Not enough Tether",
   "7H/M3jg7K5QazQc2pEleKA==": "Nema dovoljno ravnoteže",
   "O4p/HWu2u4U5gZ+vruUU1Q==": "Gdje je mogu nabaviti?",
   "FC/gJV+Syi5Bjue937Ch8g==": "komisija",
@@ -1302,8 +1303,10 @@
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Izvorni token",
   "aGfKK6ZJD6P22TIxY6gdkA==": "OKB Token",
+  "szRo+nZJoOPIP4jpYwW+pA==": "Tether",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Eter je dobar za kratkoročne popise.",
   "12RmZS0/aijc4qIbrWjHow==": "Maker Dai dobar je za dugoročne popise poput najamnina ili prodaje nekretnina.",
   "1ihLeuNdlY4LXygu4xmuTw==": "Korisno za promociju ostalih unosa",
-  "Cimm0w0HZEQCNC34hAofsQ==": "Za upotrebu s jednim od naših partnera razmjene"
+  "Cimm0w0HZEQCNC34hAofsQ==": "Za upotrebu s jednim od naših partnera razmjene",
+  "mTC5G/fed1Tk89NehaYQgQ==": "Tether is good for long term listings like rentals or property sales."
 }
