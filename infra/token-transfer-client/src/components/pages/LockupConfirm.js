@@ -52,7 +52,8 @@ const LockupConfirm = props => {
           rel="noopener noreferrer"
         >
           contact support
-        </a>.
+        </a>
+        .
       </h1>
     </div>
   )
