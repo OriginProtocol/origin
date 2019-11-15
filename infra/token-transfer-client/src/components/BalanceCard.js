@@ -55,7 +55,7 @@ const BalanceCard = props => {
             </>
           ) : (
             <div className="col">
-              <div className="bluebox p-2 text-center">Coming Soon</div>
+              <div className="bluebox p-2 text-center">Tokens Unlocking Soon</div>
             </div>
           )}
         </div>
