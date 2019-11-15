@@ -22,7 +22,10 @@ const AccountActions = props => {
       <small>
         {get(props.user, 'email')}
         <div className="mx-3 d-inline-block">|</div>
-        <a className="text-muted" href="mailto:support@originprotocol.com">
+        <a
+          className="text-muted"
+          href="mailto:investor-relations@originprotocol.com"
+        >
           Contact Support
         </a>
         <div className="mx-2 d-inline-block"></div>

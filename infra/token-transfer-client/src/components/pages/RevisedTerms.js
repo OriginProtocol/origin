@@ -69,7 +69,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
 
         <p>
           1. Amendment to Section 1(a). The last sentence of Section 1(a) is
-          amended and restated in its entirety to reads as follows: &ldquo;The
+          amended and restated in its entirety to read as follows: &ldquo;The
           Company, or an affiliate thereof (the &ldquo;Issuer&rdquo;), will
           deliver the applicable Tokens to the Purchaser in eight (8) equal
           quarterly installments (rounded down to the nearest whole Token,
@@ -236,7 +236,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
             defaultChecked
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
-            I have read and agree to the Revised Token Unlock Schedule Agreement
+            I have read and agree to the Investor Amendment Agreement
           </label>
         </div>
         <button

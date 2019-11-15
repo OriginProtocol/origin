@@ -63,8 +63,6 @@ const Dashboard = props => {
   const unlockDate = getUnlockDate(props.user)
   const isLocked = moment.utc() < unlockDate
 
-  console.log(isLocked)
-
   return (
     <>
       <div className="row">
@@ -112,7 +110,7 @@ const Dashboard = props => {
       <div className="row">
         {!get(props.user, 'employee') && (
           <div className="col-12 col-lg-6 mb-5">
-            <GrantDetailCard grants={props.grants} />
+            <GrantDetailCard grants={props.grants} user={props.user} />
           </div>
         )}
         <div className="col-12 col-lg-6 mb-4">

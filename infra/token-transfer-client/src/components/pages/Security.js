@@ -41,7 +41,7 @@ class Security extends Component {
                 <div className="col-xl-6">{get(this.props.user, 'email')}</div>
                 <div className="col-xl-6 text-xl-right">
                   <a
-                    href="mailto:support@originprotocol.com?subject=Change Investor Email"
+                    href="mailto:investor-relations@originprotocol.com?subject=Change Investor Email"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -66,7 +66,7 @@ class Security extends Component {
                 ></div>
                 <div className="col-md-8">Google Authenticator</div>
                 <div className="col-md-2 text-md-right">
-                  <a href="mailto:support@originprotocol.com?subject=Help with Google Authenticator">
+                  <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">
                     Help
                   </a>
                 </div>
