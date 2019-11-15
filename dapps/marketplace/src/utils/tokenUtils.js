@@ -2,7 +2,9 @@ import { fbt } from 'fbt-runtime'
 
 /**
  * Returns the display name of tokens
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN, token-OKB]
+ * @param {String} token Can be one of
+ *  [token-ETH, token-DAI, token-OGN,
+ *    token-OKB, token-USDT]
  */
 export function getTokenName(token) {
   switch (token) {
@@ -14,6 +16,8 @@ export function getTokenName(token) {
       return fbt('Origin Token', 'OriginToken')
     case 'token-OKB':
       return fbt('OKB Token', 'OKBToken')
+    case 'token-USDT':
+      return fbt('Tether', 'Tether')
   }
 
   return null
@@ -21,7 +25,9 @@ export function getTokenName(token) {
 
 /**
  * Returns tooltip content for the given token
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN, token-OKB]
+ * @param {String} token Can be one of
+ *  [token-ETH, token-DAI, token-OGN,
+ *    token-OKB, token-USDT]
  */
 export function getTokenTooltip(token) {
   switch (token) {
@@ -42,6 +48,11 @@ export function getTokenTooltip(token) {
         'For use with one of our exchange partners',
         'pricingChooser.okb'
       )
+    case 'token-USDT':
+      return fbt(
+        'Tether is good for long term listings like rentals or property sales.',
+        'pricingChooser.usdt'
+      )
   }
 
   return null
@@ -49,7 +60,9 @@ export function getTokenTooltip(token) {
 
 /**
  * Returns the token symbol from it's id
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
+ * @param {String} token Can be one of
+ *  [token-ETH, token-DAI, token-OGN,
+ *    token-OKB, token-USDT]
  */
 export function getTokenSymbol(token) {
   // token-ETH => ETH, token-DAI => DAI,
@@ -61,5 +74,6 @@ export const tokenToCoinLogoMap = {
   'token-ETH': 'eth',
   'token-DAI': 'dai',
   'token-OGN': 'ogn',
-  'token-OKB': 'okb'
+  'token-OKB': 'okb',
+  'token-USDT': 'usdt'
 }

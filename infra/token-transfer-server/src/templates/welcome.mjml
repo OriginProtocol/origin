@@ -1,0 +1,53 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="Arial" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body background-color="#f7fbfd">
+        <mj-wrapper padding-top="50px">
+            <!-- Header -->
+            <mj-include path="<%= path %>/header.mjml" />
+
+            <!-- Introduction Text -->
+            <mj-section background-color="white">
+                <mj-column>
+                    <mj-text font-size="28px" font-weight="bold">
+                        Welcome to the Origin Investor Portal.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <!-- Main Text -->
+            <mj-section background-color="white">
+                <mj-column>
+                    <mj-text font-size="18px" line-height="1.67">
+                        The following link will provide you access to the Origin Investor Portal. It will expire in 24 hours. You can reply directly to this email with any questions.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <!-- CTA -->
+            <mj-section background-color="white">
+                <mj-column>
+                    <mj-button href="<%= url %>" color="white" background-color="#345d7a" border-radius="43px" font-size="18px">
+                        Access the Origin Investor Portal
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+            <!-- Raw Link -->
+            <mj-section background-color="white">
+                <mj-column>
+                    <mj-text align="center" color="#007cff" font-size="18px" line-height="1.67">
+                        <a href="<%= url %>"><%= url %></a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <!-- Footer -->
+        <mj-include path="<%= path %>/footer.mjml" />
+    </mj-body>
+</mjml>

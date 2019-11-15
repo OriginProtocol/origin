@@ -26,6 +26,7 @@ export default gql`
         messagingNamespace
       }
       centralizedIdentityEnabled
+      authServer
     }
   }
 `

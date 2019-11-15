@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import get from 'lodash.get'
 
 import Swiper from 'react-id-swiper'
 import 'swiper/css/swiper.css'
@@ -20,11 +21,19 @@ const GrantDetail = props => {
       <div key={grant.id}>
         <div className="row mt-4 mb-2">
           <div className="col">
+            <strong>Investor</strong>
+          </div>
+          <div className="col text-right">{get(props.user, 'name', '')}</div>
+        </div>
+        <div className="row mb-2">
+          <div className="col">
             <strong>Purchase Date</strong>
           </div>
           {grant.purchaseDate && (
             <div className="col text-right">
-              {moment(grant.purchaseDate).format('LL')}
+              {moment(grant.purchaseDate)
+                .utc()
+                .format('LL')}
             </div>
           )}
         </div>
@@ -39,7 +48,8 @@ const GrantDetail = props => {
             <strong>Total Purchase</strong>
           </div>
           <div className="col text-right">
-            {grant.amount} <span className="ogn">OGN</span>
+            {Number(grant.amount).toLocaleString()}{' '}
+            <span className="ogn">OGN</span>
           </div>
         </div>
         <div className="row mb-2">

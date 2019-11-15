@@ -10,13 +10,10 @@ const { LOCKUP_CONFIRMED, LOCKUP_REQUEST } = require('../constants/events')
 const { Event, Lockup, sequelize } = require('../models')
 const { lockupBonusRate, lockupDuration } = require('../config')
 const { hasBalance } = require('./balance')
+const { lockupConfirmationTimeout, lockupHasExpired } = require('../shared')
 const logger = require('../logger')
 
-const {
-  emailConfirmTimeout,
-  encryptionSecret,
-  clientUrl
-} = require('../config')
+const { encryptionSecret, clientUrl } = require('../config')
 
 /**
  * Adds a lockup
@@ -30,9 +27,11 @@ async function addLockup(userId, amount, data = {}) {
   const unconfirmedLockups = await Lockup.findAll({
     where: {
       userId: user.id,
-      confirmed: null,
+      confirmed: null, // Unconfirmed
       created_at: {
-        [Sequelize.Op.gte]: moment.utc().subtract(5, 'minutes')
+        [Sequelize.Op.gte]: moment
+          .utc()
+          .subtract(lockupConfirmationTimeout, 'minutes')
       }
     }
   })
@@ -84,7 +83,7 @@ async function sendLockupConfirmationEmail(lockup, user) {
       lockupId: lockup.id
     },
     encryptionSecret,
-    { expiresIn: '5m' }
+    { expiresIn: `${lockupConfirmationTimeout}m` }
   )
 
   const vars = { url: `${clientUrl}/lockup/${lockup.id}/${token}` }
@@ -106,9 +105,7 @@ async function confirmLockup(lockup, user) {
     throw new Error('Lockup is already confirmed')
   }
 
-  if (
-    moment().diff(moment(lockup.createdAt), 'minutes') > emailConfirmTimeout
-  ) {
+  if (lockupHasExpired(lockup)) {
     throw new Error('Lockup was not confirmed in the required time')
   }
 

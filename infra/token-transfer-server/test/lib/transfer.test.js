@@ -14,6 +14,7 @@ const {
   executeTransfer
 } = require('../../src/lib/transfer')
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
+const { transferConfirmationTimeout } = require('../../src/shared')
 const enums = require('../../src/enums')
 
 // Mock for the Token class in the @origin/token package.
@@ -178,6 +179,35 @@ describe('Token transfer library', () => {
     // Check an email was sent with the confirmation token
     expect(sendStub.called).to.equal(true)
     sendStub.restore()
+  })
+
+  it('should add ignoring transfers waiting for email confirmation that have expired tokens', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
+      toAddress: toAddress,
+      amount: 2,
+      currency: 'OGN'
+    })
+
+    // Go forward in time to expire the transfer
+    const clock = sinon.useFakeTimers(
+      moment
+        .utc()
+        .add(transferConfirmationTimeout, 'm')
+        .valueOf()
+    )
+
+    const amount = 99999
+    await addTransfer(this.user.id, toAddress, amount)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+
+    clock.restore()
   })
 
   it('should not add a transfer if not enough tokens (vested)', async () => {

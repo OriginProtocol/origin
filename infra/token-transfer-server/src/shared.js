@@ -107,10 +107,31 @@ function calculateWithdrawn(transfers) {
 
   return transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total.plus(BigNumber(transfer.amount))
+      if (
+        transfer.status === enums.TransferStatuses.WaitingEmailConfirm &&
+        transferHasExpired(transfer)
+      ) {
+        return total
+      } else {
+        return total.plus(BigNumber(transfer.amount))
+      }
     }
     return total
   }, BigNumber(0))
+}
+
+function transferHasExpired(transfer) {
+  return (
+    moment().diff(moment(transfer.createdAt), 'minutes') >=
+    transferConfirmationTimeout
+  )
+}
+
+function lockupHasExpired(lockup) {
+  return (
+    moment().diff(moment(lockup.createdAt), 'minutes') >=
+    lockupConfirmationTimeout
+  )
 }
 
 const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
@@ -129,6 +150,11 @@ const lockupDuration = process.env.LOCKUP_DURATION || 12
 
 const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
 
+const transferConfirmationTimeout =
+  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
+
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 5
+
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -142,6 +168,10 @@ module.exports = {
   momentizeGrant,
   employeeUnlockDate,
   investorUnlockDate,
+  lockupHasExpired,
   lockupBonusRate,
-  lockupDuration
+  lockupDuration,
+  lockupConfirmationTimeout,
+  transferHasExpired,
+  transferConfirmationTimeout
 }

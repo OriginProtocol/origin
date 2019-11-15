@@ -800,6 +800,7 @@
   "Zwcu3zpr3n5/gvuuGPLM7w==": "Niet genoeg Origin-tokens",
   "mZyol0ZBIvZVwrMuiIQYEQ==": "Niet genoeg OKB-tokens. {E_VAR_GET_MORE_B64_R2V0IE1vcmU}",
   "GjBu2vHFw0ZvH+4WgZAzvQ==": "Haal meer",
+  "0Vu+Bjsw4nD9rCFmP670og==": "Not enough Tether",
   "7H/M3jg7K5QazQc2pEleKA==": "Onvoldoende evenwicht",
   "O4p/HWu2u4U5gZ+vruUU1Q==": "Waar kan ik wat krijgen?",
   "FC/gJV+Syi5Bjue937Ch8g==": "Commissie",
@@ -1302,8 +1303,10 @@
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Herkomststoken",
   "aGfKK6ZJD6P22TIxY6gdkA==": "OKB-token",
+  "szRo+nZJoOPIP4jpYwW+pA==": "Tether",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Ether is goed voor korte termijnvermeldingen.",
   "12RmZS0/aijc4qIbrWjHow==": "Maker Dai is goed voor langetermijnvermeldingen zoals verhuur of verkoop van onroerend goed.",
   "1ihLeuNdlY4LXygu4xmuTw==": "Handig voor het promoten van andere vermeldingen",
-  "Cimm0w0HZEQCNC34hAofsQ==": "Voor gebruik met een van onze uitwisselingspartners"
+  "Cimm0w0HZEQCNC34hAofsQ==": "Voor gebruik met een van onze uitwisselingspartners",
+  "mTC5G/fed1Tk89NehaYQgQ==": "Tether is good for long term listings like rentals or property sales."
 }

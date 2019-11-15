@@ -18,6 +18,7 @@ const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
+const { lockupConfirmationTimeout } = require('../../src/shared')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -166,7 +167,7 @@ describe('Lockup HTTP API', () => {
     await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(404)
@@ -181,7 +182,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -207,7 +208,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -355,7 +356,7 @@ describe('Lockup HTTP API', () => {
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1,
+          amount: 10,
           code: totp.gen(this.otpKey)
         })
     ])
@@ -390,7 +391,7 @@ describe('Lockup HTTP API', () => {
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1,
+          amount: 10,
           code: totp.gen(this.otpKey)
         })
     ])
@@ -402,7 +403,7 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
-  it('should not add lockups with below 0 amount', async () => {
+  it('should not add lockups with below 10 amount', async () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
@@ -414,8 +415,34 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/greater/)
   })
 
+  it('should confirm a lockup', async () => {
+    const lockup = await Lockup.create({
+      userId: this.user.id,
+      amount: 1000000
+    })
+
+    const token = jwt.sign(
+      {
+        lockupId: lockup.id
+      },
+      encryptionSecret,
+      { expiresIn: `${lockupConfirmationTimeout}m` }
+    )
+
+    await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
+      .send({ token })
+      .expect(201)
+
+    const updatedLockup = await Lockup.findOne({
+      where: { id: lockup.id }
+    })
+
+    expect(updatedLockup.confirmed).to.equal(true)
+  })
+
   it('should not confirm a lockup with invalid token', async () => {
-    const transfer = await Transfer.create({
+    const lockup = await Lockup.create({
       userId: this.user.id,
       amount: 1000000
     })
@@ -425,12 +452,45 @@ describe('Lockup HTTP API', () => {
         lockupId: 'invalid'
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${lockupConfirmationTimeout}m` }
     )
 
-    await request(this.mockApp)
-      .post(`/api/lockups/${transfer.id}`)
+    const response = await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
       .send({ token })
       .expect(400)
+
+    expect(response.text).to.match(/Invalid/)
+  })
+
+  it('should not confirm a lockup with an expired token', async () => {
+    const lockup = await Lockup.create({
+      userId: this.user.id,
+      amount: 1000000
+    })
+
+    const token = jwt.sign(
+      {
+        lockupId: lockup.id
+      },
+      encryptionSecret,
+      { expiresIn: `${lockupConfirmationTimeout}m` }
+    )
+
+    // Go forward in time to expire the token
+    const clock = sinon.useFakeTimers(
+      moment
+        .utc()
+        .add(lockupConfirmationTimeout, 'm')
+        .valueOf()
+    )
+
+    const response = await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
+      .send({ token })
+      .expect(400)
+
+    expect(response.text).to.match(/expired/)
+    clock.restore()
   })
 })
