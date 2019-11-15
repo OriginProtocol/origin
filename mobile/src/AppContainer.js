@@ -2,14 +2,15 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { StatusBar } from 'react-native'
+import { StatusBar, Clipboard } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import get from 'lodash.get'
 
-import { NETWORKS } from './constants'
+import { NETWORKS, REFERRAL_PREFIX } from './constants'
 import { Navigation } from './Navigation'
 import { setEnabled as setSamsungBKSEnabled } from 'actions/SamsungBKS'
 import { setNetwork } from 'actions/Settings'
+import { setReferralCode } from 'actions/Activation'
 import { setAccounts, setAccountActive } from 'actions/Wallet'
 import { canUseSamsungBKS } from 'utils'
 import { updateExchangeRate } from 'utils/exchangeRate'
@@ -22,6 +23,7 @@ class MarketplaceApp extends React.Component {
   static router = Navigation.router
 
   componentDidMount = async () => {
+    this.checkReferral()
     this.initSamsungBKS()
     this.validateAccounts()
     this.updateExchangeRates()
@@ -46,6 +48,17 @@ class MarketplaceApp extends React.Component {
       this.props.samsungBKS.seedHash
     ) {
       this.validateAccounts()
+    }
+  }
+
+  /* Check the clipboard for a referral code
+   */
+  checkReferral = async () => {
+    const clipData = await Clipboard.getString()
+    if (clipData && clipData.startsWith(REFERRAL_PREFIX)) {
+      const referralCode = clipData.slice(REFERRAL_PREFIX.length)
+      console.debug(`referral code found: ${referralCode}`)
+      this.props.setReferralCode(referralCode)
     }
   }
 
@@ -144,7 +157,8 @@ const mapDispatchToProps = dispatch => ({
   setAccounts: accounts => dispatch(setAccounts(accounts)),
   setAccountActive: account => dispatch(setAccountActive(account)),
   setNetwork: network => dispatch(setNetwork(network)),
-  setSamsungBKSEnabled: payload => dispatch(setSamsungBKSEnabled(payload))
+  setSamsungBKSEnabled: payload => dispatch(setSamsungBKSEnabled(payload)),
+  setReferralCode: payload => dispatch(setReferralCode(payload))
 })
 
 const App = connect(mapStateToProps, mapDispatchToProps)(MarketplaceApp)

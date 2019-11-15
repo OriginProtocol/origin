@@ -235,6 +235,10 @@ class PushNotifications extends Component {
         data['device_token'] = this.props.settings.deviceToken
       }
 
+      if (this.props.settings.referralCode) {
+        data['referral_code'] = this.props.settings.referralCode
+      }
+
       fetch(this.getNotificationServerUrl(), {
         method: 'POST',
         headers: {

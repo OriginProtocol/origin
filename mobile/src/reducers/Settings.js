@@ -12,7 +12,8 @@ const initialState = {
   deviceToken: null,
   language: null,
   network: defaultNetwork,
-  pin: null
+  pin: null,
+  referralCode: ''
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -34,6 +35,9 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_PIN:
       return { ...state, pin: action.pin }
+
+    case SettingsConstants.SET_REFERRAL_CODE:
+      return { ...state, referralCode: action.referralCode }
   }
 
   return state
