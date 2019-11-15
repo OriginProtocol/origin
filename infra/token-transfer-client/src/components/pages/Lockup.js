@@ -45,7 +45,7 @@ const Lockup = props => {
   }
 
   const unlockDate = getUnlockDate(props.user)
-  const isLocked = unlockDate === true || moment.utc() < unlockDate
+  const isLocked = !unlockDate || moment.utc() < unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)

@@ -60,7 +60,7 @@ router.post(
     const unlockDate = req.user.employee
       ? getEmployeeUnlockDate()
       : getInvestorUnlockDate()
-    if (unlockDate === true || moment.utc() < unlockDate) {
+    if (!unlockDate || moment.utc() < unlockDate) {
       logger.warn(`Transfer attempted by ${req.user.email} before unlock date`)
       res
         .status(422)
