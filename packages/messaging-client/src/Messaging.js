@@ -1193,7 +1193,7 @@ class Messaging {
       return
     }
 
-    for (let key in convObj.keys) {
+    for (const key in convObj.keys) {
       try {
         const iv = CryptoJS.lib.WordArray.random(16)
         const messageStr = JSON.stringify(message)
@@ -1204,7 +1204,7 @@ class Messaging {
           iv: iv
         }).toString()
         const ivStr = CryptoJS.enc.Base64.stringify(iv)
-    
+
         return {
           type: 'msg',
           emsg: encmsg,
