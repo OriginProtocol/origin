@@ -95,7 +95,6 @@ class ListingDetail extends Component {
     const userListings = (
       <UserListings
         user={listing.seller.id}
-        horizontal={isMobile ? false : true}
         title={fbt(
           'Other listings by this seller',
           'ListingDetail.othersFromSeller'

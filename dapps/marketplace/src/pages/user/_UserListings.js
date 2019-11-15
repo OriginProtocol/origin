@@ -14,7 +14,6 @@ const UserListings = ({
   user,
   hideHeader,
   hideLoadMore,
-  horizontal,
   compact,
   title,
   hideIfEmpty,
