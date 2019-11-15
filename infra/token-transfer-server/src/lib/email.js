@@ -4,6 +4,7 @@ const fs = require('fs')
 const template = require('lodash/template')
 const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
+const mjml2html = require('mjml')
 
 const { User } = require('../models')
 const {
@@ -21,26 +22,26 @@ const templateDir = `${__dirname}/../templates`
 const welcomeTextTemplate = template(
   fs.readFileSync(`${templateDir}/welcome.txt`).toString()
 )
-const welcomeHtmlTemplate = template(
-  fs.readFileSync(`${templateDir}/welcome.html`).toString()
+const welcomeMjmlTemplate = template(
+  fs.readFileSync(`${templateDir}/welcome.mjml`).toString()
 )
 const loginTextTemplate = template(
   fs.readFileSync(`${templateDir}/login.txt`).toString()
 )
-const loginHtmlTemplate = template(
-  fs.readFileSync(`${templateDir}/login.html`).toString()
+const loginMjmlTemplate = template(
+  fs.readFileSync(`${templateDir}/login.mjml`).toString()
 )
 const transferTextTemplate = template(
   fs.readFileSync(`${templateDir}/transfer.txt`).toString()
 )
-const transferHtmlTemplate = template(
-  fs.readFileSync(`${templateDir}/transfer.html`).toString()
+const transferMjmlTemplate = template(
+  fs.readFileSync(`${templateDir}/transfer.mjml`).toString()
 )
 const lockupTextTemplate = template(
   fs.readFileSync(`${templateDir}/lockup.txt`).toString()
 )
-const lockupHtmlTemplate = template(
-  fs.readFileSync(`${templateDir}/lockup.html`).toString()
+const lockupMjmlTemplate = template(
+  fs.readFileSync(`${templateDir}/lockup.mjml`).toString()
 )
 
 /**
@@ -51,27 +52,48 @@ const lockupHtmlTemplate = template(
  * @returns {{subject: string, html: string, text: string}}
  */
 function _generateEmail(emailType, vars) {
-  let subject, text, html
+  let subject, text, html, mjml
+
+  // Note: We add the templates directory to dynamic vars. It is used to set
+  // the path in the mjml-include directives.
+  vars.path = templateDir
+
   switch (emailType) {
     case 'welcome':
       subject = 'Welcome to the Origin Investor Portal'
       text = welcomeTextTemplate(vars)
-      html = welcomeHtmlTemplate(vars)
+      mjml = mjml2html(welcomeMjmlTemplate(vars))
+      if (mjml.errors.length) {
+        throw new Error('Email template error:', mjml.errors)
+      }
+      html = mjml.html
       break
     case 'login':
       subject = 'Your Origin Token Portal Verification Code'
       text = loginTextTemplate(vars)
-      html = loginHtmlTemplate(vars)
+      mjml = mjml2html(loginMjmlTemplate(vars))
+      if (mjml.errors.length) {
+        throw new Error('Email template error:', mjml.errors)
+      }
+      html = mjml.html
       break
     case 'transfer':
       subject = `Confirm Your Origin Token Withdrawal`
       text = transferTextTemplate(vars)
-      html = transferHtmlTemplate(vars)
+      mjml = mjml2html(transferMjmlTemplate(vars))
+      if (mjml.errors.length) {
+        throw new Error('Email template error:', mjml.errors)
+      }
+      html = mjml.html
       break
     case 'lockup':
       subject = `Confirm Your Origin Token Lockup`
       text = lockupTextTemplate(vars)
-      html = lockupHtmlTemplate(vars)
+      mjml = mjml2html(lockupMjmlTemplate(vars))
+      if (mjml.errors.length) {
+        throw new Error('Email template error:', mjml.errors)
+      }
+      html = mjml.html
       break
     default:
       throw new Error(`Invalid email type ${emailType}`)
