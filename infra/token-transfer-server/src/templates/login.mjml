@@ -35,16 +35,6 @@
                     </mj-button>
                 </mj-column>
             </mj-section>
-
-            <!-- Raw Link -->
-            <mj-section background-color="white">
-                <mj-column>
-                    <mj-text align="center" color="#007cff" font-size="18px" line-height="1.67">
-                        <a href="<%= url %>"><%= url %></a>
-                    </mj-text>
-                </mj-column>
-            </mj-section>
-
         </mj-wrapper>
 
         <!-- Footer -->
