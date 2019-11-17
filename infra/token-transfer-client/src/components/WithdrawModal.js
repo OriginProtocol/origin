@@ -259,7 +259,7 @@ class WithdrawModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.accountIsAdding}
+            disabled={this.state.amount < 1 || this.props.accountIsAdding}
           >
             {this.props.accountIsAdding ? (
               <>

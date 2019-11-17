@@ -64,10 +64,13 @@ router.post(
       // doesn't block the account add action.
       request
         .post('https://www.originprotocol.com/mailing-list/join')
-        .send(`email=${req.user.email}`)
+        .send(`email=${encodeURIComponent(req.user.email)}`)
         .send(`investor=1`)
         .send(`eth_address=${req.body.address}`)
-        .send(`name=${req.user.name || req.user.email}`)
+        .send(
+          `name=${encodeURIComponent(req.user.name) ||
+            encodeURIComponent(req.user.email)}`
+        )
         .then(
           response => {
             if (response.body.success) {

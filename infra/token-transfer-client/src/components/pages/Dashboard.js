@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -33,9 +33,14 @@ import VestingCard from '@/components/VestingCard'
 import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
+import BonusModal from '@/components/BonusModal'
+import WithdrawModal from '@/components/WithdrawModal'
 import { earnOgnEnabled } from '@/constants'
 
 const Dashboard = props => {
+  const [displayBonusModal, setDisplayBonusModal] = useState(false)
+  const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
+
   useEffect(() => {
     props.fetchAccounts(),
       props.fetchGrants(),
@@ -65,6 +70,21 @@ const Dashboard = props => {
 
   return (
     <>
+      {displayBonusModal && (
+        <BonusModal
+          balance={balanceAvailable}
+          onModalClose={() => setDisplayBonusModal(false)}
+        />
+      )}
+      {displayWithdrawModal && (
+        <WithdrawModal
+          balance={props.balance}
+          accounts={props.accounts}
+          isLocked={props.isLocked}
+          onModalClose={() => setDisplayWithdrawModal(false)}
+        />
+      )}
+
       <div className="row">
         <div className="col mb-4">
           <BalanceCard
@@ -73,6 +93,7 @@ const Dashboard = props => {
             locked={props.lockupTotals.locked}
             isLocked={isLocked}
             unlockDate={unlockDate}
+            onDisplayBonusModal={() => setDisplayBonusModal(true)}
           />
         </div>
       </div>
@@ -87,23 +108,25 @@ const Dashboard = props => {
           />
         </div>
         <div className="col-12 col-xl-6 mb-4">
-          <WithdrawalSummaryCard
-            vested={vestedTotal}
-            unvested={unvestedTotal}
-            isLocked={isLocked}
-            withdrawnAmount={props.withdrawnAmount}
-          />
+          {earnOgnEnabled ? (
+            <BonusCard
+              lockups={props.lockups}
+              locked={props.lockupTotals.locked}
+              earnings={props.lockupTotals.earnings}
+              isLocked={isLocked}
+              onDisplayBonusModal={() => setDisplayBonusModal(true)}
+            />
+          ) : (
+            <NewsHeadlinesCard />
+          )}
           <div className="mt-4">
-            {earnOgnEnabled ? (
-              <BonusCard
-                lockups={props.lockups}
-                locked={props.lockupTotals.locked}
-                earnings={props.lockupTotals.earnings}
-                isLocked={isLocked}
-              />
-            ) : (
-              <NewsHeadlinesCard />
-            )}
+            <WithdrawalSummaryCard
+              vested={vestedTotal}
+              unvested={unvestedTotal}
+              isLocked={isLocked}
+              withdrawnAmount={props.withdrawnAmount}
+              onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
+            />
           </div>
         </div>
       </div>
