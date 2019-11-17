@@ -72,7 +72,7 @@ class Phone extends Component {
       <>
         <div className="action-card narrow">
           <h1>Please provide a phone number</h1>
-          <p>We will contact you to verify large withdrawals</p>
+          <p>We will contact you to verify large withdrawals.</p>
           <form>
             <div className="form-group">
               <label htmlFor="country-code">Country Code</label>
