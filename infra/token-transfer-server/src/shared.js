@@ -51,7 +51,7 @@ function calculateUnlockedEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -69,7 +69,7 @@ function calculateEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
