@@ -142,7 +142,7 @@ class BonusModal extends Component {
             </div>
           </div>
 
-          {this.state.amount && this.state.amount >= 10 ? (
+          {this.state.amount && this.state.amount >= 100 ? (
             <div className="text-left">
               <div className="row">
                 <div className="col">
@@ -156,7 +156,7 @@ class BonusModal extends Component {
                     {Number(
                       BigNumber(
                         this.state.amount * (lockupBonusRate / 100)
-                      ).toFixed(0, BigNumber.ROUND_UP)
+                      ).toFixed(0, BigNumber.ROUND_HALF_UP)
                     ).toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
@@ -189,7 +189,7 @@ class BonusModal extends Component {
             className="btn btn-primary btn-lg mt-5"
             disabled={
               !this.state.amount ||
-              this.state.amount <= 10 ||
+              this.state.amount < 100 ||
               this.props.lockupIsAdding
             }
           >

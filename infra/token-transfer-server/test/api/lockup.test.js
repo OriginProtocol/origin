@@ -403,7 +403,7 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
-  it('should not add lockups with below 10 amount', async () => {
+  it('should not add lockups with amount below 100', async () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
