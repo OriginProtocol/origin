@@ -34,7 +34,7 @@
     "nock": "11.7.0",
     "prettier": "1.19.1",
     "supertest": "4.0.2",
-    "web3-eth": "1.2.3",
+    "web3-eth": "1.2.4",
     "web3": "1.0.0-beta.34"
   },
   "prettier": {
