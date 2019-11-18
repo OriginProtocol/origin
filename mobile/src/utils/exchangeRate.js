@@ -40,7 +40,10 @@ export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
         try {
           const json = JSON.parse(text)
           resolve({
-            rate: parseFloat(json.price),
+            // Note: Bridge returns the value of ETH per USD
+            // Mobile expects and uses the inverse value for gas
+            // and value cost estimation
+            rate: 1 / parseFloat(json.price),
             cacheHit: false
           })
         } catch (error) {

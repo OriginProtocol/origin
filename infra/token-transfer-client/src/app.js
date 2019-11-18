@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { withRouter } from 'react-router'
 import { Switch } from 'react-router-dom'
 
 import Modal from '@/components/Modal'
@@ -6,6 +7,7 @@ import ScrollToTop from '@/components/ScrollToTop'
 import OnboardingRoute from '@/components/OnboardingRoute'
 import PrivateRoute from '@/components/PrivateRoute'
 import PublicRoute from '@/components/PublicRoute'
+import withTracker from '@/hoc/withTracker'
 
 // Public routes
 import Welcome from '@/components/pages/Welcome'
@@ -92,4 +94,4 @@ const App = () => {
   )
 }
 
-export default App
+export default withRouter(withTracker(App))

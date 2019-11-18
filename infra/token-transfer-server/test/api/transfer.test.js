@@ -121,7 +121,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if unlock date has not passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -156,7 +156,7 @@ describe('Transfer HTTP API', () => {
 
   it('should add a transfer if lockup date has passed', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const sendStub = sinon.stub(sendgridMail, 'send')
 
@@ -179,7 +179,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer before lockup date passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -199,7 +199,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -219,7 +219,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -247,7 +247,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -275,7 +275,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -303,7 +303,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus success)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -331,7 +331,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const promises = [
       enums.TransferStatuses.Enqueued,
@@ -397,6 +397,19 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: -10,
+        address: toAddress,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/greater/)
+  })
+
+  it('should not add a transfer if amount 0', async () => {
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 0,
         address: toAddress,
         code: totp.gen(this.otpKey)
       })
@@ -495,8 +508,8 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if unconfirmed lockups greater than balance', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
-    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
 
     const earnOgnFake = sinon.fake.returns(true)
     lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)

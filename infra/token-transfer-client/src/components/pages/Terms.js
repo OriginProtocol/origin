@@ -27,7 +27,7 @@ const Terms = ({ editUser, userIsEditing }) => {
     <>
       <div className="action-card">
         <h1>Great! Please review our Terms of Use</h1>
-        <p>Please agree to our terms below and click Continue to proceed</p>
+        <p>Please agree to our terms below and click Continue to proceed.</p>
         <div className="form-group">
           <div className="terms-wrapper">
             The recipient acknowledges that they have been advised that the
@@ -61,13 +61,13 @@ const Terms = ({ editUser, userIsEditing }) => {
             onClick={e => setAccepted(e.target.checked)}
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
-            I have read and agree to the above terms of use and the{' '}
+            I have read and agree to the above Terms of Use and the{' '}
             <a
               href="https://www.originprotocol.com/en/privacy"
               target="_blank"
               rel="noopener noreferrer"
             >
-              privacy policy
+              Privacy Policy
             </a>{' '}
             and{' '}
             <a
@@ -75,7 +75,7 @@ const Terms = ({ editUser, userIsEditing }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              terms of service
+              Terms of Service
             </a>{' '}
             of Origin Protocol Labs.
           </label>
