@@ -109,7 +109,9 @@ export function fetchAccounts() {
       .then(response => dispatch(fetchAccountsSuccess(response.body)))
       .catch(error => {
         dispatch(fetchAccountsError(error))
-        throw error
+        if (error.status !== 401) {
+          throw error
+        }
       })
   }
 }
