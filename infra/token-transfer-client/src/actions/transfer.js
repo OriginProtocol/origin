@@ -110,7 +110,9 @@ export function fetchTransfers() {
       .then(response => dispatch(fetchTransfersSuccess(response.body)))
       .catch(error => {
         dispatch(fetchTransfersError(error))
-        throw error
+        if (error.status !== 401) {
+          throw error
+        }
       })
   }
 }

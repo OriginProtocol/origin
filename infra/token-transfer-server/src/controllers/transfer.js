@@ -10,9 +10,8 @@ const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
-  getEmployeeUnlockDate,
   getFingerprintData,
-  getInvestorUnlockDate
+  getUnlockDate
 } = require('../utils')
 const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret } = require('../config')
@@ -43,7 +42,7 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 0 })
+      .isInt({ min: 1 })
       .withMessage('Amount must be greater than 0'),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),
@@ -57,9 +56,7 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    const unlockDate = req.user.employee
-      ? getEmployeeUnlockDate()
-      : getInvestorUnlockDate()
+    const unlockDate = getUnlockDate()
     if (!unlockDate || moment.utc() < unlockDate) {
       logger.warn(`Transfer attempted by ${req.user.email} before unlock date`)
       res

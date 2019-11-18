@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
+import Withdraw from '-!react-svg-loader!@/assets/export-icon.svg'
 
 const WithdrawalSummaryCard = props => {
   const total = Number(props.vested)
@@ -57,6 +58,20 @@ const WithdrawalSummaryCard = props => {
           role="progressbar"
           style={{ width: `${withdrawnPercent}%` }}
         ></div>
+      </div>
+      <div className="row mt-3">
+        <div className="col text-center">
+          <button
+            className="btn btn-lg btn-outline-dark"
+            onClick={props.onDisplayWithdrawModal}
+          >
+            <Withdraw
+              className="icon"
+              style={{ marginTop: '-5px', marginRight: '10px' }}
+            />
+            Withdraw
+          </button>
+        </div>
       </div>
     </BorderedCard>
   )

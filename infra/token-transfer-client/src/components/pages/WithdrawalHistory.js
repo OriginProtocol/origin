@@ -23,7 +23,7 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { getUnlockDate } from '@/utils'
+import { unlockDate } from '@/constants'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
@@ -44,7 +44,6 @@ const WithdrawalHistory = props => {
     )
   }
 
-  const unlockDate = getUnlockDate(props.user)
   const isLocked = !unlockDate || moment.utc() < unlockDate
 
   const accountNicknameMap = {}

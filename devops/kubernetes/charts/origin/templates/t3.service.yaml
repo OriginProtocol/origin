@@ -20,4 +20,3 @@ spec:
     port: 80
   - name: express
     port: 5000
-
