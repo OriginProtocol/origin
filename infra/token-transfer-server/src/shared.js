@@ -151,7 +151,7 @@ const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
 const transferConfirmationTimeout =
   process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
 
-const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 5
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
 module.exports = {
   calculateGranted,
