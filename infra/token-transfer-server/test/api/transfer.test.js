@@ -405,6 +405,19 @@ describe('Transfer HTTP API', () => {
     expect(response.text).to.match(/greater/)
   })
 
+  it('should not add a transfer if amount 0', async () => {
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 0,
+        address: toAddress,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/greater/)
+  })
+
   it('should confirm a transfer', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,

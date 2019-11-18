@@ -34,7 +34,9 @@ export function fetchGrants() {
       .then(response => dispatch(fetchGrantsSuccess(response.body)))
       .catch(error => {
         dispatch(fetchGrantsError(error))
-        throw error
+        if (error.status !== 401) {
+          throw error
+        }
       })
   }
 }

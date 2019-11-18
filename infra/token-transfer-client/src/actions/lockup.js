@@ -95,7 +95,9 @@ export function fetchLockups() {
       .then(response => dispatch(fetchLockupsSuccess(response.body)))
       .catch(error => {
         dispatch(fetchLockupsError(error))
-        throw error
+        if (error.status !== 401) {
+          throw error
+        }
       })
   }
 }

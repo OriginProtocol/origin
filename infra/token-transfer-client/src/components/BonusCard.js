@@ -2,11 +2,18 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
+import Earn from '-!react-svg-loader!@/assets/earn-icon.svg'
 import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
 import OgnTokens from '-!react-svg-loader!@/assets/ogn-tokens.svg'
 
-const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
+const BonusCard = ({
+  earnings,
+  isLocked,
+  locked,
+  lockups,
+  onDisplayBonusModal
+}) => {
   const renderLockupGraphs = lockups => {
     return lockups.slice(0, 3).map(lockup => {
       return (
@@ -22,7 +29,8 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
       <BorderedCard shadowed={true}>
         <div className="text-center">
           <OgnTokens />
-          <h1 className="mt-3 mb-1">Earn Bonus Tokens</h1>
+          <h1 className="mt-3 mb-1">Coming Soon</h1>
+          <h1>Earn Bonus Tokens</h1>
           <p>
             Place your vested tokens into lockup periods to earn even more OGN.
           </p>
@@ -76,6 +84,21 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
             You don&apos;t have any OGN locked up.
           </div>
         )}
+      </div>
+      <div className="row">
+        <div className="col text-center">
+          <button className="btn btn-lg btn-dark" onClick={onDisplayBonusModal}>
+            <Earn
+              className="icon"
+              style={{
+                transform: 'scale(0.8) rotate(-90deg)',
+                marginTop: '-5px',
+                marginRight: '10px'
+              }}
+            />
+            Earn OGN
+          </button>
+        </div>
       </div>
     </BorderedCard>
   )

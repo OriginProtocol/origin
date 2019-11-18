@@ -43,7 +43,7 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 0 })
+      .isInt({ min: 1 })
       .withMessage('Amount must be greater than 0'),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),

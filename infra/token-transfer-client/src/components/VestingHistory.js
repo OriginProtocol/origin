@@ -43,7 +43,7 @@ const VestingHistory = props => {
       <hr />
       <div className="table-card">
         <div className="scrolling-table">
-          <table className="table mb-4">
+          <table className="table mb-0">
             <tbody>
               {props.isLocked ? (
                 <tr>
