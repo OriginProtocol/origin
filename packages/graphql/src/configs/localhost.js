@@ -41,8 +41,8 @@ const config = {
   tokens: [],
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
   messaging: {
-    messagingNamespace: 'origin',
-    globalKeyServer: 'http://localhost:6647'
+    messagingNamespace: 'origin:dev',
+    globalKeyServer: 'https://messaging.dev.originprotocol.com'
   },
 
   authServer: 'https://auth.dev.originprotocol.com',

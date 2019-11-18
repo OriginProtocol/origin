@@ -51,7 +51,7 @@ function calculateUnlockedEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -69,7 +69,7 @@ function calculateEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -134,20 +134,10 @@ function lockupHasExpired(lockup) {
   )
 }
 
-// Unlock dates, if undefined assume tokens are locked with an unknown unlock
+// Unlock date, if undefined assume tokens are locked with an unknown unlock
 // date
-const employeeUnlockDate = moment(
-  process.env.EMPLOYEE_UNLOCK_DATE,
-  'YYYY-MM-DD'
-).isValid()
-  ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
-  : undefined
-
-const investorUnlockDate = moment(
-  process.env.INVESTOR_UNLOCK_DATE,
-  'YYYY-MM-DD'
-).isValid()
-  ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
+const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
+  ? moment.utc(process.env.UNLOCK_DATE)
   : undefined
 
 // Lockup bonus rate as a percentage
@@ -174,8 +164,7 @@ module.exports = {
   toMoment,
   momentizeLockup,
   momentizeGrant,
-  employeeUnlockDate,
-  investorUnlockDate,
+  unlockDate,
   lockupHasExpired,
   lockupBonusRate,
   lockupDuration,

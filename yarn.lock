@@ -6898,10 +6898,10 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
-bull@3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.12.0.tgz#48d06d0d4e77140b5db8eee613385e252163a8a2"
-  integrity sha512-Gv/x7SHx0mugaqeDmUnh/ub4GqEcF0cBBZ2rmUUXvwLC4FVzrcOie9VkqNJjYLcvia4xTzr43WP3aMWJXtlYMA==
+bull@3.12.1:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.12.1.tgz#ced62d0afca81c9264b44f1b6f39243df5d2e73f"
+  integrity sha512-X3bSP7gTqPXLYVSyUtQuTOqZuU0GwVbV304Et84Z8bxYP60R1VD3FUOLsESVRA9LIUEOWVH3hE8MFqlszmO0Gw==
   dependencies:
     cron-parser "^2.13.0"
     debuglog "^1.0.0"
@@ -22840,6 +22840,11 @@ react-error-overlay@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
+
+react-ga@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
+  integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
 
 react-geocode@^0.2.0:
   version "0.2.1"

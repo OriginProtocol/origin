@@ -103,16 +103,19 @@ const CreateListing = props => {
   // Force a given listing type/category
   // Hack: '__' is not allowed in GraphQL where we get our config from, so we change
   // `typename` into `__typename` here.
-  const forceType =
-    props.creatorConfig && props.creatorConfig.forceType
-      ? {
-          ...props.creatorConfig.forceType,
-          __typename: props.creatorConfig.forceType.typename
-        }
-      : {}
+  const shouldForceType = props.creatorConfig && props.creatorConfig.forceType
+  const forceType = shouldForceType
+    ? {
+        ...props.creatorConfig.forceType,
+        __typename: props.creatorConfig.forceType.typename
+      }
+    : {}
 
   const cmpProps = {
-    listing: { ...listing, ...forceType },
+    // Directly having `listing: { ...listing, ...forceType }` works
+    // but forces all the components to render every second (since wallet change is polled
+    // and listing !== { ...listing, ...forceType } because of different object reference )
+    listing: !shouldForceType ? listing : { ...listing, ...forceType },
     onChange: listing => {
       setListing(listing)
       if (listing.id) {

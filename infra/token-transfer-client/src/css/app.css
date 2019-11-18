@@ -224,8 +224,7 @@ input, select {
 
 .table-card .scrolling-table {
   padding-top: 0;
-  margin: 20px 0;
-  max-height: 230px;
+  height: 422px;
   overflow-y: scroll;
 }
 
@@ -423,6 +422,19 @@ input, select {
 
 .dropdown-menu .icon > path {
   fill: #007cff;
+}
+
+.btn .icon > path {
+  fill-opacity: 1;
+}
+
+.btn-outline-dark .icon > path {
+  fill-opacity: 1;
+  fill: #000;
+}
+
+.btn-outline-dark:hover .icon > path {
+  fill: #fff;
 }
 
 .lockup-graph canvas {

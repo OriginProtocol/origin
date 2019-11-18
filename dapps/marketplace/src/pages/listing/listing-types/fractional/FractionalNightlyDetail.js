@@ -69,6 +69,7 @@ const FractionalNightlyDetail = ({
               currency={listing.price.currency}
               startDate={startDate}
               endDate={endDate}
+              listing={listing}
             />
             <div className="actions mt-auto">
               <button
@@ -77,7 +78,7 @@ const FractionalNightlyDetail = ({
                   onChange(selectedRange)
                   setCloseModal(true)
                 }}
-                disabled={!startDate && !endDate}
+                disabled={!startDate || !endDate}
               >
                 <fbt desc="Save">Save</fbt>
               </button>
