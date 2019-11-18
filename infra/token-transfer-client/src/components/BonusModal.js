@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import BigNumber from 'bignumber.js'
 import get from 'lodash.get'
+import ReactGA from 'react-ga'
 
 import { addLockup } from '@/actions/lockup'
 import {
@@ -20,10 +21,18 @@ class BonusModal extends Component {
     this.state = this.getInitialState()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    ReactGA.modalview(`/lockup/${this.state.modalState.toLowerCase()}`)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     // Parse server errors for account add
     if (get(prevProps, 'lockupError') !== this.props.lockupError) {
       this.handleServerError(this.props.lockupError)
+    }
+
+    if (prevState.modalState !== this.state.modalState) {
+      ReactGA.modalview(`/lockup/${this.state.modalState.toLowerCase()}`)
     }
   }
 
