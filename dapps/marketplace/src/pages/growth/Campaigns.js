@@ -21,6 +21,7 @@ import { calculatePendingAndAvailableActions } from 'utils/growthTools'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import ToastNotification from 'pages/user/ToastNotification'
+import CompletedActionGroups from './CompletedActionGroups'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 2500
@@ -189,7 +190,6 @@ function Campaign(props) {
       <MobileDownloadAction
         action={mobileAction}
         decimalDivision={decimalDivision}
-        isMobile={isMobile}
       />
       <ActionGroupList
         campaign={campaign}
@@ -197,6 +197,12 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
         isMobile={isMobile}
       />
+      {
+        <CompletedActionGroups
+          actions={[mobileAction]}
+          decimalDivision={decimalDivision}
+        />
+      }
     </Fragment>
   )
 }
