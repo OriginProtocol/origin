@@ -19,11 +19,11 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
-    - secretName: {{ template "t3.host" . }}
+    - secretName: {{ template "t3-investor.host" . }}
       hosts:
-        - {{ template "t3.host" . }}
+        - {{ template "t3-investor.host" . }}
   rules:
-  - host: {{ template "t3.host" . }}
+  - host: {{ template "t3-investor.host" . }}
     http:
       paths:
         - path: /
@@ -34,3 +34,10 @@ spec:
           backend:
             serviceName: {{ template "t3.fullname" . }}
             servicePort: 5000
+  - host: {{ template "t3-employee.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "t3.fullname" . }}
+            servicePort: 80
