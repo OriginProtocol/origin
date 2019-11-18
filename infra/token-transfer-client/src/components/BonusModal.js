@@ -132,7 +132,7 @@ class BonusModal extends Component {
                     cursor: 'pointer'
                   }}
                 >
-                  Max amount
+                  Max Amount
                 </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
@@ -142,11 +142,11 @@ class BonusModal extends Component {
             </div>
           </div>
 
-          {this.state.amount && this.state.amount >= 10 ? (
+          {this.state.amount && this.state.amount >= 100 ? (
             <div className="text-left">
               <div className="row">
                 <div className="col">
-                  <strong>Bonus tokens earned</strong>{' '}
+                  <strong>Bonus Tokens Earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
                     ({lockupBonusRate}% of lockup)
                   </span>
@@ -156,7 +156,7 @@ class BonusModal extends Component {
                     {Number(
                       BigNumber(
                         this.state.amount * (lockupBonusRate / 100)
-                      ).toFixed(0, BigNumber.ROUND_UP)
+                      ).toFixed(0, BigNumber.ROUND_HALF_UP)
                     ).toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
@@ -175,8 +175,10 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please enter a number of tokens to lock up for one year (minimum
-                10 OGN). Bonus tokens will be calculated based on that amount.
+                Please enter the number of tokens (minimum 100 OGN) to lock up
+                for one year. Bonus tokens will be calculated based on this
+                amount. Locked up and bonus tokens will be unavailable for
+                withdrawal during the one-year lockup.
               </div>
               <hr />
             </>
@@ -187,7 +189,7 @@ class BonusModal extends Component {
             className="btn btn-primary btn-lg mt-5"
             disabled={
               !this.state.amount ||
-              this.state.amount <= 10 ||
+              this.state.amount < 100 ||
               this.props.lockupIsAdding
             }
           >
