@@ -22,6 +22,9 @@ spec:
     - secretName: {{ template "t3-investor.host" . }}
       hosts:
         - {{ template "t3-investor.host" . }}
+    - secretName: {{ template "t3-employee.host" . }}
+      hosts:
+        - {{ template "t3-employee.host" . }}
   rules:
   - host: {{ template "t3-investor.host" . }}
     http:
