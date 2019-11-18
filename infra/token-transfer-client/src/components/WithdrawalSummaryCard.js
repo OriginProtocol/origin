@@ -54,25 +54,27 @@ const WithdrawalSummaryCard = props => {
           style={{ width: `${remainingPercent}%` }}
         ></div>
         <div
-          className="progress-bar bg-error"
+          className="progress-bar bg-danger"
           role="progressbar"
           style={{ width: `${withdrawnPercent}%` }}
         ></div>
       </div>
-      <div className="row mt-3">
-        <div className="col text-center">
-          <button
-            className="btn btn-lg btn-outline-dark"
-            onClick={props.onDisplayWithdrawModal}
-          >
-            <Withdraw
-              className="icon"
-              style={{ marginTop: '-5px', marginRight: '10px' }}
-            />
-            Withdraw
-          </button>
+      {!props.isLocked && (
+        <div className="row mt-3">
+          <div className="col text-center">
+            <button
+              className="btn btn-lg btn-outline-dark"
+              onClick={props.onDisplayWithdrawModal}
+            >
+              <Withdraw
+                className="icon"
+                style={{ marginTop: '-5px', marginRight: '10px' }}
+              />
+              Withdraw
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </BorderedCard>
   )
 }
