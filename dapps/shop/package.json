@@ -41,7 +41,7 @@
     "react": "^16.8.6",
     "react-apollo": "^3.0.0",
     "react-dom": "^16.8.6",
-    "react-stripe-elements": "^5.0.1",
+    "react-stripe-elements": "^6.0.0",
     "react-styl": "^0.0.3",
     "sequelize": "^5.21.2",
     "serve-static": "^1.14.1",
