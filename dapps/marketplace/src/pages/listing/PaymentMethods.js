@@ -125,7 +125,11 @@ const PaymentMethods = ({
   history,
   next
 }) => {
-  const acceptedTokens = get(listing, 'acceptedTokens', []).map(t => t.id)
+  // Note: For really old listings, `acceptedTokens` prop may not be present
+  // Default to ETH in that case
+  const acceptedTokens = get(listing, 'acceptedTokens', ['token-ETH']).map(
+    t => t.id
+  )
 
   const setTokenCallback = useCallback(token => setPaymentMethod(token))
 
