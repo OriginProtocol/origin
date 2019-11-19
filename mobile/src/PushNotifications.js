@@ -321,11 +321,7 @@ class PushNotifications extends Component {
 
     // No private key (Samsung BKS account), can't proceed
     if (wallet.activeAccount.hdPath) {
-      const messageToSign = Buffer.from(payload).toString('base64')
-      signature = await RNSamsungBKS.signEthPersonalMessage(
-        wallet.activeAccount.hdPath,
-        messageToSign
-      )
+      return
     } else {
       const { privateKey, mnemonic } = wallet.activeAccount
 

@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -36,14 +37,17 @@ const App = () => {
   return (
     <ReduxProvider store={Store}>
       <PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
-        <AppContainer
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef)
-          }}
-        />
+        <SafeAreaProvider>
+          <AppContainer
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef)
+            }}
+          />
+        </SafeAreaProvider>
       </PersistGate>
     </ReduxProvider>
   )
 }
 
 export default App
+

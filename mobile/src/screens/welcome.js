@@ -57,7 +57,7 @@ class WelcomeScreen extends Component {
 
   render() {
     let action
-    if (this.props.samsungBKS.seedHash === '') {
+    if (this.props.samsungBKS.seedHash === '' ) {
       action = this.renderSamsungBKSRequiresSetup()
     } else if (
       this.props.samsungBKS.seedHash &&
@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontFamily: 'Lato',
-    marginBottom: 20
+    marginBottom: 20,
+    paddingHorizontal: 20
   }
 })

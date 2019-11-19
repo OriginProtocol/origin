@@ -73,7 +73,7 @@ class ChangePinScreen extends Component {
     return (
       <KeyboardAvoidingView
         style={styles.content}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        behavior={'padding'}
       >
         <Text style={styles.subtitle}>{titleElement}</Text>
         {this.state.isRetry === true && (
