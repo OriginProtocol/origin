@@ -20,7 +20,7 @@ const OnboardingRoute = ({
   useEffect(rest.fetchUser, [])
 
   if (rest.sessionExpired && !isLoading) {
-    return <Redirect to="/login?error=expired" />
+    return <Redirect to="/?error=expired" />
   }
 
   return (

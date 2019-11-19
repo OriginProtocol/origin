@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const get = require('lodash.get')
 const passport = require('passport')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
@@ -112,9 +113,12 @@ router.post(
       data: fingerprintData
     })
 
-    logger.info(
-      `Successful login for ${req.user.email} in ${fingerprintData.location}`
+    const countryDisplay = get(
+      fingerprintData.location,
+      'countryName',
+      'unknown'
     )
+    logger.info(`Successful login for ${req.user.email} in ${countryDisplay}`)
 
     // Save in the session that the user successfully authed with TOTP.
     req.session.twoFA = 'totp'

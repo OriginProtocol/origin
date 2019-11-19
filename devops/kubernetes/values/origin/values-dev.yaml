@@ -26,7 +26,7 @@ discoveryImageTag: 'f2a9315'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '0431acf'
+growthImageTag: '047079b'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -67,11 +67,11 @@ graphqlImageTag: '72c6bd6'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
-t3ClientImageTag: 'e57c92c'
+t3ClientImageTag: '6ecca2b'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: 'e57c92c'
+t3ServerImageTag: '375cabb'
 
 # origin-auth
 authImage: origin-auth
