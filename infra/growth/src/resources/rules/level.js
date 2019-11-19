@@ -4,6 +4,7 @@ const { ReferralRule } = require('./referralRule')
 const { ListingIdPurchaseRule } = require('./listingIdPurchaseRule')
 const { SocialShareRule } = require('./socialShareRule')
 const { VerifiableSocialShareRule } = require('./verifiableSocialShareRule')
+const { PartnerReferralEvent } = require('./partnerReferralRule')
 
 class Level {
   constructor(crules, levelId, config) {
@@ -78,6 +79,9 @@ function ruleFactory(crules, levelId, config) {
       break
     case 'SocialShare':
       rule = new VerifiableSocialShareRule(crules, levelId, config)
+      break
+    case 'PartnerReferralEvent':
+      rule = new PartnerReferralEvent(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
