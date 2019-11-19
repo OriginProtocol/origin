@@ -14,10 +14,7 @@ import AcceptedTokenListItem from 'components/AcceptedTokenListItem'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-import withMultiUnitData from './listing-types/multi-unit/withMultiUnitData'
-import withSingleUnitData from './listing-types/single-unit/withSingleUnitData'
-import withFractionalData from './listing-types/fractional/withFractionalData'
-import withFractionalHourlyData from './listing-types/fractional-hourly/withFractionalHourlyData'
+import withTypeSpecificData from './listing-types/withTypeSpecificData'
 import Price from 'components/Price'
 
 import InsufficientBalance from './_InsufficientBalance'
@@ -116,42 +113,7 @@ const PaymentAmountRaw = ({
   )
 }
 
-// TODO: Is there a better way to do this?
-const MultiUnitPaymentAmount = withMultiUnitData(PaymentAmountRaw)
-const FractionalPaymentAmount = withFractionalData(PaymentAmountRaw)
-const FractionalHourlyPaymentAmount = withFractionalHourlyData(PaymentAmountRaw)
-const SingleUnitPaymentAmount = withSingleUnitData(PaymentAmountRaw)
-
-/**
- * @returns PaymentAmountRaw component wrapped with the
- * appropriate data for the listing type
- */
-const PaymentAmount = props => {
-  const { listing } = props
-
-  const singleUnit =
-    listing.__typename === 'UnitListing' && listing.unitsTotal === 1
-  const multiUnit = listing.multiUnit
-  const isFractional = listing.__typename === 'FractionalListing'
-  const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-  const isService = listing.__typename === 'ServiceListing'
-
-  switch (true) {
-    case multiUnit:
-    case isService:
-      return <MultiUnitPaymentAmount {...props} />
-
-    case isFractional:
-      return <FractionalPaymentAmount {...props} />
-
-    case isFractionalHourly:
-      return <FractionalHourlyPaymentAmount {...props} />
-
-    case singleUnit:
-    default:
-      return <SingleUnitPaymentAmount {...props} />
-  }
-}
+const PaymentAmount = withTypeSpecificData(PaymentAmountRaw)
 
 const PaymentMethods = ({
   listing,
