@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 
 import Price from 'components/Price'
 
+import { fbt } from 'fbt-runtime'
+
 class Calendar extends Component {
   constructor(props) {
     super(props)
@@ -129,6 +131,13 @@ class Calendar extends Component {
       : slots[slots.length - 1].date
   }
 
+  /**
+   * @returns {{
+   *  className: String
+   *  unavailable: Boolean
+   *  canInteract: Boolean
+   * }}
+   */
   getClass(slot) {
     const { today, dragStartDate, dragEndDate, canBookUpto } = this.state
 
@@ -139,18 +148,23 @@ class Calendar extends Component {
 
     const notInSelection = !dragStartDate || (dragStartDate && dragEndDate)
 
+    let canInteract = true
+
     if (notInSelection && unavailable) {
+      canInteract = false
       className.push('unavailable')
     }
 
     if (inPast) {
       unavailable = true
+      canInteract = false
       className.push('in-past')
     } else if (isToday) {
       className.push('today')
     }
 
     if (dragStartDate) {
+      // In selection
       const isStartDate = dragStartDate.isSame(slot.date)
       const isBeforeStartDate = slot.date.isBefore(dragStartDate)
 
@@ -166,34 +180,32 @@ class Calendar extends Component {
       } else if (canBookUpto && slot.date.isAfter(canBookUpto)) {
         // Cannot be included in the range
         className.push('disabled')
+        canInteract = false
       } else if (!dragEndDate && !isBeforeStartDate && !isStartDate) {
         className.push('can-check-out')
+        // Note: Can checkout on unavailable/booked slot
+        canInteract = true
       }
 
       if (unavailable && isBeforeStartDate) {
+        canInteract = false
         className.push('disabled', 'unavailable')
       }
     }
 
-    return className.join(' ')
+    return {
+      className: className.join(' '),
+      unavailable,
+      canInteract
+    }
   }
 
   renderSlot(slot, index) {
-    const { canBookUpto } = this.state
-    const { allowToSelectUnavailable } = this.props
-
     if (!slot) {
       return <div className="empty" key={index} />
     }
 
-    const slotClassName = this.getClass(slot)
-    // Note: Can checkout on unavailable/booked slot
-    const canInteract =
-      !slotClassName.includes('single') &&
-      ((canBookUpto
-        ? !slotClassName.includes('disabled')
-        : !slotClassName.includes('unavailable')) ||
-        allowToSelectUnavailable)
+    const { className: slotClassName, canInteract } = this.getClass(slot)
 
     let content = (
       <Price
@@ -203,7 +215,7 @@ class Calendar extends Component {
     )
 
     if (slot.booked && this.props.showBooked) {
-      content = 'Booked'
+      content = <fbt desc="Booked">Booked</fbt>
     } else if (slot.unavailable || !slot.price) {
       content = null
     } else if (slot.customPrice) {
