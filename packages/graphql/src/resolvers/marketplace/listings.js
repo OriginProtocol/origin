@@ -105,7 +105,7 @@ async function resultsFromIds({
     const idsToCheck = ids.slice(start, start + numToCheck)
     const visibleIds = await filterNonVisibleListingIds(idsToCheck)
     listingIds = visibleIds.slice(0, first)
-    end = ids.indexOf(listingIds[listingIds.length - 1])
+    end = ids.indexOf(listingIds[listingIds.length - 1]) + 1;
   } else {
     end = start + first
     listingIds = ids.slice(start, end)
