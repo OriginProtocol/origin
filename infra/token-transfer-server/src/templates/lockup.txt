@@ -2,4 +2,4 @@ Please confirm your lockup of Origin Tokens by clicking the link below.
 
 <%= url %>
 
-This link will expire in 5 minutes. You can reply directly to this email with any questions.
+This link will expire in 10 minutes. You can reply directly to this email with any questions.
