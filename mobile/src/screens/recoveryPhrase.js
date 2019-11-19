@@ -83,15 +83,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   recoveryWordNumber: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#6a8296',
     textAlign: 'right',
-    width: '15%',
-    marginRight: '5%'
+    width: 28,
+    marginRight: 5
   },
   recoveryWord: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
-    width: '75%'
+    width: '100%'
   }
 })
