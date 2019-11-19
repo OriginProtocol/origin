@@ -149,7 +149,7 @@ input, select {
 }
 
 #main .spinner-grow {
-  margin: 30% 50% 0% 50%;
+  margin: 20% 50% 0% 50%;
 }
 
 /*
@@ -350,7 +350,7 @@ input, select {
 .btn.btn-lg {
   font-weight: 800;
   border-radius: 2rem;
-  padding: 0.5rem 3rem;
+  padding: 0.4rem 3rem 0.5rem 3rem;
   min-width: 10rem;
   font-size: 20px;
 }

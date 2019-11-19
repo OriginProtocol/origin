@@ -64,7 +64,7 @@ const App = () => {
       {displayMobileWarning && renderMobileWarning()}
       <ScrollToTop />
       <Switch>
-        <PublicRoute path="/login" component={Login} />
+        <PublicRoute exact path="/" component={Login} />
         <PublicRoute path="/check_email" component={CheckEmail} />
         <PublicRoute path="/login_handler/:token" component={HandleLogin} />
         <PublicRoute path="/otp/explain" component={OtpExplain} />
@@ -79,7 +79,7 @@ const App = () => {
         <OnboardingRoute exact path="/terms" component={Terms} />
         <OnboardingRoute exact path="/phone" component={Phone} />
         <OnboardingRoute path="/otp/setup" component={OtpSetup} />
-        <PrivateRoute exact path="/" component={Dashboard} />
+        <PrivateRoute path="/dashboard" component={Dashboard} />
         <PrivateRoute path="/news" component={News} />
         <PrivateRoute exact path="/lockup" component={Lockup} />
         <PrivateRoute path="/lockup/:id/:token" component={LockupConfirm} />

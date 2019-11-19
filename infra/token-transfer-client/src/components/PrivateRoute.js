@@ -45,26 +45,28 @@ const PrivateRoute = ({
         render={props => {
           return (
             <div className="logged-in">
-              <Navigation
-                onExpandSidebar={toggleSidebar}
-                expandSidebar={expandSidebar}
-              />
-              <div id="main" className={expandSidebar ? 'd-none' : ''}>
-                {isLoading ? (
+              {isLoading || !user ? (
+                <div id="main" style={{ width: '100%' }}>
                   <div className="spinner-grow" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
-                ) : (
-                  <>
+                </div>
+              ) : (
+                <>
+                  <Navigation
+                    onExpandSidebar={toggleSidebar}
+                    expandSidebar={expandSidebar}
+                  />
+                  <div id="main" className={expandSidebar ? 'd-none' : ''}>
                     <div className="d-none d-md-block">
                       {user && <AccountActions user={user} />}
                     </div>
                     <div className="mt-4">
                       <Component {...props} user={user} />
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           )
         }}
@@ -76,7 +78,7 @@ const PrivateRoute = ({
             Your session has expired. You will need to sign in again to
             continue.
           </p>
-          <Link to="/login">
+          <Link to="/">
             <button className="btn btn-primary btn-lg">Sign In</button>
           </Link>
         </Modal>

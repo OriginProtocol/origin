@@ -29,7 +29,7 @@ class Otp extends Component {
 
   render() {
     if (this.state.redirectToDashboard) {
-      return <Redirect push to="/" />
+      return <Redirect push to="/dashboard" />
     }
 
     const input = formInput(

@@ -13,7 +13,7 @@ const HandleLogin = props => {
       handleLoginToken(props.match.params.token)
     } else {
       // Redirect to login if no token present in URL
-      setRedirectTo('/login')
+      setRedirectTo('/')
     }
   }, [])
 
@@ -25,9 +25,9 @@ const HandleLogin = props => {
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
       if (error.response) {
-        setRedirectTo('/login?error=expired')
+        setRedirectTo('/?error=expired')
       } else {
-        setRedirectTo('/login?error=server')
+        setRedirectTo('/?error=server')
       }
       return
     }

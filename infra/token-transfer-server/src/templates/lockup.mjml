@@ -23,7 +23,7 @@
                 <mj-column>
                     <mj-text font-size="18px" line-height="1.67">
                         Please confirm your lockup of Origin tokens by clicking the link below.
-                        This link will expire in 5 minutes.
+                        This link will expire in 10 minutes.
                     </mj-text>
                 </mj-column>
             </mj-section>
