@@ -23,8 +23,6 @@ import withConfig from 'hoc/withConfig'
 
 import AuthClient from '@origin/auth-client/src/auth-client'
 
-import RNSamsungBKS from 'react-native-samsung-bks'
-
 class PushNotifications extends Component {
   constructor(props) {
     super(props)

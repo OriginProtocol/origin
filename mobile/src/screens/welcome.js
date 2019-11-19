@@ -57,7 +57,7 @@ class WelcomeScreen extends Component {
 
   render() {
     let action
-    if (this.props.samsungBKS.seedHash === '' ) {
+    if (this.props.samsungBKS.seedHash === '') {
       action = this.renderSamsungBKSRequiresSetup()
     } else if (
       this.props.samsungBKS.seedHash &&

@@ -18,6 +18,7 @@ import BackArrow from 'components/back-arrow'
 import PinInput from 'components/pin-input'
 import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
+import Disclaimer from 'components/disclaimer'
 
 class PinScreen extends Component {
   constructor(props) {
@@ -63,19 +64,18 @@ class PinScreen extends Component {
 
   render() {
     const title = this.state.verifyPin
-      ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
-      : fbt('Create a Pin Code', 'PinScreen.createPinCode')
+      ? fbt('Confirm Pin Code', 'PinScreen.reenterPinCode')
+      : fbt('Create Pin Code', 'PinScreen.createPinCode')
 
     return (
       <KeyboardAvoidingView
         style={styles.darkOverlay}
         behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 10}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 25 : 10}
       >
         <SafeAreaView style={styles.container}>
           <ScrollView
             style={styles.onboardingModal}
-            contentContainerStyle={styles.container}
             keyboardShouldPersistTaps={'always'}
           >
             <BackArrow onClick={() => this.props.navigation.goBack(null)} />
@@ -93,11 +93,11 @@ class PinScreen extends Component {
                 pinLength={this.pinLength}
                 onChangeText={this.handleChange}
               />
-              <Text style={styles.legal}>
+              <Disclaimer>
                 <fbt desc="PinScreen.disclaimer">
                   Your Pin Code will be used to login to the app.
                 </fbt>
-              </Text>
+              </Disclaimer>
             </View>
           </ScrollView>
         </SafeAreaView>
