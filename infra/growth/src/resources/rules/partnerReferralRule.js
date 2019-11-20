@@ -58,20 +58,6 @@ class PartnerReferralEvent extends BaseRule {
   }
 
   /**
-   * Retrieve the campaign's configuration
-   * @param {string} code - The referral code
-   * @returns {Promise<Object>}
-   */
-  async _getCampaignConfig(code) {
-    const url = `${PARTNER_CONF_URL}/${code}.json`
-    const res = await fetch(url)
-    if (res.status !== 200) {
-      throw new Error(`Failed to fetch campaign config JSON from ${url}`)
-    }
-    return await res.json()
-  }
-
-  /**
    * Retrieve all campaign configuration
    */
   async _getConfig() {
@@ -80,7 +66,13 @@ class PartnerReferralEvent extends BaseRule {
     if (res.status !== 200) {
       throw new Error('Failed to fetch campaigns JSON')
     }
-    this.validCodes = await res.json()
+    const config = await res.json()
+
+    if (!config) {
+      return
+    }
+
+    this.validCodes = Object.keys(config)
 
     if (this.validCodes.length === 0) {
       return
@@ -88,7 +80,7 @@ class PartnerReferralEvent extends BaseRule {
 
     // Get the rewards for the code
     for (const code of this.validCodes) {
-      const conf = await this._getCampaignConfig(code)
+      const conf = config[code]
       if (!conf) {
         logger.debug(`Code "${code}" has no config`)
         continue
