@@ -4,6 +4,7 @@ const { Reward } = require('./reward')
 const logger = require('../../logger')
 const { tokenToNaturalUnits } = require('../../util/token')
 
+const CONF_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 const PARTNER_CONF_URL = process.env.PARTNER_CONF_URL || 'https://originprotocol.com/static/partnerconf'
 // TODO: Does this data need to be refetched/expire or is restart enough?
 const PARTNER_REWARDS = {}
@@ -20,6 +21,20 @@ class PartnerReferralEvent extends BaseRule {
     }
 
     this.validCodes = []
+    this.lastConfLoad = null
+  }
+
+  /**
+   * Return whether or not the configuration should be reloaded from source
+   */
+  async _reloadConf() {
+    if (this.validCodes.length < 1 || (
+      this.lastConfLoad && (
+        +new Date() - CONF_CACHE_DURATION > Number(this.lastConfLoad)
+      )
+    )) {
+      await this._getConfig()
+    }
   }
 
   /**
@@ -30,7 +45,7 @@ class PartnerReferralEvent extends BaseRule {
    * @private
    */
   async _numRewards(ethAddress, events) {
-    if (this.validCodes.length < 1) await this._getConfig()
+    await this._reloadConf()
     const tally = this._tallyEvents(
       ethAddress,
       this.eventTypes,
@@ -47,7 +62,7 @@ class PartnerReferralEvent extends BaseRule {
    * @returns {boolean}
    */
   async _evaluate(ethAddress, events) {
-    if (this.validCodes.length < 1) await this._getConfig()
+    await this._reloadConf()
     const tally = this._tallyEvents(
       ethAddress,
       this.eventTypes,
@@ -87,6 +102,8 @@ class PartnerReferralEvent extends BaseRule {
       }
       PARTNER_REWARDS[code] = conf.reward
     }
+
+    this.lastConfLoad = new Date()
   }
 
   /**
@@ -115,7 +132,7 @@ class PartnerReferralEvent extends BaseRule {
    * @returns {Promise<Array<Reward>>}
    */
   async getEarnedRewards(ethAddress, events) {
-    if (this.validCodes.length < 1) await this._getConfig()
+    await this._reloadConf()
 
     const zero = new Reward(this.campaignId, this.levelId, this.id, {
       amount: '0',
