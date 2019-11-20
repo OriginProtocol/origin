@@ -43,11 +43,7 @@ const exchangeHeads = async (
   const heads = getHeadsForDatabase(getStore(address))
   logger.debug(
     `Send latest heads of '${address}':\n`,
-    JSON.stringify(
-      heads.map(e => e.hash),
-      null,
-      2
-    )
+    JSON.stringify(heads.map(e => e.hash), null, 2)
   )
   if (heads) {
     await channel.send(JSON.stringify({ address: address, heads: heads }))
