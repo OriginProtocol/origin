@@ -32,7 +32,7 @@
     "express-prom-bundle": "5.1.5",
     "graphql-iso-date": "3.6.1",
     "graphql-tag": "2.10.1",
-    "graphql-type-json": "0.3.0",
+    "graphql-type-json": "0.3.1",
     "http": "0.0.0",
     "lodash-es": "4.17.15",
     "logplease": "1.2.15",
