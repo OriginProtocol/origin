@@ -76,6 +76,7 @@ class PinScreen extends Component {
         <SafeAreaView style={styles.container}>
           <ScrollView
             style={styles.onboardingModal}
+            contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps={'always'}
           >
             <BackArrow onClick={() => this.props.navigation.goBack(null)} />
