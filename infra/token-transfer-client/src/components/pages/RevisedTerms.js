@@ -236,7 +236,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
             defaultChecked
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
-            I have read and agree to the Investor Amendment Agreement
+            I have read and agree to the Investor Amendment Agreement.
           </label>
         </div>
         <button

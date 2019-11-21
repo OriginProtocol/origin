@@ -1,10 +1,5 @@
 const logger = require('./logger')
-const {
-  employeeUnlockDate,
-  investorUnlockDate,
-  lockupBonusRate,
-  lockupDuration
-} = require('./shared')
+const { lockupBonusRate, lockupDuration, unlockDate } = require('./shared')
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL || null
 
@@ -43,8 +38,6 @@ if (!sessionSecret) {
 module.exports = {
   discordWebhookUrl,
   encryptionSecret,
-  employeeUnlockDate,
-  investorUnlockDate,
   lockupBonusRate,
   lockupDuration,
   networkId,
@@ -52,5 +45,6 @@ module.exports = {
   clientUrl,
   sendgridFromEmail,
   sendgridApiKey,
-  sessionSecret
+  sessionSecret,
+  unlockDate
 }

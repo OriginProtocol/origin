@@ -114,7 +114,7 @@ class AccountTable extends Component {
                   {this.props.accounts.length === 0 ? (
                     <tr>
                       <td className="table-empty-cell" colSpan="100%">
-                        You don&apos;t have any accounts
+                        You haven&apos;t added any Ethereum accounts.
                       </td>
                     </tr>
                   ) : (
@@ -149,8 +149,8 @@ class AccountTable extends Component {
 
     return (
       <Modal appendToId="main" onClose={this.reset} closeBtn={true}>
-        <h1 className="mb-2">Add An Account</h1>
-        <p>Enter a nickname and an ETH address</p>
+        <h1 className="mb-2">Add an Account</h1>
+        <p>Enter a nickname and an Ethereum account address.</p>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Nickname</label>
@@ -158,7 +158,7 @@ class AccountTable extends Component {
             {Feedback('nickname')}
           </div>
           <div className="form-group">
-            <label htmlFor="email">ETH Address</label>
+            <label htmlFor="email">Ethereum Address</label>
             <input {...input('address')} />
             {Feedback('address')}
           </div>

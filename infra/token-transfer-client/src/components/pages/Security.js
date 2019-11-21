@@ -45,7 +45,7 @@ class Security extends Component {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Change email
+                    Change Email
                   </a>
                 </div>
               </div>

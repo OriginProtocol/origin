@@ -51,7 +51,7 @@ function calculateUnlockedEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -69,7 +69,7 @@ function calculateEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -134,13 +134,11 @@ function lockupHasExpired(lockup) {
   )
 }
 
-const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
-  ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
-  : moment.utc('2020-01-01')
-
-const investorUnlockDate = process.env.INVESTOR_UNLOCK_DATE
-  ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
-  : moment.utc('2019-12-01')
+// Unlock date, if undefined assume tokens are locked with an unknown unlock
+// date
+const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
+  ? moment.utc(process.env.UNLOCK_DATE)
+  : undefined
 
 // Lockup bonus rate as a percentage
 const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
@@ -153,7 +151,7 @@ const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
 const transferConfirmationTimeout =
   process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
 
-const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 5
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
 module.exports = {
   calculateGranted,
@@ -166,8 +164,7 @@ module.exports = {
   toMoment,
   momentizeLockup,
   momentizeGrant,
-  employeeUnlockDate,
-  investorUnlockDate,
+  unlockDate,
   lockupHasExpired,
   lockupBonusRate,
   lockupDuration,

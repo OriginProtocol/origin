@@ -72,7 +72,9 @@ export function fetchUser() {
       .then(response => dispatch(fetchUserSuccess(response.body)))
       .catch(error => {
         dispatch(fetchUserError(error))
-        throw error
+        if (error.status !== 401) {
+          throw error
+        }
       })
   }
 }

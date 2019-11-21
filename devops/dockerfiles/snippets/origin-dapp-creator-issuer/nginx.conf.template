@@ -16,7 +16,7 @@ http {
   lua_shared_dict auto_ssl_settings 64k;
 
   # A DNS resolver must be defined for OCSP stapling to function.
-  resolver 8.8.8.8;
+  resolver 8.8.8.8 ipv6=off;
 
   # Initial setup tasks.
   init_by_lua_block {

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
 import BigNumber from 'bignumber.js'
 import web3Utils from 'web3-utils'
+import ReactGA from 'react-ga'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -25,7 +26,11 @@ class WithdrawModal extends Component {
     this.state = this.getInitialState()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    ReactGA.modalview(`/withdraw/${this.state.modalState.toLowerCase()}`)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     // Parse server errors for account add
     if (get(prevProps, 'accountError') !== this.props.accountError) {
       this.handleServerError(this.props.accountError)
@@ -33,6 +38,9 @@ class WithdrawModal extends Component {
     // Parse server errors for transfer add
     if (get(prevProps, 'transferError') !== this.props.transferError) {
       this.handleServerError(this.props.transferError)
+    }
+    if (prevState.modalState !== this.state.modalState) {
+      ReactGA.modalview(`/withdraw/${this.state.modalState.toLowerCase()}`)
     }
   }
 
@@ -259,7 +267,7 @@ class WithdrawModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.accountIsAdding}
+            disabled={this.state.amount < 1 || this.props.accountIsAdding}
           >
             {this.props.accountIsAdding ? (
               <>

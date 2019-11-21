@@ -7,7 +7,7 @@ import VestingSchedule from '@/assets/schedule@3x.png'
 
 const VestingCard = props => {
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard shadowed={true} style={{ minHeight: '100%' }}>
       <VestingBars
         grants={props.grants}
         user={props.user}

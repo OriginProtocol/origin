@@ -1,6 +1,6 @@
 const { ip2geo } = require('@origin/ip2geo')
 
-const { employeeUnlockDate, investorUnlockDate } = require('./config')
+const { unlockDate } = require('./config')
 const { earnOgnEnabled } = require('./shared')
 
 /**
@@ -11,14 +11,11 @@ const asyncMiddleware = fn => (req, res, next) => {
 }
 
 // Use a function so that this value can be mocked in tests
-const getEmployeeUnlockDate = () => {
-  return employeeUnlockDate
+const getUnlockDate = () => {
+  return unlockDate
 }
 
-const getInvestorUnlockDate = () => {
-  return investorUnlockDate
-}
-
+// Use a function so that this value can be mocked in tests
 const getEarnOgnEnabled = () => {
   return earnOgnEnabled
 }
@@ -45,7 +42,6 @@ const getFingerprintData = async req => {
 module.exports = {
   asyncMiddleware,
   getEarnOgnEnabled,
-  getEmployeeUnlockDate,
   getFingerprintData,
-  getInvestorUnlockDate
+  getUnlockDate
 }

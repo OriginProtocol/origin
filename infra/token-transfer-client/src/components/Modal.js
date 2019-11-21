@@ -48,8 +48,8 @@ export default class Modal extends Component {
     return ReactDOM.createPortal(this.renderContent(), this.portal)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.shouldClose && nextProps.shouldClose) {
+  componentDidUpdate(prevProps) {
+    if (!this.props.shouldClose && prevProps.shouldClose) {
       this.doClose()
     }
   }
