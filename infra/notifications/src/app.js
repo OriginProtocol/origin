@@ -259,7 +259,9 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
       null,
       now
     )
-    logger.debug(`Recorded partner referral with code ${mobileRegister.referralCode}.`)
+    logger.debug(
+      `Recorded partner referral with code ${mobileRegister.referralCode}.`
+    )
   }
 })
 
