@@ -204,7 +204,7 @@ const Listing = ({ listing, refetch }) => (
           </div>
         )}
       </div>
-      {listing.status !== 'active' ? null : (
+      {['active', 'sold'].includes(listing.status) ? (
         <div className="actions">
           <Link
             to={`/listing/${listing.id}/edit`}
@@ -212,7 +212,7 @@ const Listing = ({ listing, refetch }) => (
           />
           <WithdrawListing listing={listing} refetch={refetch} />
         </div>
-      )}
+      ) : null}
     </div>
   </div>
 )
