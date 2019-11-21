@@ -6,7 +6,6 @@ const { tokenToNaturalUnits } = require('../../util/token')
 
 const CONF_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 const PARTNER_CONF_URL = process.env.PARTNER_CONF_URL || 'https://originprotocol.com/static/partnerconf'
-// TODO: Does this data need to be refetched/expire or is restart enough?
 const PARTNER_REWARDS = {}
 
 /**
