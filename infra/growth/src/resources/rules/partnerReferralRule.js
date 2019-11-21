@@ -5,7 +5,9 @@ const logger = require('../../logger')
 const { tokenToNaturalUnits } = require('../../util/token')
 
 const CONF_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
-const PARTNER_CONF_URL = process.env.PARTNER_CONF_URL || 'https://originprotocol.com/static/partnerconf'
+const PARTNER_CONF_URL =
+  process.env.PARTNER_CONF_URL ||
+  'https://originprotocol.com/static/partnerconf'
 const PARTNER_REWARDS = {}
 
 /**
@@ -27,11 +29,11 @@ class PartnerReferralEvent extends BaseRule {
    * Return whether or not the configuration should be reloaded from source
    */
   async _reloadConf() {
-    if (this.validCodes.length < 1 || (
-      this.lastConfLoad && (
-        +new Date() - CONF_CACHE_DURATION > Number(this.lastConfLoad)
-      )
-    )) {
+    if (
+      this.validCodes.length < 1 ||
+      (this.lastConfLoad &&
+        +new Date() - CONF_CACHE_DURATION > Number(this.lastConfLoad))
+    ) {
       await this._getConfig()
     }
   }
@@ -51,7 +53,7 @@ class PartnerReferralEvent extends BaseRule {
       events,
       customId => this.validCodes.includes(customId)
     )
-    return (tally && tally > 0) ? 1 : 0
+    return tally && tally > 0 ? 1 : 0
   }
 
   /**
@@ -168,10 +170,12 @@ class PartnerReferralEvent extends BaseRule {
 
           logger.debug(`Rewarding ${amount} to ${ethAddress}`)
 
-          rewards.push(new Reward(this.campaignId, this.levelId, this.id, {
-            amount,
-            currency: this.config.reward.currency
-          }))
+          rewards.push(
+            new Reward(this.campaignId, this.levelId, this.id, {
+              amount,
+              currency: this.config.reward.currency
+            })
+          )
 
           // Only one per code
           seenCodes.push(ev.customId)
