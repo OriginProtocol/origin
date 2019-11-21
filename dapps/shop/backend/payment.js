@@ -95,10 +95,11 @@ app.post('/webhook', rawJson, async (req, res) => {
     }
 
     const res = await post(config.ipfsApi, offer, true)
+    const listingId = ListingId.split('-')[2]
 
     Marketplace.methods
       .makeOffer(
-        '0',
+        listingId,
         getBytes32FromIpfsHash(res),
         offer.finalizes,
         config.affiliate || ZeroAddress,
