@@ -23,7 +23,6 @@ COPY ./packages/contracts ./packages/contracts
 COPY ./packages/ip2geo ./packages/ip2geo
 COPY ./packages/token ./packages/token
 
-
 RUN yarn install
 
 ENV NODE_ENV=production

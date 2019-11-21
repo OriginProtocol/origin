@@ -23,7 +23,7 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { getUnlockDate } from '@/utils'
+import { unlockDate } from '@/constants'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
@@ -44,8 +44,7 @@ const WithdrawalHistory = props => {
     )
   }
 
-  const unlockDate = getUnlockDate(props.user)
-  const isLocked = moment.utc() < unlockDate
+  const isLocked = !unlockDate || moment.utc() < unlockDate
 
   const accountNicknameMap = {}
   props.accounts.forEach(account => {
@@ -176,13 +175,13 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer }) => {
+const mapStateToProps = ({ account, grant, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant),
+    grantTotals: getGrantTotals(user.user, grant),
     transfers: getTransfers(transfer),
     transferIsLoading: getTransferIsLoading(transfer),
     withdrawnAmount: getWithdrawnAmount(transfer)

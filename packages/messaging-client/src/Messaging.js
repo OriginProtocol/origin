@@ -1192,23 +1192,32 @@ class Messaging {
       debug('ERR: invalid message')
       return
     }
-    const key = convObj.keys[0]
-    const iv = CryptoJS.lib.WordArray.random(16)
-    const messageStr = JSON.stringify(message)
-    const shaSub = CryptoJS.enc.Base64.stringify(
-      CryptoJS.SHA1(messageStr)
-    ).substr(0, 6)
-    const encmsg = CryptoJS.AES.encrypt(messageStr + shaSub, key, {
-      iv: iv
-    }).toString()
-    const ivStr = CryptoJS.enc.Base64.stringify(iv)
 
-    return {
-      type: 'msg',
-      emsg: encmsg,
-      i: ivStr,
-      address: this.account_key
+    for (const key in convObj.keys) {
+      try {
+        const iv = CryptoJS.lib.WordArray.random(16)
+        const messageStr = JSON.stringify(message)
+        const shaSub = CryptoJS.enc.Base64.stringify(
+          CryptoJS.SHA1(messageStr)
+        ).substr(0, 6)
+        const encmsg = CryptoJS.AES.encrypt(messageStr + shaSub, key, {
+          iv: iv
+        }).toString()
+        const ivStr = CryptoJS.enc.Base64.stringify(iv)
+
+        return {
+          type: 'msg',
+          emsg: encmsg,
+          i: ivStr,
+          address: this.account_key
+        }
+      } catch (err) {
+        debug('Encryption failed', err)
+        // Continue to try and encrypt with other keys
+      }
     }
+
+    throw new Error('Failed to encrypt message/shipping address')
   }
 
   async sendConvMessage(roomIdOrAddress, messageObj) {

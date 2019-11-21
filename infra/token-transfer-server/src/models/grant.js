@@ -8,22 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       grantType: { type: DataTypes.STRING },
       start: { type: DataTypes.DATE, allowNull: false },
+      cliff: { type: DataTypes.DATE },
       end: { type: DataTypes.DATE, allowNull: false },
-      cliff: { type: DataTypes.DATE, allowNull: false },
       cancelled: { type: DataTypes.DATE },
       amount: { type: DataTypes.INTEGER, allowNull: false },
-      interval: {
-        type: DataTypes.ENUM([
-          'years',
-          'months',
-          'weeks',
-          'days',
-          'hours',
-          'minutes',
-          'seconds'
-        ]),
-        allowNull: false
-      },
       purchaseDate: DataTypes.DATE,
       purchaseRound: DataTypes.STRING,
       purchaseTotal: DataTypes.DECIMAL,

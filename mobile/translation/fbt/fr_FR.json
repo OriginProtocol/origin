@@ -1,13 +1,6 @@
 {
   "fb-locale": "fr_FR",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Adresse"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
@@ -46,21 +39,28 @@
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "Identification requise"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Recommencez"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Réessayer avec NIP"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Pin requis"
         }
       ]
     },
@@ -179,28 +179,28 @@
     "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Woops! Il semble que les notifications soient désactivées. Pour obtenir les dernières mises à jour concernant vos transactions, nous vous recommandons de les activer dans les paramètres de l'application Origin Marketplace."
         }
       ]
     },
     "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+          "translation": "Nous vous recommandons vivement d'activer les notifications pour obtenir les dernières mises à jour concernant votre transaction avec des alertes en temps opportun."
         }
       ]
     },
     "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Paramètres ouverts"
         }
       ]
     },
     "cNC6HEwSQ2MTdQc9xbDrAw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Activer les notifications"
         }
       ]
     },
@@ -214,28 +214,28 @@
     "21hMnXPcxTGJHmoWgpA7Og==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore Error"
+          "translation": "Erreur du magasin de clés Samsung Blockchain"
         }
       ]
     },
     "qzN5RGfNbk86/n/jcpMdfg==": {
       "translations": [
         {
-          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+          "translation": "Une erreur s'est produite lors de l'accès à Samsung Blockchain Keystore."
         }
       ]
     },
     "DEMLFz9zBSsNpmhGgY6piw==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Recommencez"
         }
       ]
     },
     "rCsEaxa+oEKoe7c42xpG0A==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Continuez"
         }
       ]
     },
@@ -277,14 +277,14 @@
     "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Make Offer"
+          "translation": "Faire une offre"
         }
       ]
     },
     "8XqYinU0zAemee1+B/gY3g==": {
       "translations": [
         {
-          "translation": "Transfer Tokens"
+          "translation": "Jetons de transfert"
         }
       ]
     },
@@ -298,14 +298,14 @@
     "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Grant Token Access"
+          "translation": "Accorder l'accès au jeton"
         }
       ]
     },
     "VqHNzpP2gO7q8zCyzsy2wA==": {
       "translations": [
         {
-          "translation": "We are requesting permission to move {currency} on your behalf"
+          "translation": "Nous demandons la permission de déplacer {currency} en votre nom"
         }
       ]
     },
@@ -505,6 +505,13 @@
         }
       ]
     },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Adresse"
+        }
+      ]
+    },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
@@ -585,7 +592,7 @@
     "qB0LirQx9SttKH4w9wrLOg==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore"
+          "translation": "Magasin de clés Samsung Blockchain"
         }
       ]
     },
@@ -771,10 +778,52 @@
         }
       ]
     },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Entrez votre nouveau code PIN"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Entrez votre ancien code PIN"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Ressaisir le code PIN"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Créer un code PIN"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "Entrez votre code PIN"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "NIP incorrect"
+        }
+      ]
+    },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Devise"
         }
       ]
     },
@@ -802,7 +851,7 @@
     "YgQAbQzQfarXS32FHToKpA==": {
       "translations": [
         {
-          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+          "translation": "Votre portefeuille est géré par le keystore de Samsung Blockchain."
         }
       ]
     },
@@ -830,7 +879,7 @@
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "Entrez la phrase"
         }
       ]
     },
@@ -872,35 +921,21 @@
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "Erreur de connexion"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Recommencez"
         }
       ]
     },
     "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "Settings"
-        }
-      ]
-    },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Ressaisir le code PIN"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Créer un code PIN"
+          "translation": "Paramètres"
         }
       ]
     },
@@ -915,6 +950,34 @@
       "translations": [
         {
           "translation": "Votre code PIN sera utilisé pour vous connecter à l'application."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "Permission refusée"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "Il semble que vous ayez {biometryType} désactivé. Vous devrez l'activer dans les paramètres de l'application Origin Marketplace."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "D'accord"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "Annuler"
         }
       ]
     },
@@ -942,7 +1005,7 @@
     "GHSZ2Asae082vH5nd+9RuA==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Devise"
         }
       ]
     },
@@ -950,6 +1013,27 @@
       "translations": [
         {
           "translation": "Réseau"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "SÉCURITÉ"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "Code PIN"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "Changer le code PIN"
         }
       ]
     },

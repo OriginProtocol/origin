@@ -23,6 +23,7 @@ import { ShareDialog } from 'react-native-fbsdk'
 import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
+import stringify from 'json-stable-stringify'
 
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
@@ -35,9 +36,10 @@ import {
   setMarketplaceWebViewError
 } from 'actions/Marketplace'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import { PROMPT_MESSAGE, PROMPT_PUB_KEY, AUTH_MESSAGE } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
+import UpdatePrompt from 'components/update-prompt'
 
 class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
@@ -85,6 +87,8 @@ class MarketplaceScreen extends PureComponent {
     ) {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
+      // Inject auth signature
+      this.injectAuthSign()
     }
   }
 
@@ -158,20 +162,25 @@ class MarketplaceScreen extends PureComponent {
     }
   }
 
-  /* Inject the cookies required for messaging to allow preenabling of messaging
-   * for accounts
+  /**
+   * Signs the message using the current wallet
+   * without showing a prompt to the user
+   *
+   * @param {String} payload Data to sign
+   *
+   * @returns {String|null} Signaure hex if signed, null otherwise
    */
-  injectMessagingKeys = async () => {
+  async signMessageWithoutPrompt(payload) {
     const { wallet } = this.props
     // No active account, can't proceed
     if (!wallet.activeAccount) {
-      console.debug('Cannot inject messaging keys, no active account')
-      return
+      console.debug('Cannot sign under the hood, no active account')
+      return null
     }
     // No private key (Samsung BKS account), can't proceed
     if (wallet.activeAccount.hdPath) {
-      console.debug('Cannot inject messaging keys for Samsung BKS account')
-      return
+      console.debug('Cannot sign under the hood for Samsung BKS account')
+      return null
     }
 
     const { privateKey, mnemonic } = wallet.activeAccount
@@ -183,12 +192,35 @@ class MarketplaceScreen extends PureComponent {
       ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
     }
 
+    // Sign and return the message
+    return await ethersWallet.signMessage(payload)
+  }
+
+  /* Inject the cookies required for messaging to allow preenabling of messaging
+   * for accounts
+   */
+  injectMessagingKeys = async () => {
+    const { wallet } = this.props
+
     // Sign the first message
-    const signature = await ethersWallet.signMessage(PROMPT_MESSAGE)
+    const signature = await this.signMessageWithoutPrompt(PROMPT_MESSAGE)
+    if (!signature) {
+      console.debug(
+        'Cannot inject messaging keys, failed to sign under the hood'
+      )
+      return
+    }
+
     const signatureKey = signature.substring(0, 66)
     const msgAccount = new ethers.Wallet(signatureKey)
     const pubMessage = PROMPT_PUB_KEY + msgAccount.address
-    const pubSignature = await ethersWallet.signMessage(pubMessage)
+    const pubSignature = await this.signMessageWithoutPrompt(pubMessage)
+    if (!pubSignature) {
+      console.debug(
+        'Cannot inject messaging keys, failed to sign under the hood'
+      )
+      return
+    }
 
     this.injectJavaScript(
       `
@@ -202,6 +234,41 @@ class MarketplaceScreen extends PureComponent {
         }
       `,
       'messaging keys'
+    )
+  }
+
+  /**
+   * Inject auth signature for active wallet
+   */
+  injectAuthSign = async () => {
+    const { wallet } = this.props
+
+    const payload = {
+      message: AUTH_MESSAGE,
+      timestamp: Date.now()
+    }
+
+    // Sign the message
+    const signature = await this.signMessageWithoutPrompt(stringify(payload))
+
+    if (!signature) {
+      console.debug(
+        'Cannot inject auth signature, failed to sign under the hood'
+      )
+      return
+    }
+
+    this.injectJavaScript(
+      `
+        if (window && window.context && window.context.authClient) {
+          window.context.authClient.onAuthSign(
+            '${wallet.activeAccount.address}',
+            '${signature}',
+            JSON.parse('${JSON.stringify(payload)}')
+          );
+        }
+      `,
+      'auth sign'
     )
   }
 
@@ -578,6 +645,8 @@ class MarketplaceScreen extends PureComponent {
     this.injectCurrency()
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
+    // Inject auth signature
+    this.injectAuthSign()
     // Check if a growth invie code needs to be set
     this.injectInviteCode()
     // Inject scroll handler for pull to refresh function
@@ -647,7 +716,8 @@ class MarketplaceScreen extends PureComponent {
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <UpdatePrompt />
+        <SafeAreaView style={styles.container}>
           <KeyboardAvoidingView
             behavior="padding"
             keyboardVerticalOffset={40}
@@ -655,7 +725,7 @@ class MarketplaceScreen extends PureComponent {
             enabled={Platform.OS === 'android'}
           >
             <ScrollView
-              contentContainerStyle={{ flex: 1 }}
+              contentContainerStyle={styles.container}
               refreshControl={refreshControl}
               {...this.state.panResponder.panHandlers}
             >
@@ -698,7 +768,7 @@ class MarketplaceScreen extends PureComponent {
   renderWebViewError = () => {
     return (
       <SafeAreaView style={styles.webviewLoadingOrError}>
-        <View style={{ ...styles.container, flexGrow: 2 }}>
+        <View style={styles.content}>
           <Text style={styles.title}>
             <fbt desc="MarketplaceScreen.heading">Connection Error</fbt>
           </Text>
@@ -709,7 +779,7 @@ class MarketplaceScreen extends PureComponent {
             </fbt>
           </Text>
         </View>
-        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+        <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"

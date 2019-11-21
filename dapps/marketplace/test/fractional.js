@@ -99,6 +99,7 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
       if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
+      if (acceptedTokens.includes('USDT')) await clickByText(page, 'Tether')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')

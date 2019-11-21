@@ -13,6 +13,7 @@ const jwt = require('jsonwebtoken')
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
+const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
@@ -20,6 +21,7 @@ process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
+const { transferConfirmationTimeout } = require('../../src/shared')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -119,7 +121,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if unlock date has not passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -154,7 +156,7 @@ describe('Transfer HTTP API', () => {
 
   it('should add a transfer if lockup date has passed', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const sendStub = sinon.stub(sendgridMail, 'send')
 
@@ -177,7 +179,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer before lockup date passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -197,7 +199,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -217,7 +219,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -245,7 +247,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -273,7 +275,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -301,7 +303,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus success)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -329,7 +331,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const promises = [
       enums.TransferStatuses.Enqueued,
@@ -403,6 +405,19 @@ describe('Transfer HTTP API', () => {
     expect(response.text).to.match(/greater/)
   })
 
+  it('should not add a transfer if amount 0', async () => {
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 0,
+        address: toAddress,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/greater/)
+  })
+
   it('should confirm a transfer', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,
@@ -417,13 +432,19 @@ describe('Transfer HTTP API', () => {
         transferId: transfer.id
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${transferConfirmationTimeout}m` }
     )
 
     await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
       .expect(201)
+
+    const updatedTransfer = await Transfer.findOne({
+      where: { id: transfer.id }
+    })
+
+    expect(updatedTransfer.status).to.equal(enums.TransferStatuses.Enqueued)
   })
 
   it('should not confirm a transfer with invalid token', async () => {
@@ -440,12 +461,85 @@ describe('Transfer HTTP API', () => {
         transferId: 'invalid'
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${transferConfirmationTimeout}m` }
     )
 
-    await request(this.mockApp)
+    const response = await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
       .expect(400)
+
+    expect(response.text).to.match(/Invalid/)
+  })
+
+  it('should not confirm a transfer with an expired token', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const token = jwt.sign(
+      {
+        transferId: transfer.id
+      },
+      encryptionSecret,
+      { expiresIn: `${transferConfirmationTimeout}m` }
+    )
+
+    // Go forward in time to expire the token
+    const clock = sinon.useFakeTimers(
+      moment
+        .utc()
+        .add(transferConfirmationTimeout, 'm')
+        .valueOf()
+    )
+
+    const response = await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({ token })
+      .expect(400)
+
+    expect(response.text).to.match(/expired/)
+    clock.restore()
+  })
+
+  it('should not add a transfer if unconfirmed lockups greater than balance', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+
+    const earnOgnFake = sinon.fake.returns(true)
+    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+
+    const otpCode = totp.gen(this.otpKey)
+
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1000000,
+        code: otpCode
+      })
+      .expect(201)
+
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 1,
+        address: toAddress,
+        code: otpCode
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/exceeds/)
+
+    // Check an email was sent with the confirmation token for one of the
+    // two requests
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 })

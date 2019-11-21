@@ -43,7 +43,8 @@ const FALLBACK_EXCHANGE_RATES = {
   USDC: 1.001,
   GUSD: 1.036,
   OKB: 0.3377,
-  OGN: USD_PER_OGN
+  OGN: USD_PER_OGN,
+  USDT: 1
 }
 
 // To cache the rates in memory

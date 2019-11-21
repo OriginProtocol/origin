@@ -30,13 +30,13 @@ function calculateGranted(grants) {
 /* Calculate the amount of vested tokens for an array of grants
  * @param grants
  */
-function calculateVested(grants) {
+function calculateVested(user, grants) {
   return grants.reduce((total, grant) => {
     if (grant.dataValues) {
       // Convert if instance of sequelize model
       grant = grant.get({ plain: true })
     }
-    return total.plus(vestedAmount(grant))
+    return total.plus(vestedAmount(user, grant))
   }, BigNumber(0))
 }
 
@@ -51,7 +51,7 @@ function calculateUnlockedEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -69,7 +69,7 @@ function calculateEarnings(lockups) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
-        .toFixed(0, BigNumber.ROUND_UP)
+        .toFixed(0, BigNumber.ROUND_HALF_UP)
       return total.plus(earnings)
     }
     return total
@@ -82,9 +82,8 @@ function calculateEarnings(lockups) {
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
     if (
-      lockup.confirmed &&
-      lockup.start < moment.utc() &&
-      lockup.end > moment.utc()
+      lockup.start < moment.utc() && // Lockup has started
+      lockup.end > moment.utc() // Lockup has not yet ended
     ) {
       return total.plus(BigNumber(lockup.amount))
     }
@@ -108,19 +107,38 @@ function calculateWithdrawn(transfers) {
 
   return transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total.plus(BigNumber(transfer.amount))
+      if (
+        transfer.status === enums.TransferStatuses.WaitingEmailConfirm &&
+        transferHasExpired(transfer)
+      ) {
+        return total
+      } else {
+        return total.plus(BigNumber(transfer.amount))
+      }
     }
     return total
   }, BigNumber(0))
 }
 
-const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
-  ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
-  : moment.utc('2020-01-01')
+function transferHasExpired(transfer) {
+  return (
+    moment().diff(moment(transfer.createdAt), 'minutes') >=
+    transferConfirmationTimeout
+  )
+}
 
-const investorUnlockDate = process.env.INVESTOR_UNLOCK_DATE
-  ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
-  : moment.utc('2019-12-01')
+function lockupHasExpired(lockup) {
+  return (
+    moment().diff(moment(lockup.createdAt), 'minutes') >=
+    lockupConfirmationTimeout
+  )
+}
+
+// Unlock date, if undefined assume tokens are locked with an unknown unlock
+// date
+const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
+  ? moment.utc(process.env.UNLOCK_DATE)
+  : undefined
 
 // Lockup bonus rate as a percentage
 const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
@@ -129,6 +147,11 @@ const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
 const lockupDuration = process.env.LOCKUP_DURATION || 12
 
 const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
+
+const transferConfirmationTimeout =
+  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
+
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
 module.exports = {
   calculateGranted,
@@ -141,8 +164,11 @@ module.exports = {
   toMoment,
   momentizeLockup,
   momentizeGrant,
-  employeeUnlockDate,
-  investorUnlockDate,
+  unlockDate,
+  lockupHasExpired,
   lockupBonusRate,
-  lockupDuration
+  lockupDuration,
+  lockupConfirmationTimeout,
+  transferHasExpired,
+  transferConfirmationTimeout
 }

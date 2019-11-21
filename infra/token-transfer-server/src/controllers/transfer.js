@@ -10,9 +10,8 @@ const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
-  getEmployeeUnlockDate,
   getFingerprintData,
-  getInvestorUnlockDate
+  getUnlockDate
 } = require('../utils')
 const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret } = require('../config')
@@ -43,7 +42,7 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 0 })
+      .isInt({ min: 1 })
       .withMessage('Amount must be greater than 0'),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),
@@ -57,10 +56,9 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    const unlockDate = req.user.employee
-      ? getEmployeeUnlockDate()
-      : getInvestorUnlockDate()
-    if (moment.utc() < unlockDate) {
+    const unlockDate = getUnlockDate()
+    if (!unlockDate || moment.utc() < unlockDate) {
+      logger.warn(`Transfer attempted by ${req.user.email} before unlock date`)
       res
         .status(422)
         .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
@@ -80,7 +78,7 @@ router.post(
         )
       })
       logger.info(
-        `User ${req.user.email} transferred ${amount} OGN to ${address}`
+        `User ${req.user.email} queued a transfer for ${amount} OGN to ${address}`
       )
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
@@ -117,10 +115,13 @@ router.post(
     try {
       decodedToken = jwt.verify(req.body.token, encryptionSecret)
     } catch (error) {
-      logger.error(error)
       if (error.name === 'TokenExpiredError') {
+        logger.warn(
+          `Transfer attempted by ${req.user.email} with expired token`
+        )
         return res.status(400).send('Token has expired')
       }
+      logger.error(error)
       return res.status(400).send('Could not decode email confirmation token')
     }
 
@@ -140,6 +141,8 @@ router.post(
     } catch (e) {
       return res.status(422).send(e.message)
     }
+
+    logger.info(`Transfer ${transfer.id} confirmed for ${req.user.email}`)
 
     return res
       .status(201)

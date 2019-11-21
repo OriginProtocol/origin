@@ -17,7 +17,7 @@ const Navigation = props => {
 
   const handleLogout = async () => {
     await agent.post(`${apiUrl}/api/logout`)
-    setRedirectTo('/login')
+    setRedirectTo('/')
   }
 
   if (redirectTo) {
@@ -46,7 +46,7 @@ const Navigation = props => {
       >
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
-            <NavLink to="/" exact className="nav-link text">
+            <NavLink to="/dashboard" exact className="nav-link text">
               <Dashboard className="icon" />
               Dashboard
             </NavLink>
@@ -62,7 +62,7 @@ const Navigation = props => {
               <NavLink to="/lockup" className="nav-link text">
                 <Earn
                   className="icon"
-                  style={{ transform: 'rotate(-90deg)' }}
+                  style={{ transform: 'rotate(-90deg)', marginTop: '-10px' }}
                 />
                 Bonus Tokens
               </NavLink>
@@ -83,7 +83,9 @@ const Navigation = props => {
         </ul>
         <ul className="navbar-nav small-links mt-4 d-md-none">
           <li className="mt-4 mb-3">
-            <a href="mailto:support@originprotocol.com">Contact Support</a>
+            <a href="mailto:investor-relations@originprotocol.com">
+              Contact Support
+            </a>
           </li>
           <li>
             <a onClick={handleLogout} style={{ cursor: 'pointer' }}>

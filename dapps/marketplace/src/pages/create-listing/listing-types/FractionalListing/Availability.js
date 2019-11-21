@@ -60,6 +60,8 @@ class ListingAvailability extends Component {
                 showBooked={true}
                 currency={this.props.listing.currency}
                 originalCurrency
+                allowToSelectUnavailable={true}
+                listing={this.props.listing}
               />
 
               <div className="actions">

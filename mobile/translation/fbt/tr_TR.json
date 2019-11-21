@@ -1,794 +1,843 @@
 {
   "fb-locale": "tr_TR",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Address"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
-          "translation": "Copy"
+          "translation": "kopya"
         }
       ]
     },
     "FZRVHsdXqI51WS0/rgsmvQ==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Panoya kopyalandı!"
         }
       ]
     },
     "Z97eNnRtwWFrWlkTjsP9Dw==": {
       "translations": [
         {
-          "translation": "OK"
+          "translation": "tamam"
         }
       ]
     },
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "Kimlik doğrulama başarısız oldu"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Yanlış pin kodu"
         }
       ]
     },
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "Kimlik Doğrulama Gerekli"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Yeniden Dene"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Pim ile Yeniden Dene"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Pin Gerekli"
         }
       ]
     },
     "jakn3qdMee3dY1QQSnxPBw==": {
       "translations": [
         {
-          "translation": "Back up account"
+          "translation": "Yedek hesap"
         }
       ]
     },
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "Hesabınızın özel anahtarını kaybederseniz, fonlarınıza erişemezsiniz."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "Hesap kurtarma ifadenizi kaybederseniz, fonlarınıza erişemezsiniz."
         }
       ]
     },
     "tnjbZFYtRWMI0Cvx7tUoLw==": {
       "translations": [
         {
-          "translation": "Back up private key"
+          "translation": "Özel anahtarı yedekle"
         }
       ]
     },
     "NtSYu4dP1gx3Q867CPSNqA==": {
       "translations": [
         {
-          "translation": "Back up recovery phrase"
+          "translation": "Yedekleme öbeğini yedekle"
         }
       ]
     },
     "gS5uLfzsGn8W+iy1wGPcFA==": {
       "translations": [
         {
-          "translation": "Back up later"
+          "translation": "Daha sonra yedekle"
         }
       ]
     },
     "leoyo7yPyqCZYLzdYarxVg==": {
       "translations": [
         {
-          "translation": "Blockchain & Your Personal Data"
+          "translation": "Blockchain ve Kişisel Verileriniz"
         }
       ]
     },
     "TsWyCTUsQI/nO9f3+35sXw==": {
       "translations": [
         {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
+          "translation": "Bir profil oluşturarak, adınızı ve fotoğrafınızı Ethereum hesabınızla ilişkilendirirsiniz. Bu, başkalarının blockchain işlemlerinizi adınıza ve fotoğrafınıza bağlayabileceği anlamına gelir."
         }
       ]
     },
     "293hkFZBDThJ9B1cWDqFeA==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Anladım"
         }
       ]
     },
     "53OPnmUdKU2hcrljQxQZLA==": {
       "translations": [
         {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
+          "translation": "Origin Marketplace'i yüklerken bir hata oluştu. Lütfen internet bağlantınızı kontrol edin."
         }
       ]
     },
     "y5hrsKtem9k4a3YYBARQUQ==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Yeniden Dene"
         }
       ]
     },
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Kökeni Ödül istemediğinizden emin misiniz?"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "Yeni cüzdanınız OGN kazanmaya uygun olmayacak."
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "eminim"
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "Hayır bekle"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Bildirimleri Etkinleştir"
         }
       ]
     },
     "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Woops! Bildirimleri devre dışı bırakmışsınız gibi görünüyor. İşlemlerinizle ilgili en son güncellemeleri almak için, Origin Marketplace uygulamasının ayarlarında etkinleştirmelerini öneririz."
         }
       ]
     },
     "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+          "translation": "Zamanında uyarılarla işleminizle ilgili en son güncellemeleri almak için bildirimlerin etkinleştirilmesini şiddetle öneririz."
         }
       ]
     },
     "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ayarları aç"
         }
       ]
     },
     "cNC6HEwSQ2MTdQc9xbDrAw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Bildirimleri Etkinleştir"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "Kapat"
         }
       ]
     },
     "21hMnXPcxTGJHmoWgpA7Og==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore Error"
+          "translation": "Samsung Blockchain Anahtar Deposu Hatası"
         }
       ]
     },
     "qzN5RGfNbk86/n/jcpMdfg==": {
       "translations": [
         {
-          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+          "translation": "Samsung Blockchain Anahtar Deposuna erişilirken bir hata oluştu."
         }
       ]
     },
     "DEMLFz9zBSsNpmhGgY6piw==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Yeniden Dene"
         }
       ]
     },
     "rCsEaxa+oEKoe7c42xpG0A==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Devam et"
         }
       ]
     },
     "Hd7GnyffrmsytOC81wf1og==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ayarları aç"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "İmza İsteği"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "İşaret"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "İptal etmek"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "İlan Yarat"
         }
       ]
     },
     "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Make Offer"
+          "translation": "Teklif yap"
         }
       ]
     },
     "8XqYinU0zAemee1+B/gY3g==": {
       "translations": [
         {
-          "translation": "Transfer Tokens"
+          "translation": "Jetonları Aktar"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "Kimlik Yayını"
         }
       ]
     },
     "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Grant Token Access"
+          "translation": "Token Erişimi Ver"
         }
       ]
     },
     "VqHNzpP2gO7q8zCyzsy2wA==": {
       "translations": [
         {
-          "translation": "We are requesting permission to move {currency} on your behalf"
+          "translation": "{currency} sizin adınıza taşımak için izin istiyoruz"
         }
       ]
     },
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "Meta İşlemleri Etkinleştir"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "Blockchain İşlemi"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "Ödeme"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "Gaz Maliyeti"
         }
       ]
     },
     "aHqIW5wN2myfcutOuKhMCA==": {
       "translations": [
         {
-          "translation": "Boost"
+          "translation": "artırmak"
         }
       ]
     },
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "Hesabınız"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "Bakiyeleriniz"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "Bakiyeniz"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "Bu işlemi göndermek için yeterli ETH'niz yok."
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "Kimliğinizi yayınlamak için yeterli ETH'niz yok."
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "Onaylamak"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "İptal etmek"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "Güncelleştirme gerekli"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "Woops! Origin Marketplace App eski bir sürümünü kullanıyor gibi görünüyor. Lütfen devam etmek için güncelleyin."
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "Güncelleme uygun"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "Origin Marketplace App eski bir sürümünü kullanıyor gibi görünüyor. En iyi deneyim için güncellemenizi öneririz."
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "Güncelleme"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "Şimdi değil"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "Blockchain üzerinde ne görünecek?"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "hesap detayları"
         }
       ]
     },
     "63n7ZrjXs/xul67zZMRH6Q==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Önemli!"
         }
       ]
     },
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Güvenlik önlemi olarak pano bir dakika sonra silinir."
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Anladım"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Panoya kopyalandı!"
         }
       ]
     },
     "ARxpkvUPK0jFYXwVrYuIMw==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Önemli!"
         }
       ]
     },
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "Bu hesap için özel anahtarınızı ya da kurtarma ifadenizi yedeklediniz mi? Hesap kalıcı olarak silinecek ve kurtarmak için özel anahtar veya kurtarma ifadesine sahip olmanız gerekir. Bu hesabı silmek istediğinize emin misiniz?"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "İptal etmek"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
+          "translation": "Sil"
+        }
+      ]
+    },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Adres"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "Aktif Hesap Yap"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "Kurtarma İfadesini Göster"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Kurtarma İfadesi"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "Kurtarma İfadesini Kopyala"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "Özel Anahtarı Göster"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Özel anahtar"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "Özel Anahtarı Kopyala"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "Hesabı sil"
         }
       ]
     },
     "IiicX5WBjylfRHl57pd/cw==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Hesaplar"
         }
       ]
     },
     "dcugbzsCXlIcz+MDEjVWhw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Kurtarma İfadesi"
         }
       ]
     },
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "Özel Anahtardan Alınan"
         }
       ]
     },
     "qB0LirQx9SttKH4w9wrLOg==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore"
+          "translation": "Samsung Blockchain Anahtar Mağazası"
         }
       ]
     },
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} Kullanılamıyor"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "{biometryType} devre dışı bırakılmışa benziyor. Menşe Pazarı Uygulaması ayarlarında etkinleştirmeniz gerekir."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ayarları aç"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "Cüzdanını koru"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "Kripto'nuzu güvende tutmak için ek bir güvenlik katmanı ekleyin."
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Bir Pin Kodu Oluştur"
         }
       ]
     },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Önemli!"
         }
       ]
     },
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Güvenlik önlemi olarak pano bir dakika sonra silinir."
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Anladım"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Panoya kopyalandı!"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Özel anahtar"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "Özel anahtarınızı yazın"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Kurtarma İfadesi"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "Kurtarma ifadenizi yazın"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "Panoya kopyala"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Bu özel anahtar, hesabınızın anahtarıdır. Bir yere yazın veya bir şifre yöneticisine kopyalayın. Kendinize e-posta göndermemenizi öneririz."
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Bu kurtarma ifadesi, hesabınızın anahtarıdır. Bir yere yazın veya bir şifre yöneticisine kopyalayın. Kendinize e-posta göndermemenizi öneririz."
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Sonraki"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "İptal etmek"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Özel anahtar"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "Özel anahtarınızı girin"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Kurtarma İfadesi"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "Kelimeleri doğru sırada seçin"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "Geri dön"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "Kurtarma ifadenizi başarıyla yedeklediniz"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Bitti"
+        }
+      ]
+    },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Yeni şifrenizi girin"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Eski PIN'inizi girin"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Pin Kodunu tekrar girin"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Bir Pin Kodu Oluştur"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "PIN'inizi girin"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "Yanlış PIN"
         }
       ]
     },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Para birimi"
         }
       ]
     },
     "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Use Recovery Phrase"
+          "translation": "Kurtarma İfadesini Kullan"
         }
       ]
     },
     "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use Private Key"
+          "translation": "Özel Anahtar Kullan"
         }
       ]
     },
@@ -802,273 +851,308 @@
     "YgQAbQzQfarXS32FHToKpA==": {
       "translations": [
         {
-          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+          "translation": "Cüzdanınız Samsung Blockchain Keystore tarafından yönetiliyor."
         }
       ]
     },
     "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Import your wallet"
+          "translation": "Cüzdanını al"
         }
       ]
     },
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "Bir cüzdanı aşağıdaki yöntemlerden birini kullanarak alabilirsiniz."
         }
       ]
     },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "Geçerli bir kurtarma ifadesi gibi görünmüyor."
         }
       ]
     },
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "İfade Girin"
         }
       ]
     },
     "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Devam et"
         }
       ]
     },
     "5/XzkOw7jsXF3hNFdAOfVw==": {
       "translations": [
         {
-          "translation": "That is not a valid private key."
+          "translation": "Bu geçerli bir özel anahtar değil."
         }
       ]
     },
     "6kOIRuFPg13nKeGrxENaaw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "Özel Anahtarı Girin"
         }
       ]
     },
     "Aw26GuAppbsDwcsIGOynqA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Devam et"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Dil"
         }
       ]
     },
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "Bağlantı hatası"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Yeniden Dene"
         }
       ]
     },
     "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "Settings"
-        }
-      ]
-    },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Re-enter Pin Code"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Create a Pin Code"
+          "translation": "Ayarlar"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "Pinler eşleşmedi, tekrar dene"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Pin Kodunuz uygulamaya giriş yapmak için kullanılacaktır."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "İzin reddedildi"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "{biometryType} devre dışı bırakılmışa benziyor. Menşe Pazarı Uygulaması ayarlarında etkinleştirmeniz gerekir."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "tamam"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "İptal etmek"
         }
       ]
     },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "General"
+          "translation": "Genel"
         }
       ]
     },
     "rRrFuJKbAi/LO7RrEyMt2Q==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Hesaplar"
         }
       ]
     },
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Dil"
         }
       ]
     },
     "GHSZ2Asae082vH5nd+9RuA==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Para birimi"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "Ağ"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "GÜVENLİK"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "PIN kodu"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "PIN Kodunu Değiştir"
         }
       ]
     },
     "j5rIPEDyOjXyubSdCUgZ6A==": {
       "translations": [
         {
-          "translation": "Version"
+          "translation": "versiyon"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "Ayarlar"
         }
       ]
     },
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "Finansman"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "Şimdilik, {currency} Origin Cüzdanınıza başka bir kaynaktan aktarmanız gerekecek."
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "Adresi Göster"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Cüzdan adresi"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "Adresi kopyala"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Panoya kopyalandı!"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Cüzdan adresi"
         }
       ]
     },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
-          "translation": "Add Account"
+          "translation": "Hesap eklemek"
         }
       ]
     },
     "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Wallet"
+          "translation": "Cüzdan"
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "Kripto ile bir şeyler al ve sat."
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "Ödülleri kazanın."
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "Kaydolarak Kullanım Koşullarını ve Gizlilik Politikasını kabul etmiş olursunuz."
         }
       ]
     },
     "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Devam et"
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "Bir cüzdan oluştur"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "Zaten bir cüzdanım var"
         }
       ]
     }

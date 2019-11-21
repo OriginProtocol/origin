@@ -12,14 +12,21 @@ const OtpExplain = () => {
 
   return (
     <div className="action-card">
-      <h1>Install Google Authenticator</h1>
+      <h1>Set Up Google Authenticator</h1>
       <img src={GoogleAuthenticatorIcon} />
       <p className="mb-3">
         Google Authenticator will generate a unique, time-sensitive security
         code you can use to secure your account.
       </p>
       <p>
-        To get started, click continue once you have the Google Authenticator
+        To get started, click continue once you have the{' '}
+        <a
+          href="https://support.google.com/accounts/answer/1066447"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Google Authenticator
+        </a>{' '}
         app installed.
       </p>
       <button

@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const get = require('lodash.get')
 const passport = require('passport')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
@@ -23,7 +24,7 @@ router.post(
   '/send_email_token',
   asyncMiddleware(async (req, res) => {
     const email = req.body.email
-    logger.debug('/send_email_code called for', email)
+    logger.info(`Email token requested for ${email}`)
 
     // No await to prevent enumeration of valid emails
     if (process.env.NODE_ENV !== 'test') {
@@ -103,12 +104,21 @@ router.post(
     // complete.
     await req.user.update({ otpVerified: true })
 
+    const fingerprintData = await getFingerprintData(req)
+
     // Log the successfull login in the Event table.
     await Event.create({
       userId: req.user.id,
       action: LOGIN,
-      data: await getFingerprintData(req)
+      data: fingerprintData
     })
+
+    const countryDisplay = get(
+      fingerprintData.location,
+      'countryName',
+      'unknown'
+    )
+    logger.info(`Successful login for ${req.user.email} in ${countryDisplay}`)
 
     // Save in the session that the user successfully authed with TOTP.
     req.session.twoFA = 'totp'

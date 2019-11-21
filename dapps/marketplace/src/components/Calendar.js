@@ -49,6 +49,19 @@ class Calendar extends Component {
         dragEndDate: this.props.endDate ? dayjs(this.props.endDate) : null
       })
     }
+
+    const shouldResetAvailability = [
+      prevProps.listing.booked !== this.props.listing.booked,
+      prevProps.listing.customPricing !== this.props.listing.customPricing
+    ].some(x => x)
+
+    if (shouldResetAvailability) {
+      const { availableFrom, availableUntil } = this.state
+
+      this.setState({
+        availability: this.getAvailability(availableFrom, availableUntil)
+      })
+    }
   }
 
   getAvailability(availableFrom, availableUntil) {
@@ -82,6 +95,14 @@ class Calendar extends Component {
 
   getNextUnavailableDate(fromDate) {
     const { availability } = this.state
+
+    if (this.props.allowToSelectUnavailable) {
+      // Can select anything
+      // Return the last possible date from the last slot
+      return Object.values(availability)
+        .pop()
+        .pop().date
+    }
 
     const key = `${fromDate.year()}-${('' + fromDate.month()).padStart(2, '0')}`
 
@@ -159,6 +180,7 @@ class Calendar extends Component {
 
   renderSlot(slot, index) {
     const { canBookUpto } = this.state
+    const { allowToSelectUnavailable } = this.props
 
     if (!slot) {
       return <div className="empty" key={index} />
@@ -168,9 +190,10 @@ class Calendar extends Component {
     // Note: Can checkout on unavailable/booked slot
     const canInteract =
       !slotClassName.includes('single') &&
-      (canBookUpto
+      ((canBookUpto
         ? !slotClassName.includes('disabled')
-        : !slotClassName.includes('unavailable'))
+        : !slotClassName.includes('unavailable')) ||
+        allowToSelectUnavailable)
 
     let content = (
       <Price
@@ -355,6 +378,7 @@ require('react-styl')(`
           &.start, &.mid, &.end
             background-color: #007fff
             color: var(--white)
+            text-decoration: none
             .day-meta .custom-price
               color: var(--white)
           &.start

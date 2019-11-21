@@ -97,7 +97,8 @@ class BanParticipants {
       numBanned: 0,
       numBannedSdn: 0,
       numBannedReferrer: 0,
-      numBannedDupe: 0
+      numBannedDupe: 0,
+      numBannedManual: 0
     }
     this.employees = new OriginEmployees(employeesFilename)
     this.trusted = new TrustedAccounts(trustedFilename)
@@ -147,7 +148,7 @@ class BanParticipants {
   }
 
   async process() {
-    await this.fraudEngine.init()
+    await this.fraudEngine.init(this.config.campaignDate)
 
     // Get list of all growth engine participants that are active and not whitelisted,
     // in account creation date asc order.
@@ -215,10 +216,18 @@ class BanParticipants {
         continue
       }
       logger.debug(`Account ${address} passed dupe fraud checks.`)
+
+      // Ban any participant flagged as part of the manual review process.
+      const manual = this.fraudEngine.isManuallyBannedParticipant(address)
+      if (manual) {
+        await this._banParticipant(participant, manual)
+        this.stats.numBanned++
+        this.stats.numBannedManual++
+      }
     }
 
     //
-    // Do a second pass focusing on detecting fraudulent referrers.
+    // Do another pass focusing on detecting fraudulent referrers.
     //
     participants = await db.GrowthParticipant.findAll({
       where: {
@@ -257,10 +266,15 @@ if (require.main === module) {
   const args = parseArgv()
   const config = {
     // By default run in dry-run mode unless explicitly specified using persist.
-    persist: args['--persist'] === 'true' || false
+    persist: args['--persist'] === 'true' || false,
+    // Campaign date in format <mmmYYYY>. Ex: oct2019
+    campaignDate: args['--campaignDate']
   }
   logger.info('Config:')
   logger.info(config)
+  if (!config.campaignDate) {
+    throw new Error('--campaignDate is a mandatory argument')
+  }
 
   const job = new BanParticipants(config)
 
@@ -292,6 +306,10 @@ if (require.main === module) {
       logger.info(
         '  Number of participants banned as dupe:     ',
         job.stats.numBannedDupe
+      )
+      logger.info(
+        '  Number of participants banned due to manual review:     ',
+        job.stats.numBannedManual
       )
       logger.info(
         '  Number of participants banned as referrer: ',

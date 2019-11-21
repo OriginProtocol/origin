@@ -11,6 +11,11 @@ import {
 
 // Onboarding
 import WelcomeScreen from 'screens/welcome'
+import AccountCreatedScreen from 'screens/accountCreated'
+import AccountBackupScreen from 'screens/accountBackup'
+import RecoveryPhraseExplainerScreen from 'screens/recoveryPhraseExplainer'
+import RecoveryPhraseScreen from 'screens/recoveryPhrase'
+import RecoveryPhraseVerifyScreen from 'screens/recoveryPhraseVerify'
 import ImportAccountScreen from 'screens/import'
 import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
@@ -27,15 +32,23 @@ import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
 import ChangePinScreen from 'screens/changePin'
 
-// Backup screen
-import BackupScreen from 'screens/backup'
-
 const IMAGES_PATH = '../assets/images/'
 
 const OnboardingStack = createStackNavigator(
   {
     Welcome: WelcomeScreen,
-    ImportAccount: ImportAccountScreen,
+    AccountCreated: AccountCreatedScreen,
+    // Backup
+    AccountBackup: AccountBackupScreen,
+    RecoveryPhraseExplainer: RecoveryPhraseExplainerScreen,
+    RecoveryPhrase: RecoveryPhraseScreen,
+    RecoveryPhraseVerify: RecoveryPhraseVerifyScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        renderBackArrow: true
+      }
+    },
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
       params: {
@@ -115,7 +128,6 @@ const SettingsStack = createStackNavigator(
 export const Navigation = createSwitchNavigator(
   {
     Onboarding: OnboardingStack,
-    Backup: BackupScreen,
     Main: createBottomTabNavigator(
       {
         Marketplace: MarketplaceScreen,

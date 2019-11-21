@@ -1,0 +1,9 @@
+<mj-section background-color="#007cff">
+    <mj-column>
+        <mj-image width="138px" height="32px" src="https://www.originprotocol.com/static/img/origin-logo@3x.png" srcset="
+              https://www.originprotocol.com/static/img/origin-logo.png
+              https://www.originprotocol.com/static/img/origin-logo@2x.png 2x,
+              https://www.originprotocol.com/static/img/origin-logo@3x.png 3x" alt="Origin Protocol logo">
+        </mj-image>
+    </mj-column>
+</mj-section>

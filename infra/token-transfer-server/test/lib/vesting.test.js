@@ -4,12 +4,13 @@ chai.use(require('chai-moment'))
 chai.use(require('chai-bignumber')(BigNumber))
 const expect = chai.expect
 const moment = require('moment')
+const sinon = require('sinon')
 
 const { Grant, User, sequelize } = require('../../src/models')
 const {
   momentizeGrant,
   vestedAmount,
-  vestingEvents
+  vestingSchedule
 } = require('../../src/lib/vesting')
 
 // Sets up clean database
@@ -18,229 +19,449 @@ async function setupDatabase() {
   await sequelize.sync({ force: true })
 }
 
-describe('Vesting library', () => {
-  describe('4 year grant with 1 year cliff and monthly vesting', () => {
+describe('Employee vesting', () => {
+  describe('4 year grant with 1 year cliff', () => {
     let grant
 
     beforeEach(async () => {
       await setupDatabase()
       this.user = await User.create({
-        email: 'user@originprotocol.com',
+        email: 'user+employee@originprotocol.com',
         otpKey: '123',
-        otpVerified: true
+        otpVerified: true,
+        employee: true
       })
-      const grantObj = new Grant({
-        userId: this.user.id,
-        start: '2014-01-01 00:00:00',
-        end: '2018-01-01 00:00:00',
-        cliff: '2015-01-01 00:00:00',
-        amount: 4800,
-        interval: 'months'
-      })
-      await grantObj.save()
-      grant = momentizeGrant(grantObj.get({ plain: true }))
-    })
-
-    it('should have the correct amount of vesting events', () => {
-      const events = vestingEvents(grant)
-      expect(events.length).to.equal(48 - 12 + 1)
-    })
-
-    it('should not vest before cliff', () => {
-      grant.now = moment(grant.cliff).subtract(1, 's')
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(0)
-    })
-
-    it('should vest 12/48 at the cliff', () => {
-      grant.now = grant.cliff
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(1200)
-    })
-
-    it('should vest 12/48 after the cliff', () => {
-      grant.now = moment(grant.cliff).add(1, 's')
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(1200)
-    })
-
-    it('should have the correct amount vested total', () => {
-      grant.now = grant.end
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(4800)
-    })
-
-    it('should vest the correct amount each month', () => {
-      grant.now = grant.end
-      const events = vestingEvents(grant)
-      // Remove the first element of the array, which is the cliff vest
-      events.shift()
-      // Remove the last element in the array, which has any rounding errors
-      // All subsequent vesting events should vest the correct proportion
-      events.every(e => expect(e).to.be.bignumber.equal(100))
-    })
-  })
-
-  describe('4 year grant with 1 year cliff and daily vesting', () => {
-    let grant
-
-    beforeEach(async () => {
-      await setupDatabase()
-      this.user = await User.create({
-        email: 'user@originprotocol.com',
-        otpKey: '123',
-        otpVerified: true
-      })
-      const grantObj = new Grant({
-        userId: this.user.id,
-        start: '2014-01-01 00:00:00',
-        end: '2018-01-01 00:00:00',
-        cliff: '2015-01-01 00:00:00',
-        amount: 4800,
-        interval: 'days'
-      })
-      await grantObj.save()
-      grant = momentizeGrant(grantObj.get({ plain: true }))
-    })
-
-    it('should have the correct amount of vesting events', () => {
-      const events = vestingEvents(grant)
-      // 2016 is a leap year, so there is 2 * 365 days for standard years,
-      // 1 * 366 for the leap year, and + 1 for the cliff vesting event
-      expect(events.length).to.equal(2 * 365 + 366 + 1)
-    })
-
-    it('should not vest before cliff', () => {
-      grant.now = moment(grant.cliff).subtract(1, 's')
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(0)
-    })
-
-    it('should vest 365/1461 at the cliff', () => {
-      grant.now = grant.cliff
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(
-        Math.round(
-          BigNumber(grant.amount)
-            .div(1461)
-            .times(365)
-        )
-      )
-    })
-
-    it('should vest 365/1461 after the cliff', () => {
-      grant.now = moment(grant.cliff).add(1, 's')
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(
-        Math.round(
-          BigNumber(grant.amount)
-            .div(1461)
-            .times(365)
-        )
-      )
-    })
-
-    it('should have the correct amount vested total', () => {
-      grant.now = grant.end
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(4800)
-    })
-
-    it('should vest the correct amount for a day', () => {
-      grant.now = grant.end
-      const events = vestingEvents(grant)
-      // Remove the first element of the array, which is the cliff vest
-      events.shift()
-      expect(events[0]).to.be.bignumber.equal(
-        Math.floor(BigNumber(grant.amount).div(1461))
-      )
-    })
-
-    it('should vest the correct remainder on the last day', () => {})
-
-    it('should vest the correct amount each day for non cliff vests', () => {
-      grant.now = grant.end
-      const events = vestingEvents(grant)
-      // Remove the first element of the array, which is the cliff vest
-      events.shift()
-      // Remove the last element in the array, which carries remainder from
-      // rounding errors
-      events.pop()
-      // All subsequent vesting events should vest the correct proportion
-      events.every(e =>
-        expect(e).to.be.bignumber.equal(
-          BigNumber(grant.amount)
-            .div(1461)
-            .integerValue(BigNumber.ROUND_FLOOR)
-        )
-      )
-    })
-  })
-
-  /*
-  describe('4 year grant with 1 year cliff and minutes vesting', () => {
-    let grant
-
-    const days = 2 * 365 + 366
-    const minutes = days * 24 * 60
-    const events = minutes + 1
-    const cliffVestingEvents = 365 * 24 * 60
-
-    beforeEach(async () => {
-      await setupDatabase()
       grant = new Grant({
-        userId: 1,
+        userId: this.user.id,
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
         cliff: '2015-01-01 00:00:00',
-        amount: 4800,
-        interval: 'minutes'
+        amount: 4800
       })
       await grant.save()
     })
 
-    it('should have the correct amount of vesting events', () => {
-      const events = vestingEvents(grant)
-      // 2016 is a leap year, so there is 2 * 365 days for standard years,
-      // 1 * 366 for the leap year, times 24 hours a day, 60 minutes an hour and
-      // 60 seconds a minute, + 1 for the cliff vesting event
-      expect(events.length).to.equal(minutes + 1)
+    it('should not vest before cliff', () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.cliff)
+          .subtract(1, 's')
+          .valueOf()
+      )
+      const amount = vestedAmount(this.user, momentizeGrant(grant))
+      expect(amount).to.be.bignumber.equal(0)
+      clock.restore()
     })
 
-    it('should not vest before cliff', () => {
-      grant.now = moment(grant.cliff).subtract(1, 's')
-      const amount = vestedAmount(grant)
+    it('should vest 12/48 at the cliff', () => {
+      const clock = sinon.useFakeTimers(moment(grant.cliff).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(12)
+          .div(48)
+      )
+      clock.restore()
+    })
+
+    it('should vest 12/48 after the cliff', () => {
+      const clock = sinon.useFakeTimers(
+        moment(grant.cliff)
+          .add(1, 's')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(12)
+          .div(48)
+      )
+      clock.restore()
+    })
+
+    it('should have vested the correct total at grant end', async () => {
+      const clock = sinon.useFakeTimers(moment(grant.end).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(grant.amount)
+      clock.restore()
+    })
+
+    it('should vest the 1/48 each month', () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.end))
+      const schedule = vestingSchedule(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      // Remove the first element of the array, which is the cliff vest
+      schedule.shift()
+      // Remove the last element in the array, which has any rounding errors
+      // All subsequent vesting events should vest the correct proportion
+      schedule.every(e =>
+        expect(e.amount).to.be.bignumber.equal(BigNumber(grant.amount).div(48))
+      )
+      clock.restore()
+    })
+
+    it('should not vest anything if cancelled before cliff', async () => {
+      await grant.update({
+        cancelled: moment.utc(grant.cliff).subtract(1, 'second')
+      })
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
       expect(amount).to.be.bignumber.equal(0)
     })
 
-    it('should vest 365/1461 at the cliff', () => {
-      grant.now = grant.cliff
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(BigNumber(365).div(1461).times(grant.amount))
-    })
-
-    it('should vest 365/1461 after the cliff', () => {
-      grant.now = moment(grant.cliff).add(1, 's')
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(BigNumber(365).div(1461).times(grant.amount))
-    })
-
-    it('should have the correct amount vested total', () => {
-      grant.now = grant.end
-      const amount = vestedAmount(grant)
-      expect(amount).to.be.bignumber.equal(4800)
-    })
-
-    it('should vest the correct amount each day', () => {
-      grant.now = grant.end
-      const events = vestingEvents(grant)
-      // Remove the first element of the array, which is the cliff vest
-      vestingEvents.shift()
-      // All subsequent vesting events should vest the correct proportion
-      expect(events.every(e => {
-        return e.amount === BigNumber(grant.amount).div(1461)
-      })).to.equal(true)
+    it('should vest 13/48 if cancelled one month after cliff', async () => {
+      await grant.update({
+        cancelled: moment.utc(grant.cliff).add(1, 'month')
+      })
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(13)
+          .div(48)
+      )
     })
   })
-  */
+
+  describe('4 year grant with 1 year cliff and rounding', () => {
+    let grant
+
+    beforeEach(async () => {
+      await setupDatabase()
+      this.user = await User.create({
+        email: 'user+employee@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true,
+        employee: true
+      })
+      grant = new Grant({
+        userId: this.user.id,
+        start: '2014-01-01 00:00:00',
+        end: '2018-01-01 00:00:00',
+        cliff: '2015-01-01 00:00:00',
+        amount: 10000
+      })
+      await grant.save()
+    })
+
+    it('should not vest before cliff', () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.cliff)
+          .subtract(1, 's')
+          .valueOf()
+      )
+      const amount = vestedAmount(this.user, momentizeGrant(grant))
+      expect(amount).to.be.bignumber.equal(0)
+      clock.restore()
+    })
+
+    it('should vest 12/48 at the cliff', () => {
+      const clock = sinon.useFakeTimers(moment(grant.cliff).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(12)
+          .div(48)
+      )
+      clock.restore()
+    })
+
+    it('should vest 12/48 rounded to floor after the cliff', () => {
+      const clock = sinon.useFakeTimers(
+        moment(grant.cliff)
+          .add(1, 's')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(12)
+          .div(48)
+          .integerValue(BigNumber.ROUND_FLOOR)
+      )
+      clock.restore()
+    })
+
+    it('should have vested the correct total at grant end', async () => {
+      const clock = sinon.useFakeTimers(moment(grant.end).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(grant.amount)
+      clock.restore()
+    })
+
+    it('should vest the 1/48 rounded to floor each month', () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.end))
+      const schedule = vestingSchedule(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      // Remove the first element of the array, which is the cliff vest
+      schedule.shift()
+      // Remove the last element in the array, which has any rounding errors
+      schedule.pop()
+      // All subsequent vesting events should vest the correct proportion
+      schedule.every(e =>
+        expect(e.amount).to.be.bignumber.equal(
+          BigNumber(grant.amount)
+            .div(48)
+            .integerValue(BigNumber.ROUND_FLOOR)
+        )
+      )
+
+      clock.restore()
+    })
+
+    it('should not vest anything if cancelled before cliff', async () => {
+      await grant.update({
+        cancelled: moment.utc(grant.cliff).subtract(1, 'second')
+      })
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(0)
+    })
+
+    it('should vest 13/48 rounded to floor if cancelled one month after cliff', async () => {
+      await grant.update({
+        cancelled: moment.utc(grant.cliff).add(1, 'month')
+      })
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        BigNumber(grant.amount)
+          .times(12)
+          .div(48)
+          .plus(
+            BigNumber(grant.amount)
+              .div(48)
+              .integerValue(BigNumber.ROUND_FLOOR)
+          )
+      )
+    })
+  })
+})
+
+describe('Investor vesting', () => {
+  describe('2 year grant with inital 6% followed by quarterly vesting after 4 month delay', () => {
+    let grant
+
+    beforeEach(async () => {
+      await setupDatabase()
+      this.user = await User.create({
+        email: 'user+investor@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true
+      })
+      grant = new Grant({
+        userId: this.user.id,
+        start: '2014-01-01 00:00:00',
+        end: '2016-02-01 00:00:00',
+        amount: 10000
+      })
+      await grant.save()
+    })
+
+    it('should vest 6% at start of grant', async () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.start).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      const expectedAmount = BigNumber(grant.amount)
+        .times(6)
+        .div(100)
+      expect(amount).to.be.bignumber.equal(expectedAmount)
+      clock.restore()
+    })
+
+    it('should not vest anything before start of grant', async () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.start)
+          .subtract(1, 'second')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(0))
+      clock.restore()
+    })
+
+    it('should vest 11.75% each quarter after 4 months', async () => {
+      const initialVestAmount = BigNumber(grant.amount)
+        .times(6)
+        .div(100)
+      const quarterlyVestAmount = BigNumber(grant.amount)
+        .times(11.75)
+        .div(100)
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.start)
+          .add(4, 'months')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        initialVestAmount.plus(quarterlyVestAmount)
+      )
+      clock.restore()
+    })
+
+    it('should have vested the correct total at grant end', async () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.end).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+      clock.restore()
+    })
+
+    it('should have vested the correct total years after grant end', async () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.end)
+          .add(10, 'years')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+      clock.restore()
+    })
+  })
+
+  describe('2 year grant with inital 6% followed by quarterly vesting after 4 month delay and rounding', () => {
+    let grant
+
+    beforeEach(async () => {
+      await setupDatabase()
+      this.user = await User.create({
+        email: 'user+investor@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true
+      })
+      grant = new Grant({
+        userId: this.user.id,
+        start: '2014-01-01 00:00:00',
+        end: '2016-02-01 00:00:00',
+        amount: 11111
+      })
+      await grant.save()
+    })
+
+    it('should vest 6% floored at start of grant', async () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.start).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      const expectedAmount = BigNumber(grant.amount)
+        .times(6)
+        .div(100)
+        .integerValue(BigNumber.ROUND_FLOOR)
+      expect(amount).to.be.bignumber.equal(expectedAmount)
+      clock.restore()
+    })
+
+    it('should not vest anything before start of grant', async () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.start)
+          .subtract(1, 'second')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(0))
+      clock.restore()
+    })
+
+    it('should vest 11.75% floored each quarter after 4 months', async () => {
+      const initialVestAmount = BigNumber(grant.amount)
+        .times(6)
+        .div(100)
+        .integerValue(BigNumber.ROUND_FLOOR)
+      const quarterlyVestAmount = BigNumber(grant.amount)
+        .times(11.75)
+        .div(100)
+        .integerValue(BigNumber.ROUND_FLOOR)
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.start)
+          .add(4, 'months')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(
+        initialVestAmount.plus(quarterlyVestAmount)
+      )
+      clock.restore()
+    })
+
+    it('should have vested the correct total at grant end', async () => {
+      const clock = sinon.useFakeTimers(moment.utc(grant.end).valueOf())
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+      clock.restore()
+    })
+
+    it('should have vested the correct total years after grant end', async () => {
+      const clock = sinon.useFakeTimers(
+        moment
+          .utc(grant.end)
+          .add(10, 'years')
+          .valueOf()
+      )
+      const amount = vestedAmount(
+        this.user,
+        momentizeGrant(grant.get({ plain: true }))
+      )
+      expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+      clock.restore()
+    })
+  })
 })

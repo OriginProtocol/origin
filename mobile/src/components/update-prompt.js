@@ -70,8 +70,8 @@ class UpdatePrompt extends React.Component {
   render() {
     return (
       <Modal animationType="slide" visible={this.state.upgrade !== null}>
-        <SafeAreaView style={styles.content}>
-          <View style={{ ...styles.container, flexGrow: 2 }}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.content}>
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
@@ -108,7 +108,7 @@ class UpdatePrompt extends React.Component {
               </>
             )}
           </View>
-          <View style={[styles.container, styles.buttonContainer]}>
+          <View style={styles.buttonContainer}>
             <OriginButton
               size="large"
               type="primary"

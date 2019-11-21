@@ -119,6 +119,13 @@ class Currencies {
         code: 'OKB',
         priceInUSD: 3,
         decimals: 18
+      },
+      'token-USDT': {
+        id: 'token-USDT',
+        name: 'Tether',
+        code: 'USDT',
+        priceInUSD: 1,
+        decimals: 18
       }
     }
 

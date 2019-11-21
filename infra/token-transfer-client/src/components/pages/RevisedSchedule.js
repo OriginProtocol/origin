@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import UnlockSchedule from '@/assets/unlock-schedule.png'
+import UnlockSchedule from '@/assets/schedule@3x.png'
 
 const RevisedSchedule = () => {
   const [redirectTo, setRedirectTo] = useState(null)
@@ -23,7 +23,7 @@ const RevisedSchedule = () => {
           individuals.
         </p>
         <p>
-          Original Schedule: 3 month waiting period then 100% unlock
+          Original Schedule: 3 month lockup then 100% vested
           <br />
           <br />
           Revised Schedule: 6% unlocked immediately, followed by a 4-month

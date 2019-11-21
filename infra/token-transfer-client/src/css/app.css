@@ -149,7 +149,7 @@ input, select {
 }
 
 #main .spinner-grow {
-  margin: 30% 50% 0% 50%;
+  margin: 20% 50% 0% 50%;
 }
 
 /*
@@ -224,8 +224,7 @@ input, select {
 
 .table-card .scrolling-table {
   padding-top: 0;
-  margin: 20px 0;
-  max-height: 230px;
+  height: 422px;
   overflow-y: scroll;
 }
 
@@ -351,7 +350,7 @@ input, select {
 .btn.btn-lg {
   font-weight: 800;
   border-radius: 2rem;
-  padding: 0.5rem 3rem;
+  padding: 0.4rem 3rem 0.5rem 3rem;
   min-width: 10rem;
   font-size: 20px;
 }
@@ -425,8 +424,31 @@ input, select {
   fill: #007cff;
 }
 
+.btn .icon > path {
+  fill-opacity: 1;
+}
+
+.btn-outline-dark .icon > path {
+  fill-opacity: 1;
+  fill: #000;
+}
+
+.btn-outline-dark:hover .icon > path {
+  fill: #fff;
+}
+
 .lockup-graph canvas {
   background-image: url('../assets/dotted-lines.svg');
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.bluebox {
+  border-color: #dbe6eb;
+  background-color: #eff6f9;
+  color: #007cff;
+  font-size: 40px;
+  font-weight: 500;
+  border-radius: 8px;
+  font-family: 'Poppins';
 }

@@ -1,4 +1,3 @@
-const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -10,18 +9,16 @@ const { postToWebhook } = require('./webhook')
 const {
   TRANSFER_DONE,
   TRANSFER_FAILED,
-  TRANSFER_REQUEST
+  TRANSFER_REQUEST,
+  TRANSFER_CONFIRMED
 } = require('../constants/events')
 const { Event, Transfer, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
+const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
 const enums = require('../enums')
 const logger = require('../logger')
 
-const {
-  emailConfirmTimeout,
-  encryptionSecret,
-  clientUrl
-} = require('../config')
+const { encryptionSecret, clientUrl } = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
@@ -87,7 +84,7 @@ async function sendTransferConfirmationEmail(transfer, user) {
       transferId: transfer.id
     },
     encryptionSecret,
-    { expiresIn: '5m' }
+    { expiresIn: `${transferConfirmationTimeout}m` }
   )
 
   const vars = { url: `${clientUrl}/withdrawal/${transfer.id}/${token}` }
@@ -108,13 +105,34 @@ async function confirmTransfer(transfer, user) {
     throw new Error('Transfer is not waiting for confirmation')
   }
 
-  if (
-    moment().diff(moment(transfer.createdAt), 'minutes') > emailConfirmTimeout
-  ) {
+  if (transferHasExpired(transfer)) {
     await transfer.update({
       status: enums.TransferStatuses.Expired
     })
     throw new Error('Transfer was not confirmed in the required time')
+  }
+
+  const txn = await sequelize.transaction()
+  // Change state of transfer and add event
+  try {
+    await transfer.update({
+      status: enums.TransferStatuses.Enqueued
+    })
+    const event = {
+      userId: user.id,
+      action: TRANSFER_CONFIRMED,
+      data: JSON.stringify({
+        transferId: transfer.id
+      })
+    }
+    await Event.create(event)
+    await txn.commit()
+  } catch (e) {
+    await txn.rollback()
+    logger.error(
+      `Failed writing confirmation data for transfer ${transfer.id}: ${e}`
+    )
+    throw e
   }
 
   try {
@@ -145,9 +163,7 @@ async function confirmTransfer(transfer, user) {
     )
   }
 
-  return await transfer.update({
-    status: enums.TransferStatuses.Enqueued
-  })
+  return true
 }
 
 /**

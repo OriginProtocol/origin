@@ -52,6 +52,9 @@ class SendPayoutEmails {
       // A specific eth address was specified.
       where.toAddress = this.config.ethAddress.toLowerCase()
     }
+    if (this.config.minPayoutId) {
+      where.id = { [db.Sequelize.Op.gte]: this.config.minPayoutId }
+    }
     const payouts = await db.GrowthPayout.findAll({
       where,
       order: [['id', 'ASC']]
@@ -87,7 +90,9 @@ const config = {
   doIt: args['--doIt'] === 'true' || false,
   campaignId: args['--campaignId'],
   // Specific account to process.
-  ethAddress: args['--ethAddress'] || null
+  ethAddress: args['--ethAddress'] || null,
+  // Min id in payout table to start at (inclusive).
+  minPayoutId: args['--minPayoutId'] || null
 }
 logger.info('Config:')
 logger.info(config)

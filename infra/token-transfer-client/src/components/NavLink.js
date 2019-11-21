@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 const ScrollToTopNavLink = props => {
   let { to } = props
   if (typeof to === 'string') {
-    to = { pathname: to, state: { scrollToTop: true } }
+    to = { pathname: to }
   }
   return <NavLink {...props} to={to} />
 }

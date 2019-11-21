@@ -32,7 +32,7 @@
     "mocha": "6.2.2",
     "openzeppelin-solidity": "^1.10.0",
     "prettier": "1.19.1",
-    "solc": "0.5.12"
+    "solc": "0.5.13"
   },
   "prettier": {
     "semi": false,

@@ -17,6 +17,7 @@ const assert = require('assert')
 const csv = require('csvtojson')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 
 const db = require('../models')
 const { encryptionSecret, clientUrl } = require('../config')
@@ -24,15 +25,12 @@ const { encryptionSecret, clientUrl } = require('../config')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
 
-const employeesVestingInterval = 'months'
-
 const purchaseRounds = ['Advisor', 'Strategic', 'CoinList']
+const signedAmendmentResponses = ['Yes', 'No', 'Abstain', 'Did not respond']
 
 // TODO(franck): Update those values based on final investors vesting schedule.
-const investorsVestingStart = new Date('2020/01/01')
-const investorsVestingEnd = new Date('2020/12/31')
-const investorsVestingCliff = new Date('2020/04/01')
-const investorsVestingInterval = 'days'
+const investorsVestingStart = moment.utc('2020/01/01')
+const investorsVestingEnd = moment.utc('2020/12/31')
 
 class CsvFileParser {
   constructor(filename, employee) {
@@ -44,14 +42,13 @@ class CsvFileParser {
     assert(row['Name'] !== undefined)
     assert(row['Email'] !== undefined)
     assert(row['OGN Amount'] !== undefined)
-    assert(row['Revised Schedule Agreed At'] !== undefined)
-    assert(row['Revised Schedule Rejected'] !== undefined)
     if (this.employee) {
       assert(row['Vesting Start'] !== undefined)
       assert(row['Vesting End'] !== undefined)
       assert(row['Vesting Cliff'] !== undefined)
       assert(row['Vesting Interval'] !== undefined)
     } else {
+      assert(row['Signed Amendment'] !== undefined)
       assert(row['Purchase Date'] !== undefined)
       assert(row['Purchase Round'] !== undefined)
       assert(row['Investment Amount'] !== undefined)
@@ -86,43 +83,41 @@ class CsvFileParser {
       assert(!Number.isNaN(amount))
       record.amount = amount
 
-      if (row['Revised Schedule Rejected']) {
-        record.revisedScheduleRejected = Boolean(
-          row['Revised Schedule Rejected']
-        )
-      }
-
-      if (row['Revised Schedule Agreed At']) {
-        record.revisedScheduleAgreedAt = new Date(
-          row['Revised Schedule Agreed At']
-        )
+      const signedAmendment = row['Signed Amendment'].trim()
+      assert(signedAmendmentResponses.includes(signedAmendment))
+      switch (signedAmendment) {
+        case 'Yes':
+          record.revisedScheduleStatus = 'Accepted'
+          break
+        case 'Abstain':
+          record.revisedScheduleStatus = 'Abstained'
+          break
+        case 'No':
+          record.revisedScheduleStatus = 'Rejected'
+          break
+        case 'Did not respond':
+          record.revisedScheduleStatus = null
+          break
       }
 
       if (this.employee) {
         // Parse employee specific fields
-        const vestingStart = new Date(row['Vesting Start'])
-        assert(vestingStart instanceof Date)
+        const vestingStart = moment.utc(row['Vesting Start'])
         record.start = vestingStart
 
-        const vestingEnd = new Date(row['Vesting End'])
-        assert(vestingEnd instanceof Date)
+        const vestingEnd = moment.utc(row['Vesting End'])
         assert(vestingEnd > vestingStart)
         record.end = vestingEnd
 
-        const vestingCliff = new Date(row['Vesting Cliff'])
-        assert(vestingCliff instanceof Date)
+        const vestingCliff = moment.utc(row['Vesting Cliff'])
         assert(vestingCliff > vestingStart)
         assert(vestingCliff < vestingEnd)
         record.cliff = vestingCliff
-
-        record.interval = employeesVestingInterval
       } else {
         // Parse investor specific fields
-        const purchaseDate = new Date(row['Purchase Date'])
-        assert(purchaseDate instanceof Date)
+        const purchaseDate = moment.utc(row['Purchase Date'])
         record.purchaseDate = purchaseDate
 
-        // TODO(franck): this DB field may get renamed.
         const purchaseRound = row['Purchase Round'].trim()
         assert(purchaseRounds.includes(purchaseRound))
         record.purchaseRound = purchaseRound
@@ -138,8 +133,6 @@ class CsvFileParser {
         // Those fields are constant for all investors.
         record.start = investorsVestingStart
         record.end = investorsVestingEnd
-        record.cliff = investorsVestingCliff
-        record.interval = investorsVestingInterval
       }
 
       records.push(record)
@@ -173,8 +166,7 @@ class ImportData {
             email: record.email,
             employee: this.config.employee,
             investorType: record.purchaseRound,
-            revisedScheduleAgreedAt: record.revisedScheduleAgreedAt,
-            revisedScheduleRejected: record.revisedScheduleRejected
+            revisedScheduleStatus: record.revisedScheduleStatus
           })
         }
 
@@ -196,7 +188,6 @@ class ImportData {
           // Note: Some investors were granted a decimal amount of OGN.
           // We round it up to an integer amount.
           amount: Math.ceil(record.amount),
-          interval: record.interval,
           purchaseDate: record.purchaseDate,
           purchaseRound: record.purchaseRound,
           investmentAmount: record.investmentAmount

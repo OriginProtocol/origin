@@ -80,6 +80,8 @@ require('react-styl')(`
         background-image: url(images/ogn-icon.svg)
       &.okb:before
         background-image: url(images/okb-icon.svg)
+      &.usdt:before
+        background-image: url(images/usdt-icon.svg)
       > div
         font-weight: normal
         display: flex

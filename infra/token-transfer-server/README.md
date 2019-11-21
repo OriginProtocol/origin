@@ -7,6 +7,7 @@ export SESSION_SECRET="Don't tell anyone."
 export ENCRYPTION_SECRET="It's a secret"
 export SENDGRID_FROM_EMAIL="Origin Protocol <support@shoporigin.com>"
 export SENDGRID_API_KEY="<SendGrid key>"
+export CLIENT_URL"=http://localhost:3000/#"
 export DATABASE_URL="postgres://origin:origin@localhost/origin"
 ```
 
@@ -20,8 +21,3 @@ yarn run migrate
 yarn run start
 ```
 
-##### Additional environment variables for production
-
-```
-export PORTAL_URL="https://<url>
-```

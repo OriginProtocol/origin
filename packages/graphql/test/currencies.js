@@ -18,7 +18,8 @@ describe('Currencies', () => {
       'token-OGN',
       'token-USDC',
       'token-GUSD',
-      'token-OKB'
+      'token-OKB',
+      'token-USDT'
     ])
   })
 

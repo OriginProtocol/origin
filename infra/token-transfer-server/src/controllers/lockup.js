@@ -9,8 +9,7 @@ const moment = require('moment')
 const {
   asyncMiddleware,
   getEarnOgnEnabled,
-  getEmployeeUnlockDate,
-  getInvestorUnlockDate
+  getUnlockDate
 } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
 const { isValidTotp } = require('../validators')
@@ -45,8 +44,8 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 0 })
-      .withMessage('Amount must be greater than 0'),
+      .isInt({ min: 100 })
+      .withMessage('Amount must be 100 or greater'),
     check('code').custom(isValidTotp),
     ensureLoggedIn
   ],
@@ -62,13 +61,14 @@ router.post(
       return res.status(404).end()
     }
 
-    const unlockDate = req.user.employee
-      ? getEmployeeUnlockDate()
-      : getInvestorUnlockDate()
-    if (moment.utc() < unlockDate) {
+    const unlockDate = getUnlockDate()
+    if (!unlockDate || moment.utc() < unlockDate) {
+      logger.warn(
+        `Token lockup attempted by ${req.user.email} before unlock date`
+      )
       res
         .status(422)
-        .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
+        .send(`Tokens are still locked. Unlock date is ${unlockDate}.`)
       return
     }
 
@@ -119,10 +119,13 @@ router.post(
     try {
       decodedToken = jwt.verify(req.body.token, encryptionSecret)
     } catch (error) {
-      logger.error(error)
       if (error.name === 'TokenExpiredError') {
+        logger.warn(
+          `Token lockup attempted by ${req.user.email} with expired token`
+        )
         return res.status(400).send('Token has expired')
       }
+      logger.error(error)
       return res.status(400).send('Could not decode email confirmation token')
     }
 
@@ -142,6 +145,8 @@ router.post(
     } catch (e) {
       return res.status(422).send(e.message)
     }
+
+    logger.info(`Token lockup ${lockup.id} confirmed for ${req.user.email}`)
 
     return res
       .status(201)

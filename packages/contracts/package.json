@@ -53,7 +53,7 @@
     "lodash-es": "4.17.15",
     "mocha": "6.2.2",
     "prettier-eslint-cli": "5.0.0",
-    "solc": "0.5.12",
+    "solc": "0.5.13",
     "solidity-coverage": "0.6.7",
     "solium": "1.2.5",
     "web3-provider-engine": "15.0.4"

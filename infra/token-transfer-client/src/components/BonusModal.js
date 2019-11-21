@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import BigNumber from 'bignumber.js'
 import get from 'lodash.get'
+import ReactGA from 'react-ga'
 
 import { addLockup } from '@/actions/lockup'
 import {
@@ -20,10 +21,18 @@ class BonusModal extends Component {
     this.state = this.getInitialState()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    ReactGA.modalview(`/lockup/${this.state.modalState.toLowerCase()}`)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     // Parse server errors for account add
     if (get(prevProps, 'lockupError') !== this.props.lockupError) {
       this.handleServerError(this.props.lockupError)
+    }
+
+    if (prevState.modalState !== this.state.modalState) {
+      ReactGA.modalview(`/lockup/${this.state.modalState.toLowerCase()}`)
     }
   }
 
@@ -132,7 +141,7 @@ class BonusModal extends Component {
                     cursor: 'pointer'
                   }}
                 >
-                  Max amount
+                  Max Amount
                 </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
@@ -142,20 +151,22 @@ class BonusModal extends Component {
             </div>
           </div>
 
-          {this.state.amount ? (
+          {this.state.amount && this.state.amount >= 100 ? (
             <div className="text-left">
               <div className="row">
                 <div className="col">
-                  <strong>Bonus tokens earned</strong>{' '}
+                  <strong>Bonus Tokens Earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
                     ({lockupBonusRate}% of lockup)
                   </span>
                 </div>
                 <div className="col-4 text-right">
                   <strong>
-                    {BigNumber(this.state.amount * (lockupBonusRate / 100))
-                      .toFixed(0, BigNumber.ROUND_UP)
-                      .toLocaleString()}
+                    {Number(
+                      BigNumber(
+                        this.state.amount * (lockupBonusRate / 100)
+                      ).toFixed(0, BigNumber.ROUND_HALF_UP)
+                    ).toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
@@ -165,16 +176,18 @@ class BonusModal extends Component {
                   <strong>Tokens Locked Up</strong>
                 </div>
                 <div className="col-4 text-right">
-                  <strong>{this.state.amount}</strong>{' '}
+                  <strong>{Number(this.state.amount).toLocaleString()}</strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
               </div>
             </div>
           ) : (
             <>
-              <div className="p-5 mx-4 text-muted text-center">
-                Please enter a number of tokens to lock up for one year. Bonus
-                tokens will be calculated based on that amount.
+              <div className="p-3 mx-2 text-muted text-center">
+                Please enter the number of tokens (minimum 100 OGN) to lock up
+                for one year. Bonus tokens will be calculated based on this
+                amount. Locked up and bonus tokens will be unavailable for
+                withdrawal during the one-year lockup.
               </div>
               <hr />
             </>
@@ -183,7 +196,11 @@ class BonusModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={!this.state.amount || this.props.lockupIsAdding}
+            disabled={
+              !this.state.amount ||
+              this.state.amount < 100 ||
+              this.props.lockupIsAdding
+            }
           >
             {this.props.lockupIsAdding ? (
               <>
@@ -205,8 +222,8 @@ class BonusModal extends Component {
         <h1 className="mb-2">Earn Bonus Tokens</h1>
         <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
-            Earn 10% bonus tokens immediately by locking up your vested OGN
-            tokens.
+            Earn {lockupBonusRate}% bonus tokens immediately by locking up your
+            vested OGN tokens.
           </li>
           <li className="mt-1">
             Locked and bonus tokens will be available for withdrawal after 1
