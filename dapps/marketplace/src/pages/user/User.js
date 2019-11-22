@@ -76,13 +76,7 @@ const User = ({ match, isMobile, history }) => {
   }
 
   const listingsComp = (
-    <UserListings
-      user={id}
-      hideHeader={isMobile}
-      hideLoadMore
-      horizontal={isMobile ? false : true}
-      hideIfEmpty={true}
-    />
+    <UserListings user={id} hideHeader={isMobile} hideIfEmpty={true} />
   )
   return (
     <div className="container user-public-profile">
