@@ -3,41 +3,51 @@ const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 
-const { discordWebhookUrl } = require('../config')
+const {
+  discordWebhookUrl,
+  largeTransferThreshold,
+  largeTransferDelay,
+  watchdogPath,
+  networkId
+} = require('../config')
 const { postToWebhook } = require('../lib/webhook')
 const { Transfer, Sequelize } = require('../models')
 const { executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
-const LARGE_TRANSFER_THRESHOLD = 100000
-const LARGE_TRANSFER_DELAY = 60
-const WATCHDOG_PATH = './.execution'
-const NETWORK_ID = 1
+const watchdogFile = `${watchdogPath}/execute.pid`
 
 const initWatchdog = () => {
   // Check there is no existing watchdog.
-  if (fs.existsSync(WATCHDOG_PATH)) {
-    throw new Error(
-      `Watchdog detected at ${WATCHDOG_PATH}. Processing aborted.`
-    )
+  if (fs.existsSync(watchdogFile)) {
+    throw new Error(`Watchdog detected at ${watchdogFile}. Processing aborted.`)
   }
 
   // Create a watchdog for this run.
-  fs.writeFileSync(WATCHDOG_PATH, `Pid ${process.pid}`)
+  fs.writeFileSync(watchdogFile, `${process.pid}`)
 }
 
 const clearWatchdog = () => {
   // Clean watchdog.
-  fs.unlinkSync(WATCHDOG_PATH)
+  fs.unlinkSync(watchdogFile)
 }
 
-export const executeTransfers = async () => {
+const executeTransfers = async () => {
+  logger.info('Running execute transfers job...')
+
   initWatchdog()
 
   const waitingTransfers = await Transfer.findAll({
     where: {
-      status: enums.TransferStatuses.WaitingConfirmation
+      [Sequelize.Op.or]: [
+        {
+          status: enums.TransferStatuses.WaitingConfirmation
+        },
+        {
+          status: enums.TransferStatuses.Processing
+        }
+      ]
     }
   })
   if (waitingTransfers.length > 0) {
@@ -46,18 +56,18 @@ export const executeTransfers = async () => {
     )
   }
 
-  const cutoffTime = moment.utc().subtract(LARGE_TRANSFER_DELAY, 'hours')
+  const cutoffTime = moment.utc().subtract(largeTransferDelay, 'hours')
   const transfers = await Transfer.findAll({
     where: {
-      [Sequelize.op.or]: [
+      [Sequelize.Op.or]: [
         {
           status: enums.TransferStatuses.Enqueued,
-          amount: { [Sequelize.op.gte]: LARGE_TRANSFER_THRESHOLD },
+          amount: { [Sequelize.Op.gte]: largeTransferThreshold },
           createdAt: { [Sequelize.Op.lt]: cutoffTime }
         },
         {
           status: enums.TransferStatuses.Enqueued,
-          amount: { [Sequelize.op.lt]: LARGE_TRANSFER_THRESHOLD }
+          amount: { [Sequelize.Op.lt]: largeTransferThreshold }
         }
       ]
     }
@@ -69,7 +79,7 @@ export const executeTransfers = async () => {
     logger.info(`Processing transfer ${transfer.id}`)
     await transfer.update({ status: enums.TransferStatuses.Processing })
     const result = await executeTransfer(transfer, {
-      networkId: NETWORK_ID
+      networkId: networkId
     })
     logger.info(
       `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
@@ -77,20 +87,28 @@ export const executeTransfers = async () => {
   }
 
   clearWatchdog()
+
+  checkWalletBalance()
 }
 
-export const checkWalletBalance = async () => {
-  const token = new Token(NETWORK_ID)
+const checkWalletBalance = async () => {
+  const token = new Token(networkId)
   const balance = token.toTokenUnit(token.balance())
 
   if (balance < 10) {
     const webhookData = {
       embeds: [
         {
-          title: `Wallet balance is \`${balance}\`, should be \`${}\` OGN`
+          title: `Wallet balance is \`${balance}\`, should be \`${balance}\` OGN`
         }
       ]
     }
     await postToWebhook(discordWebhookUrl, JSON.stringify(webhookData))
   }
+}
+
+module.exports = {
+  clearWatchdog,
+  initWatchdog,
+  executeTransfers
 }

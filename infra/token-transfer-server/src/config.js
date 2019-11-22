@@ -35,6 +35,16 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
+const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
+
+const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
+
+const watchdogPath = process.env.WATCHDOG_PATH || './'
+
+const walletMnemonic =
+  process.env.WALLET_MNEMONIC ||
+  'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+
 module.exports = {
   discordWebhookUrl,
   encryptionSecret,
@@ -46,5 +56,9 @@ module.exports = {
   sendgridFromEmail,
   sendgridApiKey,
   sessionSecret,
-  unlockDate
+  unlockDate,
+  largeTransferThreshold,
+  largeTransferDelayMinutes,
+  watchdogPath,
+  walletMnemonic
 }
