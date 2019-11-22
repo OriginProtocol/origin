@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import CoinLogo from 'components/CoinLogo'
 import Price from 'components/Price'
+import OfferPrice from '../transactions/_OfferPrice'
 import Tooltip from 'components/Tooltip'
 import Modal from 'components/Modal'
 
@@ -42,7 +43,7 @@ class EscrowDetails extends Component {
   }
 
   render() {
-    const { offer } = this.props
+    const { listing, offer } = this.props
     return (
       <Fragment>
         <ul className="escrow-details list-unstyled">
@@ -86,6 +87,22 @@ class EscrowDetails extends Component {
                   {' USDT'}
                 </>
               )}
+            </span>
+          </li>
+          <li className="escrow-value">
+            <span>
+              <fbt desc="EscrowDetails.offerValue">Offer Value</fbt>
+              {offer.totalPrice.currency.id.match('ETH') && (
+                <WarningIcon
+                  tooltip={fbt(
+                    'Ether is highly volatile and it’s value can change significantly in a short period of time.',
+                    'EscrowDetails.volatility'
+                  )}
+                />
+              )}
+            </span>
+            <span>
+              <OfferPrice listing={listing} offer={offer} />
             </span>
           </li>
           <li className="escrow-value">
