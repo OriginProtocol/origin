@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
+import { useLazyQuery, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
@@ -16,28 +16,80 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
-const TelegramAttestationStatusQuery = ({
+// const TelegramAttestationStatusQuery = ({
+//   identity,
+//   onComplete,
+//   onError,
+//   children
+// }) => {
+//   const { data, error, networkStatus, refetch } = useQuery(
+//     CheckTelegramStatusQuery,
+//     {
+//       variables: {
+//         identity
+//       },
+//       notifyOnNetworkStatusChange: true,
+//       fetchPolicy: 'network-only',
+//       skip: !identity
+//     }
+//   )
+
+//   useEffect(() => {
+//     if (error) {
+//       console.error('error', error)
+//       onError(error)
+//     }
+//   }, [error])
+
+//   const response = get(data, 'checkTelegramStatus', {})
+//   const verified = get(data, 'checkTelegramStatus.data.verified', false)
+//   const attestation = get(data, 'checkTelegramStatus.data.attestation', null)
+
+//   useEffect(() => {
+//     if (verified) {
+//       onComplete(attestation)
+//     } else if (response.reason) {
+//       onError(response.reason)
+//     }
+//   }, [data, verified, response])
+
+//   const isLoading = networkStatus === 1
+//   return (
+//     <button
+//       className="btn btn-primary"
+//       disabled={isLoading}
+//       onClick={refetch}
+//       children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
+//     />
+//   )
+// }
+
+const TelegramVerifyAttestation = ({
   identity,
   onComplete,
   onError,
   children
 }) => {
-  const { data, error, networkStatus, refetch } = useQuery(
+  const [loadStatus, { data, error, networkStatus }] = useLazyQuery(
     CheckTelegramStatusQuery,
     {
       variables: {
-        identity
+        identity,
+        maxTries: 1
       },
       notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'network-only',
-      skip: !identity
+      fetchPolicy: 'network-only'
     }
   )
 
   useEffect(() => {
-    console.error('error', error)
     if (error) {
-      onError(error)
+      console.error('error', error)
+      onError(
+        <fbt desc="checkTelegramStatus.failed">
+          Failed to verify status. Please try again.
+        </fbt>
+      )
     }
   }, [error])
 
@@ -58,7 +110,7 @@ const TelegramAttestationStatusQuery = ({
     <button
       className="btn btn-primary"
       disabled={isLoading}
-      onClick={refetch}
+      onClick={loadStatus}
       children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
     />
   )
@@ -226,27 +278,34 @@ class TelegramAttestation extends Component {
             />
           )}
           {openedLink && (
-            <TelegramAttestationStatusQuery
-              identity={this.props.wallet}
-              onComplete={data => {
-                this.setState({
-                  data,
-                  loading: false,
-                  completed: true,
-                  shouldClose: true,
-                  openedLink: false
-                })
-              }}
-              onError={error => {
-                this.setState({
-                  error,
-                  loading: false,
-                  data: null,
-                  openedLink: false
-                })
-              }}
-              children={<fbt desc="Verify">Verify</fbt>}
-            />
+            <>
+              <div className="alert alert-warning px-5">
+                <fbt desc="TelegramAttestation.clickVerifyToContinue">
+                  Click &apos;Verify&apos; to continue
+                </fbt>
+              </div>
+              <TelegramVerifyAttestation
+                identity={this.props.wallet}
+                onComplete={data => {
+                  this.setState({
+                    data,
+                    loading: false,
+                    completed: true,
+                    shouldClose: true,
+                    openedLink: false
+                  })
+                }}
+                onError={error => {
+                  this.setState({
+                    error,
+                    loading: false,
+                    data: null,
+                    openedLink: false
+                  })
+                }}
+                children={<fbt desc="Verify">Verify</fbt>}
+              />
+            </>
           )}
           {!isMobile && (
             <button

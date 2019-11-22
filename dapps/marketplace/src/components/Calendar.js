@@ -141,6 +141,8 @@ class Calendar extends Component {
   getClass(slot) {
     const { today, dragStartDate, dragEndDate, canBookUpto } = this.state
 
+    const { allowToSelectUnavailable } = this.props
+
     const className = ['day']
     let unavailable = slot.unavailable || slot.booked || !slot.price
     const inPast = slot.date.isBefore(today)
@@ -195,7 +197,7 @@ class Calendar extends Component {
 
     return {
       className: className.join(' '),
-      unavailable,
+      unavailable: allowToSelectUnavailable ? false : unavailable,
       canInteract
     }
   }
