@@ -87,12 +87,12 @@ class ImportAccountScreen extends Component {
       <KeyboardAvoidingView
         style={styles.darkOverlay}
         behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 10}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 25 : 10}
       >
         <SafeAreaView style={styles.container}>
           <ScrollView
             style={styles.onboardingModal}
-            contentContainerStyle={styles.container}
+            contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps={'always'}
           >
             <BackArrow onClick={() => this.props.navigation.goBack(null)} />
@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
-    width: 300,
+    width: '80%',
+    maxWidth: '80%',
     height: 100,
     color: '#000'
   },
