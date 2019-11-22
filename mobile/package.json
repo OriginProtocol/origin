@@ -7,7 +7,7 @@
   "scripts": {
     "android": "react-native run-android --appId com.origincatcher",
     "clean": "git clean -fdX .",
-    "postinstall": "npx jetify; cd ios && pod install",
+    "postinstall": "npx jetify; cd ios && bash -c 'if [[ \"$OSTYPE\" == \"darwin\"* ]]; then pod install; else true; fi'",
     "ios": "react-native run-ios",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"**/*.js\"",
