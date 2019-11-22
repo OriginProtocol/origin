@@ -291,7 +291,11 @@ services:
       - postgres
     ports:
       - "4008:4008"
-    command: npm run start --prefix infra/growth
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
+      npm run fixtures --prefix infra/growth &&
+      npm run start --prefix infra/growth"
 
   bridge:
     container_name: bridge
@@ -300,8 +304,11 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis-master:6379
+      - GROWTH_SERVER_URL=http://growth:4008
       - FACEBOOK_CLIENT_ID=
       - FACEBOOK_CLIENT_SECRET=
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_CLIENT_SECRET=
       # Sendgrid settings for email attestations
       # sendgrid.com
       - SENDGRID_FROM_EMAIL=
@@ -316,6 +323,21 @@ services:
       - TWITTER_CONSUMER_KEY=
       - TWITTER_CONSUMER_SECRET=
       - ENVKEY=
+      - |
+        AUTH_PUB_KEY=-----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAzO41ktS3XoXFnHs/Yxcc
+        2/BcBBFadv+dD02V72RaD6KOZZZ0Uq4zrSATAHhMf/HDpCXww286+rkHCHaVwMcW
+        /iaT0f0ThPy9vp6GYXLYdUh5dyr4wUqMQirV3wGEUjbpLHAHaSR5N0OFLEV5Px7F
+        PQr0Azz96gKHUoaVeCdiWVSs295fEI+lOBnD93zqWwb2N9UPV2ltga5ju3AsSYv6
+        Ui5IWAMM9cJ5UDHMC0+wCnhPxn98e1jT3frXCzSt3IiduyuvsZUxJmBkwOfsXKqS
+        ndK6eiVRajO3d/qORVPHQ2w4kkgs6M2t6vxxr9juRy11eYEw1KLXYiDXEVosIqYZ
+        hGo2UrKC2oDkME/VZqHKiP8rjd9tBlK/BpH5YhnaOyKV7U3MKlvbVn3HyAJE6KuE
+        sjU7i43SaW3rLref4DKbiJGCYhOI+J7AvRp26HSFAQhHh0k0K33zDDuxrCPom6rt
+        4fGG8mqunuh6X6LeZh1TsoAuPyJMt1WkQA7gsRUmPkqSRLjLrKCPmYCf/9jIEjXB
+        rUoGF0MQ2mNfCoupv7psb0+AfH00p/P9alZ8UxU1uDlydzGHjSOMnRM9Jgi1nSAR
+        ENEa8ux7V7N46AgKyQW4pAyn6q5kkkNzVUSTpNTbG4WW6jNMJdw5ENbYeB7DoBjC
+        JSbqa16RDaDk39v+49ke8TkCAwEAAQ==
+        -----END PUBLIC KEY-----
     depends_on:
       - postgres
       - redis-master
@@ -408,7 +430,6 @@ services:
         
       - TOKEN_EXPIRES_IN=30
       - SIGN_EXPIRES_IN=15
-
     depends_on:
       - postgres
       - redis-master
