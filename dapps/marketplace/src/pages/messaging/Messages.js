@@ -47,6 +47,7 @@ const ConversationList = ({
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
   const [hasMore, setHasMore] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   const conversations = get(messaging, 'conversations', [])
 
@@ -91,10 +92,18 @@ const ConversationList = ({
     <div className="conversations-wrapper">
       <BottomScrollListener
         className="conversations-list"
-        ready={messaging.enabled && messagingNetworkStatus === 7}
+        ready={
+          messaging.enabled && messagingNetworkStatus === 7 && !loadingMore
+        }
         bindOnContainer={true}
         hasMore={hasMore}
         onBottom={() => {
+          if (loadingMore) {
+            return
+          }
+
+          setLoadingMore(true)
+
           messagingFetchMore({
             variables: {
               offset: conversations.length
@@ -106,11 +115,27 @@ const ConversationList = ({
                 setHasMore(false)
               }
 
+              // Cooldown
+              setTimeout(() => setLoadingMore(false), 100)
+
+              const newConvs = [...prevData.messaging.conversations, ...convs]
+
+              const map = new Map()
+              const deduped = newConvs.filter(conv => {
+                if (map.has(conv.id)) {
+                  return false
+                }
+
+                map.set(conv.id, 1)
+
+                return true
+              })
+
               return {
                 ...prevData,
                 messaging: {
                   ...prevData.messaging,
-                  conversations: [...prevData.messaging.conversations, ...convs]
+                  conversations: deduped
                 }
               }
             }

@@ -13,7 +13,7 @@ const MAX_TRIES = 20
  * @param {String} args.identity User's ETH address
  * @returns {Object} an object similar to `{ success: <Boolean>, data?: <AttestationData> }`
  */
-async function checkTelegramStatus(_, { identity }) {
+async function checkTelegramStatus(_, { identity, maxTries }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -22,7 +22,9 @@ async function checkTelegramStatus(_, { identity }) {
   let tries = 0
   const url = `${bridgeServer}/api/attestations/telegram/status?identity=${identity}`
 
-  while (tries < MAX_TRIES) {
+  const _maxTries = maxTries || MAX_TRIES
+
+  while (tries < _maxTries) {
     const response = await fetch(url, {
       credentials: 'include'
     })
@@ -61,7 +63,7 @@ async function checkTelegramStatus(_, { identity }) {
 
   return {
     success: false,
-    reason: 'Verification timed out. Please try again'
+    reason: maxTries === 1 ? 'We cannot verify your attestation' : 'Verification timed out. Please try again'
   }
 }
 
