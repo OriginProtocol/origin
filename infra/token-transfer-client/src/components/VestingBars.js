@@ -144,7 +144,8 @@ const VestingBars = props => {
                   </div>
                   <div>
                     <strong>Grant</strong>{' '}
-                    {Number(grant.amount).toLocaleString()} <span className="ogn">OGN</span>
+                    {Number(grant.amount).toLocaleString()}{' '}
+                    <span className="ogn">OGN</span>
                   </div>
                 </div>
               )}
