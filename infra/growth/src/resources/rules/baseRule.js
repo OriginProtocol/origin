@@ -214,13 +214,15 @@ class BaseRule {
     // If the rule has additional unlock conditions
     else if (this.config.additionalLockConditions) {
       // all the precondition rules need to have completed state
-      const hasNonCompletedPreconditionRule = (await Promise.all(
-        this.crules.allRules
-          .filter(rule =>
-            this.config.additionalLockConditions.includes(rule.id)
-          )
-          .map(rule => rule.getStatus(ethAddress, events, currentUserLevel))
-      )).some(status => status !== 'Completed')
+      const hasNonCompletedPreconditionRule = (
+        await Promise.all(
+          this.crules.allRules
+            .filter(rule =>
+              this.config.additionalLockConditions.includes(rule.id)
+            )
+            .map(rule => rule.getStatus(ethAddress, events, currentUserLevel))
+        )
+      ).some(status => status !== 'Completed')
 
       if (hasNonCompletedPreconditionRule) {
         return GrowthActionStatus.Inactive
