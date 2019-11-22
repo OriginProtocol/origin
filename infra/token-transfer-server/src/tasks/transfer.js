@@ -16,7 +16,7 @@ const { executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
-const watchdogFile = `${watchdogPath}/execute.pid`
+const watchdogFile = `${watchdogPath}/execute.pid`.replace(/\/\/+/g, '/')
 
 const initWatchdog = () => {
   // Check there is no existing watchdog.
@@ -30,7 +30,9 @@ const initWatchdog = () => {
 
 const clearWatchdog = () => {
   // Clean watchdog.
-  fs.unlinkSync(watchdogFile)
+  if (fs.existsSync(watchdogFile)) {
+    fs.unlinkSync(watchdogFile)
+  }
 }
 
 const executeTransfers = async () => {

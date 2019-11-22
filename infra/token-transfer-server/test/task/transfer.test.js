@@ -51,12 +51,17 @@ describe('Execute transfers', () => {
         amount: 10000000
       })
     ]
+
+    clearWatchdog()
   })
 
-  it('should not run if watchdog exists', () => {
+  it('should not run if watchdog exists', async () => {
     initWatchdog()
-    expect(executeTransfers).to.throw(/Watchdog/)
-    clearWatchdog()
+    try {
+      await executeTransfers()
+    } catch (error) {
+      expect(error.message).to.match(/Watchdog/)
+    }
   })
 
   it('should not run if unconfirmed transfers exist', async () => {
@@ -68,7 +73,11 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
-    expect(executeTransfers).to.throw(/Found unconfirmed/)
+    try {
+      await executeTransfers()
+    } catch (error) {
+      expect(error.message).to.match(/unconfirmed/)
+    }
   })
 
   it('should not run if processing transfers exist', async () => {
@@ -80,7 +89,11 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
-    expect(executeTransfers).to.throw(/Found unconfirmed/)
+    try {
+      await executeTransfers()
+    } catch (error) {
+      expect(error.message).to.match(/unconfirmed/)
+    }
   })
 
   it('should execute a small transfer immediately', () => {})
