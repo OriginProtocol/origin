@@ -27,11 +27,9 @@ const withFractionalHourlyData = WrappedComponent => {
           .format('YYYY-MM-DDTHH:00:00')}`
       )
       available = priceEstimate.available
-      if (available) {
-        totalPrice = {
-          amount: String(priceEstimate.price),
-          currency: listing.price.currency
-        }
+      totalPrice = {
+        amount: String(priceEstimate.price),
+        currency: listing.price.currency
       }
     }
 

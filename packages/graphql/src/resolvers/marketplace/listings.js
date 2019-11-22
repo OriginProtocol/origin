@@ -112,14 +112,16 @@ async function resultsFromIds({
   }
 
   if (!fields || fields.nodes) {
-    nodes = (await Promise.all(
-      listingIds.map(async id => {
-        // Fetch the listing data from eventSource.
-        const { marketplace, listingId } = parseId(id, contracts)
-        const eventSource = marketplace.eventSource
-        return eventSource.getListing(listingId).catch(e => e)
-      })
-    )).filter(node => node && !(node instanceof Error))
+    nodes = (
+      await Promise.all(
+        listingIds.map(async id => {
+          // Fetch the listing data from eventSource.
+          const { marketplace, listingId } = parseId(id, contracts)
+          const eventSource = marketplace.eventSource
+          return eventSource.getListing(listingId).catch(e => e)
+        })
+      )
+    ).filter(node => node && !(node instanceof Error))
   }
   const firstNodeId = listingIds[0] || 0
   const lastNodeId = listingIds[listingIds.length - 1] || 0

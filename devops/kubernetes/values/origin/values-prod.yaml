@@ -2,23 +2,23 @@ databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '7c2ca8a'
+bridgeImageTag: '7417231'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '87e5ed8'
+dappImageTag: '7417231'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'acc0e0b'
+ipfsProxyImageTag: '7417231'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'c2781a2'
+faucetImageTag: '7417231'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '5626ff5'
+eventlistenerImageTag: '7417231'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,15 +26,15 @@ discoveryImageTag: 'dea68c4'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '5626ff5'
+growthImageTag: '7417231'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '4452b3b'
+messagingImageTag: '7417231'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '4452b3b'
+notificationsImageTag: '7417231'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -46,7 +46,7 @@ creatorServerImageTag: 'f05bcc9'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
-creatorIssuerImageTag: 'dc709a90e4a5'
+creatorIssuerImageTag: '4988ed1bfd1d'
 creatorIssuerIp: '35.185.236.254'
 
 # origin-linking
@@ -55,15 +55,15 @@ linkingImageTag: 'a0d9e2f'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '5626ff5'
+cronImageTag: '7417231'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '7c2ca8a'
+relayerImageTag: '7417231'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '5626ff5'
+graphqlImageTag: '7417231'
 
 ipfsLoadBalancerIP: 35.233.189.126
 
@@ -73,8 +73,8 @@ t3ClientImageTag: '87e5ed8'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: '87e5ed8'
+t3ServerImageTag: '7417231'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: 'acc0e0b'
+authImageTag: '7417231'

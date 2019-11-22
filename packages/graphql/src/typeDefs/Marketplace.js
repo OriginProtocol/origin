@@ -86,6 +86,7 @@ export const mutations = `
       quantity: Int
       shippingAddress: ShippingAddressInput
       autoswap: Boolean
+      encryptedData: String
 
       # Optional: normally inherited from listing
       arbitrator: String
@@ -383,7 +384,7 @@ export const types = `
     statusStr: String
     valid: Boolean
     validationError: String
-    # A json encoded, encrypted OutOfBandMessage 
+    # A json encoded, encrypted OutOfBandMessage
     # from @origin/messaging-client.
     shippingAddressEncrypted: String
 
