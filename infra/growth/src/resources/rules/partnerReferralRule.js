@@ -8,7 +8,7 @@ const CONF_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 const PARTNER_CONF_URL =
   process.env.PARTNER_CONF_URL ||
   'https://originprotocol.com/static/partnerconf'
-const PARTNER_REWARDS = {}
+let PARTNER_REWARDS = {}
 
 /**
  * A rule that checks on a PartnerReferral event type.
@@ -80,7 +80,8 @@ class PartnerReferralEvent extends BaseRule {
     const url = `${PARTNER_CONF_URL}/campaigns.json`
     const res = await fetch(url)
     if (res.status !== 200) {
-      throw new Error('Failed to fetch campaigns JSON')
+      logger.error('Failed to fetch campaigns JSON')
+      return
     }
     const config = await res.json()
 
@@ -93,6 +94,8 @@ class PartnerReferralEvent extends BaseRule {
     if (this.validCodes.length === 0) {
       return
     }
+
+    PARTNER_REWARDS = {}
 
     // Get the rewards for the code
     for (const code of this.validCodes) {
@@ -117,9 +120,13 @@ class PartnerReferralEvent extends BaseRule {
     /**
      * TODO: This isn't exactly a fixed amount, but most likely one user won't
      * earn more than one reward of 1000 OGN. Needs massaging?
+     *
+     * Note from @franckc: "potential" reward will not be shown to the user on
+     * the UI (since the reward only shows up AFTER the user completed the
+     * action), so the value does not matter.
      */
     return new Reward(this.campaignId, this.levelId, this.id, {
-      amount: tokenToNaturalUnits(1000),
+      amount: '0',
       currency: this.config.reward.currency
     })
   }
@@ -158,13 +165,13 @@ class PartnerReferralEvent extends BaseRule {
     const seenCodes = []
 
     /**
-     * User can ear multiple partner rewards, but only one from an individual
+     * User can earn multiple partner rewards, but only one from an individual
      * partner.  Make sure to de-dupe as this could happen multiple times.
      */
     events.forEach(ev => {
       if (ev.type !== 'PartnerReferral' || !PARTNER_REWARDS[ev.customId]) return
 
-      if (PARTNER_REWARDS[ev.customId].currency === 'ogn') {
+      if (PARTNER_REWARDS[ev.customId].currency.toLowerCase() === 'ogn') {
         if (PARTNER_REWARDS[ev.customId] && !seenCodes.includes(ev.customId)) {
           const amount = tokenToNaturalUnits(PARTNER_REWARDS[ev.customId].value)
 
