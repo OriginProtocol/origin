@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontFamily: 'Lato',
-    marginBottom: 20
+    marginBottom: 20,
+    paddingHorizontal: 20
   }
 })

@@ -5,6 +5,7 @@ const template = require('lodash/template')
 const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 const mjml2html = require('mjml')
+const Sequelize = require('sequelize')
 
 const { User } = require('../models')
 const {
@@ -122,11 +123,18 @@ async function sendEmail(to, emailType, vars) {
 
 async function sendLoginToken(email) {
   // Check the user exists before sending an email code.
-  const user = await User.findOne({ where: { email } })
+  const user = await User.findOne({
+    where: {
+      email: Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('email')),
+        Sequelize.fn('lower', email)
+      )
+    }
+  })
   if (user) {
     const token = jwt.sign(
       {
-        email
+        email: user.email
       },
       encryptionSecret,
       { expiresIn: '30m' }
