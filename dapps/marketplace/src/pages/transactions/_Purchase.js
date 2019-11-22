@@ -26,7 +26,11 @@ const Purchase = ({ listing, offer }) => (
         </h2>
         <div className="right">
           <span className="time-estimate">
-            {distanceToNow(offer.createdEvent.timestamp, true) + ' ago'}
+            {
+              <fbt desc="timeago">
+                <fbt:param name="time">{distanceToNow(offer.createdEvent.timestamp, true)}</fbt:param>{` ago`}
+              </fbt>
+            }
           </span>
           <OfferStatus offer={offer} />
         </div>
