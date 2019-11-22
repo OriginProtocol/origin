@@ -65,18 +65,39 @@ const BottomScrollListener = ({
     }
   }, rebindListenerOnProps)
 
-  window.requestAnimationFrame(() => {
-    if (
-      ((bindOnContainer &&
-        elementRef.current.scrollHeight < elementRef.current.clientHeight) ||
-        (!bindOnContainer &&
-          document.body.clientHeight < window.innerHeight)) &&
-      ready &&
-      hasMore
-    ) {
+  const onWindowResize = useCallback(() => {
+    if (!ready || !hasMore) {
+      return
+    }
+
+    let canFetchMore = false
+
+    if (!bindOnContainer && document.body.clientHeight <= window.innerHeight) {
+      canFetchMore = true
+    }
+
+    const hasMoreSpace =
+      elementRef.current.clientHeight <=
+      elementRef.current.parentElement.clientHeight
+
+    if (bindOnContainer && hasMoreSpace) {
+      canFetchMore = true
+    }
+
+    if (canFetchMore) {
       onBottom()
     }
   })
+
+  useEffect(() => {
+    const debounced = debounce(onWindowResize, 300)
+    requestAnimationFrame(debounced)
+    window.addEventListener('resize', debounced)
+
+    return () => {
+      window.removeEventListener('resize', debounced)
+    }
+  }, [])
 
   return !children ? null : (
     <div className={className} ref={bindOnContainer ? elementRef : null}>

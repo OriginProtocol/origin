@@ -95,8 +95,6 @@ class ListingDetail extends Component {
     const userListings = (
       <UserListings
         user={listing.seller.id}
-        hideLoadMore
-        compact
         title={fbt(
           'Other listings by this seller',
           'ListingDetail.othersFromSeller'

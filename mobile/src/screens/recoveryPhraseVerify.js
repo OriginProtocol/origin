@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import {
   Dimensions,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -96,43 +97,48 @@ const RecoveryPhraseVerifyScreen = ({ navigation, wallet }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackArrow onClick={() => navigation.goBack(null)} />
-      <View style={styles.content}>
-        <Text style={styles.title}>
-          {isRetry ? (
-            <fbt desc="RecoveryPhraseVerify.titleRetry">Oops, Try Again</fbt>
-          ) : (
-            <fbt desc="RecoveryPhraseVerify.title">
-              Confirm Part of Recovery Phrase
-            </fbt>
-          )}
-        </Text>
-        {wordsToVerify.map(renderWord)}
-      </View>
-      <View style={styles.buttonContainer}>
-        <OriginButton
-          size="large"
-          type="primary"
-          title={fbt('Continue', 'RecoveryPhraseVerify.continueButton')}
-          disabled={selectedWords.find(w => w === null) === null}
-          onPress={() => {
-            // Naive check of array equality but works for all cases here
-            if (
-              JSON.stringify(selectedWords) != JSON.stringify(wordsToVerify)
-            ) {
-              // Failure, generate a new set of verification words and set
-              // retry state
-              const randomWords = getRandomWords()
-              setSelectedWords([null, null, null])
-              setWordsToVerify(randomWords)
-              setWordOptions(randomWords.map(getRandomWords))
-              setIsRetry(true)
-            } else {
-              navigation.navigate('Authentication')
-            }
-          }}
-        />
-      </View>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <BackArrow onClick={() => navigation.goBack(null)} />
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            {isRetry ? (
+              <fbt desc="RecoveryPhraseVerify.titleRetry">Oops, Try Again</fbt>
+            ) : (
+              <fbt desc="RecoveryPhraseVerify.title">
+                Confirm Part of Recovery Phrase
+              </fbt>
+            )}
+          </Text>
+          {wordsToVerify.map(renderWord)}
+        </View>
+        <View style={styles.buttonContainer}>
+          <OriginButton
+            size="large"
+            type="primary"
+            title={fbt('Continue', 'RecoveryPhraseVerify.continueButton')}
+            disabled={selectedWords.find(w => w === null) === null}
+            onPress={() => {
+              // Naive check of array equality but works for all cases here
+              if (
+                JSON.stringify(selectedWords) != JSON.stringify(wordsToVerify)
+              ) {
+                // Failure, generate a new set of verification words and set
+                // retry state
+                const randomWords = getRandomWords()
+                setSelectedWords([null, null, null])
+                setWordsToVerify(randomWords)
+                setWordOptions(randomWords.map(getRandomWords))
+                setIsRetry(true)
+              } else {
+                navigation.navigate('Authentication')
+              }
+            }}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

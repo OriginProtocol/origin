@@ -1,11 +1,10 @@
 'use strict'
 
 import React from 'react'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-// https://github.com/kmagiera/react-native-gesture-handler/issues/320
-import 'react-native-gesture-handler'
 
 import Store, { persistor } from './Store'
 import AppContainer from './AppContainer'
@@ -36,11 +35,13 @@ const App = () => {
   return (
     <ReduxProvider store={Store}>
       <PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
-        <AppContainer
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef)
-          }}
-        />
+        <SafeAreaProvider>
+          <AppContainer
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef)
+            }}
+          />
+        </SafeAreaProvider>
       </PersistGate>
     </ReduxProvider>
   )
