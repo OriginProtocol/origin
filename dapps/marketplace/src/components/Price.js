@@ -8,9 +8,16 @@ import numberFormat from 'utils/numberFormat'
 import CurrencyContext from 'constants/CurrencyContext'
 import { CurrenciesByKey } from 'constants/Currencies'
 
-const Price = ({ className, target, currencies, descriptor, ...props }) => {
+const Price = ({
+  className,
+  target,
+  currencies,
+  descriptor,
+  priceProp,
+  ...props
+}) => {
   const listingType = get(props, 'listing.__typename')
-  const price = props.price || get(props, 'listing.price')
+  const price = props[priceProp || 'price'] || get(props, 'listing.price')
   const currency = get(price, 'currency')
   let amount = get(price, 'amount')
 

@@ -1,5 +1,8 @@
 'use strict'
 
+// https://github.com/kmagiera/react-native-gesture-handler/issues/320
+import 'react-native-gesture-handler'
+
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 

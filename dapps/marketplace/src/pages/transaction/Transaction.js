@@ -98,7 +98,7 @@ const Transaction = props => {
               <h3>
                 <fbt desc="Transaction.escrowDetails">Escrow Details</fbt>
               </h3>
-              <EscrowDetails offer={offer} />
+              <EscrowDetails offer={offer} listing={offer.listing} />
             </>
           )
           const About = (
