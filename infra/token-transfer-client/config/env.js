@@ -79,7 +79,7 @@ function getClientEnvironment(publicUrl) {
       const whitelist = [
         'API_URL',
         'CLIENT_SENTRY_DSN',
-        'EMPLOYEE_API_URL'
+        'EMPLOYEE_API_URL',
         'EARN_OGN_ENABLED',
         'LOCKUP_BONUS_RATE',
         'NODE_ENV',
