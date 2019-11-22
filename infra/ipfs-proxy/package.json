@@ -42,7 +42,7 @@
     "chai": "4.2.0",
     "form-data": "3.0.0",
     "mocha": "6.2.2",
-    "nodemon": "1.19.4",
+    "nodemon": "2.0.0",
     "supertest": "4.0.2",
     "webrtcsupport": "2.2.0"
   },

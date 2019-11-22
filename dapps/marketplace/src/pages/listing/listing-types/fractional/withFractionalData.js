@@ -20,11 +20,9 @@ const withFractionalData = WrappedComponent => {
       endDate = split[1]
       const priceEstimate = availability.estimateNightlyPrice(range)
       available = priceEstimate.available
-      if (available) {
-        totalPrice = {
-          amount: String(priceEstimate.price),
-          currency: listing.price.currency
-        }
+      totalPrice = {
+        amount: String(priceEstimate.price),
+        currency: listing.price.currency
       }
     }
 
