@@ -35,7 +35,8 @@ const ruleIdToActionType = {
   TwitterFollow: 'TwitterFollow',
   TelegramAttestation: 'Telegram',
   TelegramFollow: 'TelegramFollow',
-  FacebookLike: 'FacebookLike'
+  FacebookLike: 'FacebookLike',
+  PartnerReferral: 'PartnerReferral'
 }
 
 /**

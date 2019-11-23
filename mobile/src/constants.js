@@ -149,3 +149,4 @@ export const LANGUAGES = [
 ].filter(l => Object.keys(TRANSLATIONS).includes(l[0]))
 
 export const AUTH_MESSAGE = 'I intend to sign in to Origin Marketplace app'
+export const REFERRAL_PREFIX = 'op:'
