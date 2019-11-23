@@ -75,4 +75,4 @@ t3ServerImageTag: 'dcf5d87'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '0497b22'
+authImageTag: 'd994bac'
