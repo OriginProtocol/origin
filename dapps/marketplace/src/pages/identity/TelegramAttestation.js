@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
@@ -93,6 +93,15 @@ const TelegramVerifyAttestation = ({
     }
   }, [error])
 
+  const [shouldRender, setShouldRender] = useState(false)
+
+  useEffect(() => {
+    // Dirty fix.
+    // Let's not render the verify screen for a couple of seconds
+    // This screen rendering before the user gets redirects seems to confuse everyone
+    setTimeout(() => setShouldRender(true), 2000)
+  }, [])
+
   const response = get(data, 'checkTelegramStatus', {})
   const verified = get(data, 'checkTelegramStatus.data.verified', false)
   const attestation = get(data, 'checkTelegramStatus.data.attestation', null)
@@ -105,14 +114,25 @@ const TelegramVerifyAttestation = ({
     }
   }, [data, verified, response])
 
-  const isLoading = networkStatus === 1
+  const isLoading = !shouldRender || networkStatus === 1
   return (
-    <button
-      className="btn btn-primary"
-      disabled={isLoading}
-      onClick={loadStatus}
-      children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
-    />
+    <>
+      {shouldRender && (
+        <div className="alert alert-warning px-5">
+          <fbt desc="TelegramAttestation.clickVerifyToContinue">
+            Click &apos;Verify&apos; to continue
+          </fbt>
+        </div>
+      )}
+      <button
+        className="btn btn-primary"
+        disabled={isLoading}
+        onClick={loadStatus}
+        children={
+          isLoading ? <fbt desc="Loading...">Loading...</fbt> : children
+        }
+      />
+    </>
   )
 }
 
@@ -278,34 +298,27 @@ class TelegramAttestation extends Component {
             />
           )}
           {openedLink && (
-            <>
-              <div className="alert alert-warning px-5">
-                <fbt desc="TelegramAttestation.clickVerifyToContinue">
-                  Click &apos;Verify&apos; to continue
-                </fbt>
-              </div>
-              <TelegramVerifyAttestation
-                identity={this.props.wallet}
-                onComplete={data => {
-                  this.setState({
-                    data,
-                    loading: false,
-                    completed: true,
-                    shouldClose: true,
-                    openedLink: false
-                  })
-                }}
-                onError={error => {
-                  this.setState({
-                    error,
-                    loading: false,
-                    data: null,
-                    openedLink: false
-                  })
-                }}
-                children={<fbt desc="Verify">Verify</fbt>}
-              />
-            </>
+            <TelegramVerifyAttestation
+              identity={this.props.wallet}
+              onComplete={data => {
+                this.setState({
+                  data,
+                  loading: false,
+                  completed: true,
+                  shouldClose: true,
+                  openedLink: false
+                })
+              }}
+              onError={error => {
+                this.setState({
+                  error,
+                  loading: false,
+                  data: null,
+                  openedLink: false
+                })
+              }}
+              children={<fbt desc="Verify">Verify</fbt>}
+            />
           )}
           {!isMobile && (
             <button
