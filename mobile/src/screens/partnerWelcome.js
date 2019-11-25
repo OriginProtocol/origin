@@ -70,6 +70,7 @@ class PartnerWelcomeScreen extends Component {
 
     const logoURL = `${BASE_URL}${config.partner.logo}`
 
+    // TODO: Need to deal with size differences
     const logoImage = logoURL.endsWith('svg') ? (
       <SvgUri width="190" height="90" uri={logoURL} />
     ) : (
