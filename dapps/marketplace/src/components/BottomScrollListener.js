@@ -76,9 +76,7 @@ const BottomScrollListener = ({
       canFetchMore = true
     }
 
-    const hasMoreSpace =
-      elementRef.current.clientHeight <=
-      elementRef.current.parentElement.clientHeight
+    const hasMoreSpace = elementRef.current.clientHeight < window.innerHeight
 
     if (bindOnContainer && hasMoreSpace) {
       canFetchMore = true
