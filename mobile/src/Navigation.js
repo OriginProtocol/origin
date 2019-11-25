@@ -21,6 +21,7 @@ import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
 import Authentication from 'screens/authentication'
 import PinScreen from 'screens/pin'
+import PartnerWelcomeScreen from 'screens/partnerWelcome'
 
 // Main screens
 import AccountsScreen from 'screens/accounts'
@@ -62,7 +63,8 @@ const OnboardingStack = createStackNavigator(
       }
     },
     Authentication: Authentication,
-    Pin: PinScreen
+    Pin: PinScreen,
+    PartnerWelcome: PartnerWelcomeScreen
   },
   {
     initialRouteName: 'Welcome',
