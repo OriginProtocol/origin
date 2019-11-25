@@ -168,7 +168,7 @@ class TelegramAttestation extends Component {
         <>
           <div className="alert alert-danger mt-3">
             <fbt desc="TelegramAttestation.onlyOnOrigin">
-              Telegram Attestation is only available through the Origin
+              Telegram verification is only available through the Origin
               Marketplace app.
             </fbt>
           </div>
