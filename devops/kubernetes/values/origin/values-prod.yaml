@@ -34,7 +34,7 @@ messagingImageTag: '7417231'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '7417231'
+notificationsImageTag: 'fc1d221'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
