@@ -16,71 +16,34 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
-// const TelegramAttestationStatusQuery = ({
-//   identity,
-//   onComplete,
-//   onError,
-//   children
-// }) => {
-//   const { data, error, networkStatus, refetch } = useQuery(
-//     CheckTelegramStatusQuery,
-//     {
-//       variables: {
-//         identity
-//       },
-//       notifyOnNetworkStatusChange: true,
-//       fetchPolicy: 'network-only',
-//       skip: !identity
-//     }
-//   )
-
-//   useEffect(() => {
-//     if (error) {
-//       console.error('error', error)
-//       onError(error)
-//     }
-//   }, [error])
-
-//   const response = get(data, 'checkTelegramStatus', {})
-//   const verified = get(data, 'checkTelegramStatus.data.verified', false)
-//   const attestation = get(data, 'checkTelegramStatus.data.attestation', null)
-
-//   useEffect(() => {
-//     if (verified) {
-//       onComplete(attestation)
-//     } else if (response.reason) {
-//       onError(response.reason)
-//     }
-//   }, [data, verified, response])
-
-//   const isLoading = networkStatus === 1
-//   return (
-//     <button
-//       className="btn btn-primary"
-//       disabled={isLoading}
-//       onClick={refetch}
-//       children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
-//     />
-//   )
-// }
-
 const TelegramVerifyAttestation = ({
   identity,
   onComplete,
   onError,
-  children
+  isMobile
 }) => {
-  const [loadStatus, { data, error, networkStatus }] = useLazyQuery(
-    CheckTelegramStatusQuery,
-    {
-      variables: {
-        identity,
-        maxTries: 1
-      },
-      notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'network-only'
+  const [loadStatus, { data, error }] = useLazyQuery(CheckTelegramStatusQuery, {
+    variables: {
+      identity,
+      maxTries: 30
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    if (!isMobile) {
+      loadStatus()
+      return
     }
-  )
+
+    // Note: Starting the poll after a few seconds of delay
+    // This is because, on mobile, the query gets terminated when
+    // app is backgrounded.
+    const timeout = setTimeout(() => loadStatus(), 5000)
+
+    return () => clearTimeout(timeout)
+  }, [])
 
   useEffect(() => {
     if (error) {
@@ -105,13 +68,12 @@ const TelegramVerifyAttestation = ({
     }
   }, [data, verified, response])
 
-  const isLoading = networkStatus === 1
   return (
     <button
       className="btn btn-primary"
-      disabled={isLoading}
+      disabled={true}
       onClick={loadStatus}
-      children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
+      children={<fbt desc="Loading...">Loading...</fbt>}
     />
   )
 }
@@ -194,12 +156,33 @@ class TelegramAttestation extends Component {
   }
 
   renderVerifyCode() {
-    const { isMobile } = this.props
+    const { isMobile, isMobileApp } = this.props
     const { openedLink, loading } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
     )
+
+    if (isMobile && !isMobileApp) {
+      return (
+        <>
+          <div className="alert alert-danger mt-3">
+            <fbt desc="TelegramAttestation.onlyOnOrigin">
+              Telegram verification is only available through the Origin
+              Marketplace app.
+            </fbt>
+          </div>
+          <div className="actions">
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          </div>
+        </>
+      )
+    }
 
     return (
       <>
@@ -271,41 +254,36 @@ class TelegramAttestation extends Component {
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
-                  openedLink: true
+                  openedLink: true,
+                  error: null,
+                  data: null
                 })
               }}
               children={<fbt desc="Continue">Continue</fbt>}
             />
           )}
           {openedLink && (
-            <>
-              <div className="alert alert-warning px-5">
-                <fbt desc="TelegramAttestation.clickVerifyToContinue">
-                  Click &apos;Verify&apos; to continue
-                </fbt>
-              </div>
-              <TelegramVerifyAttestation
-                identity={this.props.wallet}
-                onComplete={data => {
-                  this.setState({
-                    data,
-                    loading: false,
-                    completed: true,
-                    shouldClose: true,
-                    openedLink: false
-                  })
-                }}
-                onError={error => {
-                  this.setState({
-                    error,
-                    loading: false,
-                    data: null,
-                    openedLink: false
-                  })
-                }}
-                children={<fbt desc="Verify">Verify</fbt>}
-              />
-            </>
+            <TelegramVerifyAttestation
+              identity={this.props.wallet}
+              onComplete={data => {
+                this.setState({
+                  data,
+                  loading: false,
+                  completed: true,
+                  shouldClose: true,
+                  openedLink: false
+                })
+              }}
+              onError={error => {
+                this.setState({
+                  error,
+                  loading: false,
+                  data: null,
+                  openedLink: false
+                })
+              }}
+              isMobile={isMobile}
+            />
           )}
           {!isMobile && (
             <button
