@@ -51,6 +51,7 @@ module.exports = `
     TelegramFollow
     FacebookShare
     FacebookLike
+    PartnerReferral
   }
 
   enum GrowthInviteStatus {

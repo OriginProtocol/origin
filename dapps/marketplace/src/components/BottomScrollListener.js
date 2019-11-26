@@ -77,8 +77,9 @@ const BottomScrollListener = ({
     }
 
     const hasMoreSpace =
+      elementRef.current.parentElement &&
       elementRef.current.clientHeight <=
-      elementRef.current.parentElement.clientHeight
+        elementRef.current.parentElement.clientHeight
 
     if (bindOnContainer && hasMoreSpace) {
       canFetchMore = true
@@ -90,8 +91,8 @@ const BottomScrollListener = ({
   })
 
   useEffect(() => {
+    requestAnimationFrame(onWindowResize)
     const debounced = debounce(onWindowResize, 300)
-    requestAnimationFrame(debounced)
     window.addEventListener('resize', debounced)
 
     return () => {
