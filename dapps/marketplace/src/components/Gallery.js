@@ -33,7 +33,7 @@ const Zoom = ({ pics = [], onClose, initialActive }) => {
   }, [active])
 
   return (
-    <div className="zoom" onClick={() => onClose()}>
+    <div className="zoom" onClick={() => onClose(active)}>
       {pics.length > 1 && (
         <a
           href="#prev"
