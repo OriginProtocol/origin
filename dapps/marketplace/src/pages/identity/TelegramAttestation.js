@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
+import { useLazyQuery, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
@@ -16,28 +16,43 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
-const TelegramAttestationStatusQuery = ({
+const TelegramVerifyAttestation = ({
   identity,
   onComplete,
   onError,
-  children
+  isMobile
 }) => {
-  const { data, error, networkStatus, refetch } = useQuery(
-    CheckTelegramStatusQuery,
-    {
-      variables: {
-        identity
-      },
-      notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'network-only',
-      skip: !identity
-    }
-  )
+  const [loadStatus, { data, error }] = useLazyQuery(CheckTelegramStatusQuery, {
+    variables: {
+      identity,
+      maxTries: 30
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only'
+  })
 
   useEffect(() => {
-    console.error('error', error)
+    if (!isMobile) {
+      loadStatus()
+      return
+    }
+
+    // Note: Starting the poll after a few seconds of delay
+    // This is because, on mobile, the query gets terminated when
+    // app is backgrounded.
+    const timeout = setTimeout(() => loadStatus(), 5000)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
+  useEffect(() => {
     if (error) {
-      onError(error)
+      console.error('error', error)
+      onError(
+        <fbt desc="checkTelegramStatus.failed">
+          Failed to verify status. Please try again.
+        </fbt>
+      )
     }
   }, [error])
 
@@ -53,13 +68,12 @@ const TelegramAttestationStatusQuery = ({
     }
   }, [data, verified, response])
 
-  const isLoading = networkStatus === 1
   return (
     <button
       className="btn btn-primary"
-      disabled={isLoading}
-      onClick={refetch}
-      children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
+      disabled={true}
+      onClick={loadStatus}
+      children={<fbt desc="Loading...">Loading...</fbt>}
     />
   )
 }
@@ -142,12 +156,33 @@ class TelegramAttestation extends Component {
   }
 
   renderVerifyCode() {
-    const { isMobile } = this.props
+    const { isMobile, isMobileApp } = this.props
     const { openedLink, loading } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
     )
+
+    if (isMobile && !isMobileApp) {
+      return (
+        <>
+          <div className="alert alert-danger mt-3">
+            <fbt desc="TelegramAttestation.onlyOnOrigin">
+              Telegram verification is only available through the Origin
+              Marketplace app.
+            </fbt>
+          </div>
+          <div className="actions">
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          </div>
+        </>
+      )
+    }
 
     return (
       <>
@@ -219,14 +254,16 @@ class TelegramAttestation extends Component {
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
-                  openedLink: true
+                  openedLink: true,
+                  error: null,
+                  data: null
                 })
               }}
               children={<fbt desc="Continue">Continue</fbt>}
             />
           )}
           {openedLink && (
-            <TelegramAttestationStatusQuery
+            <TelegramVerifyAttestation
               identity={this.props.wallet}
               onComplete={data => {
                 this.setState({
@@ -245,7 +282,7 @@ class TelegramAttestation extends Component {
                   openedLink: false
                 })
               }}
-              children={<fbt desc="Verify">Verify</fbt>}
+              isMobile={isMobile}
             />
           )}
           {!isMobile && (

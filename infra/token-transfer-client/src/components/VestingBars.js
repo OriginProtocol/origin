@@ -134,15 +134,18 @@ const VestingBars = props => {
                   <div>
                     <strong>Start</strong> {grant.start.format('L')}
                   </div>
-                  <div>
-                    <strong>Cliff</strong> {grant.cliff.format('L')}
-                  </div>
+                  {grant.cliff && (
+                    <div>
+                      <strong>Cliff</strong> {grant.cliff.format('L')}
+                    </div>
+                  )}
                   <div>
                     <strong>End</strong> {grant.end.format('L')}
                   </div>
                   <div>
                     <strong>Grant</strong>{' '}
-                    {Number(grant.amount).toLocaleString()}
+                    {Number(grant.amount).toLocaleString()}{' '}
+                    <span className="ogn">OGN</span>
                   </div>
                 </div>
               )}

@@ -18,7 +18,7 @@ export const mutations = `
   }
 
   extend type Query {
-    checkTelegramStatus(identity: String!): AttestationStatusResult!
+    checkTelegramStatus(identity: String!, maxTries: Int): AttestationStatusResult!
   }
 `
 export const types = `
