@@ -91,8 +91,8 @@ const BottomScrollListener = ({
   })
 
   useEffect(() => {
+    requestAnimationFrame(onWindowResize)
     const debounced = debounce(onWindowResize, 300)
-    requestAnimationFrame(debounced)
     window.addEventListener('resize', debounced)
 
     return () => {
