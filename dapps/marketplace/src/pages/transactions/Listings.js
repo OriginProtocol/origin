@@ -204,7 +204,7 @@ const Listing = ({ listing, refetch }) => (
           </div>
         )}
       </div>
-      {['active', 'sold'].includes(listing.status) ? (
+      {['active', 'sold', 'pending', 'withdrawn'].includes(listing.status) ? (
         <div className="actions">
           <Link
             to={`/listing/${listing.id}/edit`}
