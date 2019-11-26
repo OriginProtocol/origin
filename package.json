@@ -64,6 +64,8 @@
     ],
     "ignorePaths": [
       "mobile"
-    ]
+    ],
+    "schedule": "before 2am",
+    "rebaseStalePrs": false
   }
 }
