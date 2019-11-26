@@ -11,7 +11,7 @@ const HOST = process.env.HOST || 'localhost'
 const app = express()
 
 app.get('/:net([a-z]+)?', (req, res) => {
-  const config = req.params.net || 'localhost'
+  const config = req.params.net || process.env.NETWORK || 'localhost'
   let html = fs.readFileSync(__dirname + '/public/dev.html').toString()
   html = html.replace(/\{HOST\}/g, `http${sslProxy ? 's' : ''}://${HOST}:8083/`)
   html = html.replace(/\{NET\}/g, config)

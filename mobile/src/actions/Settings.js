@@ -9,7 +9,8 @@ export const SettingsConstants = keyMirror(
     SET_PIN: null,
     SET_BIOMETRY_TYPE: null,
     SET_LANGUAGE: null,
-    SET_CURRENCY: null
+    SET_CURRENCY: null,
+    SET_REFERRAL_CODE: null
   },
   'SETTINGS'
 )
@@ -53,5 +54,12 @@ export function setCurrency(currency) {
   return {
     type: SettingsConstants.SET_CURRENCY,
     currency
+  }
+}
+
+export function setReferralCode(referralCode) {
+  return {
+    type: SettingsConstants.SET_REFERRAL_CODE,
+    referralCode
   }
 }

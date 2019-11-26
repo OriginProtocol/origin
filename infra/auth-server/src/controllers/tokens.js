@@ -42,6 +42,7 @@ router.post('/', generateTokenValidation, async (req, res) => {
   })
 
   if (!validSign) {
+    logger.debug('Invalid signature')
     // It is invalid sign
     return res.status(400).send({
       success: false,
@@ -59,6 +60,7 @@ router.post('/', generateTokenValidation, async (req, res) => {
       success: true
     })
   } catch (err) {
+    logger.warn(err)
     return res.status(500).send({
       success: false,
       errors: ['Failed to generate auth token']
