@@ -275,7 +275,38 @@ const Growth$FbtEnum = {
     'CoinList Founder Discusses Decentralized Marketplaces of the Future',
   'growth.share.content20.details':
     'Andy Bromberg, Co-Founder and President of CoinList discusses what he thinks of Origin and our long term vision.',
-  'growth.share.content20.link': 'Watch the video'
+  'growth.share.content20.link': 'Watch the video',
+
+  // December campaign
+  'growth.share.content21.title':
+    'Built on Origin: A Decentralized Shopify Alternative',
+  'growth.share.content21.details':
+    'We are proud to announce the Origin e-commerce store, a decentralized, open source alternative to Shopify, hosted entirely on IPFS.',
+  'growth.share.content21.link': 'Read the article',
+
+  'growth.share.content22.title':
+    'How an Early YouTube Employee is Competing Against Uber and Airbnb',
+  'growth.share.content22.details':
+    'Our very own Matthew Liu chats with Ahmed Al-Balaghi, Co-founder of Encrypted Podcast.',
+  'growth.share.content22.link': 'Watch the video',
+
+  'growth.share.content23.title':
+    'Announcing Origin Commissions to Promote Seller Listings with OGN',
+  'growth.share.content23.details':
+    'Origin Commissions: A new way for sellers to boost their sales & DApp developers and affiliates to earn Origin Tokens.',
+  'growth.share.content23.link': 'Read the article',
+
+  'growth.share.content24.title':
+    `Pantera Capital's Paul Veradittakit on How Origin Enables Freedom`,
+  'growth.share.content24.details':
+    'Meet Paul, Co-investment Officer at Pantera Capital.',
+  'growth.share.content24.link': 'Watch the video',
+
+  'growth.share.content25.title':
+    'Joey Krug Co-founder of Augur Explains the Value of Origin',
+  'growth.share.content25.details':
+    'Joey Krug Co-founder of Augur & Co-investment Officer at Pantera Capital explains the value of Origin.',
+  'growth.share.content25.link': 'Watch the video'
 }
 
 module.exports = Growth$FbtEnum
