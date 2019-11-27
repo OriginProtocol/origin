@@ -296,8 +296,7 @@ const Growth$FbtEnum = {
     'Origin Commissions: A new way for sellers to boost their sales & DApp developers and affiliates to earn Origin Tokens.',
   'growth.share.content23.link': 'Read the article',
 
-  'growth.share.content24.title':
-    `Pantera Capital's Paul Veradittakit on How Origin Enables Freedom`,
+  'growth.share.content24.title': `Pantera Capital's Paul Veradittakit on How Origin Enables Freedom`,
   'growth.share.content24.details':
     'Meet Paul, Co-investment Officer at Pantera Capital.',
   'growth.share.content24.link': 'Watch the video',
