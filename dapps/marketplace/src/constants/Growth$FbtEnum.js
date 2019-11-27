@@ -21,6 +21,8 @@ const Growth$FbtEnum = {
   'growth.oct2019.short_name': 'October 2019',
   'growth.nov2019.name': 'November 2019 Campaign',
   'growth.nov2019.short_name': 'November 2019',
+  'growth.dec2019.name': 'December 2019 Campaign',
+  'growth.dec2019.short_name': 'December 2019',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   'growth.two.attestations.requirement': 'Two profile verifications',
