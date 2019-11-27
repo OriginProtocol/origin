@@ -756,7 +756,7 @@ const novemberConfig = {
     shopify: {
       titleKey: 'growth.share.content21.title',
       detailsKey: 'growth.share.content21.details',
-      image: 'images/growth/share-content21.png',
+      image: 'images/growth/share-content21.jpg',
       link: 'https://medium.com/originprotocol/built-on-origin-a-decentralized-shopify-alternative-888adc4198b0',
       linkKey: 'growth.share.content21.link',
       post: {
