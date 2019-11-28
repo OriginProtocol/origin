@@ -41,7 +41,7 @@ class Context {
 
   async init(config, contracts, errorCounter) {
     const web3Provider = new Web3.providers.HttpProvider(
-      contractsContext.config.provider
+      process.env.PROVIDER_URL || contractsContext.config.provider
     )
     this.web3 = new Web3(web3Provider)
     this.config = config
