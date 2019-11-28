@@ -72,10 +72,8 @@ function MobileDownloadAction(props) {
         <div className="d-flex">
           <div className="install mt-0 mt-md-2 mb-2 mb-md-0">
             <fbt desc="growth.mobileRewards.installAndComplete">
-              Install &amp; complete 3 verifications to earn
+              Install &amp; complete 4 verifications.
             </fbt>
-            <img className="ogn-icon-small" src="images/ogn-icon.svg" />
-            <span className="ogn-value">{formatTokens(reward.amount)}</span>
           </div>
         </div>
         {isMobile && storeBadges()}
