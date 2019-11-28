@@ -3,6 +3,7 @@ const expect = chai.expect
 const moment = require('moment')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
+const sinon = require('sinon')
 
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
@@ -12,6 +13,11 @@ const {
   executeTransfers,
   clearWatchdog
 } = require('../../src/tasks/transfer')
+const transferTasks = require('../../src/tasks/transfer')
+const {
+  largeTransferThreshold,
+  largeTransferDelayMinutes
+} = require('../../src/config')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
@@ -96,11 +102,86 @@ describe('Execute transfers', () => {
     }
   })
 
-  it('should execute a small transfer immediately', () => {})
+  it('should execute a small transfer immediately', async () => {
+    const executeTransferFake = sinon.fake.returns({
+      id: 1,
+      txHash: '0x123'
+    })
+    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
 
-  it('should not execute a large transfer before cutoff time', () => {})
+    const result = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: 1,
+      currency: 'OGN'
+    })
 
-  it('should execute a large transfer after the cutoff time', () => {})
+    await executeTransfers()
+
+    expect(executeTransferFake.called).to.equal(true)
+
+    transferTasks.__ResetDependency__('executeTransfer')
+  })
+
+  it('should not execute a large transfer before cutoff time', async () => {
+    const executeTransferFake = sinon.fake.returns({
+      id: 1,
+      txHash: '0x123'
+    })
+    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
+
+    const result = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: largeTransferThreshold + 1,
+      currency: 'OGN'
+    })
+
+    await executeTransfers()
+
+    expect(executeTransferFake.called).to.equal(false)
+
+    const clock = sinon.useFakeTimers(
+      moment(result.createdAt)
+        .add(largeTransferDelayMinutes, 'hours')
+        .subtract(1, 's')
+    )
+
+    expect(executeTransferFake.called).to.equal(false)
+    transferTasks.__ResetDependency__('executeTransfer')
+    clock.restore()
+  })
+
+  it('should execute a large transfer after the cutoff time', async () => {
+    const executeTransferFake = sinon.fake.returns({
+      id: 1,
+      txHash: '0x123'
+    })
+    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
+
+    const result = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: largeTransferThreshold + 1,
+      currency: 'OGN'
+    })
+
+    const clock = sinon.useFakeTimers(
+      moment(result.createdAt)
+        .add(largeTransferDelayMinutes, 'hours')
+        .add(1, 's')
+    )
+
+    await executeTransfers()
+
+    expect(executeTransferFake.called).to.equal(true)
+
+    transferTasks.__ResetDependency__('executeTransfer')
+    clock.restore()
+  })
 
   it('should record transfer success', () => {})
 

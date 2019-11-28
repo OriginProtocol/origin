@@ -65,7 +65,7 @@ const executeTransfers = async () => {
         {
           status: enums.TransferStatuses.Enqueued,
           amount: { [Sequelize.Op.gte]: largeTransferThreshold },
-          createdAt: { [Sequelize.Op.lt]: cutoffTime }
+          createdAt: { [Sequelize.Op.gt]: cutoffTime }
         },
         {
           status: enums.TransferStatuses.Enqueued,
@@ -90,7 +90,7 @@ const executeTransfers = async () => {
 
   clearWatchdog()
 
-  checkWalletBalance()
+  // checkWalletBalance()
 }
 
 const checkWalletBalance = async () => {

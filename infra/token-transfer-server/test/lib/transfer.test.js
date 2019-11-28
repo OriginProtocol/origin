@@ -15,39 +15,8 @@ const {
 } = require('../../src/lib/transfer')
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { transferConfirmationTimeout } = require('../../src/shared')
+const { TokenMock } = require('../util')
 const enums = require('../../src/enums')
-
-// Mock for the Token class in the @origin/token package.
-class TokenMock {
-  constructor(networkId, fromAddress, toAddress) {
-    this.networkId = networkId
-    this.fromAddress = fromAddress
-    this.toAddress = toAddress
-    this.decimals = 18
-    this.scaling = BigNumber(10).exponentiatedBy(this.decimals)
-  }
-
-  async defaultAccount() {
-    return this.fromAddress
-  }
-
-  async credit(address, value) {
-    expect(address).to.equal(this.toAddress)
-    expect(value.toNumber()).to.be.an('number')
-    return 'testTxHash'
-  }
-
-  async waitForTxConfirmation(txHash) {
-    return {
-      status: 'confirmed',
-      receipt: { txHash, blockNumber: 123, status: true }
-    }
-  }
-
-  toNaturalUnit(value) {
-    return BigNumber(value).multipliedBy(this.scaling)
-  }
-}
 
 describe('Token transfer library', () => {
   const networkId = 999
