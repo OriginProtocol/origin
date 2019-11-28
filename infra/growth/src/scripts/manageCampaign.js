@@ -262,7 +262,7 @@ async function updateDecemberProdRules() {
   const campaign = await db.GrowthCampaign.findOne({
     where: { nameKey: 'growth.dec2019.name' }
   })
-  await campaign.update({ rules: JSON.stringify(novemberConfig) })
+  await campaign.update({ rules: JSON.stringify(decemberConfig) })
 }
 
 const args = {}
