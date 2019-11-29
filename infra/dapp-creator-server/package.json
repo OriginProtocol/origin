@@ -47,7 +47,7 @@
   "devDependencies": {
     "chai": "4.2.0",
     "mocha": "6.2.2",
-    "nodemon": "2.0.0",
+    "nodemon": "2.0.1",
     "supertest": "4.0.2"
   },
   "babel": {
