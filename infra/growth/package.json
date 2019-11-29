@@ -30,7 +30,7 @@
     "graphql-iso-date": "3.6.1",
     "graphql-type-json": "0.3.1",
     "http": "0.0.0",
-    "libphonenumber-js": "1.7.27",
+    "libphonenumber-js": "1.7.29",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.14.0",
@@ -45,7 +45,7 @@
     "chai-things": "0.2.0",
     "chalk": "3.0.0",
     "mocha": "6.2.2",
-    "nodemon": "2.0.0",
+    "nodemon": "2.0.1",
     "prettier": "1.19.1",
     "rewire": "4.0.1"
   },
