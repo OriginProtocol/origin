@@ -34,11 +34,14 @@ const About = () => (
           <a href="https://github.com/OriginProtocol/origin">GitHub</a>.
         </div>
         <div className="question">
-          How do I easily deploy my own e-commerce store?
+          How do I deploy my own decentralized e-commerce store?
         </div>
         <div className="answer">
-          For now, please fill out the contact form on this blog post to be
-          notified when the decentralized store is generally available.
+          For now, please fill out the contact form on this{' '}
+          <a href="https://medium.com/originprotocol/built-on-origin-a-decentralized-shopify-alternative-888adc4198b0">
+            blog post
+          </a>{' '}
+          to be notified when the decentralized store is generally available.
         </div>
       </div>
     </div>
