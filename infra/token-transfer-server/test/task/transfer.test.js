@@ -13,7 +13,6 @@ const {
   executeTransfers,
   clearWatchdog
 } = require('../../src/tasks/transfer')
-const transferTasks = require('../../src/tasks/transfer')
 const {
   largeTransferThreshold,
   largeTransferDelayMinutes

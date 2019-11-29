@@ -4,7 +4,7 @@ const expect = chai.expect
 
 // Mock for the Token class in the @origin/token package.
 class TokenMock {
-  constructor(toAddress) {
+  constructor() {
     this.decimals = 18
     this.scaling = BigNumber(10).exponentiatedBy(this.decimals)
   }

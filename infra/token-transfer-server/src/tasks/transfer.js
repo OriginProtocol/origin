@@ -87,7 +87,7 @@ const executeTransfers = async () => {
 
   clearWatchdog()
 
-  // checkWalletBalance()
+  checkWalletBalance()
 }
 
 const checkWalletBalance = async () => {
