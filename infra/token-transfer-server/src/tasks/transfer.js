@@ -6,7 +6,7 @@ const Token = require('@origin/token/src/token')
 const {
   discordWebhookUrl,
   largeTransferThreshold,
-  largeTransferDelay,
+  largeTransferDelayMinutes,
   watchdogPath,
   networkId
 } = require('../config')
@@ -58,14 +58,14 @@ const executeTransfers = async () => {
     )
   }
 
-  const cutoffTime = moment.utc().subtract(largeTransferDelay, 'hours')
+  const cutoffTime = moment.utc().subtract(largeTransferDelayMinutes, 'minutes')
   const transfers = await Transfer.findAll({
     where: {
       [Sequelize.Op.or]: [
         {
           status: enums.TransferStatuses.Enqueued,
           amount: { [Sequelize.Op.gte]: largeTransferThreshold },
-          createdAt: { [Sequelize.Op.gt]: cutoffTime }
+          createdAt: { [Sequelize.Op.lte]: cutoffTime }
         },
         {
           status: enums.TransferStatuses.Enqueued,
@@ -79,10 +79,7 @@ const executeTransfers = async () => {
 
   for (const transfer of transfers) {
     logger.info(`Processing transfer ${transfer.id}`)
-    await transfer.update({ status: enums.TransferStatuses.Processing })
-    const result = await executeTransfer(transfer, {
-      networkId: networkId
-    })
+    const result = await executeTransfer(transfer)
     logger.info(
       `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
     )

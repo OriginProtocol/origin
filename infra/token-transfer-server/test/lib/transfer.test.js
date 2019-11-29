@@ -16,14 +16,12 @@ const {
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { transferConfirmationTimeout } = require('../../src/shared')
 const { TokenMock } = require('../util')
+const TransferLib = require('../../src/lib/transfer')
 const enums = require('../../src/enums')
 
-describe('Token transfer library', () => {
-  const networkId = 999
-  const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
-  const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
-  const tokenMock = new TokenMock(networkId, fromAddress, toAddress)
+const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
+describe('Token transfer library', () => {
   beforeEach(async () => {
     // Wipe database before each test
     expect(process.env.NODE_ENV).to.equal('test')
@@ -43,6 +41,12 @@ describe('Token transfer library', () => {
       cliff: new Date('2015-10-10'),
       amount: 100000
     })
+
+    TransferLib.__Rewire__('Token', TokenMock)
+  })
+
+  afterEach(async () => {
+    TransferLib.__ResetDependency__('Token')
   })
 
   it('should add a transfer', async () => {
@@ -293,10 +297,7 @@ describe('Token transfer library', () => {
     // Enqueue and execute a transfer
     const amount = 1000
     const transfer = await addTransfer(this.user.id, toAddress, amount)
-    const { txHash, txStatus } = await executeTransfer(transfer, {
-      networkId,
-      tokenMock
-    })
+    const { txHash, txStatus } = await executeTransfer(transfer)
     expect(txStatus).to.equal('confirmed')
     expect(txHash).to.equal('testTxHash')
 

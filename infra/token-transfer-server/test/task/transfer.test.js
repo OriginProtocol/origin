@@ -5,7 +5,7 @@ const base32 = require('thirty-two')
 const crypto = require('crypto')
 const sinon = require('sinon')
 
-const { Grant, Transfer, User, sequelize } = require('../../src/models')
+const { Event, Grant, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const enums = require('../../src/enums')
 const {
@@ -18,6 +18,8 @@ const {
   largeTransferThreshold,
   largeTransferDelayMinutes
 } = require('../../src/config')
+const { TokenMock } = require('../util')
+const TransferLib = require('../../src/lib/transfer')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
@@ -46,19 +48,15 @@ describe('Execute transfers', () => {
         start: moment().subtract(4, 'years'),
         end: moment(),
         cliff: moment().subtract(3, 'years'),
-        amount: 1000000
-      }),
-      // Fully unvested grant
-      await Grant.create({
-        userId: this.user.id,
-        start: moment().add(10, 'years'),
-        end: moment().add(14, 'years'),
-        cliff: moment().add(11, 'years'),
         amount: 10000000
       })
     ]
 
     clearWatchdog()
+  })
+
+  afterEach(async () => {
+    TransferLib.__ResetDependency__('Token')
   })
 
   it('should not run if watchdog exists', async () => {
@@ -103,13 +101,14 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a small transfer immediately', async () => {
-    const executeTransferFake = sinon.fake.returns({
-      id: 1,
-      txHash: '0x123'
+    const waitForTxConfirmationFake = sinon.fake.returns({
+      status: 'confirmed',
+      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
-    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
+    TransferLib.__Rewire__('Token', TokenMock)
 
-    const result = await Transfer.create({
+    const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
@@ -119,19 +118,25 @@ describe('Execute transfers', () => {
 
     await executeTransfers()
 
-    expect(executeTransferFake.called).to.equal(true)
+    await transfer.reload()
+    expect(transfer.status).to.equal(enums.TransferStatuses.Success)
 
-    transferTasks.__ResetDependency__('executeTransfer')
+    expect(waitForTxConfirmationFake.called).to.equal(true)
+
+    const events = await Event.findAll()
+    expect(events[0].action).to.equal('TRANSFER_DONE')
+    expect(events[0].data.transferId).to.equal(transfer.id)
   })
 
   it('should not execute a large transfer before cutoff time', async () => {
-    const executeTransferFake = sinon.fake.returns({
-      id: 1,
-      txHash: '0x123'
+    const waitForTxConfirmationFake = sinon.fake.returns({
+      status: 'confirmed',
+      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
-    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
+    TransferLib.__Rewire__('Token', TokenMock)
 
-    const result = await Transfer.create({
+    const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
@@ -141,27 +146,36 @@ describe('Execute transfers', () => {
 
     await executeTransfers()
 
-    expect(executeTransferFake.called).to.equal(false)
+    expect(waitForTxConfirmationFake.called).to.equal(false)
 
+    // Transfer should not have been executed so fake should not have been called
+    expect(waitForTxConfirmationFake.called).to.equal(false)
+    //
+    // Move into the future
     const clock = sinon.useFakeTimers(
-      moment(result.createdAt)
-        .add(largeTransferDelayMinutes, 'hours')
-        .subtract(1, 's')
+      moment
+        .utc(transfer.createdAt)
+        .add(largeTransferDelayMinutes - 1, 'minutes')
+        .valueOf()
     )
 
-    expect(executeTransferFake.called).to.equal(false)
-    transferTasks.__ResetDependency__('executeTransfer')
+    await executeTransfers()
+
+    // Transfer should not have been executed so fake should not have been called
+    expect(waitForTxConfirmationFake.called).to.equal(false)
+
     clock.restore()
   })
 
   it('should execute a large transfer after the cutoff time', async () => {
-    const executeTransferFake = sinon.fake.returns({
-      id: 1,
-      txHash: '0x123'
+    const waitForTxConfirmationFake = sinon.fake.returns({
+      status: 'confirmed',
+      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
-    transferTasks.__Rewire__('executeTransfer', executeTransferFake)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
+    TransferLib.__Rewire__('Token', TokenMock)
 
-    const result = await Transfer.create({
+    const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
@@ -169,23 +183,74 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
+    // Move into the future
     const clock = sinon.useFakeTimers(
-      moment(result.createdAt)
-        .add(largeTransferDelayMinutes, 'hours')
-        .add(1, 's')
+      moment
+        .utc(transfer.createdAt)
+        .add(largeTransferDelayMinutes + 1, 'minutes')
+        .valueOf()
     )
 
     await executeTransfers()
 
-    expect(executeTransferFake.called).to.equal(true)
+    // Transfer should have been executed so fake should have been called
+    expect(waitForTxConfirmationFake.called).to.equal(true)
 
-    transferTasks.__ResetDependency__('executeTransfer')
     clock.restore()
+
+    const events = await Event.findAll()
+    expect(events[0].action).to.equal('TRANSFER_DONE')
+    expect(events[0].data.transferId).to.equal(transfer.id)
   })
 
-  it('should record transfer success', () => {})
+  it('should record transfer failure', async () => {
+    const waitForTxConfirmationFake = sinon.fake.returns({
+      status: 'failed'
+    })
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
+    TransferLib.__Rewire__('Token', TokenMock)
 
-  it('should record transfer failure', () => {})
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: 1,
+      currency: 'OGN'
+    })
 
-  it('should record transfer timeout', () => {})
+    await executeTransfers()
+
+    await transfer.reload()
+    expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
+
+    const events = await Event.findAll()
+    expect(events[0].action).to.equal('TRANSFER_FAILED')
+    expect(events[0].data.transferId).to.equal(transfer.id)
+  })
+
+  it('should record transfer timeout', async () => {
+    const waitForTxConfirmationFake = sinon.fake.returns({
+      status: 'timeout'
+    })
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
+    TransferLib.__Rewire__('Token', TokenMock)
+
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: 1,
+      currency: 'OGN'
+    })
+
+    await executeTransfers()
+
+    await transfer.reload()
+    expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
+
+    const events = await Event.findAll()
+    expect(events[0].action).to.equal('TRANSFER_FAILED')
+    expect(events[0].data.failureReason).to.equal('Confirmation timeout')
+    expect(events[0].data.transferId).to.equal(transfer.id)
+  })
 })

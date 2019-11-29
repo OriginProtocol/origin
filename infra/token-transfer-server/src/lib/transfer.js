@@ -15,10 +15,9 @@ const {
 const { Event, Transfer, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
+const { clientUrl, encryptionSecret, networkId } = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
-
-const { encryptionSecret, clientUrl } = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
@@ -169,21 +168,20 @@ async function confirmTransfer(transfer, user) {
 /**
  * Sends a blockchain transaction to transfer tokens and waits for the transaction to get confirmed.
  * @param {Transfer} transfer: DB model Transfer object
- * @param {{tokenMock:Object, networkId:number }} opts: options
  * @returns {Promise<{txHash: string, txStatus: string}>}
  */
-async function executeTransfer(transfer, opts) {
-  const { networkId, tokenMock } = opts
-
+async function executeTransfer(transfer) {
   const user = await hasBalance(transfer.userId, transfer.amount, transfer)
 
-  // Setup token library. tokenMock is used for testing.
-  const token = tokenMock || new Token(networkId)
+  await transfer.update({ status: enums.TransferStatuses.Processing })
 
+  // Setup token library
+  const token = new Token(networkId)
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
   const txHash = await token.credit(transfer.toAddress, naturalAmount)
+
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
     fromAddress: supplier.toLowerCase(),
@@ -204,7 +202,6 @@ async function executeTransfer(transfer, opts) {
     case 'failed':
       transferStatus = enums.TransferStatuses.Failed
       eventAction = TRANSFER_FAILED
-      failureReason = 'Tx failed'
       break
     case 'timeout':
       transferStatus = enums.TransferStatuses.Failed
@@ -217,10 +214,6 @@ async function executeTransfer(transfer, opts) {
   logger.info(`Received status ${status} for txHash ${txHash}`)
 
   // Update the status in the transfer table.
-  // Note: only create an event in case the transaction is successful. The event
-  // table is used as an activity log presented to the user and we don't want
-  // them to get alarmed if a transaction happened to fail. Our team will investigate,
-  // fix the issue and resubmit the transaction if necessary.
   const txn = await sequelize.transaction()
   try {
     await transfer.update({
@@ -229,12 +222,13 @@ async function executeTransfer(transfer, opts) {
     const event = {
       userId: user.id,
       action: eventAction,
-      data: JSON.stringify({
-        transferId: transfer.id
-      })
+      data: {
+        transferId: transfer.id,
+        failureReason: failureReason
+      }
     }
     if (failureReason) {
-      event.failureReason = failureReason
+      event.data.failureReason = failureReason
     }
     await Event.create(event)
     await txn.commit()

@@ -4,20 +4,16 @@ const expect = chai.expect
 
 // Mock for the Token class in the @origin/token package.
 class TokenMock {
-  constructor(networkId, fromAddress, toAddress) {
-    this.networkId = networkId
-    this.fromAddress = fromAddress
-    this.toAddress = toAddress
+  constructor(toAddress) {
     this.decimals = 18
     this.scaling = BigNumber(10).exponentiatedBy(this.decimals)
   }
 
   async defaultAccount() {
-    return this.fromAddress
+    return '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   }
 
   async credit(address, value) {
-    expect(address).to.equal(this.toAddress)
     expect(value.toNumber()).to.be.an('number')
     return 'testTxHash'
   }
