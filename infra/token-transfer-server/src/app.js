@@ -78,7 +78,7 @@ app.use(require('./controllers'))
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
   if (walletMnemonic) {
-    cron.schedule('*/1 * * * * *', executeTransfers)
+    cron.schedule('*/10 * * * * *', executeTransfers)
   } else {
     logger.warn('Not wallet mnemonic found, not executing any transfers')
   }
