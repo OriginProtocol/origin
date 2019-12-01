@@ -63,7 +63,7 @@ async function sendMail(cart, skip) {
 
   const vars = {
     head,
-    siteName: config.siteData.title,
+    siteName: config.siteData.fullTitle || config.siteData.title,
     supportEmailName: config.siteData.supportEmailName,
     supportEmail: config.siteData.supportEmail,
     subject: config.siteData.emailSubject,

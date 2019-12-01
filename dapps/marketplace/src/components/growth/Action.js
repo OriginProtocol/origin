@@ -81,6 +81,9 @@ const WrapIntoInteraction = ({
           {children}
         </div>
       )}
+      {!showUnlockModalOnClick && !isInteractable && (
+        <div className="mt-auto mb-auto with-border">{children}</div>
+      )}
     </Fragment>
   )
 }

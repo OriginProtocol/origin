@@ -3,7 +3,7 @@ const config = require('../config')()
 
 const SqliteURI = `sqlite:${__dirname}/${config.network}.db`
 const URI = process.env.DATABASE_URL || SqliteURI
-const sequelize = new Sequelize(URI)
+const sequelize = new Sequelize(URI, { logging: false })
 
 const Network = sequelize.define(
   'network',

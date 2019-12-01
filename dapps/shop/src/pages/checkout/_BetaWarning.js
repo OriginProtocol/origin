@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 
+import Site from 'constants/Site'
+
 const BetaWarning = () => {
+  if (!Site.beta) {
+    return null
+  }
+
   const [cc, setCc] = useState()
   return (
     <div className="alert alert-warning beta-warning">
