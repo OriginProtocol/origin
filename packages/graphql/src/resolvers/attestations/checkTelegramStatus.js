@@ -63,7 +63,10 @@ async function checkTelegramStatus(_, { identity, maxTries }) {
 
   return {
     success: false,
-    reason: maxTries === 1 ? 'We cannot verify your attestation' : 'Verification timed out. Please try again'
+    reason:
+      maxTries === 1
+        ? 'We cannot verify your attestation'
+        : 'Verification timed out. Please try again'
   }
 }
 

@@ -100,7 +100,7 @@ const webpackConfig = {
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
-      network: 'rinkeby',
+      network: process.env.NETWORK || 'rinkeby',
       metaMask: true
     }),
     new HtmlWebpackPlugin({
@@ -119,8 +119,8 @@ const webpackConfig = {
       STRIPE_KEY: process.env.STRIPE_KEY || '',
       LISTING_ID: process.env.LISTING_ID || '',
       PGP_PUBLIC_KEY: process.env.PGP_PUBLIC_KEY || '',
-      PAYMENT_URL: config.paymentUrl,
-      BACKEND_URL: config.backend,
+      PAYMENT_URL: get(config, 'siteData.paymentUrl', ''),
+      BACKEND_URL: get(config, 'siteData.backend', ''),
       MARKETPLACE_CONTRACT: config.marketplace,
       DATA_DIR: get(config, 'siteData.dataDir', ''),
       SITE_TITLE: get(config, 'siteData.title', ''),
@@ -129,6 +129,7 @@ const webpackConfig = {
       SITE_LOGO: get(config, 'siteData.logo', ''),
       SITE_CSS: get(config, 'siteData.css', ''),
       SITE_EMAIL: get(config, 'siteData.supportEmail', ''),
+      SITE_BETA: get(config, 'siteData.beta', ''),
       SOCIAL_TWITTER: get(config, 'siteData.twitter', ''),
       SOCIAL_MEDIUM: get(config, 'siteData.medium', ''),
       SOCIAL_INSTAGRAM: get(config, 'siteData.instagram', '')

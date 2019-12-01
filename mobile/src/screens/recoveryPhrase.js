@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, ScrollView, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -13,49 +13,55 @@ import CommonStyles from 'styles/common'
 
 const RecoveryPhraseScreen = ({ navigation, wallet }) => (
   <SafeAreaView style={styles.container}>
-    <BackArrow onClick={() => navigation.goBack(null)} />
-    <View style={styles.content}>
-      <Text style={styles.title}>
-        <fbt desc="RecoveryPhrase.title">Recovery Phrase</fbt>
-      </Text>
-      <Text style={styles.subtitle}>
-        <fbt desc="RecoveryPhrase.subtitle">
-          Write down these 12 words in this order and keep them somewhere safe.
-        </fbt>
-      </Text>
-      <Text style={{ ...styles.subtitle, fontWeight: 'bold' }}>
-        <fbt desc="RecoveryPhrase.warning">
-          This is the ONLY way to restore access to your account.
-        </fbt>
-      </Text>
-      <View style={styles.recoveryContainer}>
-        {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
-          return (
-            <View style={styles.recoveryWordContainer} key={i}>
-              <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
-              <Text style={styles.recoveryWord}>{word}</Text>
-            </View>
-          )
-        })}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <BackArrow onClick={() => navigation.goBack(null)} />
+      <View style={styles.content}>
+        <Text style={styles.title}>
+          <fbt desc="RecoveryPhrase.title">Recovery Phrase</fbt>
+        </Text>
+        <Text style={styles.subtitle}>
+          <fbt desc="RecoveryPhrase.subtitle">
+            Write down these 12 words in this order and keep them somewhere
+            safe.
+          </fbt>
+        </Text>
+        <Text style={{ ...styles.subtitle, fontWeight: 'bold' }}>
+          <fbt desc="RecoveryPhrase.warning">
+            This is the ONLY way to restore access to your account.
+          </fbt>
+        </Text>
+        <View style={styles.recoveryContainer}>
+          {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
+            return (
+              <View style={styles.recoveryWordContainer} key={i}>
+                <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
+                <Text style={styles.recoveryWord}>{word}</Text>
+              </View>
+            )
+          })}
+        </View>
+        <Disclaimer>
+          <fbt desc="RecoveryPhrase.disclaimer">
+            Remember: You are solely responsible for your recovery phrase. We
+            don&apos;t store it and there&apos;s no other way to recover your
+            account.
+          </fbt>
+        </Disclaimer>
       </View>
-      <Disclaimer>
-        <fbt desc="RecoveryPhrase.disclaimer">
-          Remember: You are solely responsible for your recovery phrase. We
-          don&apos;t store it and there&apos;s no other way to recover your
-          account.
-        </fbt>
-      </Disclaimer>
-    </View>
-    <View style={styles.buttonContainer}>
-      <OriginButton
-        size="large"
-        type="primary"
-        title={fbt('Continue', 'RecoveryPhrase.continueButton')}
-        onPress={() => {
-          navigation.navigate('RecoveryPhraseVerify')
-        }}
-      />
-    </View>
+      <View style={styles.buttonContainer}>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Continue', 'RecoveryPhrase.continueButton')}
+          onPress={() => {
+            navigation.navigate('RecoveryPhraseVerify')
+          }}
+        />
+      </View>
+    </ScrollView>
   </SafeAreaView>
 )
 
@@ -83,15 +89,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   recoveryWordNumber: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#6a8296',
     textAlign: 'right',
-    width: '15%',
-    marginRight: '5%'
+    width: 28,
+    marginRight: 5
   },
   recoveryWord: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
-    width: '75%'
+    width: '100%'
   }
 })

@@ -23,8 +23,6 @@ import withConfig from 'hoc/withConfig'
 
 import AuthClient from '@origin/auth-client/src/auth-client'
 
-import RNSamsungBKS from 'react-native-samsung-bks'
-
 class PushNotifications extends Component {
   constructor(props) {
     super(props)
@@ -235,6 +233,10 @@ class PushNotifications extends Component {
         data['device_token'] = this.props.settings.deviceToken
       }
 
+      if (this.props.settings.referralCode) {
+        data['referral_code'] = this.props.settings.referralCode
+      }
+
       fetch(this.getNotificationServerUrl(), {
         method: 'POST',
         headers: {
@@ -321,11 +323,7 @@ class PushNotifications extends Component {
 
     // No private key (Samsung BKS account), can't proceed
     if (wallet.activeAccount.hdPath) {
-      const messageToSign = Buffer.from(payload).toString('base64')
-      signature = await RNSamsungBKS.signEthPersonalMessage(
-        wallet.activeAccount.hdPath,
-        messageToSign
-      )
+      return
     } else {
       const { privateKey, mnemonic } = wallet.activeAccount
 

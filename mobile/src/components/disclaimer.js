@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   container: {
     fontSize: 14,
     paddingVertical: 10,
+    marginBottom: 10,
     width: '80%'
   },
   text: {
