@@ -39,7 +39,7 @@
     "@babel/register": "7.7.4",
     "chai": "4.2.0",
     "crypto": "1.0.1",
-    "eslint": "6.7.1",
+    "eslint": "6.7.2",
     "mocha": "6.2.2",
     "nodemon": "2.0.1",
     "prettier": "1.19.1"
