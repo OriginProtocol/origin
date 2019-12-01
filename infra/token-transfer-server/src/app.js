@@ -1,4 +1,8 @@
+const cron = require('node-cron')
 const logger = require('./logger')
+
+const { executeTransfers } = require('./tasks/transfer')
+const { walletMnemonic } = require('./config')
 
 try {
   require('envkey')
@@ -73,6 +77,11 @@ app.use(require('./controllers'))
 
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
+  if (walletMnemonic) {
+    cron.schedule('*/1 * * * * *', executeTransfers)
+  } else {
+    logger.warn('Not wallet mnemonic found, not executing any transfers')
+  }
 })
 
 module.exports = app
