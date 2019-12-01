@@ -120,9 +120,7 @@ class SamsungBKS extends React.Component {
               </fbt>
             </Text>
           </View>
-          <View style={styles.buttonContainer}>
-            {this.renderError()}
-          </View>
+          <View style={styles.buttonContainer}>{this.renderError()}</View>
         </View>
       )
     }
