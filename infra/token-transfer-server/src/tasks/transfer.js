@@ -1,16 +1,11 @@
 const fs = require('fs')
 const moment = require('moment')
 
-const Token = require('@origin/token/src/token')
-
 const {
-  discordWebhookUrl,
   largeTransferThreshold,
   largeTransferDelayMinutes,
-  watchdogPath,
-  networkId
+  watchdogPath
 } = require('../config')
-const { postToWebhook } = require('../lib/webhook')
 const { Transfer, Sequelize } = require('../models')
 const { executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
