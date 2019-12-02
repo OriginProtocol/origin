@@ -12,7 +12,7 @@ let eventId = 0
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(38) // Note: adjust based on number of rules.
+  expect(state.actions.length).to.equal(39) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -103,7 +103,7 @@ describe('Apollo adapter - December campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(24) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(13) // Note: adjust based on number of rules.
+    expect(this.crules.levels[2].rules.length).to.equal(14) // Note: adjust based on number of rules.
 
     this.userA = '0xA123'
     this.userB = '0xB456'
