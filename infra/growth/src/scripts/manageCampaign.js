@@ -11,6 +11,7 @@ const augustConfig = require('../../campaigns/august')
 const septemberConfig = require('../../campaigns/september')
 const octoberConfig = require('../../campaigns/october')
 const novemberConfig = require('../../campaigns/november')
+const decemberConfig = require('../../campaigns/december')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -214,7 +215,7 @@ async function createNovemberProdCampaign() {
    */
   await db.GrowthCampaign.create({
     nameKey: 'growth.nov2019.name',
-    shortNameKey: 'growth.nov.short_name',
+    shortNameKey: 'growth.nov2019.short_name',
     rules: JSON.stringify(novemberConfig),
     startDate: Date.parse('November 1, 2019, 00:00 UTC'),
     endDate: Date.parse('December 1, 2019, 00:00 UTC'),
@@ -235,6 +236,35 @@ async function updateNovemberProdRules() {
   await campaign.update({ rules: JSON.stringify(novemberConfig) })
 }
 
+async function createDecemberProdCampaign() {
+  console.log('Creating December campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.dec2019.name',
+    shortNameKey: 'growth.dec2019.short_name',
+    rules: JSON.stringify(decemberConfig),
+    startDate: Date.parse('December 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('January 1, 2020, 00:00 UTC'),
+    distributionDate: Date.parse('January 1, 2020, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateDecemberProdRules() {
+  console.log('Updating December campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.dec2019.name' }
+  })
+  await campaign.update({ rules: JSON.stringify(decemberConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -250,7 +280,8 @@ const createByMonth = {
   august: createAugProdCampaign,
   september: createSepProdCampaign,
   october: createOctoberProdCampaign,
-  november: createNovemberProdCampaign
+  november: createNovemberProdCampaign,
+  december: createDecemberProdCampaign
 }
 
 const updateByMonth = {
@@ -260,7 +291,8 @@ const updateByMonth = {
   august: updateAugProdRules,
   september: updateSepProdRules,
   october: updateOctoberProdRules,
-  november: updateNovemberProdRules
+  november: updateNovemberProdRules,
+  december: updateDecemberProdRules
 }
 
 const action = args['--action']

@@ -1,5 +1,4 @@
 const openpgp = require('openpgp')
-const fs = require('fs')
 
 openpgp.config.show_comment = false
 openpgp.config.show_version = false
@@ -10,11 +9,16 @@ async function generate(name, passphrase) {
     curve: 'ed25519',
     passphrase
   })
-  fs.writeFileSync(`${__dirname}/../data/public-pgp.key`, key.publicKeyArmored)
-  console.log('\nWrote public key.')
-  console.log('Keep this private key safe:\n')
-  console.log(key.privateKeyArmored)
   console.log(`Pass phrase: ${passphrase}\n`)
+  console.log('Public key:')
+  console.log(key.publicKeyArmored)
+  console.log('\nPrivate key:\n')
+  console.log(key.privateKeyArmored)
+
+  console.log('Public key:')
+  console.log(JSON.stringify(key.publicKeyArmored))
+  console.log('\nPrivate key:\n')
+  console.log(JSON.stringify(key.privateKeyArmored))
 }
 
-generate('nick', 'abc123')
+generate('test', 'abc123')

@@ -96,8 +96,15 @@ async function connectWS() {
     ws.send(SubscribeToNewHeads)
   })
 
+  const handled = {}
   let heads, logs
   ws.on('message', function incoming(raw) {
+    const hash = web3.utils.sha3(raw)
+    if (handled[hash]) {
+      console.log('Ignoring repeated ws message')
+    }
+    handled[hash] = true
+
     const data = JSON.parse(raw)
     if (data.id === 1) {
       logs = data.result

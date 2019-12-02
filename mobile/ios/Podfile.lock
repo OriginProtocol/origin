@@ -264,6 +264,8 @@ PODS:
   - RNSentry (1.1.0):
     - React
     - Sentry (~> 4.4.0)
+  - RNSVG (9.13.3):
+    - React
   - Sentry (4.4.1):
     - Sentry/Core (= 4.4.1)
   - Sentry/Core (4.4.1)
@@ -309,6 +311,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - RNSVG (from `../node_modules/react-native-svg`)
   - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -389,6 +392,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-localize"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   TouchID:
     :path: "../node_modules/react-native-touch-id"
   Yoga:
@@ -433,6 +438,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a4ddde1ffc6e590c8127b8b7eabfdade45475c74
   RNLocalize: 07eb7a91d10021cdf59d80061ebf3adb8a5b5688
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
+  RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   Sentry: 5d312a04e369154aeac616214f4dfc3cbcc8b296
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: ba3d99dbee6c15ea6bbe3783d1f0cb1ffb79af0f

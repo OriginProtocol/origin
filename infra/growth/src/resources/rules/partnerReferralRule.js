@@ -150,13 +150,13 @@ class PartnerReferralEvent extends BaseRule {
     // No user passed. Return zero.
     if (!ethAddress || this.validCodes.length < 1) {
       logger.debug(`No address or codes`)
-      return zero
+      return [zero]
     }
 
     // no events
     if (!events || events.length === 0) {
       logger.debug(`No matching events for ${ethAddress}`)
-      return zero
+      return [zero]
     }
 
     logger.debug(`Found ${events.length} matching events for ${ethAddress}`)

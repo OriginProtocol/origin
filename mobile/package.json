@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.26.6",
+  "version": "0.27.0",
   "scripts": {
     "android": "react-native run-android --appId com.origincatcher",
     "clean": "git clean -fdX .",
@@ -66,6 +66,7 @@
     "react-native-safe-area-context": "^0.6.0",
     "react-native-safe-area-view": "^1.0.0",
     "react-native-samsung-bks": "^0.1.1",
+    "react-native-svg": "^9.13.3",
     "react-native-touch-id": "^4.4.1",
     "react-native-webview": "^7.5.1",
     "react-navigation": "3.11.0",
