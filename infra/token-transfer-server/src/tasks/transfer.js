@@ -86,24 +86,6 @@ const executeTransfers = async () => {
   }
 
   clearWatchdog()
-
-  checkWalletBalance()
-}
-
-const checkWalletBalance = async () => {
-  const token = new Token(networkId)
-  const balance = token.toTokenUnit(token.balance())
-
-  if (balance < 10) {
-    const webhookData = {
-      embeds: [
-        {
-          title: `Wallet balance is \`${balance}\`, should be \`${balance}\` OGN`
-        }
-      ]
-    }
-    await postToWebhook(discordWebhookUrl, JSON.stringify(webhookData))
-  }
 }
 
 module.exports = {
