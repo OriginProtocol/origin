@@ -524,7 +524,7 @@ const novemberConfig = {
             limit: 1,
             visible: true,
             nextLevelCondition: false,
-            scope: 'campaign',
+            scope: 'user',
             statusScope: 'user'
           }
         },
