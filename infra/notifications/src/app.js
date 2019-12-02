@@ -19,6 +19,10 @@ const EmailSender = require('./emailSend')
 const MobileRegistry = require('./models').MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const {
+  GrowthReferral,
+  GrowthInviteCode
+} = require('@origin/growth-event/src/models')
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
 
@@ -250,18 +254,41 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
   )
   // This one's for partner referral bonus
   if (mobileRegister.referralCode) {
-    await GrowthEvent.insert(
-      logger,
-      1,
-      mobileRegister.ethAddress,
-      GrowthEventTypes.PartnerReferral,
-      mobileRegister.referralCode,
-      null,
-      now
-    )
-    logger.debug(
-      `Recorded partner referral with code ${mobileRegister.referralCode}.`
-    )
+    if (mobileRegister.referralCode.startsWith('op')) {
+      await GrowthEvent.insert(
+        logger,
+        1,
+        mobileRegister.ethAddress,
+        GrowthEventTypes.PartnerReferral,
+        mobileRegister.referralCode,
+        null,
+        now
+      )
+      logger.debug(
+        `Recorded partner referral with code ${mobileRegister.referralCode}.`
+      )
+    } else if (mobileRegister.referralCode.startsWith('or')) {
+      const inviteCode = await GrowthInviteCode.findOne({
+        where: {
+          code: mobileRegister.referralCode
+        }
+      })
+      if (inviteCode) {
+        await GrowthReferral.upsert({
+          referrerEthAddress: mobileRegister.ethAddress,
+          refereeEthAddress: inviteCode.ethAddress
+        })
+        logger.info(
+          `Invite code ${mobileRegister.referralCode} has been used by ${mobileRegister.ethAddress}`
+        )
+      } else {
+        logger.warn(`Invite code ${mobileRegister.referralCode} was not found!`)
+      }
+    } else {
+      logger.error(
+        `Referral code ${mobileRegister.referralCode} appears to be invalid!`
+      )
+    }
   }
 })
 
