@@ -56,9 +56,8 @@ class MarketplaceApp extends React.Component {
     const clipData = await Clipboard.getString()
     for (const prefix of REFERRAL_PREFIXES) {
       if (clipData && clipData.startsWith(prefix)) {
-        const referralCode = clipData.slice(prefix.length)
-        console.debug(`referral code found: ${referralCode}`)
-        this.props.setReferralCode(referralCode)
+        console.debug(`referral code found: ${clipData}`)
+        this.props.setReferralCode(clipData)
         break
       }
     }

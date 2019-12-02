@@ -253,14 +253,18 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
     `Recorded mobile account creation for ${mobileRegister.ethAddress} in growth system.`
   )
   // This one's for partner referral bonus
-  if (mobileRegister.referralCode) {
+  if (
+    mobileRegister.referralCode &&
+    mobileRegister.referralCode.includes(':')
+  ) {
     if (mobileRegister.referralCode.startsWith('op')) {
+      const parts = mobileRegister.referralCode.split(':')
       await GrowthEvent.insert(
         logger,
         1,
         mobileRegister.ethAddress,
         GrowthEventTypes.PartnerReferral,
-        mobileRegister.referralCode,
+        parts[1],
         null,
         now
       )
@@ -268,15 +272,16 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
         `Recorded partner referral with code ${mobileRegister.referralCode}.`
       )
     } else if (mobileRegister.referralCode.startsWith('or')) {
+      const parts = mobileRegister.referralCode.split(':')
       const inviteCode = await GrowthInviteCode.findOne({
         where: {
-          code: mobileRegister.referralCode
+          code: parts[1]
         }
       })
       if (inviteCode) {
         await GrowthReferral.upsert({
-          referrerEthAddress: mobileRegister.ethAddress,
-          refereeEthAddress: inviteCode.ethAddress
+          referrerEthAddress: inviteCode.ethAddress,
+          refereeEthAddress: mobileRegister.ethAddress
         })
         logger.info(
           `Invite code ${mobileRegister.referralCode} has been used by ${mobileRegister.ethAddress}`
