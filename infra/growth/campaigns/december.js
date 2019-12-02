@@ -513,6 +513,22 @@ const novemberConfig = {
           }
         },
         {
+          id: 'PartnerReferral',
+          class: 'PartnerReferralEvent',
+          config: {
+            eventType: 'PartnerReferral',
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
           id: 'ListingPurchase1-001-51',
           class: 'ListingIdPurchase',
           config: {
