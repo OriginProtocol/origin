@@ -223,8 +223,7 @@ async function executeTransfer(transfer) {
       userId: user.id,
       action: eventAction,
       data: {
-        transferId: transfer.id,
-        failureReason: failureReason
+        transferId: transfer.id
       }
     }
     if (failureReason) {
