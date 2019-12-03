@@ -60,7 +60,7 @@ class AuthenticationGuard extends Component {
   }
 
   _hasAuthentication = () => {
-    return this.props.settings.biometryType || this.props.settings.pin
+    return Boolean(this.props.settings.biometryType) || Boolean(this.props.settings.pin)
   }
 
   _handleAppStateChange = nextAppState => {
