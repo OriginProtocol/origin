@@ -47,9 +47,8 @@ if (app.get('env') === 'production') {
 }
 
 const corsWhitelist = [
-  'https://investor.dev.originprotocol.com',
-  'https://employee.dev.originprotocol.com',
-  'http://localhost:3000'
+  'https://investor.originprotocol.com',
+  'https://employee.originprotocol.com'
 ]
 
 // CORS setup
