@@ -44,16 +44,28 @@ const sessionConfig = {
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies in production
-} else {
-  // CORS setup for dev. This is handled by nginx in production.
-  app.use(
-    cors({
-      origin: 'http://localhost:3000',
-      credentials: true,
-      exposedHeaders: ['X-Authenticated-Email']
-    })
-  )
 }
+
+const corsWhitelist = [
+  'https://investor.dev.originprotocol.com',
+  'https://employee.dev.originprotocol.com',
+  'http://localhost:3000'
+]
+
+// CORS setup
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || corsWhitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    credentials: true,
+    exposedHeaders: ['X-Authenticated-Email']
+  })
+)
 
 app.use(helmet())
 

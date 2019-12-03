@@ -27,7 +27,7 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "eslint": "6.6.0",
+    "eslint": "6.7.2",
     "prettier": "1.19.1"
   }
 }

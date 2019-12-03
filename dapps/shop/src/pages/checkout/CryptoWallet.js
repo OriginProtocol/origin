@@ -23,7 +23,6 @@ const CryptoWallet = ({ walletStatus }) => {
   } else if (walletStatus === 'wrong-network') {
     return <div className="alert alert-danger">{`Wrong network`}</div>
   }
-  // console.log(walletStatus)
   return <div>{`Wallet Connected OK`}</div>
 }
 

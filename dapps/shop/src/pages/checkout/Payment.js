@@ -1,4 +1,7 @@
 import React from 'react'
+import get from 'lodash/get'
+
+import { useStateValue } from 'data/state'
 
 import Link from 'components/Link'
 import Site from 'constants/Site'
@@ -8,6 +11,7 @@ import ChoosePayment from './ChoosePayment'
 import BetaWarning from './_BetaWarning'
 
 const CheckoutPayment = () => {
+  const [{ cart }] = useStateValue()
   return (
     <div className="checkout-shipping">
       <div className="d-none d-md-block">
@@ -24,9 +28,7 @@ const CheckoutPayment = () => {
         <ShipTo />
         <div className="info-row">
           <div className="label">Method</div>
-          <div className="value">
-            Standard Shipping <b>$5.00</b>
-          </div>
+          <div className="value">{get(cart, 'shipping.label')}</div>
           <Link className="change" to="/checkout/shipping">
             Change
           </Link>
