@@ -46,25 +46,28 @@ if (app.get('env') === 'production') {
   sessionConfig.cookie.secure = true // serve secure cookies in production
 }
 
-const corsWhitelist = [
-  'https://investor.originprotocol.com',
-  'https://employee.originprotocol.com'
-]
+// Configure CORS in Heroku, outside of Heroku this is handled by Kubernetes nginx ingress
+if (process.env.HEROKU) {
+  const corsWhitelist = [
+    'https://investor.originprotocol.com',
+    'https://employee.originprotocol.com'
+  ]
 
-// CORS setup
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || corsWhitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    },
-    credentials: true,
-    exposedHeaders: ['X-Authenticated-Email']
-  })
-)
+  // CORS setup
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || corsWhitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
+      credentials: true,
+      exposedHeaders: ['X-Authenticated-Email']
+    })
+  )
+}
 
 app.use(helmet())
 
