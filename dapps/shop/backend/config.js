@@ -1,8 +1,7 @@
 const network =
-  process.env.NETWORK || process.env.NODE_ENV === 'production'
-    ? 'rinkeby'
-    : 'localhost'
-const site = process.env.SITE || 'ethereum'
+  process.env.NETWORK ||
+  (process.env.NODE_ENV === 'production' ? 'rinkeby' : 'localhost')
+const site = process.env.SITE || 'origin'
 const AlchemyKey = process.env.ALCHEMY_KEY
 
 let localContractAddress
@@ -30,8 +29,6 @@ const Configs = {
     ipfsApi: 'https://ipfs.staging.originprotocol.com',
     providerWs: `wss://eth-rinkeby.ws.alchemyapi.io/ws/${AlchemyKey}`,
     provider: `https://eth-rinkeby.alchemyapi.io/jsonrpc/${AlchemyKey}`,
-    paymentUrl: 'https://origin-pay.herokuapp.com/pay',
-    backend: 'https://origin-pay.herokuapp.com',
     marketplace: '0x3d608cce08819351ada81fc1550841ebc10686fd',
     fetchPastLogs: true
   },
@@ -41,7 +38,6 @@ const Configs = {
     ipfsApi: 'https://ipfs.originprotocol.com',
     providerWs: `wss://eth-mainnet.ws.alchemyapi.io/ws/${AlchemyKey}`,
     provider: `https://eth-mainnet.alchemyapi.io/jsonrpc/${AlchemyKey}`,
-    paymentUrl: 'https://origin-pay.herokuapp.com',
     backend: '',
     marketplace: '0x698ff47b84837d3971118a369c570172ee7e54c2',
     fetchPastLogs: true
@@ -75,7 +71,15 @@ const SiteData = {
     css: 'style.css',
     twitter: 'https://twitter.com/originprotocol',
     medium: 'https://medium.com/originprotocol',
-    instagram: 'https://www.instagram.com/originprotocol'
+    instagram: 'https://www.instagram.com/originprotocol',
+    rinkeby: {
+      paymentUrl: 'https://origin-pay.herokuapp.com/pay',
+      backend: 'https://origin-pay.herokuapp.com'
+    },
+    mainnet: {
+      paymentUrl: 'https://origin-pay.herokuapp.com/pay',
+      backend: 'https://origin-pay.herokuapp.com'
+    }
   },
   gitcoin: {
     dataDir: 'gitcoin',
@@ -90,7 +94,9 @@ const SiteData = {
     emailAssets: 'https://www.ethswag.com/gitcoin/products',
     logo: 'logo.png',
     css: 'style.css',
-    contentHash: 'QmTBTU8SmUbX32UHRmW13WviUE5wqMJBsW9V4RaVUBfKyP'
+    contentHash: 'QmTBTU8SmUbX32UHRmW13WviUE5wqMJBsW9V4RaVUBfKyP',
+    paymentUrl: 'https://gitcoin-pay.herokuapp.com/pay',
+    backend: 'https://gitcoin-pay.herokuapp.com'
   },
   ethereum: {
     dataDir: 'ef',
@@ -119,9 +125,10 @@ const SiteData = {
 }
 
 module.exports = function() {
-  if (!Configs[network]) {
+  if (!Configs[network] || !SiteData[site]) {
     process.exit(`No config for network ${network}`)
   }
-
-  return { ...Configs[network], network, siteData: SiteData[site] }
+  const siteNet = SiteData[site][network] || {}
+  const siteData = { ...SiteData[site], ...siteNet }
+  return { ...Configs[network], network, siteData }
 }

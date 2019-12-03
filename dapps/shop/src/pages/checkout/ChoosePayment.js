@@ -145,7 +145,6 @@ const CreditCardForm = injectStripe(({ stripe }) => {
                 setFormData({ ...formData, cardError: result.error.message })
                 setLoading(false)
               } else {
-                console.log('Success!', result)
                 history.push(`/order/${hash}?auth=${auth}`)
               }
             })

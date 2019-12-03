@@ -77,11 +77,11 @@ function getClientEnvironment(publicUrl) {
   const stringified = {
     'process.env': Object.keys(raw).reduce((env, key) => {
       const whitelist = [
-        'API_URL',
         'CLIENT_SENTRY_DSN',
         'EMPLOYEE_API_URL',
         'ENABLE_GA',
         'EARN_OGN_ENABLED',
+        'INVESTOR_API_URL',
         'LOCKUP_BONUS_RATE',
         'NODE_ENV',
         'UNLOCK_DATE'

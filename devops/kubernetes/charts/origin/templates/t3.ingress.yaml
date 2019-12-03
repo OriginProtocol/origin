@@ -33,10 +33,12 @@ spec:
           backend:
             serviceName: {{ template "t3.fullname" . }}
             servicePort: 80
+        {{- if ne .Release.Namespace "dev" }}
         - path: /api
           backend:
             serviceName: {{ template "t3.fullname" . }}
             servicePort: 5000
+        {{- end }}
   - host: {{ template "t3-employee.host" . }}
     http:
       paths:
@@ -44,3 +46,9 @@ spec:
           backend:
             serviceName: {{ template "t3.fullname" . }}
             servicePort: 80
+        {{- if ne .Release.Namespace "dev" }}
+        - path: /api
+          backend:
+            serviceName: {{ template "t3.fullname" . }}
+            servicePort: 5000
+        {{- end }}
