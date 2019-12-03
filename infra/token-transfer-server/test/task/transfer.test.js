@@ -104,6 +104,7 @@ describe('Execute transfers', () => {
       status: 'confirmed',
       receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
+    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
     TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
     TransferLib.__Rewire__('Token', TokenMock)
 
@@ -125,6 +126,7 @@ describe('Execute transfers', () => {
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_DONE')
     expect(events[0].data.transferId).to.equal(transfer.id)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should not execute a large transfer before cutoff time', async () => {
@@ -132,6 +134,7 @@ describe('Execute transfers', () => {
       status: 'confirmed',
       receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
+    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
     TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
     TransferLib.__Rewire__('Token', TokenMock)
 
@@ -164,6 +167,7 @@ describe('Execute transfers', () => {
     expect(waitForTxConfirmationFake.called).to.equal(false)
 
     clock.restore()
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should execute a large transfer after the cutoff time', async () => {
@@ -171,6 +175,7 @@ describe('Execute transfers', () => {
       status: 'confirmed',
       receipt: { txHash: '0x1234', blockNumber: 123, status: true }
     })
+    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
     TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
     TransferLib.__Rewire__('Token', TokenMock)
 
@@ -200,12 +205,40 @@ describe('Execute transfers', () => {
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_DONE')
     expect(events[0].data.transferId).to.equal(transfer.id)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
+  })
+
+  it('should record transfer failure on failure to credit', async () => {
+    const creditFake = sinon.fake.throws(new Error('Supplier balance is too low'))
+    const credit = TokenMock.prototype.credit
+    TokenMock.prototype.credit = creditFake
+    TransferLib.__Rewire__('Token', TokenMock)
+
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: toAddress,
+      amount: 1,
+      currency: 'OGN'
+    })
+
+    await executeTransfers()
+
+    await transfer.reload()
+    expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
+
+    const events = await Event.findAll()
+    expect(events[0].action).to.equal('TRANSFER_FAILED')
+    expect(events[0].data.transferId).to.equal(transfer.id)
+    expect(events[0].data.failureReason).to.equal('Supplier balance is too low')
+    TokenMock.prototype.credit = credit
   })
 
   it('should record transfer failure', async () => {
     const waitForTxConfirmationFake = sinon.fake.returns({
       status: 'failed'
     })
+    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
     TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
     TransferLib.__Rewire__('Token', TokenMock)
 
@@ -225,12 +258,15 @@ describe('Execute transfers', () => {
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_FAILED')
     expect(events[0].data.transferId).to.equal(transfer.id)
+    expect(events[0].data.failureReason).to.equal(undefined)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should record transfer timeout', async () => {
     const waitForTxConfirmationFake = sinon.fake.returns({
       status: 'timeout'
     })
+    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
     TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
     TransferLib.__Rewire__('Token', TokenMock)
 
@@ -251,5 +287,6 @@ describe('Execute transfers', () => {
     expect(events[0].action).to.equal('TRANSFER_FAILED')
     expect(events[0].data.failureReason).to.equal('Confirmation timeout')
     expect(events[0].data.transferId).to.equal(transfer.id)
+    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 })

@@ -177,10 +177,24 @@ async function executeTransfer(transfer) {
 
   // Setup token library
   const token = new Token(networkId)
+
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
-  const txHash = await token.credit(transfer.toAddress, naturalAmount)
+
+  let txHash
+  try {
+    txHash = await token.credit(transfer.toAddress, naturalAmount)
+  } catch (error) {
+    await updateTransferStatus(
+      user,
+      transfer,
+      enums.TransferStatuses.Failed,
+      TRANSFER_FAILED,
+      error.message
+    )
+    return { txHash: null, txStatus: enums.TransferStatuses.Failed }
+  }
 
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
@@ -193,6 +207,7 @@ async function executeTransfer(transfer) {
     numBlocks: NumBlockConfirmation,
     timeoutSec: ConfirmationTimeoutSec
   })
+
   let transferStatus, eventAction, failureReason
   switch (status) {
     case 'confirmed':
@@ -213,6 +228,24 @@ async function executeTransfer(transfer) {
   }
   logger.info(`Received status ${status} for txHash ${txHash}`)
 
+  await updateTransferStatus(
+    user,
+    transfer,
+    transferStatus,
+    eventAction,
+    failureReason
+  )
+
+  return { txHash, txStatus: status }
+}
+
+async function updateTransferStatus(
+  user,
+  transfer,
+  transferStatus,
+  eventAction,
+  failureReason
+) {
   // Update the status in the transfer table.
   const txn = await sequelize.transaction()
   try {
@@ -238,8 +271,6 @@ async function executeTransfer(transfer) {
     )
     throw e
   }
-
-  return { txHash, txStatus: status }
 }
 
 module.exports = {
