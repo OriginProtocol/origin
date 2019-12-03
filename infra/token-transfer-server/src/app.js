@@ -49,7 +49,7 @@ if (app.get('env') === 'production') {
 if (process.env.HEROKU) {
   const corsWhitelist = [
     'https://investor.originprotocol.com',
-    'https://employee.originprotocol.com',
+    'https://employee.originprotocol.com'
   ]
 
   // CORS setup
