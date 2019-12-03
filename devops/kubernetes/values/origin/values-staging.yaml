@@ -2,23 +2,23 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'e46cf37'
+bridgeImageTag: '7d04c87'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'c34bb58'
+dappImageTag: '7d04c87'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '7a45bae'
+ipfsProxyImageTag: '7d04c87'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '7a45bae'
+faucetImageTag: '7d04c87'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'af17247'
+eventlistenerImageTag: '7d04c87'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,15 +26,15 @@ discoveryImageTag: 'edbfab9'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'f0b1758'
+growthImageTag: '7d04c87'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'e46cf37'
+messagingImageTag: '7d04c87'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '7a45bae'
+notificationsImageTag: '7d04c87'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -55,28 +55,28 @@ linkingImageTag: 'bce3090'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'e46cf37'
+cronImageTag: '7d04c87'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '7a45bae'
+adminImageTag: '7d04c87'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '7a45bae'
+relayerImageTag: '7d04c87'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '7a45bae'
+graphqlImageTag: '7d04c87'
 
-# origin-token-transfer-client
-t3ClientImage: origin-token-transfer-client
-t3ClientImageTag: '7a45bae'
+# origin-t3-client
+t3ClientImage: origin-t3-client
+t3ClientImageTag: '7d04c87'
 
-# origin-token-transfer-server
-t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: '073010c'
+# origin-t3-server
+t3ServerImage: origin-t3-server
+t3ServerImageTag: '7d04c87'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '7a45bae'
+authImageTag: '7d04c87'
