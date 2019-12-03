@@ -209,7 +209,9 @@ describe('Execute transfers', () => {
   })
 
   it('should record transfer failure on failure to credit', async () => {
-    const creditFake = sinon.fake.throws(new Error('Supplier balance is too low'))
+    const creditFake = sinon.fake.throws(
+      new Error('Supplier balance is too low')
+    )
     const credit = TokenMock.prototype.credit
     TokenMock.prototype.credit = creditFake
     TransferLib.__Rewire__('Token', TokenMock)
