@@ -52,6 +52,7 @@ class MarketplaceScreen extends PureComponent {
     super(props)
 
     this.state = {
+      canGoBack: false,
       enablePullToRefresh: true,
       panResponder: this.getSwipeHandler(),
       webViewRef: React.createRef()
@@ -578,6 +579,8 @@ class MarketplaceScreen extends PureComponent {
       return
     }
 
+    this.setState({ canGoBack: state.canGoBack })
+
     // Request Android camera permissions if doing something that is likely
     // to need them
     try {
@@ -688,10 +691,11 @@ class MarketplaceScreen extends PureComponent {
   /* Handle back requests, e.g. from Android back buttons.
    */
   onBack = () => {
-    if (this.state.webViewRef.current) {
+    if (this.state.canGoBack && this.state.webViewRef.current) {
       this.state.webViewRef.current.goBack()
+      return true
     }
-    return true
+    return false
   }
 
   /* Handle an error loading the WebView
