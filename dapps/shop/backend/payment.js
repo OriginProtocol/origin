@@ -1,6 +1,7 @@
 require('dotenv').config()
 const config = require('./config')()
 
+const fetch = require('node-fetch')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -11,6 +12,11 @@ const stripe = require('stripe')(process.env.STRIPE_BACKEND)
 const Web3 = require('web3')
 const { post, getBytes32FromIpfsHash } = require('./_ipfs')
 const { Orders } = require('./data/db')
+
+const PrintfulApiKey = process.env.PRINTFUL
+
+const apiAuth = Buffer.from(PrintfulApiKey).toString('base64')
+const PrintfulURL = 'https://api.printful.com'
 
 const abi = require('./_abi')
 
@@ -34,13 +40,56 @@ app.get('/auth', auth, (req, res) => {
 })
 
 app.get('/orders', auth, async (req, res) => {
-  const orders = await Orders.findAll()
+  const orders = await Orders.findAll({ order: [['createdAt', 'desc']] })
   res.json(orders)
 })
 
 app.get('/orders/:id', auth, async (req, res) => {
   const order = await Orders.findOne({ where: { order_id: req.params.id } })
   res.json(order)
+})
+
+app.get('/orders/:id/printful', async (req, res) => {
+  const result = await fetch(`${PrintfulURL}/orders/@${req.params.id}`, {
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Basic ${apiAuth}`
+    }
+  })
+  const json = await result.json()
+  res.json(get(json, 'result'))
+})
+
+app.post('/orders/:id/printful/create', bodyParser.json(), async (req, res) => {
+  const newOrderResponse = await fetch(`${PrintfulURL}/orders`, {
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Basic ${apiAuth}`
+    },
+    credentials: 'include',
+    method: 'POST',
+    body: JSON.stringify(req.body)
+  })
+  const json = await newOrderResponse.json()
+  console.log(json)
+
+  res.json({ success: true })
+})
+
+app.post('/orders/:id/printful/confirm', async (req, res) => {
+  const url = `${PrintfulURL}/orders/@${req.params.id}/confirm`
+  const confirmOrderResponse = await fetch(url, {
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Basic ${apiAuth}`
+    },
+    credentials: 'include',
+    method: 'POST'
+  })
+  const json = await confirmOrderResponse.json()
+  console.log(json)
+
+  res.json({ success: true })
 })
 
 app.post('/pay', bodyParser.json(), async (req, res) => {

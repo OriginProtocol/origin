@@ -7,7 +7,7 @@ import Link from 'components/Link'
 import Products from './Products'
 import Collections from './Collections'
 import Orders from './Orders'
-import Order from './Order'
+import Order from './order/Order'
 import Login from './Login'
 
 const SiteTitle = process.env.SITE_FULL_TITLE || process.env.SITE_TITLE
