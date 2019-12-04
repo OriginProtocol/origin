@@ -107,10 +107,7 @@ export const reverseMapping = o =>
   )
 
 export const canUseSamsungBKS = async wallet => {
-  if (!__DEV__) {
-    // Cannot use BKS if not in dev mode because we don't have SCW_APP_ID
-    return false
-  } else if (Platform.OS === 'ios') {
+  if (Platform.OS === 'ios') {
     // Android only
     return false
   } else if (wallet.accounts.length > 0) {

@@ -76,7 +76,19 @@ function getClientEnvironment(publicUrl) {
   // Stringify all values so we can feed into Webpack DefinePlugin
   const stringified = {
     'process.env': Object.keys(raw).reduce((env, key) => {
-      env[key] = JSON.stringify(raw[key])
+      const whitelist = [
+        'CLIENT_SENTRY_DSN',
+        'EMPLOYEE_API_URL',
+        'ENABLE_GA',
+        'EARN_OGN_ENABLED',
+        'INVESTOR_API_URL',
+        'LOCKUP_BONUS_RATE',
+        'NODE_ENV',
+        'UNLOCK_DATE'
+      ]
+      if (whitelist.includes(key)) {
+        env[key] = JSON.stringify(raw[key])
+      }
       return env
     }, {})
   }

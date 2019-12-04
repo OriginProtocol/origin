@@ -21,7 +21,8 @@ const currencies = [
   'CNY',
   'USDC',
   'GUSD',
-  'OKB'
+  'OKB',
+  'USDT'
 ]
 
 let pollInterval

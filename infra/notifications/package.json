@@ -50,10 +50,11 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "eslint": "6.6.0",
+    "eslint": "6.7.2",
     "json-stable-stringify": "1.0.1",
     "mocha": "6.2.2",
-    "nodemon": "1.19.4"
+    "nodemon": "2.0.1",
+    "prettier": "1.19.1"
   },
   "prettier": {
     "semi": false,

@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
@@ -71,10 +71,7 @@ class ChangePinScreen extends Component {
     }
 
     return (
-      <KeyboardAvoidingView
-        style={styles.content}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-      >
+      <KeyboardAvoidingView style={styles.content} behavior={'padding'}>
         <Text style={styles.subtitle}>{titleElement}</Text>
         {this.state.isRetry === true && (
           <Text style={styles.invalid}>

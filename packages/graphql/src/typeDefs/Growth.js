@@ -51,6 +51,7 @@ module.exports = `
     TelegramFollow
     FacebookShare
     FacebookLike
+    PartnerReferral
   }
 
   enum GrowthInviteStatus {
@@ -91,6 +92,7 @@ module.exports = `
   type InviteInfo {
     firstName: String
     lastName: String
+    avatarURL: String
   }
 
   type UnlockCondition {

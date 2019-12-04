@@ -19,6 +19,10 @@ const EmailSender = require('./emailSend')
 const MobileRegistry = require('./models').MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const {
+  GrowthReferral,
+  GrowthInviteCode
+} = require('@origin/growth-event/src/models')
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
 
@@ -185,6 +189,7 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
     ethAddress: req.__originAuth.address,
     deviceType: _.get(req.body, 'device_type', null),
     deviceToken: _.get(req.body, 'device_token', null),
+    referralCode: _.get(req.body, 'referral_code', null),
     permissions: _.get(req.body, 'permissions', null)
   }
   logger.info(`POST /mobile/register for ${mobileRegister.ethAddress}`)
@@ -234,6 +239,7 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
   //  - The insert method is idempotent. It checks for existing rows before
   //    inserting, so it's alright to call it every time /mobile/register
   //    gets executed.
+  const now = new Date()
   await GrowthEvent.insert(
     logger,
     1,
@@ -241,11 +247,54 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
     GrowthEventTypes.MobileAccountCreated,
     mobileRegister.deviceToken,
     { deviceType: mobileRegister.deviceType },
-    new Date()
+    now
   )
   logger.debug(
     `Recorded mobile account creation for ${mobileRegister.ethAddress} in growth system.`
   )
+  // This one's for partner referral bonus
+  if (
+    mobileRegister.referralCode &&
+    mobileRegister.referralCode.includes(':')
+  ) {
+    if (mobileRegister.referralCode.startsWith('op')) {
+      const parts = mobileRegister.referralCode.split(':')
+      await GrowthEvent.insert(
+        logger,
+        1,
+        mobileRegister.ethAddress,
+        GrowthEventTypes.PartnerReferral,
+        parts[1],
+        null,
+        now
+      )
+      logger.debug(
+        `Recorded partner referral with code ${mobileRegister.referralCode}.`
+      )
+    } else if (mobileRegister.referralCode.startsWith('or')) {
+      const parts = mobileRegister.referralCode.split(':')
+      const inviteCode = await GrowthInviteCode.findOne({
+        where: {
+          code: parts[1]
+        }
+      })
+      if (inviteCode) {
+        await GrowthReferral.upsert({
+          referrerEthAddress: inviteCode.ethAddress,
+          refereeEthAddress: mobileRegister.ethAddress
+        })
+        logger.info(
+          `Invite code ${mobileRegister.referralCode} has been used by ${mobileRegister.ethAddress}`
+        )
+      } else {
+        logger.warn(`Invite code ${mobileRegister.referralCode} was not found!`)
+      }
+    } else {
+      logger.error(
+        `Referral code ${mobileRegister.referralCode} appears to be invalid!`
+      )
+    }
+  }
 })
 
 /**

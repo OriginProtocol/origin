@@ -4,7 +4,7 @@ import { fbt } from 'fbt-runtime'
 
 import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
-import ListingsGallery from 'pages/listings/ListingCards'
+import ListingCards from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
 import LoadingSpinner from 'components/LoadingSpinner'
 
@@ -14,7 +14,6 @@ const UserListings = ({
   user,
   hideHeader,
   hideLoadMore,
-  horizontal,
   compact,
   title,
   hideIfEmpty,
@@ -66,11 +65,10 @@ const UserListings = ({
           {title || fbt('Listings', 'UserListing.listings')}
         </h5>
       )}
-      <ListingsGallery
+      <ListingCards
         listings={filteredNodes}
         hasNextPage={hasNextPage}
         hideCategory
-        horizontal={horizontal}
         compact={compact}
       />
       {hideLoadMore || !hasNextPage ? null : (

@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "3.18.4"
+    "lerna": "3.19.0"
   },
   "workspaces": {
     "packages": [
@@ -17,15 +17,15 @@
   "devDependencies": {
     "babel-eslint": "10.0.3",
     "chai": "4.2.0",
-    "eslint": "6.6.0",
+    "eslint": "6.7.2",
     "eslint-config-react-app": "5.0.2",
     "eslint-config-standard": "14.1.0",
-    "eslint-plugin-flowtype": "4.4.1",
+    "eslint-plugin-flowtype": "4.5.2",
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-node": "10.0.0",
     "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-react": "7.16.0",
+    "eslint-plugin-react": "7.17.0",
     "eslint-plugin-standard": "4.0.1",
     "husky": "3.1.0",
     "mocha": "6.2.2",
@@ -64,6 +64,8 @@
     ],
     "ignorePaths": [
       "mobile"
-    ]
+    ],
+    "schedule": "before 2am",
+    "rebaseStalePrs": false
   }
 }
