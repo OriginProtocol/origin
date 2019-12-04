@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
 
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
