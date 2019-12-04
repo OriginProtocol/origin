@@ -23,10 +23,6 @@ const executeTransfers = async () => {
     )
   }
 
-  const transferTask = await TransferTask.create({
-    start: moment.utc()
-  })
-
   const waitingTransfers = await Transfer.findAll({
     where: {
       [Sequelize.Op.or]: [
@@ -44,6 +40,10 @@ const executeTransfers = async () => {
       `Found unconfirmed transfer(s). Fix before running this script again.`
     )
   }
+
+  const transferTask = await TransferTask.create({
+    start: moment.utc()
+  })
 
   const cutoffTime = moment.utc().subtract(largeTransferDelayMinutes, 'minutes')
   const transfers = await Transfer.findAll({

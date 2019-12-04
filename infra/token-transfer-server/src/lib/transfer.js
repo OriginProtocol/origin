@@ -189,6 +189,7 @@ async function executeTransfer(transfer, transferTaskId) {
   try {
     txHash = await token.credit(transfer.toAddress, naturalAmount)
   } catch (error) {
+    logger.error('Error crediting tokens', error.message)
     await updateTransferStatus(
       user,
       transfer,
