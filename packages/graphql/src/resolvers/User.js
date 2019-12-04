@@ -20,15 +20,17 @@ async function resultsFromIds({ after, allIds, first, fields }) {
   const { ids, start } = getIdsForPage({ after, ids: allIds, first })
 
   if (fields.nodes) {
-    nodes = (await Promise.all(
-      ids.map(id => {
-        const [version, listingId, offerId] = id.split('-')
-        return contracts.marketplaces[version].eventSource.getOffer(
-          listingId,
-          offerId
-        )
-      })
-    )).filter(offer => offer !== null)
+    nodes = (
+      await Promise.all(
+        ids.map(id => {
+          const [version, listingId, offerId] = id.split('-')
+          return contracts.marketplaces[version].eventSource.getOffer(
+            listingId,
+            offerId
+          )
+        })
+      )
+    ).filter(offer => offer !== null)
   }
 
   return getConnection({ start, first, nodes, ids, totalCount })
@@ -189,18 +191,20 @@ async function reviews(user, { first = 10, after }) {
     debug('Fetching reviews of ID')
 
     // fetch all events that may contain a review
-    const reviews = (await Promise.all(
-      events.map(event => {
-        const es = contracts.marketplaces[id.split('-')[1]].eventSource
-        return es.getReview(
-          event.returnValues.listingID,
-          event.returnValues.offerID,
-          event.returnValues.party,
-          event.returnValues.ipfsHash,
-          event
-        )
-      })
-    ))
+    const reviews = (
+      await Promise.all(
+        events.map(event => {
+          const es = contracts.marketplaces[id.split('-')[1]].eventSource
+          return es.getReview(
+            event.returnValues.listingID,
+            event.returnValues.offerID,
+            event.returnValues.party,
+            event.returnValues.ipfsHash,
+            event
+          )
+        })
+      )
+    )
       .map(review => {
         debug('review', review)
         return review
