@@ -1,0 +1,18 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package.json ./
+COPY yarn.lock ./
+COPY lerna.json ./
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/token ./packages/token
+COPY ./packages/ip2geo ./packages/ip2geo
+COPY ./infra/token-transfer-server ./infra/token-transfer-server
+
+RUN yarn install
+
+CMD npm run migrate --prefix infra/token-transfer-server && \
+    npm run start --prefix infra/token-transfer-server

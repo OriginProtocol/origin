@@ -738,10 +738,18 @@ class MarketplaceScreen extends PureComponent {
   }
 
   renderWebView = () => {
+    let dappUrl = this.props.settings.network.dappUrl
+    if (
+      typeof this.props.navigation.state.params != 'undefined' &&
+      this.props.navigation.state.params.dappUrl
+    ) {
+      dappUrl = this.props.navigation.state.params.dappUrl
+    }
+
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        source={{ uri: this.props.settings.network.dappUrl }}
+        source={{ uri: dappUrl }}
         onMessage={this.onMessage}
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}

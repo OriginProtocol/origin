@@ -44,11 +44,24 @@ const sessionConfig = {
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies in production
-} else {
-  // CORS setup for dev. This is handled by nginx in production.
+}
+
+if (process.env.HEROKU) {
+  const corsWhitelist = [
+    'https://investor.originprotocol.com',
+    'https://employee.originprotocol.com'
+  ]
+
+  // CORS setup
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: (origin, callback) => {
+        if (!origin || corsWhitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
       credentials: true,
       exposedHeaders: ['X-Authenticated-Email']
     })

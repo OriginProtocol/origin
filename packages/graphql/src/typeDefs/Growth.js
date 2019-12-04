@@ -92,6 +92,7 @@ module.exports = `
   type InviteInfo {
     firstName: String
     lastName: String
+    avatarURL: String
   }
 
   type UnlockCondition {

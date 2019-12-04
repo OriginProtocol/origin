@@ -6,7 +6,7 @@ import { StatusBar, Clipboard } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import get from 'lodash.get'
 
-import { NETWORKS, REFERRAL_PREFIX } from './constants'
+import { NETWORKS, REFERRAL_PREFIXES } from './constants'
 import { Navigation } from './Navigation'
 import { setEnabled as setSamsungBKSEnabled } from 'actions/SamsungBKS'
 import { setNetwork, setReferralCode } from 'actions/Settings'
@@ -54,10 +54,12 @@ class MarketplaceApp extends React.Component {
    */
   checkReferral = async () => {
     const clipData = await Clipboard.getString()
-    if (clipData && clipData.startsWith(REFERRAL_PREFIX)) {
-      const referralCode = clipData.slice(REFERRAL_PREFIX.length)
-      console.debug(`referral code found: ${referralCode}`)
-      this.props.setReferralCode(referralCode)
+    for (const prefix of REFERRAL_PREFIXES) {
+      if (clipData && clipData.startsWith(prefix)) {
+        console.debug(`referral code found: ${clipData}`)
+        this.props.setReferralCode(clipData)
+        break
+      }
     }
   }
 

@@ -255,7 +255,8 @@ class GrowthInvite {
 
     return {
       firstName: identity.firstName,
-      lastName: identity.lastName
+      lastName: identity.lastName,
+      avatarURL: identity.avatarUrl
     }
   }
 }

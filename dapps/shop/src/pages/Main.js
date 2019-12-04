@@ -15,6 +15,9 @@ import Product from './Product'
 import About from './About'
 import Cart from './cart/Cart'
 
+const BlogUrl =
+  'https://medium.com/originprotocol/built-on-origin-a-decentralized-shopify-alternative-888adc4198b0'
+
 const Content = () => (
   <>
     <main>
@@ -31,7 +34,16 @@ const Content = () => (
         <Route component={Products} />
       </Switch>
     </main>
-    <div className="footer my-4 py-4">&copy; 2019 Origin Protocol</div>
+    <div className="footer my-4 py-4">
+      &copy; 2019 <a href="https://www.originprotocol.com">Origin Protocol</a>.{' '}
+      <span className="ml-1">
+        {'Learn more about this decentralized e-commerce store '}
+        <a className="ul" href={BlogUrl}>
+          here
+        </a>
+        .
+      </span>
+    </div>
   </>
 )
 
@@ -106,6 +118,8 @@ require('react-styl')(`
   .footer
     border-top: 1px solid #eee
     font-size: 12px
+    .ul
+      text-decoration: underline
 
   .breadcrumbs
     margin-bottom: 1.5rem
