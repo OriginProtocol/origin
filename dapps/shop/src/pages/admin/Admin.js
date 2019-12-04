@@ -7,6 +7,8 @@ import Link from 'components/Link'
 import Products from './Products'
 import Collections from './Collections'
 import Orders from './Orders'
+import Discounts from './discounts/Discounts'
+import EditDiscount from './discounts/EditDiscount'
 import Order from './order/Order'
 import Login from './Login'
 
@@ -47,6 +49,13 @@ const Admin = () => {
               <li className={pathname === '/admin/collections' ? 'active' : ''}>
                 <Link to="/admin/collections">Collections</Link>
               </li>
+              <li
+                className={
+                  pathname.indexOf('/admin/discounts') === 0 ? 'active' : ''
+                }
+              >
+                <Link to="/admin/discounts">Discounts</Link>
+              </li>
               {/* <li className={pathname === '/admin/settings' ? 'active' : ''}>
                 <Link to="/admin/settings">Settings</Link>
               </li> */}
@@ -66,6 +75,8 @@ const Admin = () => {
         </div>
         <div className="col-9">
           <Switch>
+            <Route path="/admin/discounts/:id" component={EditDiscount} />
+            <Route path="/admin/discounts" component={Discounts} />
             <Route path="/admin/products" component={Products} />
             <Route path="/admin/collections" component={Collections} />
             <Route path="/admin/settings" component={Settings} />
@@ -84,6 +95,7 @@ export default Admin
 require('react-styl')(`
   .admin
     margin-top: 2rem
+    margin-bottom: 5rem
     h1
       font-size: 24px
 `)

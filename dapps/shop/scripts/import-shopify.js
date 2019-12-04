@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 const program = require('commander')
