@@ -170,10 +170,13 @@ async function confirmTransfer(transfer, user) {
  * @param {Transfer} transfer: DB model Transfer object
  * @returns {Promise<{txHash: string, txStatus: string}>}
  */
-async function executeTransfer(transfer) {
+async function executeTransfer(transfer, transferTaskId) {
   const user = await hasBalance(transfer.userId, transfer.amount, transfer)
 
-  await transfer.update({ status: enums.TransferStatuses.Processing })
+  await transfer.update({
+    status: enums.TransferStatuses.Processing,
+    transferTaskId
+  })
 
   // Setup token library
   const token = new Token(networkId)

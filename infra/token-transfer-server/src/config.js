@@ -39,8 +39,6 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
-const watchdogPath = process.env.WATCHDOG_PATH || './'
-
 const walletMnemonic = process.env.WALLET_MNEMONIC
 
 module.exports = {
@@ -57,6 +55,5 @@ module.exports = {
   unlockDate,
   largeTransferThreshold,
   largeTransferDelayMinutes,
-  watchdogPath,
   walletMnemonic
 }

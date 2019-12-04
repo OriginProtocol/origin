@@ -5,14 +5,17 @@ const base32 = require('thirty-two')
 const crypto = require('crypto')
 const sinon = require('sinon')
 
-const { Event, Grant, Transfer, User, sequelize } = require('../../src/models')
+const {
+  Event,
+  Grant,
+  Transfer,
+  TransferTask,
+  User,
+  sequelize
+} = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const enums = require('../../src/enums')
-const {
-  initWatchdog,
-  executeTransfers,
-  clearWatchdog
-} = require('../../src/tasks/transfer')
+const { executeTransfers } = require('../../src/tasks/transfer')
 const {
   largeTransferThreshold,
   largeTransferDelayMinutes
@@ -50,20 +53,20 @@ describe('Execute transfers', () => {
         amount: 10000000
       })
     ]
-
-    clearWatchdog()
   })
 
   afterEach(async () => {
     TransferLib.__ResetDependency__('Token')
   })
 
-  it('should not run if watchdog exists', async () => {
-    initWatchdog()
+  it('should not run if outstanding tasks exist', async () => {
+    await TransferTask.create({
+      start: moment.utc()
+    })
     try {
       await executeTransfers()
     } catch (error) {
-      expect(error.message).to.match(/Watchdog/)
+      expect(error.message).to.match(/incomplete/)
     }
   })
 
@@ -121,6 +124,11 @@ describe('Execute transfers', () => {
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Success)
 
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
+
     expect(waitForTxConfirmationFake.called).to.equal(true)
 
     const events = await Event.findAll()
@@ -163,6 +171,11 @@ describe('Execute transfers', () => {
 
     await executeTransfers()
 
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(null)
+
     // Transfer should not have been executed so fake should not have been called
     expect(waitForTxConfirmationFake.called).to.equal(false)
 
@@ -197,6 +210,13 @@ describe('Execute transfers', () => {
 
     await executeTransfers()
 
+    await transfer.reload()
+
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
+
     // Transfer should have been executed so fake should have been called
     expect(waitForTxConfirmationFake.called).to.equal(true)
 
@@ -229,6 +249,11 @@ describe('Execute transfers', () => {
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
 
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
+
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_FAILED')
     expect(events[0].data.transferId).to.equal(transfer.id)
@@ -257,6 +282,11 @@ describe('Execute transfers', () => {
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
 
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
+
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_FAILED')
     expect(events[0].data.transferId).to.equal(transfer.id)
@@ -284,6 +314,11 @@ describe('Execute transfers', () => {
 
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
+
+    const transferTasks = await TransferTask.findAll()
+    expect(transferTasks[0].start).to.not.equal(null)
+    expect(transferTasks[0].end).to.not.equal(null)
+    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_FAILED')

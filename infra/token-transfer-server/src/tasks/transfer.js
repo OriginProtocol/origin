@@ -1,39 +1,31 @@
-const fs = require('fs')
 const moment = require('moment')
 
 const {
   largeTransferThreshold,
-  largeTransferDelayMinutes,
-  watchdogPath
+  largeTransferDelayMinutes
 } = require('../config')
-const { Transfer, Sequelize } = require('../models')
+const { Transfer, TransferTask, Sequelize } = require('../models')
 const { executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
-const watchdogFile = `${watchdogPath}/execute.pid`.replace(/\/\/+/g, '/')
-
-const initWatchdog = () => {
-  // Check there is no existing watchdog.
-  if (fs.existsSync(watchdogFile)) {
-    throw new Error(`Watchdog detected at ${watchdogFile}. Processing aborted.`)
-  }
-
-  // Create a watchdog for this run.
-  fs.writeFileSync(watchdogFile, `${process.pid}`)
-}
-
-const clearWatchdog = () => {
-  // Clean watchdog.
-  if (fs.existsSync(watchdogFile)) {
-    fs.unlinkSync(watchdogFile)
-  }
-}
-
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
 
-  initWatchdog()
+  const outstandingTasks = await TransferTask.findAll({
+    where: {
+      end: null
+    }
+  })
+  if (outstandingTasks.length > 0) {
+    throw new Error(
+      `Found incomplete transfer task(s), wait for completion or clean up manually.`
+    )
+  }
+
+  const transferTask = await TransferTask.create({
+    start: moment.utc()
+  })
 
   const waitingTransfers = await Transfer.findAll({
     where: {
@@ -74,17 +66,17 @@ const executeTransfers = async () => {
 
   for (const transfer of transfers) {
     logger.info(`Processing transfer ${transfer.id}`)
-    const result = await executeTransfer(transfer)
+    const result = await executeTransfer(transfer, transferTask.id)
     logger.info(
       `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
     )
   }
 
-  clearWatchdog()
+  await transferTask.update({
+    end: moment.utc()
+  })
 }
 
 module.exports = {
-  clearWatchdog,
-  initWatchdog,
   executeTransfers
 }
