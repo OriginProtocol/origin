@@ -74,7 +74,7 @@
     "chai-moment": "0.1.0",
     "mocha": "6.2.2",
     "nodemon": "2.0.1",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.3.0"
   },
   "prettier": {
     "semi": false,
