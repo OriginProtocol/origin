@@ -14,15 +14,18 @@ const defaultState = {
   shippingZones: [],
   paymentMethods: PaymentMethods,
   orders: [],
+  discounts: [],
   admin: '',
 
   cart: {
     items: [],
     instructions: '',
     subTotal: 0,
+    discount: 0,
     total: 0,
     shipping: { amount: 0 },
-    paymentMethod: {}
+    paymentMethod: {},
+    discountObj: {}
   }
 }
 
@@ -39,7 +42,7 @@ try {
 
 const reducer = (state, action) => {
   let newState = state
-  // console.log('reduce', action)
+  console.log('reduce', action)
   if (action.type === 'addToCart') {
     const { product, variant } = action.item
     const existing = state.cart.items.findIndex(
@@ -76,6 +79,8 @@ const reducer = (state, action) => {
     newState = set(state, `shippingZones`, action.zones)
   } else if (action.type === 'setOrders') {
     newState = set(state, `orders`, action.orders)
+  } else if (action.type === 'setDiscounts') {
+    newState = set(state, `discounts`, action.discounts)
   } else if (action.type === 'updateUserInfo') {
     newState = set(
       state,
@@ -108,14 +113,31 @@ const reducer = (state, action) => {
     newState = set(newState, 'admin', '')
   } else if (action.type === 'updateInstructions') {
     newState = set(newState, 'cart.instructions', action.value)
+  } else if (action.type === 'setDiscount') {
+    newState = set(newState, 'cart.discountObj', action.discount)
+  } else if (action.type === 'removeDiscount') {
+    newState = set(newState, 'cart.discountObj', {})
+    newState = set(newState, 'cart.discount', 0)
   }
 
   newState.cart.subTotal = state.cart.items.reduce((total, item) => {
     return total + item.quantity * item.price
   }, 0)
 
+  const discountObj = get(newState, 'cart.discountObj', {})
+  const discountCode = get(newState, 'cart.discountObj.code')
+  let discount = 0
+  if (discountCode) {
+    if (discountObj.discountType === 'percentage') {
+      discount = (newState.cart.subTotal * discountObj.value) / 100
+    } else if (discountObj.discountType === 'fixed') {
+      discount = discountObj.value * 100
+    }
+  }
+
   const shipping = get(newState, 'cart.shipping.amount', 0)
-  newState.cart.total = newState.cart.subTotal + shipping
+  newState.cart.discount = discount
+  newState.cart.total = newState.cart.subTotal + shipping - discount
 
   localStorage.cart = JSON.stringify(pick(newState, 'cart'))
   // console.log(newState)

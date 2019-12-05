@@ -13,3 +13,4 @@ backend/db/*.db
 backend/tstEmail.js
 backend/.git
 TODO
+.env*

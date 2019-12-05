@@ -56,7 +56,7 @@ const Checkout = () => {
             </div>
 
             <div className="order-summary-wrap">
-              <Summary cart={cart} />
+              <Summary cart={cart} discountForm={true} />
             </div>
           </div>
         </Elements>

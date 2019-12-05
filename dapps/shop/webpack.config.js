@@ -100,7 +100,7 @@ const webpackConfig = {
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
-      network: process.env.NETWORK || 'rinkeby',
+      network: process.env.NETWORK || 'localhost',
       metaMask: true
     }),
     new HtmlWebpackPlugin({

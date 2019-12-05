@@ -53,6 +53,8 @@ router.post(
  */
 router.post(
   '/setup_totp',
+  // Ensure user in session and only enforce OTP if already verified to prevent
+  // resetting of OTP once verification has happened
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     // TOTP not setup yet. Generate a key and save it encrypted in the DB.
@@ -87,7 +89,8 @@ router.post(
   '/verify_totp',
   [
     (req, res, next) => {
-      // Skip two factor auth for this endpoint
+      // Skip two factor auth requirement for this endpoint because this is
+      // how it gets set
       ensureLoggedIn(req, res, next, true)
     },
     check('code').custom(isValidTotp)

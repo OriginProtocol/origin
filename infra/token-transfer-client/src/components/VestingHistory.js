@@ -15,7 +15,7 @@ const VestingHistory = props => {
   })
 
   const tableRows = []
-  for (const [date, amount] of Object.entries(schedule)) {
+  for (const date of Object.keys(schedule).sort()) {
     const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
@@ -26,7 +26,7 @@ const VestingHistory = props => {
             }`}
           ></div>
         </td>
-        <td>{Number(amount).toLocaleString()} OGN</td>
+        <td>{Number(schedule[date]).toLocaleString()} OGN</td>
         <td>
           <span className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}
