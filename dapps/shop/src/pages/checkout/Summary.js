@@ -6,8 +6,9 @@ import Caret from 'components/icons/Caret'
 import formatPrice from 'utils/formatPrice'
 
 import CheckoutItem from './CheckoutItem'
+import Discount from './Discount'
 
-const OrderSummary = ({ cart }) => {
+const OrderSummary = ({ cart, discountForm = false }) => {
   if (!cart || !cart.items) return null
 
   const [summary, showSummary] = useState(false)
@@ -37,6 +38,7 @@ const OrderSummary = ({ cart }) => {
             <CheckoutItem key={idx} item={item} />
           ))}
         </div>
+        {discountForm ? <Discount cart={cart} /> : null}
         <div className="sub-total">
           <div>
             <div>Subtotal</div>
@@ -44,6 +46,18 @@ const OrderSummary = ({ cart }) => {
               <b>{formatPrice(cart.subTotal)}</b>
             </div>
           </div>
+          {!cart.discount ? null : (
+            <div>
+              <div>{`Discount: ${get(
+                cart,
+                'discountObj.code',
+                ''
+              ).toUpperCase()}`}</div>
+              <div>
+                <b>{formatPrice(cart.discount)}</b>
+              </div>
+            </div>
+          )}
           <div>
             <div>Shipping</div>
             {cart.shipping ? (
@@ -108,7 +122,7 @@ require('react-styl')(`
           font-size: 0.75rem
     img
       max-width: 60px
-    .sub-total,.total
+    .sub-total,.total,.discount
       margin-top: 1rem
       padding-top: 1rem
       border-top: 1px solid #ddd

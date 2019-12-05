@@ -19,7 +19,6 @@ const Configs = {
     ipfsApi: 'http://localhost:5002',
     providerWs: 'ws://localhost:8545',
     provider: 'http://localhost:8545',
-    backend: 'http://localhost:3000',
     paymentUrl: 'http://localhost:3000/pay',
     marketplace: localContractAddress
   },
@@ -72,6 +71,10 @@ const SiteData = {
     twitter: 'https://twitter.com/originprotocol',
     medium: 'https://medium.com/originprotocol',
     instagram: 'https://www.instagram.com/originprotocol',
+    localhost: {
+      paymentUrl: 'http://localhost:3000/pay',
+      backend: 'http://localhost:3000'
+    },
     rinkeby: {
       paymentUrl: 'https://origin-pay.herokuapp.com/pay',
       backend: 'https://origin-pay.herokuapp.com'

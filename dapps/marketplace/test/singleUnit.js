@@ -232,6 +232,18 @@ export function singleUnitTests({
       await clickByText(page, 'Complete', 'a')
       await waitForText(page, title, 'h2')
     })
+
+    it('should switch to Seller account', async function() {
+      await changeAccount(page, seller)
+    })
+
+    it('should have sold item in Listings and be editable', async function() {
+      await clickByText(page, 'Listings', 'a/span')
+      await waitForText(page, 'Listings', 'h1')
+      await waitForText(page, title, 'a')
+      await clickByText(page, 'Edit', 'a')
+      await waitForText(page, 'Listing Details', 'h1')
+    })
   })
 }
 

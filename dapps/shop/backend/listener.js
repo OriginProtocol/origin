@@ -5,12 +5,12 @@ const WebSocket = require('ws')
 const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
-const abi = require('./_abi')
-const { getIpfsHashFromBytes32, getText } = require('./_ipfs')
+const abi = require('./utils/_abi')
+const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
 const netId = config.netId
 
 const { Network, Transactions, Orders } = require('./data/db')
-const sendMail = require('./emailer')
+const sendMail = require('./utils/emailer')
 
 const web3 = new Web3()
 
