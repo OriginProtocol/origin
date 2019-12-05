@@ -790,7 +790,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content22.link',
       post: {
         tweet: {
-          default: `Listen to this episode from @Encrypt_d Podcast where @matthewliu, Co-founder of @originprotocol discusses his career as a Product Manager during YouTube's early days, and how Origin is building decentralized marketplaces of the future. https://twitter.com/originprotocol/status/1196697372341850113`,
+          default: `Listen to this episode from @Encrypt_d Podcast where @matthewliu, Co-founder of @originprotocol discusses his career as a Product Manager during YouTube's early days, and how Origin is building decentralized marketplaces of the future. https://podcast.encrypt-d.com/how-an-early-youtube-employee-is-competing-against-uber-and-airbnb`,
           translations: [ ]
         }
       }
@@ -829,8 +829,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content25.link',
       post: {
         tweet: {
-          default: `In this video, @JoeyKrug, Co-founder of 
-@AugurProject and Co-investment Officer of @PanteraCapital, explains how a peer-to-peer cryptocurrency network like Origin can reduce fees and create a better experience for users. https://www.originprotocol.com/video/joey-krug-augur-value-origin`,
+          default: `In this video, @JoeyKrug, Co-founder of @AugurProject and Co-investment Officer of @PanteraCapital, explains how a peer-to-peer cryptocurrency network like @originprotocol can reduce fees and create a better experience for users. https://www.originprotocol.com/video/joey-krug-augur-value-origin`,
           translations: [ ]
         }
       }

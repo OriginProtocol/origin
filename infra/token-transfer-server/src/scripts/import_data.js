@@ -16,11 +16,9 @@
 const assert = require('assert')
 const csv = require('csvtojson')
 const Logger = require('logplease')
-const jwt = require('jsonwebtoken')
 const moment = require('moment')
 
 const db = require('../models')
-const { encryptionSecret, clientUrl } = require('../config')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
@@ -46,7 +44,6 @@ class CsvFileParser {
       assert(row['Vesting Start'] !== undefined)
       assert(row['Vesting End'] !== undefined)
       assert(row['Vesting Cliff'] !== undefined)
-      assert(row['Vesting Interval'] !== undefined)
     } else {
       assert(row['Signed Amendment'] !== undefined)
       assert(row['Purchase Date'] !== undefined)
@@ -83,31 +80,20 @@ class CsvFileParser {
       assert(!Number.isNaN(amount))
       record.amount = amount
 
-      const signedAmendment = row['Signed Amendment'].trim()
-      assert(signedAmendmentResponses.includes(signedAmendment))
-      switch (signedAmendment) {
-        case 'Yes':
-          record.revisedScheduleStatus = 'Accepted'
-          break
-        case 'Abstain':
-          record.revisedScheduleStatus = 'Abstained'
-          break
-        case 'No':
-          record.revisedScheduleStatus = 'Rejected'
-          break
-        case 'Did not respond':
-          record.revisedScheduleStatus = null
-          break
-      }
-
       if (this.employee) {
         // Parse employee specific fields
         const vestingStart = moment.utc(row['Vesting Start'])
         record.start = vestingStart
 
         const vestingEnd = moment.utc(row['Vesting End'])
+
         assert(vestingEnd > vestingStart)
         record.end = vestingEnd
+
+        const vestingCancelled = row['Vesting Cancelled']
+        if (vestingCancelled) {
+          record.cancelled = moment.utc(vestingCancelled)
+        }
 
         const vestingCliff = moment.utc(row['Vesting Cliff'])
         assert(vestingCliff > vestingStart)
@@ -115,6 +101,23 @@ class CsvFileParser {
         record.cliff = vestingCliff
       } else {
         // Parse investor specific fields
+        const signedAmendment = row['Signed Amendment'].trim()
+        assert(signedAmendmentResponses.includes(signedAmendment))
+        switch (signedAmendment) {
+          case 'Yes':
+            record.revisedScheduleStatus = 'Accepted'
+            break
+          case 'Abstain':
+            record.revisedScheduleStatus = 'Abstained'
+            break
+          case 'No':
+            record.revisedScheduleStatus = 'Rejected'
+            break
+          case 'Did not respond':
+            record.revisedScheduleStatus = null
+            break
+        }
+
         const purchaseDate = moment.utc(row['Purchase Date'])
         record.purchaseDate = purchaseDate
 
@@ -172,19 +175,13 @@ class ImportData {
 
         this.stats.numUserRowsInserted++
       }
-      if (this.config.token) {
-        logger.info(
-          `${record.email} ${clientUrl}/login_handler/${generateToken(
-            record.email
-          )}`
-        )
-      }
       if (this.config.doIt) {
         await db.Grant.create({
           userId: user.id,
           start: record.start,
           end: record.end,
           cliff: record.cliff,
+          cancelled: record.cancelled ? record.cancelled : null,
           // Note: Some investors were granted a decimal amount of OGN.
           // We round it up to an integer amount.
           amount: Math.ceil(record.amount),
@@ -196,16 +193,6 @@ class ImportData {
       this.stats.numGrantRowsInserted++
     }
   }
-}
-
-function generateToken(email) {
-  return jwt.sign(
-    {
-      email
-    },
-    encryptionSecret,
-    { expiresIn: '14d' }
-  )
 }
 
 function parseArgv() {
@@ -230,9 +217,7 @@ const config = {
   // Investor by default.
   employee: args['--employee'] === 'true' || false,
   // Run in in dry-run mode by default.
-  doIt: args['--doIt'] === 'true' || false,
-  // Generate and print a welcome token
-  token: args['--token'] === 'true' || false
+  doIt: args['--doIt'] === 'true' || false
 }
 logger.info('Config:')
 logger.info(config)

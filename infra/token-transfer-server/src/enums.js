@@ -20,6 +20,8 @@ const TransferStatuses = new Enum(
   'Enqueued',
   // Request paused. For example for Origin staff to review the transfer before its exection.
   'Paused',
+  // Being processed by this module.
+  'Processing',
   // Transfer transaction sent to the network. Waiting for confirmation.
   'WaitingConfirmation',
   // Transfer successfully executed by the network.

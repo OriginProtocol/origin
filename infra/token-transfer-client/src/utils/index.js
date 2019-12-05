@@ -3,6 +3,9 @@ export const getNextOnboardingPage = user => {
     // Verified OTP can no longer perform any onboarding as OTP would be required
     // for any login action
     return null
+  } else if (user.employee) {
+    // Employees don't go through regular onboarding
+    return '/otp/explain'
   } else if (!user.termsAgreedAt) {
     return '/terms'
   } else if (user.revisedScheduleStatus === null) {

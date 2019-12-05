@@ -33,7 +33,9 @@ module.exports = function() {
       try {
         decodedToken = jwt.verify(token, encryptionSecret)
       } catch (error) {
-        logger.error('Could not decode token', error)
+        if (error.name !== 'TokenExpiredError') {
+          logger.error('Could not decode token', error)
+        }
         return done(null, false)
       }
 
