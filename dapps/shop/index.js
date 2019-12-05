@@ -10,7 +10,10 @@ async function start() {
     skipContractsIfExists: process.env.CLEAN ? false : true
   })
 
-  const devServerArgs = ['--info=false', '--host=0.0.0.0', '--open']
+  const devServerArgs = ['--info=false', '--host=0.0.0.0']
+  if (process.env.NOOPENER !== 'true') {
+    devServerArgs.push('--open')
+  }
   const webpackDevServer = spawn(
     './node_modules/.bin/webpack-dev-server',
     devServerArgs,
