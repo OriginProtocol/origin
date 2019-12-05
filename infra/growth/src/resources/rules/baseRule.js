@@ -5,6 +5,8 @@ const {
 } = require('../../enums')
 const { Reward } = require('./reward')
 
+const logger = require('../../logger')
+
 // System cap for max number of rewards per rule.
 const maxNumRewardsPerRule = 1000
 
@@ -172,6 +174,27 @@ class BaseRule {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
+    }
+
+    // If scope is 'campaign' but statusScope is 'user', first check the
+    // rewards was not earned in a prior campaign. We don't want to reward more
+    // than once for the same action in different campaigns.
+    // For ex. a user doing an attestation in month A, then redoing the same
+    // attestation in month B should only get a reward in month A.
+    if (
+      this.config.scope === 'campaign' &&
+      this.config.statusScope === 'user'
+    ) {
+      const priorEvents = events.filter(
+        e => e.createdAt < this.campaign.startDate
+      )
+      const numRewards = await this._numRewards(ethAddress, priorEvents)
+      if (numRewards >= this.limit && this.limit !== -1) {
+        logger.debug(
+          `No reward for ${this.id}: action already rewarded in prior campaign.`
+        )
+        return []
+      }
     }
 
     const numRewards = await this._numRewards(ethAddress, this._inScope(events))
