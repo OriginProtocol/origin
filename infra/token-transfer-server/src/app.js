@@ -48,15 +48,25 @@ const sessionConfig = {
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies in production
+} else {
+  // CORS configuration for local development
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+      exposedHeaders: ['X-Authenticated-Email']
+    })
+  )
 }
 
+// CORS configuration for Heroku
 if (process.env.HEROKU) {
+  // Whitelisted domains
   const corsWhitelist = [
     'https://investor.originprotocol.com',
     'https://employee.originprotocol.com'
   ]
 
-  // CORS setup
   app.use(
     cors({
       origin: (origin, callback) => {
