@@ -21,7 +21,10 @@ class PartnerWelcomeScreen extends Component {
       config: null
     }
 
-    if (!this.props.settings.referralCode) this.next()
+    if (!this.props.settings.referralCode) {
+      console.log('skipping partner welcome...')
+      this.next()
+    }
     this.getConfig()
   }
 
@@ -42,29 +45,37 @@ class PartnerWelcomeScreen extends Component {
     const {
       settings: { referralCode }
     } = this.props
-    const url = `${COFNIG_BASE_URL}/campaigns.json`
 
-    const resp = await fetch(url)
+    if (referralCode && referralCode.startsWith('op:')) {
+      const partnerCode = referralCode.split(':')[1]
+      const url = `${COFNIG_BASE_URL}/campaigns.json`
 
-    if (resp.status !== 200) {
-      return this.next()
+      console.log(`fetching config from ${url}`)
+      const resp = await fetch(url)
+
+      if (resp.status !== 200) {
+        console.warn('originprotocol.com did not return 200')
+        return this.next()
+      }
+
+      const jason = await resp.json()
+
+      if (!Object.prototype.hasOwnProperty.call(jason, partnerCode)) {
+        console.log('Did not find referral code in config')
+        return this.next()
+      }
+
+      this.setState({
+        config: jason[partnerCode]
+      })
     }
-
-    const jason = await resp.json()
-
-    if (!Object.prototype.hasOwnProperty.call(jason, referralCode)) {
-      return this.next()
-    }
-
-    this.setState({
-      config: jason[referralCode]
-    })
   }
 
   render() {
     const { config } = this.state
 
     if (!config) {
+      console.debug('no config, not rendering')
       return null
     }
 
