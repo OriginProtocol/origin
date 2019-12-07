@@ -102,7 +102,7 @@
     "@babel/runtime": "7.7.4",
     "babel-eslint": "10.0.3",
     "babel-loader": "8.0.6",
-    "babel-plugin-fbt": "0.12.0",
+    "babel-plugin-fbt": "0.12.1",
     "babel-plugin-fbt-runtime": "0.9.9",
     "bootstrap": "4.4.1",
     "clean-webpack-plugin": "3.0.0",
