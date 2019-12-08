@@ -78,9 +78,7 @@ class MarketplaceScreen extends PureComponent {
       this.injectLanguage()
     }
     // Send the user to the campaign page if given a referral code
-    if (
-      prevProps.props.settings.referralCode !== this.props.settings.referralCode
-    ) {
+    if (prevProps.settings.referralCode !== this.props.settings.referralCode) {
       this.injectGetStartedRedirect('/campaigns')
     }
     if (prevProps.settings.currency !== this.props.settings.currency) {
