@@ -77,6 +77,12 @@ class MarketplaceScreen extends PureComponent {
       // Language has changed
       this.injectLanguage()
     }
+    // Send the user to the campaign page if given a referral code
+    if (
+      prevProps.props.settings.referralCode !== this.props.settings.referralCode
+    ) {
+      this.injectGetStartedRedirect('/campaigns')
+    }
     if (prevProps.settings.currency !== this.props.settings.currency) {
       // Currency has changed
       this.injectCurrency()
@@ -160,6 +166,21 @@ class MarketplaceScreen extends PureComponent {
       // Clear clipboard
       Clipboard.setString('')
     }
+  }
+
+  injectGetStartedRedirect = path => {
+    console.log(`injectGetStartedRedirect(${path})`)
+    return this.injectJavaScript(
+      `
+      let uiState = typeof window.sessionStorage.uiState === 'undefined'
+        ? {}
+          : JSON.parse(window.sessionStorage.uiState)
+      console.log('setting getStartedRedirect to ${path}')
+      uiState.getStartedRedirect = { pathname: '${path}', search: '' }
+      window.sessionStorage.uiState = JSON.stringify(uiState)
+    `,
+      'getStartedRedirect'
+    )
   }
 
   /**
