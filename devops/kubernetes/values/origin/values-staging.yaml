@@ -75,7 +75,7 @@ t3ClientImageTag: 'c30bab8'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'c30bab8'
+t3ServerImageTag: '04c3799'
 
 # origin-auth
 authImage: origin-auth
