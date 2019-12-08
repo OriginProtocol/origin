@@ -66,10 +66,51 @@ const Orders = sequelize.define(
   }
 )
 
+const Discounts = sequelize.define(
+  'discounts',
+  {
+    network_id: {
+      type: Sequelize.INTEGER
+    },
+    status: {
+      type: Sequelize.ENUM('active', 'inactive')
+    },
+    code: {
+      type: Sequelize.STRING
+    },
+    discountType: {
+      type: Sequelize.ENUM('fixed', 'percentage')
+    },
+    value: {
+      type: Sequelize.INTEGER
+    },
+    maxUses: {
+      type: Sequelize.INTEGER
+    },
+    onePerCustomer: {
+      type: Sequelize.BOOLEAN
+    },
+    startTime: {
+      type: Sequelize.DATE
+    },
+    endTime: {
+      type: Sequelize.DATE
+    },
+    uses: {
+      type: Sequelize.INTEGER
+    }
+  },
+  {
+    // options
+  }
+)
+
 sequelize.sync()
 
 module.exports = {
   Network,
   Transactions,
-  Orders
+  Orders,
+  Discounts,
+  Sequelize
 }

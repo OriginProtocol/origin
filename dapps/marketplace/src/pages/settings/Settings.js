@@ -38,7 +38,15 @@ const configurableFields = [
 const configurableMessagingFields = ['messagingNamespace', 'globalKeyServer']
 
 const Settings = props => {
-  const { locale, onLocale, currency, onCurrency, isMobile, config } = props
+  const {
+    locale,
+    onLocale,
+    currency,
+    onCurrency,
+    isMobile,
+    isMobileApp,
+    config
+  } = props
 
   const [devMode, setDevMode] = useState(store.get('developerMode'))
   const [state, _setState] = useState({
@@ -90,44 +98,46 @@ const Settings = props => {
           <fbt desc="settings.heading">Settings</fbt>
         </h1>
       )}
-      <div className="settings-box">
-        <div className="form-group">
-          <div>
-            <label>
-              <fbt desc="settings.languageLabel">Language</fbt>
-            </label>
-            <small className="form-text form-text-muted">
-              <fbt desc="settings.language">
-                Please make a selection from the list.
-              </fbt>
-            </small>
+      {!isMobileApp && (
+        <div className="settings-box">
+          <div className="form-group">
+            <div>
+              <label>
+                <fbt desc="settings.languageLabel">Language</fbt>
+              </label>
+              <small className="form-text form-text-muted">
+                <fbt desc="settings.language">
+                  Please make a selection from the list.
+                </fbt>
+              </small>
+            </div>
+            <LocaleDropdown
+              locale={locale}
+              onLocale={onLocale}
+              className="settings-dropdown"
+              dropdown={true}
+            />
           </div>
-          <LocaleDropdown
-            locale={locale}
-            onLocale={onLocale}
-            className="settings-dropdown"
-            dropdown={true}
-          />
-        </div>
 
-        <div className="form-group">
-          <div>
-            <label>
-              <fbt desc="settings.currencyLabel">Currency</fbt>
-            </label>
-            <small className="form-text form-text-muted">
-              <fbt desc="settings.currency">
-                Please make a selection from the list below.
-              </fbt>
-            </small>
+          <div className="form-group">
+            <div>
+              <label>
+                <fbt desc="settings.currencyLabel">Currency</fbt>
+              </label>
+              <small className="form-text form-text-muted">
+                <fbt desc="settings.currency">
+                  Please make a selection from the list below.
+                </fbt>
+              </small>
+            </div>
+            <CurrencyDropdown
+              value={currency}
+              onChange={onCurrency}
+              className="settings-dropdown"
+            />
           </div>
-          <CurrencyDropdown
-            value={currency}
-            onChange={onCurrency}
-            className="settings-dropdown"
-          />
         </div>
-      </div>
+      )}
       <div className="settings-box">
         <div className="form-group">
           <div>

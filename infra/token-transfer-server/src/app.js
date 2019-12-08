@@ -1,4 +1,8 @@
+const cron = require('node-cron')
 const logger = require('./logger')
+
+const { executeTransfers } = require('./tasks/transfer')
+const { walletMnemonic } = require('./config')
 
 try {
   require('envkey')
@@ -44,15 +48,25 @@ const sessionConfig = {
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies in production
+} else {
+  // CORS configuration for local development
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+      exposedHeaders: ['X-Authenticated-Email']
+    })
+  )
 }
 
+// Configure CORS in Heroku, outside of Heroku this is handled by Kubernetes nginx ingress
 if (process.env.HEROKU) {
+  // Whitelisted domains
   const corsWhitelist = [
     'https://investor.originprotocol.com',
     'https://employee.originprotocol.com'
   ]
 
-  // CORS setup
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -86,6 +100,11 @@ app.use(require('./controllers'))
 
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
+  if (walletMnemonic) {
+    cron.schedule('*/10 * * * * *', executeTransfers)
+  } else {
+    logger.warn('Not wallet mnemonic found, not executing any transfers')
+  }
 })
 
 module.exports = app

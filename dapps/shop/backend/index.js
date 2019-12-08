@@ -1,6 +1,6 @@
 // const cp = require('child_process')
 
-require('./payment')
+require('./app')
 require('./listener')
 
 // const stripeCli = cp.spawn(
