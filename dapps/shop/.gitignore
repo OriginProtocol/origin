@@ -12,5 +12,6 @@ scripts/conv.sh
 backend/db/*.db
 backend/tstEmail.js
 backend/.git
+backend/public
 TODO
 .env*
