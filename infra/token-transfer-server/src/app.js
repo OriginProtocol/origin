@@ -59,7 +59,7 @@ if (app.get('env') === 'production') {
   )
 }
 
-// CORS configuration for Heroku
+// Configure CORS in Heroku, outside of Heroku this is handled by Kubernetes nginx ingress
 if (process.env.HEROKU) {
   // Whitelisted domains
   const corsWhitelist = [
