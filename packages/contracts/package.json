@@ -26,7 +26,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "7.7.4",
+    "@babel/core": "7.7.5",
     "@babel/polyfill": "7.7.0",
     "@babel/register": "7.7.4",
     "ajv": "6.10.2",
@@ -40,10 +40,10 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/cli": "7.7.4",
-    "@babel/plugin-transform-runtime": "7.7.4",
-    "@babel/preset-env": "7.7.4",
-    "@babel/runtime": "7.7.4",
+    "@babel/cli": "7.7.5",
+    "@babel/plugin-transform-runtime": "7.7.6",
+    "@babel/preset-env": "7.7.6",
+    "@babel/runtime": "7.7.6",
     "bignumber.js": "9.0.0",
     "chai": "4.2.0",
     "chai-bignumber": "3.0.0",
