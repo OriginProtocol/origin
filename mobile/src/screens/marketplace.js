@@ -79,7 +79,7 @@ class MarketplaceScreen extends PureComponent {
     }
     // Send the user to the campaign page if given a referral code
     if (
-      prevProps.props.settings.referralCode !== this.props.settings.referralCode
+      prevProps.settings.referralCode !== this.props.settings.referralCode
     ) {
       this.injectGetStartedRedirect('/campaigns')
     }
