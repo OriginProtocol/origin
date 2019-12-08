@@ -33,9 +33,9 @@
     "web3-utils": "^1.2.1"
   },
   "devDependencies": {
-    "@babel/core": "7.7.4",
+    "@babel/core": "7.7.5",
     "@babel/polyfill": "7.7.0",
-    "@babel/preset-env": "7.7.4",
+    "@babel/preset-env": "7.7.6",
     "@babel/register": "7.7.4",
     "chai": "4.2.0",
     "crypto": "1.0.1",
