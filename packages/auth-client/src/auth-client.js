@@ -16,6 +16,7 @@ const debug = createDebug('origin:auth-client:')
  * @param {Boolean} disablePersistence Should store and retrieve tokens from localStorage if set to true.
  * @param {Object}  web3 Web3 instance to be used to sign data
  * @param {Object}  personalSign uses `web3.eth.personal.sign` if true.
+ * @param {Object}  pubsub For subscriptions
  *
  * Usage:
  * 1. Stateless mode with no persistence
@@ -26,11 +27,13 @@ const debug = createDebug('origin:auth-client:')
  * ```
  */
 class AuthClient {
-  constructor({ authServer, disablePersistence, web3, personalSign }) {
+  constructor({ authServer, disablePersistence, web3, personalSign, pubsub }) {
     this.authServer = authServer
     this.disablePersistence = disablePersistence
     this.web3 = web3
     this.personalSign = personalSign
+
+    this.pubsub = pubsub
 
     this.renewalPromise = null
   }
@@ -142,7 +145,12 @@ class AuthClient {
       // Persist to localStorage
       this._cacheToken(wallet, tokenData)
 
-      // TODO: Fire onLogin Event
+      // Fire onLogin Event
+      this.pubsub.publish('LOGGED_IN', {
+        loggedIn: {
+          wallet
+        }
+      })
 
       debug('Login successful')
 
@@ -172,7 +180,12 @@ class AuthClient {
 
     debug('Logout successful')
 
-    // TODO: Fire onLogout Event
+    // Fire onLogout Event
+    this.pubsub.publish('LOGGED_OUT', {
+      loggedOut: {
+        wallet
+      }
+    })
 
     return true
   }
@@ -234,7 +247,13 @@ class AuthClient {
       // If the token has expired or has less than
       // 5 seconds of validity left, consider it expired
 
-      // TODO: fire OnTokenExpired
+      // Fire OnTokenExpired
+      this.pubsub.publish('TOKEN_EXPIRED', {
+        tokenExpired: {
+          tokenData
+        }
+      })
+
       return {
         valid: false,
         expired: true
@@ -243,7 +262,12 @@ class AuthClient {
       // If the token is about to expire in the next 24 hours,
       // Notify the user
 
-      // TODO: fire OnTokenWillExpire
+      // Fire OnTokenWillExpire
+      this.pubsub.publish('TOKEN_WILL_EXPIRE', {
+        tokenWillExpire: {
+          tokenData
+        }
+      })
 
       willExpire = true
     }

@@ -316,7 +316,8 @@ function setupAuthClient(config) {
     context.authClient = new AuthClient({
       authServer,
       web3,
-      personalSign: metaMask && metaMaskEnabled ? true : false
+      personalSign: metaMask && metaMaskEnabled ? true : false,
+      pubsub
     })
   }
 }

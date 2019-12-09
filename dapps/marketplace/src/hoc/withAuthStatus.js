@@ -1,8 +1,9 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
 import AuthStatusQuery from 'queries/AuthStatus'
+import LoggedInSubscription from 'queries/LoggedInSubscription'
 
 function withAuthStatus(WrappedComponent) {
   const WithAuthStatus = props => {
@@ -13,6 +14,10 @@ function withAuthStatus(WrappedComponent) {
         wallet: props.wallet
       },
       skip: props.walletLoading || !props.wallet
+    })
+
+    useSubscription(LoggedInSubscription, {
+      onSubscriptionData: () => refetch()
     })
 
     if (error) console.error(error)
