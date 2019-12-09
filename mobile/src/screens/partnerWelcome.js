@@ -109,14 +109,14 @@ class PartnerWelcomeScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <View style={styles.welcomeMessage}>{logoImage}</View>
+          <View style={styles.logo}>{logoImage}</View>
           <View style={styles.welcomeMessage}>
             <Text style={styles.welcome}>
               <fbt desc="PartnerWelcome.welcome">
                 Welcome! We see you’re a
                 <fbt:param name="partnerName">{config.partner.name}</fbt:param>
-                customer, complete the onboarding and sign up for Origin Rewards
-                to earn
+                customer. Click continue to create your account and join Origin
+                Rewards.
               </fbt>
             </Text>
           </View>
@@ -150,6 +150,11 @@ export default connect(mapStateToProps)(PartnerWelcomeScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
+  logo: {
+    marginTop: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
   welcomeMessage: {},
   welcome: {
     fontFamily: 'Lato',
@@ -160,16 +165,19 @@ const styles = StyleSheet.create({
   reward: {
     width: 255,
     height: 90,
+    maxHeight: 90,
     borderRadius: 10,
-    backgroundColor: '#00004c',
-    marginLeft: 35
+    backgroundColor: '#f0f6f9',
+    /*display: 'flex',
+    flexDirection: 'row',*/
+    flex: 1
   },
   rewardText: {
     fontFamily: 'Poppins',
     fontSize: 38,
     fontWeight: 'bold',
     lineHeight: 90,
-    color: '#fff',
+    color: '#000',
     textAlign: 'center'
   }
 })
