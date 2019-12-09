@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { SvgUri } from 'react-native-svg'
+import get from 'lodash.get'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
@@ -21,7 +22,10 @@ class PartnerWelcomeScreen extends Component {
       config: null
     }
 
-    if (!this.props.settings.referralCode) this.next()
+    if (!this.props.settings.referralCode) {
+      console.log('skipping partner welcome...')
+      this.next()
+    }
     this.getConfig()
   }
 
@@ -42,39 +46,64 @@ class PartnerWelcomeScreen extends Component {
     const {
       settings: { referralCode }
     } = this.props
-    const url = `${COFNIG_BASE_URL}/campaigns.json`
 
-    const resp = await fetch(url)
+    if (referralCode && referralCode.startsWith('op:')) {
+      const partnerCode = referralCode.split(':')[1]
+      const url = `${COFNIG_BASE_URL}/campaigns.json`
 
-    if (resp.status !== 200) {
-      return this.next()
+      console.log(`fetching config from ${url}`)
+
+      let resp
+      try {
+        resp = await fetch(url)
+      } catch (err) {
+        console.error(err)
+        return this.next()
+      }
+
+      if (resp.status !== 200) {
+        console.warn('originprotocol.com did not return 200')
+        return this.next()
+      }
+
+      const jason = await resp.json()
+
+      if (!Object.prototype.hasOwnProperty.call(jason, partnerCode)) {
+        console.log('Did not find referral code in config')
+        return this.next()
+      }
+
+      this.setState({
+        config: jason[partnerCode]
+      })
     }
-
-    const jason = await resp.json()
-
-    if (!Object.prototype.hasOwnProperty.call(jason, referralCode)) {
-      return this.next()
-    }
-
-    this.setState({
-      config: jason[referralCode]
-    })
   }
 
   render() {
     const { config } = this.state
 
     if (!config) {
+      console.debug('no config, not rendering')
       return null
     }
 
-    const logoURL = `${BASE_URL}${config.partner.logo}`
+    const logo = get(config, 'partner.logo')
 
-    // TODO: Need to deal with size differences
+    let logoURL,
+      height = 90,
+      width = 190
+    if (typeof logo === 'object') {
+      height = logo.height || 90
+      width = logo.width || 190
+      logoURL = `${BASE_URL}${logo.uri}`
+    } else {
+      logoURL = `${BASE_URL}${logo}`
+    }
+
     const logoImage = logoURL.endsWith('svg') ? (
-      <SvgUri width="190" height="90" uri={logoURL} />
+      <SvgUri width={width} height={height} uri={logoURL} />
     ) : (
-      <Image style={{ width: 90, height: 160 }} source={{ uri: logoURL }} />
+      <Image style={{ width, height }} source={{ uri: logoURL }} />
     )
 
     return (
@@ -124,14 +153,15 @@ const styles = StyleSheet.create({
   welcomeMessage: {},
   welcome: {
     fontFamily: 'Lato',
-    fontSize: 18
+    fontSize: 18,
+    marginTop: 45,
+    marginBottom: 45
   },
   reward: {
     width: 255,
     height: 90,
     borderRadius: 10,
     backgroundColor: '#00004c',
-    marginTop: 45,
     marginLeft: 35
   },
   rewardText: {
