@@ -1,13 +1,12 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import numberFormat from 'utils/numberFormat'
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
 function MobileDownloadAction(props) {
   if (!props.action) return null
 
-  const { status, reward } = props.action
+  const { status } = props.action
 
   const { isMobile, walletType } = props
 
@@ -21,19 +20,6 @@ function MobileDownloadAction(props) {
   if (actionCompleted) {
     // Don't show if completed
     return null
-  }
-
-  const formatTokens = tokenAmount => {
-    return numberFormat(
-      web3.utils
-        .toBN(tokenAmount)
-        .div(props.decimalDivision)
-        .toString(),
-      2,
-      '.',
-      ',',
-      true
-    )
   }
 
   const storeBadges = () => {
