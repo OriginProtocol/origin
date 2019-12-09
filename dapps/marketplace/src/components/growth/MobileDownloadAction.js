@@ -1,13 +1,12 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import numberFormat from 'utils/numberFormat'
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
 function MobileDownloadAction(props) {
   if (!props.action) return null
 
-  const { status, reward } = props.action
+  const { status } = props.action
 
   const { isMobile, walletType } = props
 
@@ -21,19 +20,6 @@ function MobileDownloadAction(props) {
   if (actionCompleted) {
     // Don't show if completed
     return null
-  }
-
-  const formatTokens = tokenAmount => {
-    return numberFormat(
-      web3.utils
-        .toBN(tokenAmount)
-        .div(props.decimalDivision)
-        .toString(),
-      2,
-      '.',
-      ',',
-      true
-    )
   }
 
   const storeBadges = () => {
@@ -72,10 +58,8 @@ function MobileDownloadAction(props) {
         <div className="d-flex">
           <div className="install mt-0 mt-md-2 mb-2 mb-md-0">
             <fbt desc="growth.mobileRewards.installAndComplete">
-              Install &amp; complete 3 verifications to earn
+              Install &amp; complete 4 verifications.
             </fbt>
-            <img className="ogn-icon-small" src="images/ogn-icon.svg" />
-            <span className="ogn-value">{formatTokens(reward.amount)}</span>
           </div>
         </div>
         {isMobile && storeBadges()}
