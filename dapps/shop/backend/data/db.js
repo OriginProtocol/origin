@@ -3,7 +3,7 @@ const config = require('../config')()
 
 const SqliteURI = `sqlite:${__dirname}/${config.network}.db`
 const URI = process.env.DATABASE_URL || SqliteURI
-const sequelize = new Sequelize(URI)
+const sequelize = new Sequelize(URI, { logging: false })
 
 const Network = sequelize.define(
   'network',
@@ -66,10 +66,51 @@ const Orders = sequelize.define(
   }
 )
 
+const Discounts = sequelize.define(
+  'discounts',
+  {
+    network_id: {
+      type: Sequelize.INTEGER
+    },
+    status: {
+      type: Sequelize.ENUM('active', 'inactive')
+    },
+    code: {
+      type: Sequelize.STRING
+    },
+    discountType: {
+      type: Sequelize.ENUM('fixed', 'percentage')
+    },
+    value: {
+      type: Sequelize.INTEGER
+    },
+    maxUses: {
+      type: Sequelize.INTEGER
+    },
+    onePerCustomer: {
+      type: Sequelize.BOOLEAN
+    },
+    startTime: {
+      type: Sequelize.DATE
+    },
+    endTime: {
+      type: Sequelize.DATE
+    },
+    uses: {
+      type: Sequelize.INTEGER
+    }
+  },
+  {
+    // options
+  }
+)
+
 sequelize.sync()
 
 module.exports = {
   Network,
   Transactions,
-  Orders
+  Orders,
+  Discounts,
+  Sequelize
 }

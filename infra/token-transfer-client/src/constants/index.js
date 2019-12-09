@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
   if (window.location.hostname.includes('employee')) {
     apiUrl = process.env.EMPLOYEE_API_URL
   } else {
-    apiUrl = window.location.origin
+    apiUrl = process.env.INVESTOR_API_URL
   }
 } else {
   apiUrl = 'http://localhost:5000'

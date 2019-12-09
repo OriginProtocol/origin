@@ -194,24 +194,26 @@ class Footer extends Component {
                 </a>
               </span>
             </div>
-            <div className="footer-settings">
-              <div className="footer-dropdown-wrapper">
-                <CurrencyDropdown
-                  value={currency}
-                  onChange={onCurrency}
-                  className="footer-dropdown"
-                  useNativeSelectbox={true}
-                />
+            {!this.props.isMobileApp && (
+              <div className="footer-settings">
+                <div className="footer-dropdown-wrapper">
+                  <CurrencyDropdown
+                    value={currency}
+                    onChange={onCurrency}
+                    className="footer-dropdown"
+                    useNativeSelectbox={true}
+                  />
+                </div>
+                <div className="footer-dropdown-wrapper">
+                  <LocaleDropdown
+                    locale={locale}
+                    onLocale={onLocale}
+                    className="footer-dropdown"
+                    useNativeSelectbox={true}
+                  />
+                </div>
               </div>
-              <div className="footer-dropdown-wrapper">
-                <LocaleDropdown
-                  locale={locale}
-                  onLocale={onLocale}
-                  className="footer-dropdown"
-                  useNativeSelectbox={true}
-                />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </footer>

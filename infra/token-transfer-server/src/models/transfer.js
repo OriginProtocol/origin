@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       userId: DataTypes.INTEGER,
+      transferTaskId: DataTypes.INTEGER,
       status: DataTypes.ENUM(enums.TransferStatuses),
       fromAddress: DataTypes.STRING,
       toAddress: DataTypes.STRING,
@@ -23,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Transfer.associate = models => {
     Transfer.belongsTo(models.User)
+    Transfer.belongsTo(models.TransferTask)
   }
 
   return Transfer

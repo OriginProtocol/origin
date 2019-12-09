@@ -128,7 +128,11 @@ class AuthenticationScreen extends Component {
                 TouchID.authenticate('Enable access to Origin Marketplace App')
                   .then(() => {
                     this.props.setBiometryType(this.state.biometryType)
-                    this.props.navigation.navigate('Main')
+                    if (this.props.settings.referralCode) {
+                      this.props.navigation.navigate('PartnerWelcome')
+                    } else {
+                      this.props.navigation.navigate('Main')
+                    }
                   })
                   .catch(error => {
                     console.warn('Biometry failure: ', error)
@@ -154,8 +158,8 @@ class AuthenticationScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({

@@ -35,7 +35,9 @@ const getFingerprintData = async req => {
       version: device.version,
       os: device.os
     },
-    location: await ip2geo(req.headers['x-real-ip'])
+    location: await ip2geo(
+      req.headers['x-real-ip'] || req.headers['x-forwarded-for']
+    )
   }
 }
 

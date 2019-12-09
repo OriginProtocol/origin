@@ -441,7 +441,9 @@ class Messaging {
         break
       case 'msg':
         {
+          debug('Trying to decrypt message', content)
           const decrypted = this.decryptMessage(content, convObj)
+          debug('Decrypted message', decrypted)
           if (decrypted.error == COULD_NOT_DECRYPT) {
             onEncrypted(content.emsg, content.address)
           } else if (decrypted.error == INVALID_MESSAGE_OBJECT) {
@@ -556,9 +558,11 @@ class Messaging {
         // The conversation isn't locally cached or queried before.
         // Fetch the conversation keys, recent messages and push the update to GraphQL subscription
         // eslint-disable-next-line no-extra-semi
+        debug(`Fetching conversations ${conversationId}...`)
         ;(async () => {
           await this.getRoom(conversationId, { keys: true })
           const convObj = await this.getRoom(conversationId)
+          debug(`Conversation ${conversationId} fetch complete`)
           this.pubsub.publish('MESSAGE_ADDED', {
             messageAdded: {
               conversationId: remoteEthAddress,
@@ -567,6 +571,7 @@ class Messaging {
               totalUnread: convObj.unreadCount
             }
           })
+          debug('Publish MESSAGE_ADDED event to pubsub')
         })()
       } else {
         const convObj = this.convs[conversationId]
@@ -602,6 +607,7 @@ class Messaging {
                   totalUnread: convObj.unreadCount
                 }
               })
+              debug('Publish MESSAGE_ADDED event to pubsub')
             },
             onEncrypted: (msg, address) => {
               this.events.emit(
@@ -612,14 +618,17 @@ class Messaging {
           })
           convObj.lastConversationIndex = entry.conversationIndex
           convObj.messageCount = entry.conversationIndex + 1
+          debug(`Updated existing conv ${conversationId}`)
         } else {
           // Locally cached version is out of sync
           // Clear and fetch the messages again and push the update to GraphQL subscription
 
           const lastConversationIndex = convObj.lastConversationIndex
 
+          debug(`Refetching conversation ${conversationId}...`)
           ;(async () => {
             const updatedConvObj = await this.getRoom(conversationId)
+            debug(`Conversation ${conversationId} refetch complete`)
             updatedConvObj.messages
               .filter(message => message.conversationId > lastConversationIndex)
               .map(message => {
@@ -632,6 +641,7 @@ class Messaging {
                   }
                 })
               })
+            debug('Publish MESSAGE_ADDED event to pubsub')
           })()
         }
       }
@@ -1193,7 +1203,7 @@ class Messaging {
       return
     }
 
-    for (const key in convObj.keys) {
+    for (const key of convObj.keys) {
       try {
         const iv = CryptoJS.lib.WordArray.random(16)
         const messageStr = JSON.stringify(message)

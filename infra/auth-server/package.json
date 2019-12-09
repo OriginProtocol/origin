@@ -33,15 +33,15 @@
     "web3-utils": "^1.2.1"
   },
   "devDependencies": {
-    "@babel/core": "7.7.2",
+    "@babel/core": "7.7.5",
     "@babel/polyfill": "7.7.0",
-    "@babel/preset-env": "7.7.1",
-    "@babel/register": "7.7.0",
+    "@babel/preset-env": "7.7.6",
+    "@babel/register": "7.7.4",
     "chai": "4.2.0",
     "crypto": "1.0.1",
-    "eslint": "6.6.0",
+    "eslint": "6.7.2",
     "mocha": "6.2.2",
-    "nodemon": "2.0.0",
+    "nodemon": "2.0.1",
     "prettier": "1.19.1"
   },
   "prettier": {

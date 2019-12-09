@@ -1,5 +1,5 @@
 require('dotenv').config()
-const config = require('./config')()
+const config = require('../config')()
 const mjml2html = require('mjml')
 const nodemailer = require('nodemailer')
 const cartData = require('./cartData')
@@ -63,7 +63,7 @@ async function sendMail(cart, skip) {
 
   const vars = {
     head,
-    siteName: config.siteData.title,
+    siteName: config.siteData.fullTitle || config.siteData.title,
     supportEmailName: config.siteData.supportEmailName,
     supportEmail: config.siteData.supportEmail,
     subject: config.siteData.emailSubject,
@@ -78,6 +78,8 @@ async function sendMail(cart, skip) {
     orderItems,
     orderItemsTxt,
     subTotal: formatPrice(cart.subTotal),
+    hasDiscount: cart.discount > 0 ? true : false,
+    discount: formatPrice(cart.discount),
     shipping: formatPrice(cart.shipping.amount),
     total: formatPrice(cart.total),
     shippingAddress: [

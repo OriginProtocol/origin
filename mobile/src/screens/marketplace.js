@@ -77,6 +77,10 @@ class MarketplaceScreen extends PureComponent {
       // Language has changed
       this.injectLanguage()
     }
+    // Send the user to the campaign page if given a referral code
+    if (prevProps.settings.referralCode !== this.props.settings.referralCode) {
+      this.injectGetStartedRedirect('/campaigns')
+    }
     if (prevProps.settings.currency !== this.props.settings.currency) {
       // Currency has changed
       this.injectCurrency()
@@ -160,6 +164,21 @@ class MarketplaceScreen extends PureComponent {
       // Clear clipboard
       Clipboard.setString('')
     }
+  }
+
+  injectGetStartedRedirect = path => {
+    console.log(`injectGetStartedRedirect(${path})`)
+    return this.injectJavaScript(
+      `
+      let uiState = typeof window.sessionStorage.uiState === 'undefined'
+        ? {}
+          : JSON.parse(window.sessionStorage.uiState)
+      console.log('setting getStartedRedirect to ${path}')
+      uiState.getStartedRedirect = { pathname: '${path}', search: '' }
+      window.sessionStorage.uiState = JSON.stringify(uiState)
+    `,
+      'getStartedRedirect'
+    )
   }
 
   /**
@@ -738,10 +757,18 @@ class MarketplaceScreen extends PureComponent {
   }
 
   renderWebView = () => {
+    let dappUrl = this.props.settings.network.dappUrl
+    if (
+      typeof this.props.navigation.state.params != 'undefined' &&
+      this.props.navigation.state.params.dappUrl
+    ) {
+      dappUrl = this.props.navigation.state.params.dappUrl
+    }
+
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        source={{ uri: this.props.settings.network.dappUrl }}
+        source={{ uri: dappUrl }}
         onMessage={this.onMessage}
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}

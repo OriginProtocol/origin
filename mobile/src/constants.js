@@ -1,6 +1,6 @@
 'use strict'
 
-export const VERSION = '0.26.6'
+export const VERSION = '0.27.0'
 
 class Enum extends Array {
   constructor(...args) {
@@ -149,4 +149,5 @@ export const LANGUAGES = [
 ].filter(l => Object.keys(TRANSLATIONS).includes(l[0]))
 
 export const AUTH_MESSAGE = 'I intend to sign in to Origin Marketplace app'
-export const REFERRAL_PREFIX = 'op:'
+// op: Origin Partner referral; or: Origin Referral (invite)
+export const REFERRAL_PREFIXES = ['op:', 'or:']

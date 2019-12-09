@@ -40,5 +40,9 @@ export default {
       newStatus: messagingStatusChange
     }),
     subscribe: () => pubsub.asyncIterator('MESSAGING_STATUS_CHANGE')
+  },
+  loggedIn: {
+    resolve: ({ loggedIn }) => ({ loggedIn }),
+    subscribe: () => pubsub.asyncIterator('LOGGED_IN')
   }
 }

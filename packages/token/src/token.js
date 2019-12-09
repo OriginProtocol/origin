@@ -96,7 +96,7 @@ class Token {
     }
     const paused = await this.contract.methods.paused().call()
     if (paused) {
-      throw new Error('token transfers are paused')
+      throw new Error('Token transfers are paused')
     }
     const transaction = this.contract.methods.transfer(address, value)
     return await this.sendTx(transaction, {

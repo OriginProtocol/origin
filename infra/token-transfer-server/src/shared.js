@@ -102,7 +102,8 @@ function calculateWithdrawn(transfers) {
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
-    enums.TransferStatuses.Success
+    enums.TransferStatuses.Success,
+    enums.TransferStatuses.Processing
   ]
 
   return transfers.reduce((total, transfer) => {
