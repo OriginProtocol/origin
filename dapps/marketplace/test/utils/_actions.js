@@ -110,10 +110,9 @@ export const purchaseListing = async ({
   await waitForText(page, 'Total Price')
 
   const summaryEls = await page.$('.purchase-summary')
-  const summaryText = (await page.evaluate(
-    el => el.innerText || '',
-    summaryEls
-  )).replace(/[\n\t\r ]+/g, ' ')
+  const summaryText = (
+    await page.evaluate(el => el.innerText || '', summaryEls)
+  ).replace(/[\n\t\r ]+/g, ' ')
 
   if (withShipping) {
     assert(
@@ -207,10 +206,9 @@ export const purchaseMultiUnitListing = async ({
   await waitForText(page, 'Total Price')
 
   const summaryEls = await page.$('.purchase-summary')
-  const summaryText = (await page.evaluate(
-    el => el.innerText || '',
-    summaryEls
-  )).replace(/[\n\t\r ]+/g, ' ')
+  const summaryText = (
+    await page.evaluate(el => el.innerText || '', summaryEls)
+  ).replace(/[\n\t\r ]+/g, ' ')
 
   if (withShipping) {
     assert(
