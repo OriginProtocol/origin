@@ -214,6 +214,7 @@ export default {
         distributionDate
         status
         actions {
+          conditionalName
           type
           status
           rewardEarned {
