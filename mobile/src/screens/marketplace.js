@@ -54,7 +54,8 @@ class MarketplaceScreen extends PureComponent {
     this.state = {
       enablePullToRefresh: true,
       panResponder: this.getSwipeHandler(),
-      webViewRef: React.createRef()
+      webViewRef: React.createRef(),
+      injectedGetStartedRedirect: false
     }
 
     this.subscriptions = [
@@ -76,6 +77,14 @@ class MarketplaceScreen extends PureComponent {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed
       this.injectLanguage()
+    }
+    // Send the user to the campaign page if given a referral code
+    if (
+      this.props.settings.referralCode &&
+      !this.state.injectedGetStartedRedirect
+    ) {
+      this.injectGetStartedRedirect('/campaigns')
+      this.setState({ injectedGetStartedRedirect: true })
     }
     if (prevProps.settings.currency !== this.props.settings.currency) {
       // Currency has changed
@@ -160,6 +169,21 @@ class MarketplaceScreen extends PureComponent {
       // Clear clipboard
       Clipboard.setString('')
     }
+  }
+
+  injectGetStartedRedirect = path => {
+    console.log(`injectGetStartedRedirect(${path})`)
+    return this.injectJavaScript(
+      `
+      let uiState = typeof window.sessionStorage.uiState === 'undefined'
+        ? {}
+          : JSON.parse(window.sessionStorage.uiState)
+      console.log('setting getStartedRedirect to ${path}')
+      uiState.getStartedRedirect = { pathname: '${path}', search: '' }
+      window.sessionStorage.uiState = JSON.stringify(uiState)
+    `,
+      'getStartedRedirect'
+    )
   }
 
   /**

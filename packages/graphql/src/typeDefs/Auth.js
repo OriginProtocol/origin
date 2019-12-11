@@ -8,6 +8,14 @@ export const mutations = `
     isLoggedIn(wallet: String!): Boolean
     tokenStatus(wallet: String!): TokenStatusResult
   }
+
+  extend type Subscription {
+    loggedIn: LoggedInSubscription
+  }
+
+  type LoggedInSubscription {
+    wallet: String
+  }
 `
 export const types = `
   type LoginResult {
