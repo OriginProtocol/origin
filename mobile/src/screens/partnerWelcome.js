@@ -25,7 +25,7 @@ class PartnerWelcomeScreen extends Component {
     const { referralCode } = this.props.settings
 
     if (!referralCode || !referralCode.startsWith('op:')) {
-      console.log('skipping partner welcome...')
+      console.debug('skipping partner welcome...')
       this.next()
     }
     this.getConfig()
@@ -35,7 +35,7 @@ class PartnerWelcomeScreen extends Component {
     if (this.props.settings.referralCode) {
       // We want to direct the user directly to dapp onboarding
       const url = new URL(this.props.settings.network.dappUrl)
-      url.hash = '/onboard?referralCode=' + this.props.settings.referralCode
+      url.hash = '/onboard?referralCode=' + encodeURIComponent(this.props.settings.referralCode)
       const dappUrl = String(url)
 
       this.props.navigation.navigate('Marketplace', { dappUrl })
@@ -74,6 +74,8 @@ class PartnerWelcomeScreen extends Component {
         console.log('Did not find referral code in config')
         return this.next()
       }
+
+      console.debug('Got partner config', jason[partnerCode])
 
       this.setState({
         config: jason[partnerCode]
