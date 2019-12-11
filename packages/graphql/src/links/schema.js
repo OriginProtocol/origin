@@ -30,6 +30,11 @@ const authLink = setContext((_, { headers }) => {
     }
   }
 
+  const authToken = context.authClient.getAccessToken(growthWallet)
+  if (authToken) {
+    returnObject.headers['authorization'] = `Bearer ${authToken}`
+  }
+
   if (token) {
     returnObject.headers['authentication'] = `{"growth_auth_token": "${token}"}`
   }

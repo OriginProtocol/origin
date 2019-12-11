@@ -124,6 +124,7 @@ const RecoveryPhraseVerifyScreen = ({ navigation, wallet }) => {
               // Naive check of array equality but works for all cases here
               if (
                 JSON.stringify(selectedWords) != JSON.stringify(wordsToVerify)
+                && !__DEV__
               ) {
                 // Failure, generate a new set of verification words and set
                 // retry state

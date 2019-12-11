@@ -22,7 +22,9 @@ class PartnerWelcomeScreen extends Component {
       config: null
     }
 
-    if (!this.props.settings.referralCode) {
+    const { referralCode } = this.props.settings
+
+    if (!referralCode || !referralCode.startsWith('op:')) {
       console.log('skipping partner welcome...')
       this.next()
     }
