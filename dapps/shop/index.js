@@ -3,7 +3,25 @@ import { spawn } from 'child_process'
 import services from '@origin/services'
 
 async function start() {
-  await services({
+  let shuttingDown = false
+
+  process.on('SIGINT', async () => {
+    if (shuttingDown) return
+    shuttingDown = true
+
+    if (shutdown) {
+      await shutdown()
+    }
+    if (webpackDevServer) {
+      webpackDevServer.kill()
+    }
+    if (backend) {
+      backend.kill()
+    }
+    console.log('Shut down ok.')
+  })
+
+  const shutdown = await services({
     ganache: true,
     deployContracts: true,
     ipfs: true,
@@ -25,10 +43,6 @@ async function start() {
   const backend = spawn('node', ['backend'], {
     stdio: 'inherit',
     env: process.env
-  })
-  process.on('exit', () => {
-    webpackDevServer.kill()
-    backend.kill()
   })
 }
 

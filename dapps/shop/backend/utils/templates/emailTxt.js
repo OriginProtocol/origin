@@ -52,5 +52,5 @@ Payment method
 ${vars.paymentMethod}
 
 If you have any questions, reply to this email or
-contact us at ${vars.supportEmail}
+contact us at ${vars.supportEmailPlain}
 `

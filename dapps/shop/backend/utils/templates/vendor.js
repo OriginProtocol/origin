@@ -75,16 +75,6 @@ module.exports = vars => `
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-divider />
-    <mj-section>
-      <mj-column>
-        <mj-text mj-class="light small">
-          If you have any questions, reply to this email or contact us at ${
-            vars.supportEmail
-          }
-        </mj-text>
-      </mj-column>
-    </mj-section>
   </mj-body>
 </mjml>
 `

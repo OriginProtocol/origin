@@ -1,5 +1,4 @@
-require('dotenv').config()
-const config = require('./config')()
+const config = require('./config')
 
 const WebSocket = require('ws')
 const openpgp = require('openpgp')
@@ -7,25 +6,24 @@ const Web3 = require('web3')
 const get = require('lodash/get')
 const abi = require('./utils/_abi')
 const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
-const netId = config.netId
 
 const { Network, Transactions, Orders } = require('./data/db')
 const sendMail = require('./utils/emailer')
 
-const web3 = new Web3()
+const web3 = new Web3(config.provider)
 
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
 const PrivateKey = process.env.PGP_PRIVATE_KEY
 const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
-const ListingId = process.env.LISTING_ID
 
-const SubscribeToLogs = JSON.stringify({
-  jsonrpc: '2.0',
-  id: 1,
-  method: 'eth_subscribe',
-  params: ['logs', { address: config.marketplace, topics: [] }]
-})
+const SubscribeToLogs = address =>
+  JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'eth_subscribe',
+    params: ['logs', { address, topics: [] }]
+  })
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -34,27 +32,34 @@ const SubscribeToNewHeads = JSON.stringify({
   params: ['newHeads']
 })
 
-const GetPastLogs = ({ fromBlock, toBlock }) =>
-  JSON.stringify({
+const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
+  const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+  const rpc = {
     jsonrpc: '2.0',
     id: 3,
     method: 'eth_getLogs',
     params: [
       {
         address: config.marketplace,
-        topics: [],
+        topics: [null, null, listingTopic],
         fromBlock: web3.utils.numberToHex(fromBlock),
         toBlock: web3.utils.numberToHex(toBlock)
       }
     ]
-  })
-
+  }
+  return JSON.stringify(rpc)
+}
+const netId = config.network
 let ws
 async function connectWS() {
   let lastBlock
+  const siteConfig = await config.getSiteConfig()
+  const listingId = siteConfig.listingId.split('-')[2]
+  console.log(`Connecting to ${config.provider} (netId ${netId})`)
+  console.log(`Watching listing ${siteConfig.listingId}`)
   const res = await Network.findOne({ where: { network_id: netId } })
   if (res) {
-    lastBlock = res.last_block
+    lastBlock = res.last_block - 400
     console.log(`Last recorded block: ${lastBlock}`)
   } else {
     console.log('No recorded block found')
@@ -65,7 +70,7 @@ async function connectWS() {
   }
 
   console.log('Trying to connect...')
-  ws = new WebSocket(config.providerWs)
+  ws = new WebSocket(config.provider)
 
   function heartbeat() {
     console.log('Got ping...')
@@ -92,7 +97,7 @@ async function connectWS() {
   ws.on('open', function open() {
     console.log('Connection open')
     this.heartbeat()
-    ws.send(SubscribeToLogs)
+    ws.send(SubscribeToLogs(siteConfig.marketplaceContract))
     ws.send(SubscribeToNewHeads)
   })
 
@@ -111,6 +116,7 @@ async function connectWS() {
     } else if (data.id === 2) {
       heads = data.result
     } else if (data.id === 3) {
+      console.log(data)
       console.log(`Got ${data.result.length} unhandled logs`)
       data.result.map(handleLog)
     } else if (get(data, 'params.subscription') === logs) {
@@ -120,9 +126,12 @@ async function connectWS() {
       const blockDiff = number - lastBlock
       if (blockDiff > 500) {
         console.log('Too many new blocks. Skip past log fetch.')
-      } else if (blockDiff > 1 && config.fetchPastLogs) {
+      } else if (blockDiff > 1) {
+        //} && config.fetchPastLogs) {
         console.log(`Fetching ${blockDiff} past logs...`)
-        ws.send(GetPastLogs({ fromBlock: lastBlock, toBlock: number }))
+        ws.send(
+          GetPastLogs({ fromBlock: lastBlock, toBlock: number, listingId })
+        )
       }
       lastBlock = number
     } else {
@@ -142,6 +151,7 @@ const handleNewHead = head => {
 }
 
 const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
+  const siteConfig = await config.getSiteConfig()
   const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
   if (!eventAbi) {
     console.log('Unknown event')
@@ -161,7 +171,7 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
       transaction_hash: transactionHash,
       block_number: web3.utils.hexToNumber(blockNumber)
     }).then(res => {
-      console.log(res)
+      console.log(`Created tx ${res.dataValues.id}`)
     })
   }
 
@@ -169,11 +179,11 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
   const decoded = web3.eth.abi.decodeLog(inputs, data, topics.slice(1))
   const { offerID, ipfsHash, party } = decoded
 
-  console.log(`${name} - ${ListingId}-${offerID} by ${party}`)
+  console.log(`${name} - ${siteConfig.listingId}-${offerID} by ${party}`)
   console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
 
   try {
-    const offerData = await getText(config.ipfsGateway, ipfsHash, 10000)
+    const offerData = await getText(siteConfig.ipfsGateway, ipfsHash, 10000)
     const offer = JSON.parse(offerData)
     console.log('Offer:', offer)
 
@@ -183,7 +193,7 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
     }
 
     const encryptedDataJson = await getText(
-      config.ipfsGateway,
+      siteConfig.ipfsGateway,
       offer.encryptedData,
       10000
     )
@@ -199,7 +209,7 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
 
     const plaintext = await openpgp.decrypt(options)
     const cart = JSON.parse(plaintext.data)
-    cart.offerId = `${ListingId}-${offerID}`
+    cart.offerId = `${siteConfig.listingId}-${offerID}`
     cart.tx = transactionHash
 
     console.log(cart)

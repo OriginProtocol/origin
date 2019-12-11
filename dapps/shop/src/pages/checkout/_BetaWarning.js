@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-import Site from 'constants/Site'
+import useConfig from 'utils/useConfig'
 
 const BetaWarning = () => {
-  if (!Site.beta) {
+  const { config } = useConfig()
+  if (!config.beta) {
     return null
   }
 

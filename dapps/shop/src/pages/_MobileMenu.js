@@ -1,4 +1,5 @@
-import React, { useRef, useState, useLayoutEffect } from 'react'
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
 import Link from 'components/Link'
@@ -15,6 +16,11 @@ const Item = ({ id, children, active, onClick }) => (
 
 const MobileMenu = ({ open, onClose }) => {
   const [{ cart, collections }] = useStateValue()
+  const location = useLocation()
+  useEffect(() => {
+    onClose()
+  }, [location.pathname])
+
   const targetRef = useRef()
   const [height, setHeight] = useState(0)
   useLayoutEffect(() => {
@@ -72,7 +78,7 @@ require('react-styl')(`
         &:last-of-type
           border-bottom: 0
       .search
-        margin-left: 0.25rem
-        margin-right: 0.25rem
+        margin: 0 auto
+        width: 115px
 
 `)

@@ -6,11 +6,12 @@ import Checkout from './checkout/Loader'
 import Order from './OrderLoader'
 import Admin from './admin/Admin'
 
-import dataUrl from 'utils/dataUrl'
-
-const CSS = process.env.SITE_CSS
+import useConfig from 'utils/useConfig'
 
 const App = ({ location }) => {
+  const { loading, config } = useConfig()
+
+  // Redirect to HTTPS if URL is not local
   useEffect(() => {
     const href = window.location.href
     if (
@@ -20,27 +21,31 @@ const App = ({ location }) => {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
   }, [])
+
   useEffect(() => {
     if (location.state && location.state.scrollToTop) {
       window.scrollTo(0, 0)
     }
   }, [location.pathname])
 
+  // Add custom CSS
   useEffect(() => {
-    if (CSS) {
-      const link = document.createElement('link')
-      link.type = 'text/css'
-      link.rel = 'stylesheet'
-      link.href = `${dataUrl()}${CSS}`
-      document.head.appendChild(link)
+    if (config && config.css) {
+      const css = document.createElement('style')
+      css.appendChild(document.createTextNode(config.css))
+      document.head.appendChild(css)
     }
-  }, [])
+  }, [config])
+
+  if (loading) {
+    return null
+  }
 
   return (
     <Switch>
+      <Route path="/admin" component={Admin}></Route>
       <Route path="/order/:tx" component={Order}></Route>
       <Route path="/checkout" component={Checkout}></Route>
-      <Route path="/admin" component={Admin}></Route>
       <Route component={Main}></Route>
     </Switch>
   )
@@ -58,5 +63,4 @@ require('react-styl')(`
       color: #333
       opacity: 0.7
       text-decoration: none
-
 `)
