@@ -496,7 +496,8 @@ function withEnrolmentModal(WrappedComponent) {
             let countryOverride = localStorage.getItem(
               'growth_country_override'
             )
-            let { countryName, countryCode, eligibility } = data.isEligible
+            let { countryName, eligibility } = data.isEligible
+            const { countryCode } = data.isEligible
 
             if (countryOverride !== null) {
               countryOverride = JSON.parse(countryOverride)
@@ -508,7 +509,7 @@ function withEnrolmentModal(WrappedComponent) {
             if (
               eligibility === 'Eligible' ||
               (eligibility === 'Restricted' && notCitizenConfirmed) ||
-                (eligibility === 'Restricted' && this.countryCode === 'US')
+              (eligibility === 'Restricted' && this.countryCode === 'US')
             ) {
               return this.renderTermsModal()
             } else if (
