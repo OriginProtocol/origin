@@ -9,7 +9,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
-const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+const SupportLink = 'https://forms.gle/KxBDiGjZwaXhitSn9'
 
 const urlPrefixesForShortButton = ['/messages']
 

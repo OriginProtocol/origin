@@ -96,7 +96,7 @@ module.exports = vars => `
       <mj-column>
         <mj-text mj-class="light small">
           If you have any questions, reply to this email or contact us at ${
-            vars.supportEmail
+            vars.supportEmailPlain
           }
         </mj-text>
       </mj-column>

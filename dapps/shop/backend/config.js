@@ -1,137 +1,158 @@
-const network =
-  process.env.NETWORK ||
-  (process.env.NODE_ENV === 'production' ? 'rinkeby' : 'localhost')
-const site = process.env.SITE || 'origin'
-const AlchemyKey = process.env.ALCHEMY_KEY
+require('dotenv').config()
+const fetch = require('node-fetch')
+const memoize = require('lodash/memoize')
 
-let localContractAddress
-try {
-  const Addresses = require(`@origin/contracts/build/contracts.json`)
-  localContractAddress = Addresses.Marketplace_V01
-} catch (e) {
-  /* Ignore */
-}
+const { NODE_ENV, NETWORK_ID, DATA_URL } = process.env
+const defaultNetwork = NODE_ENV === 'production' ? '4' : '999'
 
-const Configs = {
-  localhost: {
-    netId: 999,
+const Defaults = {
+  '999': {
     ipfsGateway: 'http://localhost:8080',
     ipfsApi: 'http://localhost:5002',
-    providerWs: 'ws://localhost:8545',
-    provider: 'http://localhost:8545',
-    paymentUrl: 'http://localhost:3000/pay',
-    marketplace: localContractAddress
+    provider: 'ws://localhost:8545'
   },
-  rinkeby: {
-    netId: 4,
+  '4': {
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsApi: 'https://ipfs.staging.originprotocol.com',
-    providerWs: `wss://eth-rinkeby.ws.alchemyapi.io/ws/${AlchemyKey}`,
-    provider: `https://eth-rinkeby.alchemyapi.io/jsonrpc/${AlchemyKey}`,
     marketplace: '0x3d608cce08819351ada81fc1550841ebc10686fd',
     fetchPastLogs: true
   },
-  mainnet: {
-    netId: 1,
+  '1': {
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsApi: 'https://ipfs.originprotocol.com',
-    providerWs: `wss://eth-mainnet.ws.alchemyapi.io/ws/${AlchemyKey}`,
-    provider: `https://eth-mainnet.alchemyapi.io/jsonrpc/${AlchemyKey}`,
-    backend: '',
     marketplace: '0x698ff47b84837d3971118a369c570172ee7e54c2',
     fetchPastLogs: true
   }
 }
 
-const SiteData = {
-  brave: {
-    dataDir: 'brave',
-    title: 'Brave Swag Store',
-    supportEmailName: 'Origin Swag',
-    supportEmail: 'swag@originprotocol.com',
-    emailSubject: 'Your Origin Swag',
-    storeUrl: 'https://www.ethswag.com',
-    productUrl: 'https://www.ethswag.com/products/',
-    emailAssets: 'https://www.ethswag.com/products',
-    contentHash: 'QmP5ynAZ7akpjUnfSjHXme2nTQGF5hvn7ZSEnYWjdDE66j'
-  },
-  origin: {
-    dataDir: 'origin',
-    title: 'Swag',
-    fullTitle: 'Origin Swag',
-    byline: 'Free shipping on all orders! 🚚💨',
-    supportEmailName: 'Origin Swag',
-    supportEmail: 'help@originswag.com',
-    emailSubject: '🦄🌈 Your Origin Swag!',
-    storeUrl: 'https://www.originswag.com',
-    productUrl: 'https://www.originswag.com/origin/',
-    emailAssets: 'https://www.originswag.com/origin',
-    logo: 'logo.svg',
-    css: 'style.css',
-    twitter: 'https://twitter.com/originprotocol',
-    medium: 'https://medium.com/originprotocol',
-    instagram: 'https://www.instagram.com/originprotocol',
-    localhost: {
-      paymentUrl: 'http://localhost:3000/pay',
-      backend: 'http://localhost:3000'
-    },
-    rinkeby: {
-      paymentUrl: 'https://origin-pay.herokuapp.com/pay',
-      backend: 'https://origin-pay.herokuapp.com'
-    },
-    mainnet: {
-      paymentUrl: 'https://origin-pay.herokuapp.com/pay',
-      backend: 'https://origin-pay.herokuapp.com'
-    }
-  },
-  gitcoin: {
-    dataDir: 'gitcoin',
-    title: 'Gitcoin Schwag Store',
-    byline:
-      'Support the supporters of Open Source Sustainability (and look good while doing it) 😎',
-    supportEmailName: 'Gitcoin Schwag Store',
-    supportEmail: 'help@ethswag.com',
-    emailSubject: '🦄🌈 Your Gitcoin Schwag!',
-    storeUrl: 'https://www.ethswag.com/gitcoin',
-    productUrl: 'https://www.ethswag.com/gitcoin/products/',
-    emailAssets: 'https://www.ethswag.com/gitcoin/products',
-    logo: 'logo.png',
-    css: 'style.css',
-    contentHash: 'QmTBTU8SmUbX32UHRmW13WviUE5wqMJBsW9V4RaVUBfKyP',
-    paymentUrl: 'https://gitcoin-pay.herokuapp.com/pay',
-    backend: 'https://gitcoin-pay.herokuapp.com'
-  },
-  ethereum: {
-    dataDir: 'ef',
-    title: 'Ethporeum',
-    byline:
-      'Serving the finest Ethereum swag since block <a href="https://etherscan.io/block/4832686">4832686</a>.',
-    supportEmailName: 'Ethereum Swag Store',
-    supportEmail: 'help@ethswag.com',
-    emailSubject: '🦄🌈 Your Ethereum Swag!',
-    storeUrl: 'https://www.ethswag.com',
-    productUrl: 'https://www.ethswag.com/products/',
-    emailAssets: 'https://www.ethswag.com/products',
-    logo: 'logo.svg',
-    contentHash: 'QmNod6kFeaNMdtNxMBe3KVxtGKhpdQKzwoisfTVrSwiBW4'
-  },
-  ethhub: {
-    dataDir: 'ethhub',
-    title: 'EthHub',
-    supportEmailName: 'EthHub Swag Store',
-    supportEmail: 'help@ethswag.com',
-    emailSubject: '🦄🌈 Your Ethereum Swag!',
-    storeUrl: 'https://www.ethswag.com',
-    productUrl: 'https://www.ethswag.com/products/',
-    emailAssets: 'https://www.ethswag.com/products'
-  }
+const getSiteConfig = memoize(async function getSiteConfig() {
+  const url = `${DATA_URL}config.json`
+  const dataRaw = await fetch(url)
+  const data = await dataRaw.json()
+  const defaultData = Defaults[NETWORK_ID || defaultNetwork] || {}
+  const networkData = data.networks[NETWORK_ID || defaultNetwork] || {}
+  const siteConfig = { ...data, ...defaultData, ...networkData }
+  return siteConfig
+})
+
+module.exports = {
+  network: NETWORK_ID || defaultNetwork,
+  getSiteConfig,
+  provider: process.env.PROVIDER
 }
 
-module.exports = function() {
-  if (!Configs[network] || !SiteData[site]) {
-    process.exit(`No config for network ${network}`)
-  }
-  const siteNet = SiteData[site][network] || {}
-  const siteData = { ...SiteData[site], ...siteNet }
-  return { ...Configs[network], network, siteData }
-}
+// const Configs = {
+//   localhost: {
+//     ipfsGateway: 'http://localhost:8080',
+//     ipfsApi: 'http://localhost:5002',
+//     provider: 'ws://localhost:8545',
+//     marketplace: localContractAddress
+//   },
+//   rinkeby: {
+//     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
+//     ipfsApi: 'https://ipfs.staging.originprotocol.com',
+//     provider: `wss://eth-rinkeby.ws.alchemyapi.io/ws/${AlchemyKey}`,
+//     marketplace: '0x3d608cce08819351ada81fc1550841ebc10686fd',
+//     fetchPastLogs: true
+//   },
+//   mainnet: {
+//     ipfsGateway: 'https://ipfs.originprotocol.com',
+//     ipfsApi: 'https://ipfs.originprotocol.com',
+//     provider: `wss://eth-mainnet.ws.alchemyapi.io/ws/${AlchemyKey}`,
+//     backend: '',
+//     marketplace: '0x698ff47b84837d3971118a369c570172ee7e54c2',
+//     fetchPastLogs: true
+//   }
+// }
+
+// const SiteData = {
+//   brave: {
+//     dataDir: 'brave',
+//     title: 'Brave Swag Store',
+//     email: 'Brave Swag <swag@originprotocol.com>',
+//     emailSubject: 'Your Brave Swag',
+//     storeUrl: 'https://www.ethswag.com',
+//     productUrl: 'https://www.ethswag.com/products/',
+//     emailAssets: 'https://www.ethswag.com/products',
+//     contentHash: 'QmP5ynAZ7akpjUnfSjHXme2nTQGF5hvn7ZSEnYWjdDE66j'
+//   },
+//   origin: {
+//     dataDir: 'origin',
+//     title: 'Swag',
+//     fullTitle: 'Origin Swag',
+//     byline: 'Free shipping on all orders! 🚚💨',
+//     email: 'Origin Swag <help@originswag.com>',
+//     emailSubject: '🦄🌈 Your Origin Swag!',
+//     storeUrl: 'https://www.originswag.com',
+//     productUrl: 'https://www.originswag.com/origin/',
+//     emailAssets: 'https://www.originswag.com/origin',
+//     logo: 'logo.svg',
+//     css: 'style.css',
+//     twitter: 'https://twitter.com/originprotocol',
+//     medium: 'https://medium.com/originprotocol',
+//     instagram: 'https://www.instagram.com/originprotocol',
+//     localhost: {
+//       backend: 'http://localhost:3000'
+//     },
+//     rinkeby: {
+//       backend: 'https://origin-pay.herokuapp.com'
+//     },
+//     mainnet: {
+//       backend: 'https://origin-pay.herokuapp.com'
+//     }
+//   },
+//   gitcoin: {
+//     dataDir: 'gitcoin',
+//     title: 'Gitcoin Schwag Store',
+//     byline:
+//       'Support the supporters of Open Source Sustainability (and look good while doing it) 😎',
+//     email: 'Gitcoin Schwag Store <help@ethswag.com>',
+//     emailSubject: '🦄🌈 Your Gitcoin Schwag!',
+//     storeUrl: 'https://www.ethswag.com/gitcoin',
+//     productUrl: 'https://www.ethswag.com/gitcoin/products/',
+//     emailAssets: 'https://www.ethswag.com/gitcoin/products',
+//     logo: 'logo.png',
+//     css: 'style.css',
+//     contentHash: 'QmTBTU8SmUbX32UHRmW13WviUE5wqMJBsW9V4RaVUBfKyP',
+//     localhost: {
+//       backend: 'http://localhost:3000'
+//     },
+//     rinkeby: {
+//       backend: 'https://gitcoin-pay.herokuapp.com'
+//     },
+//     mainnet: {
+//       backend: 'https://gitcoin-pay.herokuapp.com'
+//     }
+//   },
+//   ethereum: {
+//     dataDir: 'ef',
+//     title: 'Ethporeum',
+//     byline:
+//       'Serving the finest Ethereum swag since block <a href="https://etherscan.io/block/4832686">4832686</a>.',
+//     email: 'Ethereum Swag Store <help@ethswag.com>',
+//     emailSubject: '🦄🌈 Your Ethereum Swag!',
+//     storeUrl: 'https://www.ethswag.com',
+//     productUrl: 'https://www.ethswag.com/products/',
+//     emailAssets: 'https://www.ethswag.com/products',
+//     logo: 'logo.svg',
+//     contentHash: 'QmNod6kFeaNMdtNxMBe3KVxtGKhpdQKzwoisfTVrSwiBW4'
+//   },
+//   ethhub: {
+//     dataDir: 'ethhub',
+//     title: 'EthHub',
+//     email: 'EthHub Swag Store <help@ethswag.com>',
+//     emailSubject: '🦄🌈 Your Ethereum Swag!',
+//     storeUrl: 'https://www.ethswag.com',
+//     productUrl: 'https://www.ethswag.com/products/',
+//     emailAssets: 'https://www.ethswag.com/products'
+//   }
+// }
+
+// module.exports = function() {
+//   if (!Configs[network] || !SiteData[site]) {
+//     process.exit(`No config for network ${network}`)
+//   }
+//   const siteNet = SiteData[site][network] || {}
+//   const siteData = { ...SiteData[site], ...siteNet }
+//   return { ...Configs[network], network, siteData }
+// }

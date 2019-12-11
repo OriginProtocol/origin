@@ -25,8 +25,10 @@ const Growth$FbtEnum = {
   'growth.dec2019.short_name': 'December 2019',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
-  'growth.two.attestations.requirement': 'Two profile verifications',
-  'growth.three.attestations.requirement': 'Three profile verifications',
+  // 2 + 1 because the user considers email to be included
+  'growth.two.attestations.requirement': 'Three profile verifications',
+  // 3 + 1 because the user considers email to be included
+  'growth.three.attestations.requirement': 'Four profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email',
   'growth.attestation.requirement.twitterAttestation': 'Twitter attestation',
