@@ -177,7 +177,9 @@ const OnboardMessagingRaw = ({
 
   useEffect(() => {
     // If user has already signed the messages, skip this step
-    if (needsSigning || messagingStatusLoading || messagingKeysLoading) { return }
+    if (needsSigning || messagingStatusLoading || messagingKeysLoading) {
+      return
+    }
 
     const { pubKey, pubSig } = messagingStatus.messaging
     if (pubKey && pubSig) {
@@ -185,7 +187,12 @@ const OnboardMessagingRaw = ({
     } else {
       setNeedsSigning(true)
     }
-  }, [needsSigning, messagingStatusLoading, messagingStatus, messagingKeysLoading])
+  }, [
+    needsSigning,
+    messagingStatusLoading,
+    messagingStatus,
+    messagingKeysLoading
+  ])
 
   if (redirect) {
     return <Redirect to={nextLink} />

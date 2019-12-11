@@ -9,7 +9,12 @@ import { formatTokens, getReferralReward } from 'utils/growthTools'
 
 import withEnrolmentStatus from 'hoc/withEnrolmentStatus'
 
-const Finished = ({ linkPrefix, redirectto, activeGrowthCampaign, growthEnrollmentStatus }) => {
+const Finished = ({
+  linkPrefix,
+  redirectto,
+  activeGrowthCampaign,
+  growthEnrollmentStatus
+}) => {
   const continueTo = redirectto ? redirectto : `${linkPrefix}/onboard/back`
 
   const [finished, setFinished] = useState(false)

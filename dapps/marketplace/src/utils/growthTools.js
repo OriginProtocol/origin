@@ -76,7 +76,7 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
 }
 
 export function formatTokens(tokenAmount, decimalDivision) {
-  const _div = decimalDivision || (web3.utils.toBN(10).pow(web3.utils.toBN(18)))
+  const _div = decimalDivision || web3.utils.toBN(10).pow(web3.utils.toBN(18))
 
   return numberFormat(
     web3.utils
@@ -239,7 +239,11 @@ export function getReferralReward(campaign) {
     return null
   }
 
-  const action = actions.find(action => action.type === (referralCode.startsWith('op') ? 'PartnerReferral' : 'Referral'))
+  const action = actions.find(
+    action =>
+      action.type ===
+      (referralCode.startsWith('op') ? 'PartnerReferral' : 'Referral')
+  )
 
   const reward = get(action, 'reward.amount')
 

@@ -3,7 +3,7 @@ import fragments from './Fragments'
 
 const ActiveGrowthCampaignQuery = gql`
   query GrowthCampaigns($id: String = "active") {
-    campaign(id:$id) {
+    campaign(id: $id) {
       ...basicCampaignFields
     }
   }

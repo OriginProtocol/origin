@@ -8,49 +8,38 @@ const UserProfileCreated = ({ onCompleted, isMobile, referralReward }) => {
   const content = (
     <div className="profile-created">
       <img src="images/identity/rocket.svg" />
-      {
-        referralReward ? (
-          <div className="rewards-earned mt-3">
-            <div><fbt desc="UserActivation.congratulations">Congratulations!</fbt></div>
-            <div><fbt desc="UserActivation.youEarned">You earned</fbt></div>
-            <div className="partner-referral-reward mt-2">
-              {referralReward}
-            </div>
+      {referralReward ? (
+        <div className="rewards-earned mt-3">
+          <div>
+            <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
           </div>
-        ) : (
-          <>
-            <h2 className="mt-3">
-              <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
-            </h2>
-            <div>
-              <fbt desc="UserActivation.profileCreated">
-                You&apos;ve successfully created your profile You&apos;re now ready to
-                continue your journey in the Origin Marketplace.
-              </fbt>
-            </div>
-          </>
-        )
-      }
+          <div>
+            <fbt desc="UserActivation.youEarned">You earned</fbt>
+          </div>
+          <div className="partner-referral-reward mt-2">{referralReward}</div>
+        </div>
+      ) : (
+        <>
+          <h2 className="mt-3">
+            <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
+          </h2>
+          <div>
+            <fbt desc="UserActivation.profileCreated">
+              You&apos;ve successfully created your profile You&apos;re now
+              ready to continue your journey in the Origin Marketplace.
+            </fbt>
+          </div>
+        </>
+      )}
       <div className="actions mt-auto">
-        {
-          referralReward ? (
-            <>
-              <Link to="/welcome" className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3">
-                <fbt desc="UserActivation.earnMore">Earn more OGN</fbt>
-              </Link>
-              <button
-                type="button"
-                onClick={e => {
-                  e.preventDefault()
-                  if (onCompleted) {
-                    onCompleted()
-                  }
-                }}
-                className="btn btn-dark btn-rounded mb-3 mx-md-3"
-                children={fbt('Go to Marketplace', 'Go to Marketplace')}
-              />
-            </>
-          ) : (
+        {referralReward ? (
+          <>
+            <Link
+              to="/welcome"
+              className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3"
+            >
+              <fbt desc="UserActivation.earnMore">Earn more OGN</fbt>
+            </Link>
             <button
               type="button"
               onClick={e => {
@@ -59,11 +48,23 @@ const UserProfileCreated = ({ onCompleted, isMobile, referralReward }) => {
                   onCompleted()
                 }
               }}
-              className="btn btn-primary btn-rounded mt-5 mb-3"
-              children={fbt('Ok', 'Ok')}
+              className="btn btn-dark btn-rounded mb-3 mx-md-3"
+              children={fbt('Go to Marketplace', 'Go to Marketplace')}
             />
-          )
-        }
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={e => {
+              e.preventDefault()
+              if (onCompleted) {
+                onCompleted()
+              }
+            }}
+            className="btn btn-primary btn-rounded mt-5 mb-3"
+            children={fbt('Ok', 'Ok')}
+          />
+        )}
       </div>
     </div>
   )

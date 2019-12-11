@@ -51,7 +51,7 @@ const CategoryHeader = ({ search: { category, subCategory } }) => {
   return content ? <h3 className="category-title">{content}</h3> : null
 }
 
-const Listings = ({ isMobile, creatorConfig, walletType, isOriginWallet, ...props }) => {
+const Listings = ({ isMobile, creatorConfig, isOriginWallet, ...props }) => {
   const [search, setSearch] = useState(getStateFromQuery(props))
 
   useEffect(() => {
@@ -102,8 +102,7 @@ const Listings = ({ isMobile, creatorConfig, walletType, isOriginWallet, ...prop
     search.ognListings
 
   const injectCTAs = !isSearch
-  const shouldShowBackButton =
-    isSearch && isOriginWallet
+  const shouldShowBackButton = isSearch && isOriginWallet
 
   const filterComp = (
     <SortMenu

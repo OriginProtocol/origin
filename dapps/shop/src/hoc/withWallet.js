@@ -21,7 +21,9 @@ function withWallet(WrappedComponent) {
         walletLoading={networkStatus === 1}
         walletProxy={get(data, 'web3.primaryAccount.proxy.id')}
         walletPredictedProxy={predicted}
-        isOriginWallet={walletType === 'Origin Wallet' || walletType === 'Mobile'}
+        isOriginWallet={
+          walletType === 'Origin Wallet' || walletType === 'Mobile'
+        }
       />
     )
   }

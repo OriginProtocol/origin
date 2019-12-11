@@ -7,7 +7,11 @@ const netId = memoize(async () => await contracts.web3.eth.net.getId())
 const mmNetId = memoize(async () => await contracts.metaMask.eth.net.getId())
 
 import { getTransaction, getTransactionReceipt } from './web3/transactions'
-import { getMetaMaskAccount, getMobileWalletAccount, getPrimaryAccount } from '../utils/primaryAccount'
+import {
+  getMetaMaskAccount,
+  getMobileWalletAccount,
+  getPrimaryAccount
+} from '../utils/primaryAccount'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'

@@ -16,7 +16,11 @@ import Store from 'utils/store'
 
 import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
 
-import { formatTokens, hasReferralCode, getReferralReward } from 'utils/growthTools'
+import {
+  formatTokens,
+  hasReferralCode,
+  getReferralReward
+} from 'utils/growthTools'
 
 const localStore = Store('localStorage')
 
@@ -236,7 +240,9 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withActiveGrowthCampaign(withIsMobile(withWallet(OnboardRewardsSignUp)))
+export default withActiveGrowthCampaign(
+  withIsMobile(withWallet(OnboardRewardsSignUp))
+)
 
 require('react-styl')(`
   .rewards-signup

@@ -160,8 +160,7 @@ const Nav = ({
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
     const canShowBack =
-      canGoBack && isOriginWallet &&
-      pathname.match(ShowBackRegex)
+      canGoBack && isOriginWallet && pathname.match(ShowBackRegex)
         ? true
         : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false

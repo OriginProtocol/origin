@@ -13,6 +13,8 @@ import growthTypeDefs from '../typeDefs/Growth'
 import context from '../contracts'
 import { setContext } from 'apollo-link-context'
 
+import { getPrimaryAccount } from '../utils/primaryAccount'
+
 const growthSchema = makeExecutableSchema({
   typeDefs: growthTypeDefs,
   resolverValidationOptions: {
