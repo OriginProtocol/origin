@@ -505,6 +505,10 @@ function withEnrolmentModal(WrappedComponent) {
               eligibility = countryOverride.eligibility
             }
 
+            // Note: US is restricted but as opposed to other restricted countries,
+            // we have the user answer the citizenship question on the
+            // terms acceptance page rather than on a separate modal in order
+            // to streamline the flow.
             this.countryCode = countryCode
             if (
               eligibility === 'Eligible' ||
