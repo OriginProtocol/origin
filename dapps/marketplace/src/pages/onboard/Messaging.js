@@ -257,9 +257,14 @@ const Messaging = ({
   linkPrefix,
   isMobile,
   hideOriginWallet,
-  history
+  history,
+  isOriginWallet
 }) => {
   const nextLink = `${linkPrefix}/onboard/rewards`
+
+  if (isOriginWallet) {
+    return <Redirect to={nextLink} />
+  }
 
   const content = <OnboardMessaging nextLink={nextLink} />
 

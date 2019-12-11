@@ -34,7 +34,7 @@ const Enroll = ({ fingerprintData, onAccountBlocked, onSuccess }) => {
         fingerprintData: fingerprintData
       }
     })
-      .then(({ enroll }) => {
+      .then(({ data: { enroll } }) => {
         if (enroll.isBanned) {
           onAccountBlocked()
         } else {

@@ -35,7 +35,7 @@ class PartnerWelcomeScreen extends Component {
     if (this.props.settings.referralCode) {
       // We want to direct the user directly to dapp onboarding
       const url = new URL(this.props.settings.network.dappUrl)
-      url.hash = '/onboard'
+      url.hash = '/onboard?referralCode=' + this.props.settings.referralCode
       const dappUrl = String(url)
 
       this.props.navigation.navigate('Marketplace', { dappUrl })
