@@ -100,7 +100,7 @@
   "2idJzM": "Ang Metamask icon ay matatagpuan sa kanang tuktok ng tool bar ng iyong browser.",
   "32hLtQ": "Binabati kita! Maaari mo na ngayong mensahe ng iba pang mga gumagamit sa Pinagmulan at manatiling napapanahon sa lahat ng iyong mga pagbili at mga benta.",
   "AACIs": "Tapos ka na at maaaring magpatuloy sa pamamagitan ng pagpindot sa pindutan sa ibaba.",
-  "1Eh3nJ": {
+  "VoLV1": {
     "growth.jan2019.name": "Enero 2019 Kampanya",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Pebrero 2019 Kampanya",
@@ -126,8 +126,8 @@
     "growth.dec2019.name": "December 2019 Campaign",
     "growth.dec2019.short_name": "December 2019",
     "growth.profile.and.email.requirement": "Na-verify na email at Pinagmulan ng profile",
-    "growth.two.attestations.requirement": "Dalawang pagpapatunay ng profile",
-    "growth.three.attestations.requirement": "Tatlong mga pagpapatunay ng profile",
+    "growth.two.attestations.requirement": "Tatlong mga pagpapatunay ng profile",
+    "growth.three.attestations.requirement": "Four profile verifications",
     "growth.profile.requirement": "Pangalan ng larawan at larawan",
     "growth.email.requirement": "Na-verify na email",
     "growth.attestation.requirement.twitterAttestation": "Pagpapatotoo sa Twitter",
@@ -650,6 +650,7 @@
   "1YUe0g": "Kabuuan na kinita",
   "2tRIOg": "Walang natagpuan ang mga kampanya",
   "3Dcwum": "Origin Marketplace installed",
+  "Nuz99": "Partner Referral",
   "acQDS": "Completed",
   "2JJkHr": "Nakamit mo ang {amount} OGN",
   "1dhANo": "Sundin ang Pinagmulan",

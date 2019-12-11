@@ -100,7 +100,7 @@
   "2idJzM": "Metamask simgesi, tarayıcı araç çubuğunun sağ üst köşesinde bulunur.",
   "32hLtQ": "Tebrikler! Artık Origin'deki diğer kullanıcılara mesaj atabilir ve tüm alım satımlarınızla ilgili güncel bilgiler alabilirsiniz.",
   "AACIs": "Tamamlandı ve aşağıdaki düğmeye basarak devam edebilirsiniz.",
-  "1Eh3nJ": {
+  "VoLV1": {
     "growth.jan2019.name": "Ocak 2019 Kampanyası",
     "growth.jan2019.short_name": "Ocak 2019",
     "growth.feb2019.name": "Şubat 2019 Kampanyası",
@@ -126,8 +126,8 @@
     "growth.dec2019.name": "December 2019 Campaign",
     "growth.dec2019.short_name": "December 2019",
     "growth.profile.and.email.requirement": "Doğrulanmış e-posta ve Menşe profili",
-    "growth.two.attestations.requirement": "İkinci profil doğrulaması",
-    "growth.three.attestations.requirement": "Üçüncü profil doğrulaması",
+    "growth.two.attestations.requirement": "Üçüncü profil doğrulaması",
+    "growth.three.attestations.requirement": "Four profile verifications",
     "growth.profile.requirement": "Profil adı ve fotoğrafı",
     "growth.email.requirement": "Doğrulanmış e-posta",
     "growth.attestation.requirement.twitterAttestation": "Twitter doğrulaması",
@@ -650,6 +650,7 @@
   "1YUe0g": "Toplam Kazanç",
   "2tRIOg": "Kampanya tespit edilmedi",
   "3Dcwum": "Origin Marketplace installed",
+  "Nuz99": "Partner Referral",
   "acQDS": "Tamamlandı",
   "2JJkHr": "{amount} OGN kazandınız",
   "1dhANo": "Menşei izleyin",
