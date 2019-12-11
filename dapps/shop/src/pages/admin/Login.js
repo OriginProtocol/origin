@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 
 import { useStateValue } from 'data/state'
-
-const AuthURL = `${process.env.BACKEND_URL}/auth`
+import useConfig from 'utils/useConfig'
 
 const Login = () => {
+  const { config } = useConfig()
   const inputEl = useRef(null)
   const [state, setState] = useState({ username: '', password: '', error: '' })
   const [, dispatch] = useStateValue()
@@ -21,7 +21,7 @@ const Login = () => {
         e.preventDefault()
         const auth = `Basic ${btoa(`${state.username}:${state.password}`)}`
         const headers = new Headers({ authorization: auth })
-        const myRequest = new Request(AuthURL, { headers })
+        const myRequest = new Request(`${config.backend}/auth`, { headers })
         fetch(myRequest).then(res => {
           if (res.ok) {
             setState({ ...state, error: '' })

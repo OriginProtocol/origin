@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect, Switch, Route, useLocation } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
+import useConfig from 'utils/useConfig'
 import Link from 'components/Link'
 
 import Products from './Products'
@@ -12,8 +13,6 @@ import EditDiscount from './discounts/EditDiscount'
 import Order from './order/Order'
 import Login from './Login'
 
-const SiteTitle = process.env.SITE_FULL_TITLE || process.env.SITE_TITLE
-
 const Settings = () => (
   <div>
     <h3>Settings</h3>
@@ -21,12 +20,14 @@ const Settings = () => (
 )
 
 const Admin = () => {
+  const { config } = useConfig()
   const { pathname } = useLocation()
 
   const [{ admin }, dispatch] = useStateValue()
   if (!admin) {
     return <Login />
   }
+  const SiteTitle = config.fullTitle || config.title
 
   return (
     <div className="container admin">

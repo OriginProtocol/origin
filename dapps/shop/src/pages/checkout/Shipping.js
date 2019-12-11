@@ -5,13 +5,14 @@ import { useStateValue } from 'data/state'
 import { Countries } from 'data/Countries'
 import formatPrice from 'utils/formatPrice'
 import useShippingZones from 'utils/useShippingZones'
-import Site from 'constants/Site'
+import useConfig from 'utils/useConfig'
 import Link from 'components/Link'
 import Contact from './_Contact'
 import ShipTo from './_ShipTo'
 import BetaWarning from './_BetaWarning'
 
 const CheckoutShipping = () => {
+  const { config } = useConfig()
   const [{ cart }, dispatch] = useStateValue()
   const { shippingZones, loading } = useShippingZones()
 
@@ -39,7 +40,7 @@ const CheckoutShipping = () => {
   return (
     <div className="checkout-shipping">
       <div className="d-none d-md-block">
-        <h3>{Site.fullTitle}</h3>
+        <h3>{config.fullTitle}</h3>
         <div className="breadcrumbs">
           <Link to="/cart">Cart</Link>
           <Link to="/checkout">Information</Link>
