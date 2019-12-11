@@ -41,7 +41,7 @@
     "crypto": "1.0.1",
     "eslint": "6.7.2",
     "mocha": "6.2.2",
-    "nodemon": "2.0.1",
+    "nodemon": "2.0.2",
     "prettier": "1.19.1"
   },
   "prettier": {
