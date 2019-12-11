@@ -63,7 +63,7 @@ const Nav = ({
   location: { pathname, state: locationState },
   isMobile,
   wallet,
-  walletType,
+  isOriginWallet,
   onShowFooter,
   navbarDarkMode,
   history,
@@ -160,8 +160,7 @@ const Nav = ({
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
     const canShowBack =
-      canGoBack &&
-      (walletType === 'Mobile' || walletType === 'Origin Wallet') &&
+      canGoBack && isOriginWallet &&
       pathname.match(ShowBackRegex)
         ? true
         : false

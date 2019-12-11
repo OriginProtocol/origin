@@ -12,14 +12,16 @@ function withWallet(WrappedComponent) {
     })
     if (error) console.error(error)
     const predicted = get(data, 'web3.primaryAccount.predictedProxy.id')
+    const walletType = get(data, 'web3.walletType')
     return (
       <WrappedComponent
         {...props}
         wallet={get(data, 'web3.primaryAccount.id')}
-        walletType={get(data, 'web3.walletType')}
+        walletType={walletType}
         walletLoading={networkStatus === 1}
         walletProxy={get(data, 'web3.primaryAccount.proxy.id')}
         walletPredictedProxy={predicted}
+        isOriginWallet={walletType === 'Origin Wallet' || walletType === 'Mobile'}
       />
     )
   }
