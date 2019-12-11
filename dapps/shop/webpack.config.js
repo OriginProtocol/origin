@@ -1,6 +1,4 @@
 require('dotenv').config()
-const config = require('./backend/config')()
-const get = require('lodash/get')
 const path = require('path')
 const webpack = require('webpack')
 const SriPlugin = require('webpack-subresource-integrity')
@@ -9,6 +7,14 @@ const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+let localContractAddress
+try {
+  const Addresses = require(`@origin/contracts/build/contracts.json`)
+  localContractAddress = Addresses.Marketplace_V01
+} catch (e) {
+  /* Ignore */
+}
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -113,26 +119,11 @@ const webpackConfig = {
     new webpack.EnvironmentPlugin({
       WEBPACK_BUILD: true,
       NODE_ENV: process.env.NODE_ENV || 'development',
-      CONTENT_HASH:
-        process.env.CONTENT_HASH || get(config, 'siteData.contentHash') || '',
+      MARKETPLACE_CONTRACT: localContractAddress,
+      NETWORK: process.env.NETWORK || 'localhost',
+      DATA_DIR: process.env.DATA_DIR || '',
       CONTENT_CDN: process.env.CONTENT_CDN || '',
-      STRIPE_KEY: process.env.STRIPE_KEY || '',
-      LISTING_ID: process.env.LISTING_ID || '',
-      PGP_PUBLIC_KEY: process.env.PGP_PUBLIC_KEY || '',
-      PAYMENT_URL: get(config, 'siteData.paymentUrl', ''),
-      BACKEND_URL: get(config, 'siteData.backend', ''),
-      MARKETPLACE_CONTRACT: config.marketplace,
-      DATA_DIR: get(config, 'siteData.dataDir', ''),
-      SITE_TITLE: get(config, 'siteData.title', ''),
-      SITE_FULL_TITLE: get(config, 'siteData.fullTitle', ''),
-      SITE_BYLINE: get(config, 'siteData.byline', ''),
-      SITE_LOGO: get(config, 'siteData.logo', ''),
-      SITE_CSS: get(config, 'siteData.css', ''),
-      SITE_EMAIL: get(config, 'siteData.supportEmail', ''),
-      SITE_BETA: get(config, 'siteData.beta', ''),
-      SOCIAL_TWITTER: get(config, 'siteData.twitter', ''),
-      SOCIAL_MEDIUM: get(config, 'siteData.medium', ''),
-      SOCIAL_INSTAGRAM: get(config, 'siteData.instagram', '')
+      CONTENT_HASH: process.env.CONTENT_HASH || ''
     })
   ],
 

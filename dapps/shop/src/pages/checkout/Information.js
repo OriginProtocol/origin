@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import { Countries, CountriesDefaultInfo } from 'data/Countries'
 
@@ -9,7 +10,6 @@ import Link from 'components/Link'
 import CountrySelect from 'components/CountrySelect'
 import ProvinceSelect from 'components/ProvinceSelect'
 import get from 'lodash/get'
-import Site from 'constants/Site'
 
 import BetaWarning from './_BetaWarning'
 
@@ -43,6 +43,7 @@ function validate(state) {
 }
 
 const CheckoutInfo = () => {
+  const { config } = useConfig()
   const history = useHistory()
   const [{ cart }, dispatch] = useStateValue()
   const [state, setStateRaw] = useState(
@@ -58,7 +59,7 @@ const CheckoutInfo = () => {
   return (
     <div className="checkout-information">
       <div className="d-none d-md-block">
-        <h3>{Site.fullTitle}</h3>
+        <h3>{config.fullTitle}</h3>
         <div className="breadcrumbs">
           <Link to="/cart">Cart</Link>
           <span>

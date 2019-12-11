@@ -10,13 +10,14 @@ import Link from 'components/Link'
 import CheckCircle from 'components/icons/CheckCircle'
 
 import { useStateValue } from 'data/state'
-import Site from 'constants/Site'
+import useConfig from 'utils/useConfig'
 import formatAddress from 'utils/formatAddress'
 import Summary from './checkout/Summary'
 
 import getOffer from 'data/getOffer'
 
 const OrderDetails = ({ cart }) => {
+  const { config } = useConfig()
   if (!cart) {
     return <div>Loading...</div>
   }
@@ -24,7 +25,7 @@ const OrderDetails = ({ cart }) => {
   return (
     <div className="checkout-confirmation">
       <div className="d-none d-md-block">
-        <h3>{Site.fullTitle}</h3>
+        <h3>{config.fullTitle}</h3>
       </div>
       <div className="thankyou">
         <div className="check">
@@ -85,7 +86,8 @@ const OrderDetails = ({ cart }) => {
 
       <div className="actions">
         <div>
-          Need help? <a href={`mailto:${Site.supportEmail}`}>Contact us</a>
+          Need help?{' '}
+          <a href={`mailto:${config.supportEmailPlain}`}>Contact us</a>
         </div>
         <Link className="btn btn-primary btn-lg" to="/">
           Continue shopping
@@ -96,6 +98,7 @@ const OrderDetails = ({ cart }) => {
 }
 
 const Order = () => {
+  const { config } = useConfig()
   const [cart, setCart] = useState()
   const [error, setError] = useState()
   const [, dispatch] = useStateValue()
@@ -105,7 +108,7 @@ const Order = () => {
 
   useEffect(() => {
     async function go() {
-      const result = await getOffer(match.params.tx, opts.auth)
+      const result = await getOffer(match.params.tx, opts.auth, config)
       if (result) {
         setCart(result.cart)
         setError(false)
@@ -128,7 +131,7 @@ const Order = () => {
   if (error) {
     return (
       <div className="checkout">
-        <h3 className="d-md-none my-4 ml-4">{Site.title}</h3>
+        <h3 className="d-md-none my-4 ml-4">{config.title}</h3>
         <div className="user-details">Error loading order</div>
         <div className="order-summary-wrap"></div>
       </div>
@@ -141,7 +144,7 @@ const Order = () => {
   return (
     <ApolloProvider client={client}>
       <div className="checkout">
-        <h3 className="d-md-none my-4 ml-4">{Site.title}</h3>
+        <h3 className="d-md-none my-4 ml-4">{config.title}</h3>
         <div className="user-details">
           <OrderDetails cart={cart} />
         </div>

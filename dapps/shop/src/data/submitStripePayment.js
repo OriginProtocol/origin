@@ -1,5 +1,5 @@
-async function submitStripePayment({ stripe, cart, encryptedData }) {
-  const res = await fetch(process.env.PAYMENT_URL, {
+async function submitStripePayment({ backend, stripe, cart, encryptedData }) {
+  const res = await fetch(`${backend}/pay`, {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'POST',

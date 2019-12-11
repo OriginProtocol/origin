@@ -12,6 +12,7 @@ import {
 import { formFeedback } from 'utils/formHelpers'
 import formatPrice from 'utils/formatPrice'
 import getWalletStatus from 'utils/walletStatus'
+import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import submitStripePayment from 'data/submitStripePayment'
 import PaymentMethods from 'data/PaymentMethods'
@@ -28,16 +29,17 @@ import WithPrices from 'components/WithPrices'
 import CryptoWallet from './CryptoWallet'
 import WaitForTransaction from '../../components/WaitForTransaction'
 
-const ListingId = process.env.LISTING_ID
 const MarketplaceContract = process.env.MARKETPLACE_CONTRACT
 
 const CreditCardForm = injectStripe(({ stripe }) => {
   // const [paymentMethod, setPaymentMethod] = useState()
+  // const [applePay, setApplePay] = useState(false)
+
+  const { config } = useConfig()
   const [token, setToken] = useState('token-ETH')
   const [tokenStatus, setTokenStatus] = useState({})
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
-  // const [applePay, setApplePay] = useState(false)
   const [paymentReq, setPaymentReq] = useState()
   const [{ cart }, dispatch] = useStateValue()
   const [approveOfferTx, setApproveOfferTx] = useState()
@@ -135,11 +137,12 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         }
 
         setLoading(true)
-        const encryptedData = await addData(cart)
+        const encryptedData = await addData(cart, config)
         const { auth, hash } = encryptedData
 
         if (paymentMethod === 'stripe') {
-          submitStripePayment({ stripe, cart, encryptedData })
+          const { backend } = config
+          submitStripePayment({ backend, stripe, cart, encryptedData })
             .then(result => {
               if (result.error) {
                 setFormData({ ...formData, cardError: result.error.message })
@@ -157,8 +160,9 @@ const CreditCardForm = injectStripe(({ stripe }) => {
               setLoading(false)
             })
         } else if (paymentMethod === 'crypto') {
+          const netId = get(walletStatusData, 'web3.networkId')
           const variables = {
-            listingID: ListingId,
+            listingID: get(config, `networks[${netId}].listingId`),
             value: tokenStatus.tokenValue,
             currency: token,
             from: get(walletStatusData, 'web3.metaMaskAccount.id'),
@@ -206,22 +210,24 @@ const CreditCardForm = injectStripe(({ stripe }) => {
             )}
           </div>
         )}
-        <label
-          className={`radio${paymentMethod === 'stripe' ? '' : ' inactive'}`}
-        >
-          <input
-            type="radio"
-            name="paymentMethod"
-            checked={paymentMethod === 'stripe'}
-            onChange={() =>
-              dispatch({
-                type: 'updatePaymentMethod',
-                method: PaymentMethods.find(m => m.id === 'stripe')
-              })
-            }
-          />
-          Credit Card
-        </label>
+        {!config.stripe ? null : (
+          <label
+            className={`radio${paymentMethod === 'stripe' ? '' : ' inactive'}`}
+          >
+            <input
+              type="radio"
+              name="paymentMethod"
+              checked={paymentMethod === 'stripe'}
+              onChange={() =>
+                dispatch({
+                  type: 'updatePaymentMethod',
+                  method: PaymentMethods.find(m => m.id === 'stripe')
+                })
+              }
+            />
+            Credit Card
+          </label>
+        )}
         {paymentMethod === 'stripe' && (
           <div className="pl-4 pb-3 pt-2">
             {/*applePay && (
@@ -286,6 +292,7 @@ const Execute = ({ exec, children }) => {
 }
 
 const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
+  const { config } = useConfig()
   const [approveUnlockTx, setApproveUnlockTx] = useState()
   const [unlockTx, setUnlockTx] = useState()
   const [allowToken] = useMutation(AllowToken, {
@@ -302,7 +309,7 @@ const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
     <WithPrices
       price={price}
       targets={['token-ETH', 'token-DAI', 'fiat-USD']}
-      allowanceTarget={MarketplaceContract}
+      allowanceTarget={config.marketplaceContract || MarketplaceContract}
     >
       {({ tokenStatus, refetchBalances }) => {
         // console.log({ tokenStatus, suggestedToken })
@@ -360,7 +367,7 @@ const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
                     setApproveUnlockTx(true)
                     allowToken({
                       variables: {
-                        to: MarketplaceContract,
+                        to: config.marketplaceContract || MarketplaceContract,
                         token: value,
                         from,
                         value: token.value
@@ -410,6 +417,11 @@ require('react-styl')(`
           font-size: 0.75rem
           margin-top: 0.25rem
   .checkout-payment-method
+    border: 1px solid #eee
+    border-radius: 0.5rem
+    padding: 1rem
+    label
+      margin-bottom: 0
     label .description
       font-size: 0.875rem
       color: #666

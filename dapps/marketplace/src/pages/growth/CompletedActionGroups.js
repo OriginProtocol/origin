@@ -4,11 +4,23 @@ import { fbt } from 'fbt-runtime'
 import numberFormat from 'utils/numberFormat'
 
 const actionTypeToName = {
-  MobileAccountCreated: (
-    <fbt desc="CompletedActionGroups.MobileAccountCreated">
-      Origin Marketplace installed
-    </fbt>
-  )
+  MobileAccountCreated: () => {
+    const mobileAccountCreatedText = (
+      <fbt desc="CompletedActionGroups.MobileAccountCreated">
+        Origin Marketplace installed
+      </fbt>
+    )
+    return mobileAccountCreatedText
+  },
+  PartnerReferral: action => {
+    const partnerReferralText = (
+      <fbt desc="CompletedActionGroups.PartnerReferral">Partner Referral</fbt>
+    )
+    if (action.conditionalName) {
+      return action.conditionalName
+    }
+    return partnerReferralText
+  }
 }
 
 const CompletedActionGroupItem = ({ action, ...props }) => {
@@ -16,13 +28,20 @@ const CompletedActionGroupItem = ({ action, ...props }) => {
     return null
   }
 
+  let amount = action.reward.amount
+  if (amount === '0' && action.rewardEarned.amount !== '0') {
+    amount = action.rewardEarned.amount
+  }
+
   return (
     <div className="completed-action-group-item">
-      <div className="action-name">{actionTypeToName[action.type] || ''}</div>
+      <div className="action-name">
+        {actionTypeToName[action.type](action) || ''}
+      </div>
       <div className="action-reward">
         {numberFormat(
           web3.utils
-            .toBN(action.reward.amount)
+            .toBN(amount)
             .div(props.decimalDivision)
             .toString(),
           2,

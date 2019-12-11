@@ -1,10 +1,14 @@
 import { get } from '@origin/ipfs'
-const ListingId = process.env.LISTING_ID
-const MarketplaceId = ListingId.split('-')[1]
+import _get from 'lodash/get'
 
-async function getOfferFromReceipt(tx, password) {
+async function getOfferFromReceipt(tx, password, config) {
   let encryptedHash, fullOfferId, offer
+
   if (tx.indexOf('0x') === 0) {
+    const NetId = context.config.networkId
+    const ListingId = _get(config, `networks[${NetId}].listingId`)
+    const MarketplaceId = ListingId.split('-')[1]
+
     const web3 = context.web3
     const receipt = await web3.eth.getTransactionReceipt(tx)
     if (!receipt) {
@@ -24,7 +28,7 @@ async function getOfferFromReceipt(tx, password) {
     const offerId = web3.utils.hexToNumber(offerLog.topics[3])
     const ipfsHash = offerLog.data
 
-    const ipfsData = await get(context.config.ipfsRPC, ipfsHash, 10000)
+    const ipfsData = await get(context.config.ipfsGateway, ipfsHash, 10000)
     encryptedHash = ipfsData.encryptedData
 
     fullOfferId = `${ListingId}-${offerId}`
@@ -37,7 +41,7 @@ async function getOfferFromReceipt(tx, password) {
 
   try {
     const encryptedData = await get(
-      context.config.ipfsRPC,
+      context.config.ipfsGateway,
       encryptedHash,
       10000
     )
