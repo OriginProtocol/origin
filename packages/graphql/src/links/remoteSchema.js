@@ -13,6 +13,8 @@ import growthTypeDefs from '../typeDefs/Growth'
 import context from '../contracts'
 import { setContext } from 'apollo-link-context'
 
+import { getPrimaryAccount } from '../utils/primaryAccount'
+
 const growthSchema = makeExecutableSchema({
   typeDefs: growthTypeDefs,
   resolverValidationOptions: {
@@ -20,13 +22,22 @@ const growthSchema = makeExecutableSchema({
   }
 })
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(async (_, { headers }) => {
   const token = localStorage.getItem('growth_auth_token')
   const growthSecret = localStorage.getItem('growth_admin_secret')
   const growthWallet = localStorage.getItem('growth_wallet_override')
   const returnObject = {
     headers: {
       ...headers
+    }
+  }
+
+  const primaryAccount = await getPrimaryAccount()
+
+  if (primaryAccount) {
+    const authToken = context.authClient.getAccessToken(primaryAccount.id)
+    if (authToken) {
+      returnObject.headers['authorization'] = `Bearer ${authToken}`
     }
   }
 

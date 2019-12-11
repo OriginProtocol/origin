@@ -11,6 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/auth-utils": "^0.1.0",
     "@origin/discovery": "^0.1.0",
     "@origin/graphql": "^0.1.1",
     "@origin/growth-event": "^0.1.0",

@@ -36,7 +36,7 @@
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "lerna run start --scope @origin/marketplace --stream --no-prefix",
-    "lint": "lerna run lint",
+    "lint": "lerna run lint && npm run lint --prefix mobile",
     "format": "eslint **/**/*.js --quiet --fix",
     "test": "node scripts/test.js",
     "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v mobile | grep -v node_modules | node scripts/package-versions.js"

@@ -287,6 +287,21 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ENVKEY=
+      - |
+        AUTH_PUB_KEY=-----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAzO41ktS3XoXFnHs/Yxcc
+        2/BcBBFadv+dD02V72RaD6KOZZZ0Uq4zrSATAHhMf/HDpCXww286+rkHCHaVwMcW
+        /iaT0f0ThPy9vp6GYXLYdUh5dyr4wUqMQirV3wGEUjbpLHAHaSR5N0OFLEV5Px7F
+        PQr0Azz96gKHUoaVeCdiWVSs295fEI+lOBnD93zqWwb2N9UPV2ltga5ju3AsSYv6
+        Ui5IWAMM9cJ5UDHMC0+wCnhPxn98e1jT3frXCzSt3IiduyuvsZUxJmBkwOfsXKqS
+        ndK6eiVRajO3d/qORVPHQ2w4kkgs6M2t6vxxr9juRy11eYEw1KLXYiDXEVosIqYZ
+        hGo2UrKC2oDkME/VZqHKiP8rjd9tBlK/BpH5YhnaOyKV7U3MKlvbVn3HyAJE6KuE
+        sjU7i43SaW3rLref4DKbiJGCYhOI+J7AvRp26HSFAQhHh0k0K33zDDuxrCPom6rt
+        4fGG8mqunuh6X6LeZh1TsoAuPyJMt1WkQA7gsRUmPkqSRLjLrKCPmYCf/9jIEjXB
+        rUoGF0MQ2mNfCoupv7psb0+AfH00p/P9alZ8UxU1uDlydzGHjSOMnRM9Jgi1nSAR
+        ENEa8ux7V7N46AgKyQW4pAyn6q5kkkNzVUSTpNTbG4WW6jNMJdw5ENbYeB7DoBjC
+        JSbqa16RDaDk39v+49ke8TkCAwEAAQ==
+        -----END PUBLIC KEY-----
     depends_on:
       - postgres
     ports:

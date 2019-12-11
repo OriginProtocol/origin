@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
@@ -170,8 +172,33 @@ const OnboardMessagingRaw = ({
 }) => {
   const [waitForSignature, setWaitForSignature] = useState(false)
   const [signatureError, setSignatureError] = useState(null)
+  const [needsSigning, setNeedsSigning] = useState(false)
+  const [redirect, setRedirect] = useState(false)
 
-  if (messagingStatusLoading || messagingKeysLoading) {
+  useEffect(() => {
+    // If user has already signed the messages, skip this step
+    if (needsSigning || messagingStatusLoading || messagingKeysLoading) {
+      return
+    }
+
+    const { pubKey, pubSig } = messagingStatus.messaging
+    if (pubKey && pubSig) {
+      setRedirect(true)
+    } else {
+      setNeedsSigning(true)
+    }
+  }, [
+    needsSigning,
+    messagingStatusLoading,
+    messagingStatus,
+    messagingKeysLoading
+  ])
+
+  if (redirect) {
+    return <Redirect to={nextLink} />
+  }
+
+  if (!needsSigning && (messagingStatusLoading || messagingKeysLoading)) {
     return <MessagingInitializing />
   } else if (messagingStatusError) {
     return (
@@ -237,9 +264,14 @@ const Messaging = ({
   linkPrefix,
   isMobile,
   hideOriginWallet,
-  history
+  history,
+  isOriginWallet
 }) => {
   const nextLink = `${linkPrefix}/onboard/rewards`
+
+  if (isOriginWallet) {
+    return <Redirect to={nextLink} />
+  }
 
   const content = <OnboardMessaging nextLink={nextLink} />
 
@@ -278,7 +310,7 @@ const Messaging = ({
   )
 }
 
-export default withRouter(withIsMobile(Messaging))
+export default withRouter(withWallet(withIsMobile(Messaging)))
 
 require('react-styl')(`
   .onboard-box

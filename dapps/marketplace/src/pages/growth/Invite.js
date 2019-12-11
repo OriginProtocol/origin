@@ -52,15 +52,13 @@ class GrowthInvite extends Component {
   }
 
   getInviteCode() {
-    return `${location.protocol}//${location.hostname}/#/welcome/${this.state.inviteCode}`
+    return `https://originprotocol.com/referral/${this.state.inviteCode}`
   }
 
   handleCopyClick() {
     const inviteField = document.getElementById('growth-invite-text')
-    inviteField.value = this.getInviteCode()
     inviteField.select()
     document.execCommand('copy')
-    inviteField.value = `${this.state.inviteCode}`
     this.setState({ showCopyConfirmation: true })
     // reset copy confirmation after 3 seconds
     setTimeout(() => {
@@ -112,7 +110,6 @@ class GrowthInvite extends Component {
   renderSendInvites() {
     const {
       showCopyConfirmation,
-      inviteCode,
       inviteEmailsConfirmation,
       inviteEmailsMutationError
     } = this.state
@@ -162,7 +159,7 @@ class GrowthInvite extends Component {
                       id="growth-invite-text"
                       type="text"
                       className="invite-code"
-                      value={inviteCode}
+                      value={this.getInviteCode()}
                       readOnly
                     />
                     <div

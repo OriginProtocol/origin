@@ -8,9 +8,9 @@ function MobileDownloadAction(props) {
 
   const { status } = props.action
 
-  const { isMobile, walletType } = props
+  const { isMobile, isOriginWallet } = props
 
-  if (walletType === 'Origin Wallet' || walletType === 'Mobile') {
+  if (isOriginWallet) {
     // Don't show on Mobile app
     return null
   }
