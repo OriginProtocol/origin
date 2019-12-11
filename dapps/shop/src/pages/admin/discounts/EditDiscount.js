@@ -3,10 +3,9 @@ import { useRouteMatch, useHistory } from 'react-router-dom'
 import dayjs from 'dayjs'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
 import { useStateValue } from 'data/state'
-
-const { BACKEND_URL } = process.env
 
 const times = Array(48)
   .fill(0)
@@ -42,6 +41,7 @@ const defaultValues = {
 }
 
 const AdminEditDiscount = () => {
+  const { config } = useConfig()
   const history = useHistory()
   const [shouldDelete, setDelete] = useState()
   const match = useRouteMatch('/admin/discounts/:discountId')
@@ -81,7 +81,7 @@ const AdminEditDiscount = () => {
               authorization: admin,
               'content-type': 'application/json'
             })
-            let url = `${BACKEND_URL}/discounts`
+            let url = `${config.backend}/discounts`
             if (discount && discount.id) {
               url += `/${discount.id}`
             }
@@ -258,7 +258,7 @@ const AdminEditDiscount = () => {
                         authorization: admin,
                         'content-type': 'application/json'
                       })
-                      const url = `${BACKEND_URL}/discounts/${discount.id}`
+                      const url = `${config.backend}/discounts/${discount.id}`
                       const myRequest = new Request(url, {
                         headers,
                         method: 'DELETE'

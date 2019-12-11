@@ -2,8 +2,9 @@ const { Orders } = require('../data/db')
 const auth = require('./_basicAuth')
 const get = require('lodash/get')
 const bodyParser = require('body-parser')
+const fetch = require('node-fetch')
 
-const PrintfulApiKey = process.env.PRINTFUL
+const PrintfulApiKey = process.env.PRINTFUL || ''
 
 const apiAuth = Buffer.from(PrintfulApiKey).toString('base64')
 const PrintfulURL = 'https://api.printful.com'

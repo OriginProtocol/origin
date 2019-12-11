@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useStateValue } from 'data/state'
 import memoize from 'lodash/memoize'
+import useConfig from 'utils/useConfig'
 
 const getOrder = memoize(
-  async function fetchOrder(admin, orderId) {
+  async function fetchOrder(admin, orderId, backend) {
     const headers = new Headers({ authorization: admin })
-    const myRequest = new Request(`${URL}/orders/${orderId}`, { headers })
+    const myRequest = new Request(`${backend}/orders/${orderId}`, { headers })
     const raw = await fetch(myRequest)
 
     const order = await raw.json()
@@ -16,9 +17,8 @@ const getOrder = memoize(
   (...args) => args[1]
 )
 
-const URL = process.env.BACKEND_URL
-
 function useOrder(orderId) {
+  const { config } = useConfig()
   const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState()
   const [{ admin }] = useStateValue()
@@ -26,7 +26,7 @@ function useOrder(orderId) {
   useEffect(() => {
     async function fetchOrder() {
       setLoading(true)
-      const order = await getOrder(admin, orderId)
+      const order = await getOrder(admin, orderId, config.backend)
       setLoading(false)
       setOrder(order)
     }

@@ -111,7 +111,8 @@ class ApolloAdapter {
         data.campaign.currency
       ),
       reward: data.reward ? data.reward.value : null,
-      unlockConditions: data.unlockConditions
+      unlockConditions: data.unlockConditions,
+      conditionalName: data.conditionalName || null
     }
 
     // Some action types require to fetch extra custom data.

@@ -24,7 +24,10 @@ const Products = () => {
   const { start, end } = usePaginate()
 
   const collectionParam = get(match, 'params.collection')
-  const collection = collections.find(c => c.id === collectionParam)
+  let collection = collections.find(c => c.id === collectionParam)
+  if (!collection && collectionParam === 'all') {
+    collection = { id: 'all', title: 'All Products' }
+  }
 
   let filteredProducts = products
   const isSearch = location.pathname === '/search' && opts.q

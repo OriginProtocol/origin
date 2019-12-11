@@ -4,18 +4,19 @@ import get from 'lodash/get'
 import { useStateValue } from 'data/state'
 
 import Link from 'components/Link'
-import Site from 'constants/Site'
+import useConfig from 'utils/useConfig'
 import Contact from './_Contact'
 import ShipTo from './_ShipTo'
 import ChoosePayment from './ChoosePayment'
 import BetaWarning from './_BetaWarning'
 
 const CheckoutPayment = () => {
+  const { config } = useConfig()
   const [{ cart }] = useStateValue()
   return (
     <div className="checkout-shipping">
       <div className="d-none d-md-block">
-        <h3>{Site.fullTitle}</h3>
+        <h3>{config.fullTitle}</h3>
         <div className="breadcrumbs">
           <Link to="/cart">Cart</Link>
           <Link to="/checkout">Information</Link>
@@ -47,10 +48,3 @@ const CheckoutPayment = () => {
 }
 
 export default CheckoutPayment
-
-require('react-styl')(`
-  .checkout-payment-method
-    border: 1px solid #eee
-    border-radius: 0.5rem
-    padding: 1rem 1rem 0.5rem 1rem
-`)

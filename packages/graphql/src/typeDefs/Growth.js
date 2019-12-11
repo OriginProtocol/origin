@@ -106,6 +106,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type GrowthAction implements GrowthBaseAction {
@@ -114,6 +115,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type GrowthInviteConnection {
@@ -133,6 +135,7 @@ module.exports = `
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type ListingIdPurchasedAction implements GrowthBaseAction {
@@ -141,6 +144,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
+    conditionalName: String
     listingId: String!
     titleKey: String
     detailsKey: String
@@ -179,6 +183,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
+    conditionalName: String
     content: SocialContent
   }
 
