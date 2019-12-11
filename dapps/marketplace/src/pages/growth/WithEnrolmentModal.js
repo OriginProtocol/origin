@@ -140,7 +140,9 @@ function withEnrolmentModal(WrappedComponent) {
       // If we detected country as US based on IP, user must certify they
       // are not US citizen/resident before we enable the signup button.
       if (this.countryCode === 'US') {
-        this.setState({ enableSignupButton: notCitizenChecked && termsAccepted })
+        this.setState({
+          enableSignupButton: notCitizenChecked && termsAccepted
+        })
       } else {
         this.setState({ enableSignupButton: termsAccepted })
       }
@@ -338,7 +340,7 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            {this.countryCode === 'US' &&
+            {this.countryCode === 'US' && (
               <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
                 <label className="checkbox-holder">
                   <input
@@ -347,14 +349,15 @@ function withEnrolmentModal(WrappedComponent) {
                     onChange={e => this.handleNotCitizenCheck(e)}
                     value="confirm-not-us-citizen"
                   />
-                <span className="checkmark" />
-                &nbsp;
-                <fbt desc="EnrollmentModal.notAUsCitizen">
-                  I am not a citizen or resident of the United States of America
-                </fbt>
-              </label>
+                  <span className="checkmark" />
+                  &nbsp;
+                  <fbt desc="EnrollmentModal.notAUsCitizen">
+                    I am not a citizen or resident of the United States of
+                    America
+                  </fbt>
+                </label>
               </div>
-            }
+            )}
             <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
               <label className="checkbox-holder">
                 <input
@@ -504,8 +507,8 @@ function withEnrolmentModal(WrappedComponent) {
             this.countryCode = countryCode
             if (
               eligibility === 'Eligible' ||
-              (eligibility === 'Restricted' && notCitizenConfirmed ||
-              (eligibility === 'Restricted' && this.countryCode === 'US'))
+              (eligibility === 'Restricted' && notCitizenConfirmed) ||
+                (eligibility === 'Restricted' && this.countryCode === 'US')
             ) {
               return this.renderTermsModal()
             } else if (
