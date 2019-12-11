@@ -347,7 +347,13 @@ class BaseRule {
       content: this.content
     }
 
-    const optionalFields = ['titleKey', 'title', 'detailsKey', 'details']
+    const optionalFields = [
+      'titleKey',
+      'title',
+      'detailsKey',
+      'details',
+      'conditionalName'
+    ]
     optionalFields.forEach(field => {
       if (this[field]) {
         data[field] = this[field]

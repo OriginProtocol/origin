@@ -14,6 +14,7 @@ import Verifications from 'pages/growth/Verifications'
 import Promotions from 'pages/growth/Promotions'
 import FollowOrigin from 'pages/growth/FollowOrigin'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
+import PartnerReferralAction from 'components/growth/PartnerReferralAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
@@ -98,7 +99,6 @@ function CampaignNavList(props) {
 
 function Campaign(props) {
   const { campaign, decimalDivision, isMobile } = props
-
   const {
     startDate,
     endDate,
@@ -139,6 +139,11 @@ function Campaign(props) {
   const mobileAction = find(
     actions,
     action => action.type === 'MobileAccountCreated'
+  )
+
+  const partnerAction = find(
+    actions,
+    action => action.type === 'PartnerReferral'
   )
 
   // campaign rewards converted normalized to token value according to number of decimals
@@ -191,6 +196,12 @@ function Campaign(props) {
         action={mobileAction}
         decimalDivision={decimalDivision}
       />
+
+      <PartnerReferralAction
+        action={partnerAction}
+        decimalDivision={decimalDivision}
+      />
+
       <ActionGroupList
         campaign={campaign}
         actions={actions}
@@ -199,7 +210,7 @@ function Campaign(props) {
       />
       {
         <CompletedActionGroups
-          actions={[mobileAction]}
+          actions={[mobileAction, partnerAction]}
           decimalDivision={decimalDivision}
         />
       }
