@@ -100,7 +100,7 @@
   "2idJzM": "Значок Metamask розташований у верхньому правому куті панелі інструментів веб-переглядача.",
   "32hLtQ": "Вітаємо! Тепер ви можете надсилати повідомлення іншим користувачам про Origin і залишатися в курсі всіх ваших покупок і продажів.",
   "AACIs": "Ви закінчили і можете продовжити, натиснувши кнопку нижче.",
-  "1Eh3nJ": {
+  "VoLV1": {
     "growth.jan2019.name": "Кампанія в січні 2019 року",
     "growth.jan2019.short_name": "Січня 2019",
     "growth.feb2019.name": "Акція лютого 2019 року",
@@ -126,8 +126,8 @@
     "growth.dec2019.name": "December 2019 Campaign",
     "growth.dec2019.short_name": "December 2019",
     "growth.profile.and.email.requirement": "Підтверджена електронна пошта й профіль Origin",
-    "growth.two.attestations.requirement": "Дві перевірки профілю",
-    "growth.three.attestations.requirement": "Три перевірки профілю",
+    "growth.two.attestations.requirement": "Три перевірки профілю",
+    "growth.three.attestations.requirement": "Four profile verifications",
     "growth.profile.requirement": "Ім'я профілю та фотографія",
     "growth.email.requirement": "Підтверджена електронна пошта",
     "growth.attestation.requirement.twitterAttestation": "Атестація у Twitter",
@@ -650,6 +650,7 @@
   "1YUe0g": "Усього заробленого",
   "2tRIOg": "Не виявлено жодної кампанії",
   "3Dcwum": "Origin Marketplace installed",
+  "Nuz99": "Partner Referral",
   "acQDS": "Completed",
   "2JJkHr": "Ви заробили {amount} ОГН",
   "1dhANo": "Дотримуйтесь походження",

@@ -100,7 +100,7 @@
   "2idJzM": "L'icona Metamask si trova in alto a destra nella barra degli strumenti del browser.",
   "32hLtQ": "Congratulazioni! Ora puoi inviare messaggi ad altri utenti su Origin e rimanere aggiornato su tutti i tuoi acquisti e vendite.",
   "AACIs": "Hai finito e puoi continuare premendo il pulsante qui sotto.",
-  "1Eh3nJ": {
+  "VoLV1": {
     "growth.jan2019.name": "Campagna di Gennaio 2019",
     "growth.jan2019.short_name": "Gen 2019",
     "growth.feb2019.name": "Campagna di Febbraio 2019",
@@ -126,8 +126,8 @@
     "growth.dec2019.name": "Campagna di Dicembre 2019",
     "growth.dec2019.short_name": "Dicembre 2019",
     "growth.profile.and.email.requirement": "Email e profilo Origin verificati",
-    "growth.two.attestations.requirement": "Due verifiche del profilo",
-    "growth.three.attestations.requirement": "Tre verifiche del profilo",
+    "growth.two.attestations.requirement": "Tre verifiche del profilo",
+    "growth.three.attestations.requirement": "Four profile verifications",
     "growth.profile.requirement": "Nome e foto del profilo",
     "growth.email.requirement": "Email verificata",
     "growth.attestation.requirement.twitterAttestation": "Conferma Twitter",
@@ -650,6 +650,7 @@
   "1YUe0g": "Totale guadagnato",
   "2tRIOg": "Nessuna campagna rilevata",
   "3Dcwum": "Origin Marketplace installato",
+  "Nuz99": "Partner Referral",
   "acQDS": "Completato",
   "2JJkHr": "Hai guadagnato {amount} OGN",
   "1dhANo": "Segui Origin",

@@ -100,7 +100,7 @@
   "2idJzM": "Значок метамаски находится в правом верхнем углу панели инструментов вашего браузера.",
   "32hLtQ": "Поздравляем! Теперь вы можете отправлять сообщения другим пользователям в Origin и получать информацию обо всех ваших покупках и продажах.",
   "AACIs": "Вы сделали и можете продолжить, нажав кнопку ниже.",
-  "1Eh3nJ": {
+  "VoLV1": {
     "growth.jan2019.name": "Январь 2019 Кампания",
     "growth.jan2019.short_name": "Январь 2019",
     "growth.feb2019.name": "Февраль 2019 Кампания",
@@ -126,8 +126,8 @@
     "growth.dec2019.name": "Кампания в декабре 2019",
     "growth.dec2019.short_name": "Декабрь 2019",
     "growth.profile.and.email.requirement": "Подтвержденный адрес электронной почты и Происхождение",
-    "growth.two.attestations.requirement": "Два подтверждения в профиле",
-    "growth.three.attestations.requirement": "Верификация трех профилей",
+    "growth.two.attestations.requirement": "Верификация трех профилей",
+    "growth.three.attestations.requirement": "Four profile verifications",
     "growth.profile.requirement": "Имя и фотография в профиле",
     "growth.email.requirement": "Подтвержденный адрес электронной почты",
     "growth.attestation.requirement.twitterAttestation": "Подтверждение Twitter",
@@ -650,6 +650,7 @@
   "1YUe0g": "Всего заработано",
   "2tRIOg": "Кампании не найдены",
   "3Dcwum": "Origin Marketplace установлено",
+  "Nuz99": "Partner Referral",
   "acQDS": "Завершено",
   "2JJkHr": "Вы заработали {amount} OGN",
   "1dhANo": "Подписаться на Origin",
