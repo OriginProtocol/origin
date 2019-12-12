@@ -1,5 +1,6 @@
 // Script to manage growth user accounts in production.
 const BigNumber = require('bignumber.js')
+const Sequelize = require('sequelize')
 
 const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
@@ -23,6 +24,16 @@ async function _loadAccount(ethAddress) {
 }
 
 async function _loadAccountDetails(ethAddress) {
+  logger.info('Wallet: ', ethAddress)
+  // Load proxy, if it exists.
+  const proxy = await db.Proxy.findOne({ where: { ownerAddress: ethAddress } })
+  const addresses = [ethAddress]
+  if (proxy) {
+    addresses.push(proxy.address)
+    logger.info('Proxy: ', proxy.address)
+  }
+  logger.info('=================')
+
   // Load identity
   const i = await db.Identity.findOne({ where: { ethAddress } })
   logger.info('Identity:')
@@ -39,14 +50,17 @@ async function _loadAccountDetails(ethAddress) {
   logger.info('Id\tType\tStatus\tCreatedAt')
   logger.info('=================')
   const events = await db.GrowthEvent.findAll({
-    where: { ethAddress },
+    where: { ethAddress: { [Sequelize.Op.in]: addresses } },
     order: [['createdAt', 'ASC']]
   })
   for (const e of events) {
     logger.info(
-      `${e.id}\t${e.type.slice(0, 20)}\t${
-        e.status
-      }\t${e.createdAt.toLocaleString()}`
+      `${String(e.id).padEnd(8, ' ')}${e.type
+        .slice(0, 20)
+        .padEnd(20, ' ')}${e.status.padEnd(
+        10,
+        ' '
+      )}\t${e.createdAt.toLocaleString()}`
     )
   }
 
