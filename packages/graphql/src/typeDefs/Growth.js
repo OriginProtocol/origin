@@ -106,6 +106,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type GrowthAction implements GrowthBaseAction {
@@ -114,6 +115,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type GrowthInviteConnection {
@@ -133,6 +135,7 @@ module.exports = `
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
+    conditionalName: String
   }
 
   type ListingIdPurchasedAction implements GrowthBaseAction {
@@ -141,6 +144,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
+    conditionalName: String
     listingId: String!
     titleKey: String
     detailsKey: String
@@ -179,6 +183,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
+    conditionalName: String
     content: SocialContent
   }
 
@@ -227,7 +232,7 @@ module.exports = `
     # Sends email invites with referral code on behalf of the referrer.
     invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
-    enroll(accountId: ID!, agreementMessage: String!, signature: String!, inviteCode: String, fingerprintData: JSON): EnrollResponse
+    enroll(agreementMessage: String!, inviteCode: String, fingerprintData: JSON): EnrollResponse
     # Records a growth engine event.
     log(event: JSON!): Boolean
     # Remind a user that his invitation is still pending

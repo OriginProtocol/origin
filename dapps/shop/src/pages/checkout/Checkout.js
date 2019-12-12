@@ -7,7 +7,7 @@ import Styl from 'react-styl'
 
 import { Elements } from 'react-stripe-elements'
 
-import Site from 'constants/Site'
+import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 
 import Information from './Information'
@@ -15,9 +15,8 @@ import Shipping from './Shipping'
 import Payment from './Payment'
 import Summary from './Summary'
 
-const StripeKey = process.env.STRIPE_KEY
-
 const Checkout = () => {
+  const { config } = useConfig()
   const history = useHistory()
   const [{ cart }] = useStateValue()
   const [stripe, setStripe] = useState(null)
@@ -28,14 +27,16 @@ const Checkout = () => {
       return
     }
     if (window.Stripe) {
-      setStripe(window.Stripe(StripeKey))
+      setStripe(window.Stripe(config.stripeKey))
     } else {
-      const script = document.createElement('script')
-      script.src = 'https://js.stripe.com/v3/'
-      script.addEventListener('load', () => {
-        setStripe(window.Stripe(StripeKey))
-      })
-      document.head.appendChild(script)
+      if (config.stripe) {
+        const script = document.createElement('script')
+        script.src = 'https://js.stripe.com/v3/'
+        script.addEventListener('load', () => {
+          setStripe(window.Stripe(config.stripeKey))
+        })
+        document.head.appendChild(script)
+      }
       // Need to re-add stylesheet as this component is lazy loaded
       Styl.addStylesheet()
     }
@@ -46,7 +47,7 @@ const Checkout = () => {
       <StripeProvider stripe={stripe}>
         <Elements>
           <div className="checkout">
-            <h3 className="d-md-none my-4 ml-4">{Site.fullTitle}</h3>
+            <h3 className="d-md-none my-4 ml-4">{config.fullTitle}</h3>
             <div className="user-details">
               <Switch>
                 <Route path="/checkout/shipping" component={Shipping} />

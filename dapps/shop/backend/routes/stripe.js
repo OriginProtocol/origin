@@ -1,20 +1,22 @@
-require('dotenv').config()
-const config = require('../config')()
+const config = require('../config')
 const get = require('lodash/get')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 
 const Web3 = require('web3')
 const bodyParser = require('body-parser')
-const stripe = require('stripe')(process.env.STRIPE_BACKEND)
+const stripe = require('stripe')(process.env.STRIPE_BACKEND || '')
 
 const abi = require('../utils/_abi')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
-const web3 = new Web3(config.provider)
-const account = web3.eth.accounts.wallet.add(process.env.WEB3_PK)
-const ListingId = process.env.LISTING_ID
-const Marketplace = new web3.eth.Contract(abi, config.marketplace)
+const web3 = new Web3()
+const PK = process.env.WEB3_PK
+let walletAddress
+if (PK) {
+  const account = web3.eth.accounts.wallet.add(PK)
+  walletAddress = account.address
+}
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 const rawJson = bodyParser.raw({ type: 'application/json' })
@@ -35,7 +37,13 @@ module.exports = function(app) {
     res.send({ success: true, client_secret: paymentIntent.client_secret })
   })
 
+  // Stripe CLI for testing webhook:
+  //    stripe listen --forward-to localhost:3000/webhook
+  //    STRIPE_WEBHOOK_SECRET=xxx node backend/payment.js
+  //    stripe trigger payment_intent.created
+
   app.post('/webhook', rawJson, async (req, res) => {
+    const siteConfig = await config.getSiteConfig()
     let event
     try {
       const signature = req.headers['stripe-signature']
@@ -52,7 +60,7 @@ module.exports = function(app) {
 
       const offer = {
         schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
-        listingId: ListingId,
+        listingId: siteConfig.listingId,
         listingType: 'unit',
         unitsPurchased: 1,
         totalPrice: {
@@ -65,21 +73,25 @@ module.exports = function(app) {
       }
 
       const res = await post(config.ipfsApi, offer, true)
-      const listingId = ListingId.split('-')[2]
+      const listingId = siteConfig.listingId.split('-')[2]
+      const Marketplace = new web3.eth.Contract(
+        abi,
+        siteConfig.marketplaceContract
+      )
 
       Marketplace.methods
         .makeOffer(
           listingId,
           getBytes32FromIpfsHash(res),
           offer.finalizes,
-          config.affiliate || ZeroAddress,
+          siteConfig.affiliate || ZeroAddress,
           '0',
           '0',
           ZeroAddress,
-          config.arbitrator || account.address
+          siteConfig.arbitrator || walletAddress
         )
         .send({
-          from: account.address,
+          from: walletAddress,
           gas: 350000
         })
         .then(tx => {

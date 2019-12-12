@@ -14,6 +14,14 @@ import LoadingSpinner from 'components/LoadingSpinner'
 
 import Store from 'utils/store'
 
+import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
+
+import {
+  formatTokens,
+  hasReferralCode,
+  getReferralReward
+} from 'utils/growthTools'
+
 const localStore = Store('localStorage')
 
 class OnboardRewardsSignUp extends Component {
@@ -27,6 +35,20 @@ class OnboardRewardsSignUp extends Component {
       confirmSkipModal: false,
       shouldCloseConfirmSkipModal: false
     }
+  }
+
+  getReferralReward() {
+    const reward = getReferralReward(this.props.activeGrowthCampaign)
+
+    if (!reward) {
+      return null
+    }
+
+    return (
+      <div className="partner-referral-reward">
+        {`${formatTokens(reward)} OGN`}
+      </div>
+    )
   }
 
   render() {
@@ -119,11 +141,20 @@ class OnboardRewardsSignUp extends Component {
             className="onboard-rewards-logo"
           />
         </div>
-        <div className="help desc mt-3 mb-3 text-center">
-          <fbt desc="UserActivation.rewardsDesc">
-            Earn Origin Tokens (OGN) by strengthening your profile and
-            completing tasks in the Origin Marketplace.
-          </fbt>
+        <div className="help desc mt-3 mb-0 text-center">
+          {hasReferralCode() ? (
+            <fbt desc="Rewards.almostThere">
+              You&apos;re almost there! Sign up to claim your
+            </fbt>
+          ) : (
+            <fbt desc="UserActivation.rewardsDesc">
+              Earn Origin Tokens (OGN) by strengthening your profile and
+              completing tasks in the Origin Marketplace.
+            </fbt>
+          )}
+        </div>
+        <div className="mb-3">
+          {hasReferralCode() ? this.getReferralReward() : null}
         </div>
         <div className="actions">
           <EnrollButton
@@ -209,7 +240,9 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withIsMobile(withWallet(OnboardRewardsSignUp))
+export default withActiveGrowthCampaign(
+  withIsMobile(withWallet(OnboardRewardsSignUp))
+)
 
 require('react-styl')(`
   .rewards-signup
@@ -223,6 +256,11 @@ require('react-styl')(`
         margin-top: auto
         > button
           width: 100%
+  .partner-referral-reward
+    font-family: Poppins
+    font-size: 2.125rem
+    font-weight: bold
+    color: #0d1d29
   .onboard .onboard-box.profile-rewards
     padding: 0
     > img

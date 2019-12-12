@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
 import useIsMobile from 'utils/useIsMobile'
-import Site from 'constants/Site'
 import dataUrl from 'utils/dataUrl'
+import useConfig from 'utils/useConfig'
 
 import Bars from 'components/icons/Bars.js'
 import Link from 'components/Link'
@@ -15,39 +15,36 @@ import Product from './Product'
 import About from './About'
 import Cart from './cart/Cart'
 
-const BlogUrl =
-  'https://medium.com/originprotocol/built-on-origin-a-decentralized-shopify-alternative-888adc4198b0'
-
-const Content = () => (
-  <>
-    <main>
-      <Switch>
-        <Route path="/products/:id" component={Product} />
-        <Route path="/cart" component={Cart} />
-        <Route
-          path="/collections/:collection/products/:id"
-          component={Product}
-        ></Route>
-        <Route path="/collections/:collection" component={Products} />
-        <Route path="/search" component={Products} />
-        <Route path="/about" component={About} />
-        <Route component={Products} />
-      </Switch>
-    </main>
-    <div className="footer my-4 py-4">
-      &copy; 2019 <a href="https://www.originprotocol.com">Origin Protocol</a>.{' '}
-      <span className="ml-1">
-        {'Learn more about this decentralized e-commerce store '}
-        <a className="ul" href={BlogUrl}>
-          here
-        </a>
-        .
-      </span>
-    </div>
-  </>
-)
+const Content = () => {
+  const { config } = useConfig()
+  return (
+    <>
+      <main>
+        <Switch>
+          <Route path="/products/:id" component={Product} />
+          <Route path="/cart" component={Cart} />
+          <Route
+            path="/collections/:collection/products/:id"
+            component={Product}
+          ></Route>
+          <Route path="/collections/:collection" component={Products} />
+          <Route path="/search" component={Products} />
+          <Route path="/about" component={About} />
+          <Route component={Products} />
+        </Switch>
+      </main>
+      {!config.footer ? null : (
+        <div
+          className="footer my-4 py-4"
+          dangerouslySetInnerHTML={{ __html: config.footer }}
+        />
+      )}
+    </>
+  )
+}
 
 const Main = () => {
+  const { config } = useConfig()
   const isMobile = useIsMobile()
   const [menu, setMenu] = useState(false)
   if (isMobile) {
@@ -57,8 +54,10 @@ const Main = () => {
           <header>
             <Link to="/" onClick={() => setMenu(false)}>
               <h1>
-                {Site.logo ? <img src={`${dataUrl()}${Site.logo}`} /> : null}
-                {Site.title}
+                {config.logo ? (
+                  <img src={`${dataUrl()}${config.logo}`} />
+                ) : null}
+                {config.title}
               </h1>
             </Link>
             <button className="btn" onClick={() => setMenu(!menu)}>
@@ -78,12 +77,12 @@ const Main = () => {
         <header>
           <Link to="/">
             <h1>
-              {Site.logo ? <img src={`${dataUrl()}${Site.logo}`} /> : null}
-              {Site.title}
+              {config.logo ? <img src={`${dataUrl()}${config.logo}`} /> : null}
+              {config.title}
             </h1>
           </Link>
-          {!Site.byline ? null : (
-            <div dangerouslySetInnerHTML={{ __html: Site.byline }} />
+          {!config.byline ? null : (
+            <div dangerouslySetInnerHTML={{ __html: config.byline }} />
           )}
         </header>
         <Content />
@@ -108,6 +107,7 @@ require('react-styl')(`
       display: flex
       font-size: 38px
       font-weight: 300
+      align-items: center
       svg,img
         width: 2rem
         margin-right: 1rem
@@ -136,6 +136,7 @@ require('react-styl')(`
     header
       margin-top: 1rem
       margin-bottom: 1rem
+      flex-wrap: nowrap
       .icon-bars
         width: 2rem
       h1

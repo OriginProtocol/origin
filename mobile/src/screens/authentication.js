@@ -128,7 +128,8 @@ class AuthenticationScreen extends Component {
                 TouchID.authenticate('Enable access to Origin Marketplace App')
                   .then(() => {
                     this.props.setBiometryType(this.state.biometryType)
-                    if (this.props.settings.referralCode) {
+                    const { referralCode } = this.props.settings
+                    if (referralCode && referralCode.startsWith('op:')) {
                       this.props.navigation.navigate('PartnerWelcome')
                     } else {
                       this.props.navigation.navigate('Main')

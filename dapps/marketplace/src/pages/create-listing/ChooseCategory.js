@@ -74,7 +74,7 @@ const ChooseListingCategory = ({
   listing,
   prev,
   next,
-  walletType,
+  isOriginWallet,
   onChange
 }) => {
   const [valid, setValid] = useState(false)
@@ -133,7 +133,7 @@ const ChooseListingCategory = ({
             </div>
           </div>
         </div>
-        {walletType !== 'Mobile' && walletType !== 'Origin Wallet' && (
+        {!isOriginWallet && (
           <div className="col-md-4">
             <div className="gray-box">
               <DownloadApp />

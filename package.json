@@ -21,7 +21,7 @@
     "eslint-config-react-app": "5.1.0",
     "eslint-config-standard": "14.1.0",
     "eslint-plugin-flowtype": "4.5.2",
-    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-import": "2.19.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-node": "10.0.0",
     "eslint-plugin-promise": "4.2.1",
@@ -36,7 +36,7 @@
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "lerna run start --scope @origin/marketplace --stream --no-prefix",
-    "lint": "lerna run lint",
+    "lint": "lerna run lint && npm run lint --prefix mobile",
     "format": "eslint **/**/*.js --quiet --fix",
     "test": "node scripts/test.js",
     "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v mobile | grep -v node_modules | node scripts/package-versions.js"

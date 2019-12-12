@@ -481,7 +481,6 @@ class Messaging {
    */
   decryptMessage(content, convObj) {
     const v = content
-    console.log(convObj.keys)
     for (const key of convObj.keys) {
       const buffer = this.decryptEmsg(v.i, v.emsg, key)
       if (buffer != undefined) {

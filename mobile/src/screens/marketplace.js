@@ -52,9 +52,11 @@ class MarketplaceScreen extends PureComponent {
     super(props)
 
     this.state = {
+      canGoBack: false,
       enablePullToRefresh: true,
       panResponder: this.getSwipeHandler(),
-      webViewRef: React.createRef()
+      webViewRef: React.createRef(),
+      injectedGetStartedRedirect: false
     }
 
     this.subscriptions = [
@@ -79,9 +81,11 @@ class MarketplaceScreen extends PureComponent {
     }
     // Send the user to the campaign page if given a referral code
     if (
-      prevProps.props.settings.referralCode !== this.props.settings.referralCode
+      this.props.settings.referralCode &&
+      !this.state.injectedGetStartedRedirect
     ) {
       this.injectGetStartedRedirect('/campaigns')
+      this.setState({ injectedGetStartedRedirect: true })
     }
     if (prevProps.settings.currency !== this.props.settings.currency) {
       // Currency has changed
@@ -599,6 +603,8 @@ class MarketplaceScreen extends PureComponent {
       return
     }
 
+    this.setState({ canGoBack: state.canGoBack })
+
     // Request Android camera permissions if doing something that is likely
     // to need them
     try {
@@ -709,10 +715,11 @@ class MarketplaceScreen extends PureComponent {
   /* Handle back requests, e.g. from Android back buttons.
    */
   onBack = () => {
-    if (this.state.webViewRef.current) {
+    if (this.state.canGoBack && this.state.webViewRef.current) {
       this.state.webViewRef.current.goBack()
+      return true
     }
-    return true
+    return false
   }
 
   /* Handle an error loading the WebView

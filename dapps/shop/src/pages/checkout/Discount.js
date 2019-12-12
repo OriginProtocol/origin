@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import get from 'lodash/get'
 
 import { useStateValue } from 'data/state'
-const { BACKEND_URL } = process.env
+import useConfig from 'utils/useConfig'
 
 const OrderDiscount = ({ cart }) => {
+  const { config } = useConfig()
   const [error, setError] = useState()
   const [code, setCode] = useState('')
   const [, dispatch] = useStateValue()
-  if (!cart || !cart.items) return null
+  if (!config.discountCodes || !cart || !cart.items) return null
   const existingCode = get(cart, 'discountObj.code', '').toUpperCase()
 
   return (
@@ -16,7 +17,7 @@ const OrderDiscount = ({ cart }) => {
       className="discount"
       onSubmit={async e => {
         e.preventDefault()
-        const res = await fetch(`${BACKEND_URL}/check-discount`, {
+        const res = await fetch(`${config.backend}/check-discount`, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ code })

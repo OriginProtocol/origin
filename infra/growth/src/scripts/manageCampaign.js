@@ -297,13 +297,13 @@ const updateByMonth = {
 
 const action = args['--action']
 if (!action) {
-  console.err('Missing --action argument')
+  console.error('Missing --action argument')
   process.exit()
 }
 
 const month = args['--month']
 if (!month) {
-  console.err('Missing --month argument')
+  console.error('Missing --month argument')
   process.exit()
 }
 
@@ -313,12 +313,12 @@ if (action === 'create') {
 } else if (action === 'update') {
   fn = updateByMonth[month]
 } else {
-  console.err(`Unexpected action ${action}`)
+  console.error(`Unexpected action ${action}`)
   process.exit()
 }
 
 if (!fn) {
-  console.err(`No create function for month of ${month}`)
+  console.error(`No create function for month of ${month}`)
   process.exit()
 }
 

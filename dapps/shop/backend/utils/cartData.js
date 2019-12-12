@@ -1,8 +1,9 @@
 const fetch = require('node-fetch')
-const config = require('../config')()
+
+const { DATA_URL } = process.env
 
 async function fetchItem(item) {
-  const url = `${config.siteData.productUrl}${item.product}/data.json`
+  const url = `${DATA_URL}${item.product}/data.json`
   const dataRaw = await fetch(url)
   const data = await dataRaw.json()
   return {

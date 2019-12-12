@@ -3,12 +3,14 @@ const { BaseRule } = require('./baseRule')
 const { Reward } = require('./reward')
 const logger = require('../../logger')
 const { tokenToNaturalUnits } = require('../../util/token')
+const { GrowthActionStatus } = require('../../enums')
 
 const CONF_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 const PARTNER_CONF_URL =
   process.env.PARTNER_CONF_URL ||
   'https://originprotocol.com/static/partnerconf'
 let PARTNER_REWARDS = {}
+let PARTNER_NAMES = {}
 
 /**
  * A rule that checks on a PartnerReferral event type.
@@ -53,7 +55,7 @@ class PartnerReferralEvent extends BaseRule {
       events,
       customId => this.validCodes.includes(customId)
     )
-    return tally && tally > 0 ? 1 : 0
+    return tally && tally.PartnerReferral > 0 ? 1 : 0
   }
 
   /**
@@ -86,15 +88,18 @@ class PartnerReferralEvent extends BaseRule {
     const config = await res.json()
 
     if (!config) {
+      logger.error('No config - probably an error')
       return
     }
 
     this.validCodes = Object.keys(config)
 
     if (this.validCodes.length === 0) {
+      logger.warn('Found 0 valid codes from campaigns.json')
       return
     }
 
+    PARTNER_NAMES = {}
     PARTNER_REWARDS = {}
 
     // Get the rewards for the code
@@ -105,9 +110,13 @@ class PartnerReferralEvent extends BaseRule {
         continue
       }
       PARTNER_REWARDS[code] = conf.reward
+      PARTNER_NAMES[code] = conf.partner ? conf.partner.name : null
     }
 
     this.lastConfLoad = new Date()
+    logger.info(
+      `Loaded campaigns.json config at ${this.lastConfLoad.toString()}`
+    )
   }
 
   /**
@@ -171,6 +180,8 @@ class PartnerReferralEvent extends BaseRule {
     events.forEach(ev => {
       if (ev.type !== 'PartnerReferral' || !PARTNER_REWARDS[ev.customId]) return
 
+      this.conditionalName = `${PARTNER_NAMES[ev.customId]} Referral`
+
       if (PARTNER_REWARDS[ev.customId].currency.toLowerCase() === 'ogn') {
         if (PARTNER_REWARDS[ev.customId] && !seenCodes.includes(ev.customId)) {
           const amount = tokenToNaturalUnits(PARTNER_REWARDS[ev.customId].value)
@@ -195,6 +206,34 @@ class PartnerReferralEvent extends BaseRule {
     })
 
     return rewards
+  }
+
+  /**
+   * Return the rule's status. One of: Inactive, Active, Completed.
+   * This is for use by the front-end to display the status of the rule to the user.
+   *  - Inactive: rule is locked
+   *  - Active:
+   *     - Rule returning rewards: user can actively earn rewards from the rule
+   *     - Rule that is a condition: user has not met condition yet.
+   *  - Completed:
+   *     - Rule returning rewards: user reached the limit of rewards that can be earned from the rule
+   *     - Rule that is a condition: user has met condition.
+   *
+   * @param {string} ethAddress - User's eth address
+   * @param {Array<models.GrowthEvent>} events - All events for user since sign up.
+   * @param {number} currentUserLevel - Current level the user is at in the campaign.
+   * @returns {Promise<enums.GrowthActionStatus>}
+   */
+  async getStatus(ethAddress, events, currentUserLevel) {
+    if (
+      currentUserLevel < this.levelId &&
+      (await this._evaluate(ethAddress, events))
+    ) {
+      return GrowthActionStatus.Inactive
+    }
+    // TODO: Not exactly accurate, do we need another enum val or does this
+    // hack work?
+    return GrowthActionStatus.Exhausted
   }
 }
 
