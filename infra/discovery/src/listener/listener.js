@@ -29,6 +29,9 @@ const { blockGauge, errorCounter, metricsServer } = require('./metrics')
 const { handleEvent } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
+// Poll for new events every 30 seconds.
+const pollIntervalSec = 30
+
 /**
  * Helper class passed to logic methods containing config and shared resources.
  */
@@ -141,16 +144,14 @@ async function main() {
     logger.warn(`Backfill mode: concurrency=${context.config.concurrency}`)
   }
 
-  // Helper function to wait at most tickIntervalSeconds.
-  const tickIntervalSeconds = 5
-  let start
-
+  // Helper function to wait at most pollIntervalSec.
   async function nextTick() {
     const elapsed = new Date() - start
-    const delay = Math.max(tickIntervalSeconds * 1000 - elapsed, 1)
+    const delay = Math.max(pollIntervalSec * 1000 - elapsed, 1)
     return new Promise(resolve => setTimeout(() => resolve(true), delay))
   }
 
+  let start
   do {
     start = new Date()
 
