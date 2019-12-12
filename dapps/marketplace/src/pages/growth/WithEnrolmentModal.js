@@ -796,6 +796,8 @@ require('react-styl')(`
         transform: rotate(45deg)
     .country-check-label
       font-weight: 300
+      padding-left: 25px
+      padding-right: 25px
     .terms-title
       font-weight: 500
       color: black
