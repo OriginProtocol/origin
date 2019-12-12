@@ -1,4 +1,3 @@
-import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
 
 export function getAttestationReward({

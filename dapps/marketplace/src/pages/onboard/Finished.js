@@ -46,9 +46,7 @@ const Finished = ({
   )
 }
 
-export default withEnrolmentStatus(
-  withPartnerCampaignConfig(Finished)
-)
+export default withEnrolmentStatus(withPartnerCampaignConfig(Finished))
 
 require('react-styl')(`
   .onboard .finished

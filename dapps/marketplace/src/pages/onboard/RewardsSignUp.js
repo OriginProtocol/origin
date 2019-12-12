@@ -12,10 +12,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
 
-import {
-  hasReferralCode,
-  getReferralReward
-} from 'utils/growthTools'
+import { hasReferralCode, getReferralReward } from 'utils/growthTools'
 import Store from 'utils/store'
 
 import ListingPreview from './_ListingPreview'
@@ -37,19 +34,13 @@ class OnboardRewardsSignUp extends Component {
   }
 
   getReferralReward() {
-    const reward = getReferralReward(
-      this.props.partnerCampaignConfig
-    )
+    const reward = getReferralReward(this.props.partnerCampaignConfig)
 
     if (!reward) {
       return null
     }
 
-    return (
-      <div className="partner-referral-reward">
-        {`${reward} OGN`}
-      </div>
-    )
+    return <div className="partner-referral-reward">{`${reward} OGN`}</div>
   }
 
   render() {
@@ -59,7 +50,14 @@ class OnboardRewardsSignUp extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
 
-    const { linkPrefix, skip, onSkip, wallet, walletLoading, partnerCampaignLoading } = this.props
+    const {
+      linkPrefix,
+      skip,
+      onSkip,
+      wallet,
+      walletLoading,
+      partnerCampaignLoading
+    } = this.props
 
     if (walletLoading || partnerCampaignLoading) {
       return <LoadingSpinner />
@@ -241,8 +239,9 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
-
+export default withPartnerCampaignConfig(
+  withIsMobile(withWallet(OnboardRewardsSignUp))
+)
 
 require('react-styl')(`
   .rewards-signup
