@@ -22,13 +22,13 @@ const UserProfileCreated = ({
             <div>
               {referralReward ? (
                 <fbt desc="UserActivation.profileCreatedCollect">
-                  You&apos;ve successfully created your profile. You&apos;re
-                  now ready to collect your Origin Tokens.
+                  You&apos;ve successfully created your profile. You&apos;re now
+                  ready to collect your Origin Tokens.
                 </fbt>
               ) : (
                 <fbt desc="UserActivation.profileCreatedEarn">
-                  You&apos;ve successfully created your profile. You&apos;re
-                  now ready to start earning Origin Rewards.
+                  You&apos;ve successfully created your profile. You&apos;re now
+                  ready to start earning Origin Rewards.
                 </fbt>
               )}
             </div>
