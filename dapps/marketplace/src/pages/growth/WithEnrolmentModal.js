@@ -759,7 +759,7 @@ require('react-styl')(`
       display: block
       position: relative
       padding-left: 28px
-      margin-bottom: 0px
+      margin: 0 10px 0 10px
       cursor: pointer
       font-size: 18px
       -webkit-user-select: none

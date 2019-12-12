@@ -21,12 +21,16 @@ async function fetchConfig(signal) {
 function withPartnerCampaignConfig(WrappedComponent) {
   const WithPartnerCampaignConfig = props => {
     const [partnerConfig, setPartnerConfig] = useState(cachedCampaigns)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
       const abortController = new AbortController()
 
       fetchConfig(abortController.signal)
-        .then(data => setPartnerConfig(data))
+        .then(data => {
+          setPartnerConfig(data)
+          setLoading(false)
+        })
         .catch(() => {
           // Probably aborted, do nothing
         })
@@ -37,6 +41,7 @@ function withPartnerCampaignConfig(WrappedComponent) {
     return (
       <WrappedComponent
         {...props}
+        partnerCampaignLoading={loading}
         partnerCampaignConfig={partnerConfig || {}}
       />
     )
