@@ -14,6 +14,8 @@ import Modal from 'components/Modal'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
 
+import ToastMessage from 'components/ToastMessage'
+
 class SendMessage extends Component {
   state = { message: '' }
   componentDidMount() {
@@ -54,6 +56,13 @@ class SendMessage extends Component {
           }}
           children={this.props.children}
         />
+        {this.state.messageError && (
+          <ToastMessage
+            message={this.state.messageError}
+            type="danger"
+            onClose={() => this.setState({ messageError: null })}
+          />
+        )}
         {!this.state.open ? null : (
           <Modal
             shouldClose={this.state.shouldClose}
@@ -128,18 +137,33 @@ class SendMessage extends Component {
     return (
       <Mutation
         mutation={mutation}
-        onCompleted={({ sendMessage }) =>
-          this.setState({ sent: true, room: sendMessage.id })
-        }
+        onCompleted={({ sendMessage }) => {
+          if (!sendMessage.success) {
+            return this.setState({
+              messageError: sendMessage.error
+            })
+          }
+
+          this.setState({
+            sent: true,
+            room: sendMessage.conversation.id,
+            message: ''
+          })
+        }}
+        onError={err => {
+          console.error(err)
+          return this.setState({
+            messageError: 'Something went wrong. Please try again'
+          })
+        }}
       >
         {sendMessage => (
           <form
-            onSubmit={e => {
+            onSubmit={async e => {
               e.preventDefault()
               const content = this.state.message
               if (content) {
                 sendMessage({ variables: { to, content } })
-                this.setState({ message: '' })
               }
             }}
           >
