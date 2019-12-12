@@ -42,18 +42,20 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
+      this.countryCode = undefined
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
+        enableSignupButton: false,
         userAlreadyEnrolled: false,
         modalTitle: fbt('Origin Rewards', 'WithEnrolmentModal.OriginRewards')
       }
     }
 
-    componentDidUpdate(previosProps, previousState) {
+    componentDidUpdate(previousProps, previousState) {
       if (!this.state.open && previousState.open) {
         if (this.props.onClose) {
           this.props.onClose()
@@ -124,8 +126,26 @@ function withEnrolmentModal(WrappedComponent) {
       this.setState({ notCitizenChecked: e.target.checked })
     }
 
+    handleNotCitizenCheck(e) {
+      const notCitizenChecked = e.target.checked
+      this.setState({ notCitizenChecked })
+      const { termsAccepted } = this.state
+      this.setState({ enableSignupButton: notCitizenChecked && termsAccepted })
+    }
+
     handleAcceptTermsCheck(e) {
-      this.setState({ termsAccepted: e.target.checked })
+      const termsAccepted = e.target.checked
+      this.setState({ termsAccepted })
+      const { notCitizenChecked } = this.state
+      // If we detected country as US based on IP, user must certify they
+      // are not US citizen/resident before we enable the signup button.
+      if (this.countryCode === 'US') {
+        this.setState({
+          enableSignupButton: notCitizenChecked && termsAccepted
+        })
+      } else {
+        this.setState({ enableSignupButton: termsAccepted })
+      }
     }
 
     handleTermsContinue() {
@@ -246,7 +266,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderTermsModal() {
-      const { termsAccepted } = this.state
+      const { enableSignupButton } = this.state
       const { isMobile } = this.props
 
       const cancelButton = (
@@ -264,14 +284,14 @@ function withEnrolmentModal(WrappedComponent) {
       const acceptTermsButton = (
         <button
           className={`btn btn-lg ${
-            termsAccepted
+            enableSignupButton
               ? `btn-primary btn-rounded ${isMobile ? 'm-0' : ''}`
               : isMobile
               ? 'btn-primary wide-btn m-0'
               : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
-          disabled={termsAccepted ? undefined : 'disabled'}
+          disabled={enableSignupButton ? undefined : 'disabled'}
           children={fbt('Accept Terms', 'Accept Terms')}
         />
       )
@@ -320,7 +340,25 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            <div className="mt-1 d-flex country-check-label justify-content-center pb-3">
+            {this.countryCode === 'US' && (
+              <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
+                <label className="checkbox-holder">
+                  <input
+                    type="checkbox"
+                    className="country-check"
+                    onChange={e => this.handleNotCitizenCheck(e)}
+                    value="confirm-not-us-citizen"
+                  />
+                  <span className="checkmark" />
+                  &nbsp;
+                  <fbt desc="EnrollmentModal.notAUsCitizen">
+                    I am not a citizen or resident of the United States of
+                    America
+                  </fbt>
+                </label>
+              </div>
+            )}
+            <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
               <label className="checkbox-holder">
                 <input
                   type="checkbox"
@@ -459,6 +497,7 @@ function withEnrolmentModal(WrappedComponent) {
               'growth_country_override'
             )
             let { countryName, eligibility } = data.isEligible
+            const { countryCode } = data.isEligible
 
             if (countryOverride !== null) {
               countryOverride = JSON.parse(countryOverride)
@@ -466,9 +505,15 @@ function withEnrolmentModal(WrappedComponent) {
               eligibility = countryOverride.eligibility
             }
 
+            // Note: US is restricted but as opposed to other restricted countries,
+            // we have the user answer the citizenship question on the
+            // terms acceptance page rather than on a separate modal in order
+            // to streamline the flow.
+            this.countryCode = countryCode
             if (
               eligibility === 'Eligible' ||
-              (eligibility === 'Restricted' && notCitizenConfirmed)
+              (eligibility === 'Restricted' && notCitizenConfirmed) ||
+              (eligibility === 'Restricted' && this.countryCode === 'US')
             ) {
               return this.renderTermsModal()
             } else if (

@@ -1,27 +1,25 @@
 {
-  "name": "Origin Protocol Shop",
-  "description": "A decentralized ",
+  "name": "Origin Shop",
+  "description": "A decentralized e-commerce store.",
   "repository": "https://github.com/OriginProtocol/origin/dapps/shop",
-  "logo": "https://www.originprotocol.com/static/img/origin-logo-dark.png",
+  "logo": "https://www.originprotocol.com/static/img/origin-icon.png",
   "keywords": ["ethereum", "node", "ipfs"],
   "addons": [
     {
       "plan": "heroku-postgresql:hobby-dev"
+    },
+    {
+      "plan": "mailgun:starter"
     }
   ],
   "env": {
     "ADMIN_PW": {
       "description": "Admin page password",
-      "generator": "secret",
       "required": true
     },
-    "LISTING_ID": {
-      "description": "Origin Marketplace contract Listing ID",
-      "required": true
-    },
-    "NETWORK": {
-      "description": "Ethereum Network. mainnet, rinkeby",
-      "value": "mainnet",
+    "NETWORK_ID": {
+      "description": "Ethereum Network ID. mainnet = 1, rinkeby = 4",
+      "value": "1",
       "required": true
     },
     "PGP_PRIVATE_KEY": {
@@ -32,9 +30,17 @@
       "description": "Password for decrypting PGP Private key",
       "required": true
     },
-    "SITE": {
-      "description": "Site config",
-      "value": "origin"
+    "PUBLIC_URL": {
+      "description": "URL of publically accessible frontend",
+      "required": true
+    },
+    "DATA_URL": {
+      "description": "URL of data folder",
+      "required": true
+    },
+    "PROVIDER": {
+      "description": "Ethereum provider websocket",
+      "required": true
     },
     "STRIPE_BACKEND": {
       "description": "Stripe Secret"
@@ -47,47 +53,6 @@
     },
     "WEB3_PK": {
       "description": "Private Ethereum Key. Used to make offers on behalf of credit card users."
-    },
-    "SMTP_HOST": {
-      "description": "SMTP Host for email notifications",
-      "value": "smtp.gmail.com"
-    },
-    "SMTP_USER": {
-      "description": "SMTP Username",
-      "value": "user@gmail.com"
-    },
-    "SMTP_PASS": {
-      "description": "SMTP Password",
-      "value": "gmail password"
-    },
-    "SUPPORT_EMAIL": {
-      "description": "Email from which to send notifications"
-    },
-    "EMAIL_SUBJECT": {
-      "description": "Subject of notification email",
-      "value": "Order receipt"
-    },
-    "PUBLIC_URL": {
-      "description": ""
-    },
-    "PROVIDER_WS": {
-      "description": "Ethereum provider websocket",
-      "required": true
-    },
-    "CONTRACT": {
-      "description": "Origin Marketplace contract address",
-      "value": "0x698ff47b84837d3971118a369c570172ee7e54c2",
-      "required": true
-    },
-    "IPFS_GATEWAY": {
-      "description": "IPFS Gateway",
-      "value": "https://ipfs.originprotocol.com",
-      "required": true
-    },
-    "IPFS_API": {
-      "description": "IPFS API",
-      "value": "https://ipfs.originprotocol.com",
-      "required": true
     }
   }
 }

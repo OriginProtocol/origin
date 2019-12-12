@@ -74,14 +74,14 @@ class OnboardProfile extends Component {
   }
 
   getNextLink() {
-    const { linkPrefix, wallet, walletType, hasMessagingKeys } = this.props
+    const { linkPrefix, wallet, isOriginWallet, hasMessagingKeys } = this.props
 
     const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
 
     if (onboardCompleted && hasMessagingKeys) {
       // Back to where you came from.
       return `${linkPrefix}/onboard/back`
-    } else if (walletType === 'Origin Wallet') {
+    } else if (isOriginWallet) {
       // Keys are injected in Origin Wallet, so skip `messaging` step
       return `${linkPrefix}/onboard/rewards`
     } else {

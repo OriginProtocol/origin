@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import get from 'lodash/get'
 
-const { BACKEND_URL } = process.env
-
 import useOrder from 'utils/useOrder'
+import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import usePrintfulIds from 'utils/usePrintfulIds'
 import usePrintful from 'utils/usePrintful'
@@ -37,6 +36,7 @@ function generatePrintfulOrder(order, printfulIds) {
 }
 
 const Printful = () => {
+  const { config } = useConfig()
   const [create, setCreate] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const match = useRouteMatch('/admin/orders/:orderId/:tab?')
@@ -71,7 +71,7 @@ const Printful = () => {
                 'content-type': 'application/json'
               })
               const myRequest = new Request(
-                `${BACKEND_URL}/orders/${orderId}/printful/confirm`,
+                `${config.backend}/orders/${orderId}/printful/confirm`,
                 { headers, method: 'POST' }
               )
               const raw = await fetch(myRequest)
@@ -102,7 +102,7 @@ const Printful = () => {
             'content-type': 'application/json'
           })
           const myRequest = new Request(
-            `${BACKEND_URL}/orders/${orderId}/printful/create`,
+            `${config.backend}/orders/${orderId}/printful/create`,
             { headers, method: 'POST', body: JSON.stringify(printfulData) }
           )
           const raw = await fetch(myRequest)

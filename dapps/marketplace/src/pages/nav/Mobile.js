@@ -8,7 +8,7 @@ import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+const SupportLink = 'https://forms.gle/KxBDiGjZwaXhitSn9'
 
 const MobileNav = ({
   open,
