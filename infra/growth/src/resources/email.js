@@ -141,8 +141,7 @@ async function _getEmailVars(referrer) {
   const referrerName =
     (identity.firstName || '') + ' ' + (identity.lastName || '')
 
-  const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
-  const targetUrl = `${dappUrl}/#/welcome/${inviteCode.code}`
+  const targetUrl = `https://originprotocol.com/referral/${inviteCode.code}`
 
   return { referrerName, targetUrl }
 }
