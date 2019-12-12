@@ -39,6 +39,8 @@ import { applyConfiguration } from 'utils/marketplaceCreator'
 import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
 
+import { setReferralCode } from 'utils/growthTools'
+
 class App extends Component {
   state = {
     hasError: false,
@@ -60,6 +62,12 @@ class App extends Component {
       Sentry.configureScope(scope => {
         scope.setUser({ id: accountID })
       })
+    }
+
+    // Update referral code
+    const params = new URLSearchParams(this.props.location.search)
+    if (params.has('referralCode')) {
+      setReferralCode(params.get('referralCode'))
     }
   }
 

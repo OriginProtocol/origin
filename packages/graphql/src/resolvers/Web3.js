@@ -7,6 +7,11 @@ const netId = memoize(async () => await contracts.web3.eth.net.getId())
 const mmNetId = memoize(async () => await contracts.metaMask.eth.net.getId())
 
 import { getTransaction, getTransactionReceipt } from './web3/transactions'
+import {
+  getMetaMaskAccount,
+  getMobileWalletAccount,
+  getPrimaryAccount
+} from '../utils/primaryAccount'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'
@@ -75,10 +80,7 @@ const web3Resolver = {
     return await fn()
   },
   metaMaskAccount: async () => {
-    if (!contracts.metaMask) return null
-    const accounts = await contracts.metaMask.eth.getAccounts()
-    if (!accounts || !accounts.length) return null
-    return { id: accounts[0] }
+    return getMetaMaskAccount()
   },
   walletType: () => {
     if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
@@ -108,22 +110,10 @@ const web3Resolver = {
     }
   },
   mobileWalletAccount: async () => {
-    if (!contracts.mobileBridge) return null
-    const accounts = await contracts.web3Exec.eth.getAccounts()
-    if (!accounts || !accounts.length) return null
-    return { id: accounts[0] }
+    return getMobileWalletAccount()
   },
   primaryAccount: async () => {
-    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
-      return { id: localStorage.useWeb3Wallet }
-    }
-    if (contracts.metaMaskEnabled) {
-      return web3Resolver.metaMaskAccount()
-    }
-    if (contracts.mobileBridge) {
-      return web3Resolver.mobileWalletAccount()
-    }
-    return null
+    return getPrimaryAccount()
   }
 }
 

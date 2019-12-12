@@ -1,4 +1,5 @@
 import numberFormat from 'utils/numberFormat'
+import get from 'lodash/get'
 
 export function getAttestationReward({
   growthCampaigns,
@@ -75,10 +76,12 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
 }
 
 export function formatTokens(tokenAmount, decimalDivision) {
+  const _div = decimalDivision || web3.utils.toBN(10).pow(web3.utils.toBN(18))
+
   return numberFormat(
     web3.utils
       .toBN(tokenAmount)
-      .div(decimalDivision)
+      .div(_div)
       .toString(),
     2,
     '.',
@@ -208,4 +211,45 @@ export function getContentToShare(action, locale) {
   )
 
   return translation ? translation.text : action.content.post.tweet.default
+}
+
+export function setReferralCode(code) {
+  if (!code) {
+    delete localStorage.partner_referral_code
+    return
+  }
+
+  if (localStorage.partner_referral_code === code) {
+    return
+  }
+
+  localStorage.partner_referral_code = code
+}
+
+export function hasReferralCode() {
+  return !!localStorage.partner_referral_code
+}
+
+export function getReferralReward(campaign) {
+  const referralCode = localStorage.partner_referral_code
+
+  const actions = get(campaign, 'actions', [])
+
+  if (!referralCode || !actions.length) {
+    return null
+  }
+
+  const action = actions.find(
+    action =>
+      action.type ===
+      (referralCode.startsWith('op') ? 'PartnerReferral' : 'Referral')
+  )
+
+  const reward = get(action, 'reward.amount')
+
+  if (!reward) {
+    return null
+  }
+
+  return reward
 }
