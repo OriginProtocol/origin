@@ -10,11 +10,9 @@ import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
-import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
 import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
 
 import {
-  formatTokens,
   hasReferralCode,
   getReferralReward
 } from 'utils/growthTools'
@@ -40,7 +38,6 @@ class OnboardRewardsSignUp extends Component {
 
   getReferralReward() {
     const reward = getReferralReward(
-      this.props.activeGrowthCampaign,
       this.props.partnerCampaignConfig
     )
 
@@ -50,7 +47,7 @@ class OnboardRewardsSignUp extends Component {
 
     return (
       <div className="partner-referral-reward">
-        {`${formatTokens(reward)} OGN`}
+        {`${reward} OGN`}
       </div>
     )
   }
@@ -62,9 +59,9 @@ class OnboardRewardsSignUp extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
 
-    const { linkPrefix, skip, onSkip, wallet, walletLoading } = this.props
+    const { linkPrefix, skip, onSkip, wallet, walletLoading, partnerCampaignLoading } = this.props
 
-    if (walletLoading) {
+    if (walletLoading || partnerCampaignLoading) {
       return <LoadingSpinner />
     }
 
@@ -157,7 +154,7 @@ class OnboardRewardsSignUp extends Component {
             </fbt>
           )}
         </div>
-        <div className="mb-3">
+        <div className="mb-3 text-center">
           {hasReferralCode() ? this.getReferralReward() : null}
         </div>
         <div className="actions">
@@ -244,9 +241,8 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withActiveGrowthCampaign(
-  withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
-)
+export default withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
+
 
 require('react-styl')(`
   .rewards-signup
@@ -265,6 +261,7 @@ require('react-styl')(`
     font-size: 2.125rem
     font-weight: bold
     color: #0d1d29
+    text-align: center !important
   .onboard .onboard-box.profile-rewards
     padding: 0
     > img

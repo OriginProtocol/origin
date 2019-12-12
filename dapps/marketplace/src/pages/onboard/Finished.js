@@ -2,32 +2,37 @@ import React, { useState } from 'react'
 
 import Redirect from 'components/Redirect'
 import UserProfileCreated from 'components/_UserProfileCreated'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import withEnrolmentStatus from 'hoc/withEnrolmentStatus'
-import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
 import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
 
-import { formatTokens, getReferralReward } from 'utils/growthTools'
+import { getReferralReward } from 'utils/growthTools'
 
 const Finished = ({
   linkPrefix,
   redirectto,
-  activeGrowthCampaign,
   growthEnrollmentStatus,
-  partnerCampaignConfig
+  growthEnrollmentStatusLoading,
+  partnerCampaignConfig,
+  partnerCampaignLoading
 }) => {
   const continueTo = redirectto ? redirectto : `${linkPrefix}/onboard/back`
 
   const [finished, setFinished] = useState(false)
+
+  if (partnerCampaignLoading || growthEnrollmentStatusLoading) {
+    return <LoadingSpinner />
+  }
 
   if (finished) {
     return <Redirect to={continueTo} />
   }
 
   const enrolled = growthEnrollmentStatus === 'Enrolled'
-  const reward = getReferralReward(activeGrowthCampaign, partnerCampaignConfig)
+  const reward = getReferralReward(partnerCampaignConfig)
 
-  const formattedReward = !reward ? null : `${formatTokens(reward)} OGN`
+  const formattedReward = !reward ? null : `${reward} OGN`
 
   return (
     <div className="finished">
@@ -42,7 +47,7 @@ const Finished = ({
 }
 
 export default withEnrolmentStatus(
-  withActiveGrowthCampaign(withPartnerCampaignConfig(Finished))
+  withPartnerCampaignConfig(Finished)
 )
 
 require('react-styl')(`

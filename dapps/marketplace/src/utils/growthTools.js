@@ -230,7 +230,7 @@ export function hasReferralCode() {
   return !!localStorage.partner_referral_code
 }
 
-export function getReferralReward(campaign, campaignConfig) {
+export function getReferralReward(campaignConfig) {
   const referralCode = localStorage.partner_referral_code
 
   if (!referralCode) {
@@ -244,23 +244,10 @@ export function getReferralReward(campaign, campaignConfig) {
     return null
   }
 
-  const actions = get(campaign, 'actions', [])
-
-  // Invalid campaign
-  if (!actions.length) {
-    return null
-  }
-
-  const action = actions.find(
-    action =>
-      action.type ===
-      (referralCode.startsWith('op') ? 'PartnerReferral' : 'Referral')
-  )
-
   // if there's no campaign action, nor config for the referral code, there's
   // no point in continuing
   if (
-    !action ||
+    !campaignConfig ||
     !Object.prototype.hasOwnProperty.call(campaignConfig, codeParts[1]) ||
     campaignConfig[codeParts[1]].reward.currency !== 'ogn'
   ) {
