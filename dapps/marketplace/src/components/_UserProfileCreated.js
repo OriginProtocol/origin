@@ -4,54 +4,64 @@ import withIsMobile from 'hoc/withIsMobile'
 import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
 
-const UserProfileCreated = ({ onCompleted, isMobile, referralReward }) => {
+const UserProfileCreated = ({
+  onCompleted,
+  isMobile,
+  enrolled,
+  referralReward
+}) => {
   const content = (
     <div className="profile-created">
       <img src="images/identity/rocket.svg" />
-      {referralReward ? (
-        <div className="rewards-earned mt-3">
-          <div>
-            <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
-          </div>
-          <div>
-            <fbt desc="UserActivation.youEarned">You earned</fbt>
-          </div>
-          <div className="partner-referral-reward mt-2">{referralReward}</div>
+      <div className="mt-3">
+        <div>
+          <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
         </div>
-      ) : (
-        <>
-          <h2 className="mt-3">
-            <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
-          </h2>
+        {enrolled ? (
+          <>
+            <div>
+              {referralReward ? (
+                <fbt desc="UserActivation.profileCreatedCollect">
+                  You&apos;ve successfully created your profile. You&apos;re now
+                  ready to collect your Origin Tokens.
+                </fbt>
+              ) : (
+                <fbt desc="UserActivation.profileCreatedEarn">
+                  You&apos;ve successfully created your profile. You&apos;re now
+                  ready to start earning Origin Rewards.
+                </fbt>
+              )}
+            </div>
+            {referralReward && (
+              <div className="partner-referral-reward mt-2">
+                {referralReward}
+              </div>
+            )}
+          </>
+        ) : (
           <div>
-            <fbt desc="UserActivation.profileCreated">
-              You&apos;ve successfully created your profile You&apos;re now
+            <fbt desc="UserActivation.profileCreatedJourney">
+              You&apos;ve successfully created your profile. You&apos;re now
               ready to continue your journey in the Origin Marketplace.
             </fbt>
           </div>
-        </>
-      )}
+        )}
+      </div>
       <div className="actions mt-auto">
         {referralReward ? (
-          <>
-            <Link
-              to="/welcome"
-              className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3"
-            >
-              <fbt desc="UserActivation.earnMore">Earn more OGN</fbt>
-            </Link>
-            <button
-              type="button"
-              onClick={e => {
-                e.preventDefault()
-                if (onCompleted) {
-                  onCompleted()
-                }
-              }}
-              className="btn btn-dark btn-rounded mb-3 mx-md-3"
-              children={fbt('Go to Marketplace', 'Go to Marketplace')}
-            />
-          </>
+          <Link
+            to="/campaigns"
+            className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3"
+          >
+            <fbt desc="UserActivation.collectOGN">Collect OGN</fbt>
+          </Link>
+        ) : enrolled ? (
+          <Link
+            to="/campaigns"
+            className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3"
+          >
+            <fbt desc="UserActivation.earnOGN">Earn OGN</fbt>
+          </Link>
         ) : (
           <button
             type="button"
@@ -89,7 +99,7 @@ require('react-styl')(`
       margin-top: 2.5rem
     .actions .btn
       width: 50%
-    .rewards-earned
+    .partner-referral-reward
       font-family: Poppins
       font-size: 1.5rem
       font-weight: 500
