@@ -13,40 +13,40 @@ const UserProfileCreated = ({
   const content = (
     <div className="profile-created">
       <img src="images/identity/rocket.svg" />
-      {enrolled && (
-        <div className="mt-3">
-          <div>
-            <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
-          </div>
-          {enrolled ? (
-            <>
-              <div>
-                {referralReward ? (
-                  <fbt desc="UserActivation.profileCreatedCollect">
-                    You&apos;ve successfully created your profile. You&apos;re
-                    now ready to collect your Origin Tokens.
-                  </fbt>
-                ) : (
-                  <fbt desc="UserActivation.profileCreatedEarn">
-                    You&apos;ve successfully created your profile. You&apos;re
-                    now ready to start earning Origin Rewards.
-                  </fbt>
-                )}
-              </div>
+      <div className="mt-3">
+        <div>
+          <fbt desc="UserActivation.congratulations">Congratulations!</fbt>
+        </div>
+        {enrolled ? (
+          <>
+            <div>
+              {referralReward ? (
+                <fbt desc="UserActivation.profileCreatedCollect">
+                  You&apos;ve successfully created your profile. You&apos;re
+                  now ready to collect your Origin Tokens.
+                </fbt>
+              ) : (
+                <fbt desc="UserActivation.profileCreatedEarn">
+                  You&apos;ve successfully created your profile. You&apos;re
+                  now ready to start earning Origin Rewards.
+                </fbt>
+              )}
+            </div>
+            {referralReward && (
               <div className="partner-referral-reward mt-2">
                 {referralReward}
               </div>
-            </>
-          ) : (
-            <div>
-              <fbt desc="UserActivation.profileCreatedJourney">
-                You&apos;ve successfully created your profile. You&apos;re now
-                ready to continue your journey in the Origin Marketplace.
-              </fbt>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </>
+        ) : (
+          <div>
+            <fbt desc="UserActivation.profileCreatedJourney">
+              You&apos;ve successfully created your profile. You&apos;re now
+              ready to continue your journey in the Origin Marketplace.
+            </fbt>
+          </div>
+        )}
+      </div>
       <div className="actions mt-auto">
         {referralReward ? (
           <Link
