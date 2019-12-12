@@ -1234,7 +1234,7 @@ class Messaging {
     debug('sendConvMessage', roomIdOrAddress, messageObj)
     if (this._sending_message) {
       debug('ERR: already sending message')
-      return
+      throw new Error('Wait until current message is sent')
     }
     let remoteEthAddress, roomId
     if (this.isRoomId(roomIdOrAddress)) {
@@ -1253,7 +1253,7 @@ class Messaging {
     const convObj = await this.startConv(remoteEthAddress)
     if (!convObj) {
       debug('ERR: no room to send message to')
-      return
+      throw new Error('Could not initiate conversation with the recipient')
     }
 
     const encryptedContent = await this.createEncrypted(
@@ -1278,8 +1278,9 @@ class Messaging {
       //do something different if this succeeds
     } else {
       debug('Err: cannot add message.')
+      this._sending_message = false
+      throw new Error('Failed to add message to conversation')
     }
-    this._sending_message = false
 
     this.markConversationRead(remoteEthAddress)
 

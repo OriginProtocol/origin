@@ -10,6 +10,8 @@ import withConfig from 'hoc/withConfig'
 import { postFile } from 'utils/fileUtils'
 import pasteIntoInput from 'utils/pasteIntoInput'
 
+import ToastMessage from 'components/ToastMessage'
+
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
 async function getImages(config, files) {
@@ -68,13 +70,30 @@ class SendMessage extends Component {
   async sendContent(sendMessage, to) {
     const { message, images } = this.state
 
+    const variables = { to }
+
     if (message.length) {
-      sendMessage({ variables: { to, content: message } })
+      variables.content = message
     } else {
-      sendMessage({ variables: { to, media: images } })
+      variables.media = images
     }
 
-    this.setState({ message: '', images: [] })
+    try {
+      const { data } = await sendMessage({ variables })
+
+      if (!data.sendMessage.success) {
+        throw new Error(
+          data.sendMessage.error || 'Something went wrong. Please try again.'
+        )
+      }
+
+      this.setState({ message: '', images: [] })
+    } catch (err) {
+      console.error(err)
+      this.setState({
+        error: err.message
+      })
+    }
   }
 
   render() {
@@ -82,72 +101,84 @@ class SendMessage extends Component {
     const { images } = this.state
 
     return (
-      <Mutation mutation={mutation}>
-        {sendMessage => (
-          <form
-            className="send-message d-flex"
-            onSubmit={e => this.handleSubmit(e, sendMessage)}
-          >
-            {images.length ? (
-              <div className="images-preview">
-                {images.map(image => (
-                  <div key={image.url} className="images-container">
-                    <img className="img" src={image.url} />
-                    <a
-                      className="image-overlay-btn"
-                      aria-label={fbt('Close', 'SendMessage.close')}
-                      onClick={() => {
-                        this.setState({
-                          images: images.filter(img => img !== image)
-                        })
-                      }}
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </a>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-            {images.length ? null : (
-              <TextareaAutosize
-                className="form-control"
-                placeholder={fbt(
-                  'Type something...',
-                  'SendMessage.placeholder'
-                )}
-                innerRef={this.input}
-                value={this.state.message}
-                onChange={e => this.setState({ message: e.target.value })}
-                onKeyPress={e => this.handleKeyPress(e, sendMessage)}
-              />
-            )}
-            <img
-              src="images/add-photo-icon.svg"
-              className="add-photo"
-              role="presentation"
-              onClick={this.handleClick}
-            />
-            <input
-              type="file"
-              multiple={true}
-              accept="image/jpeg,image/gif,image/png"
-              ref={this.fileInput}
-              className="d-none"
-              onChange={async e => {
-                const newImages = await getImages(config, e.currentTarget.files)
-                this.setState(state => ({
-                  images: [...state.images, ...newImages]
-                }))
-              }}
-            />
-            <button
-              className="btn btn-sm btn-primary btn-rounded"
-              type="submit"
-              children={fbt('Send', 'SendMessage.send')}
-            />
-          </form>
+      <>
+        {this.state.error && (
+          <ToastMessage
+            message={this.state.error}
+            type="danger"
+            onClose={() => this.setState({ error: null })}
+          />
         )}
-      </Mutation>
+        <Mutation mutation={mutation}>
+          {sendMessage => (
+            <form
+              className="send-message d-flex"
+              onSubmit={e => this.handleSubmit(e, sendMessage)}
+            >
+              {images.length ? (
+                <div className="images-preview">
+                  {images.map(image => (
+                    <div key={image.url} className="images-container">
+                      <img className="img" src={image.url} />
+                      <a
+                        className="image-overlay-btn"
+                        aria-label={fbt('Close', 'SendMessage.close')}
+                        onClick={() => {
+                          this.setState({
+                            images: images.filter(img => img !== image)
+                          })
+                        }}
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              {images.length ? null : (
+                <TextareaAutosize
+                  className="form-control"
+                  placeholder={fbt(
+                    'Type something...',
+                    'SendMessage.placeholder'
+                  )}
+                  innerRef={this.input}
+                  value={this.state.message}
+                  onChange={e => this.setState({ message: e.target.value })}
+                  onKeyPress={e => this.handleKeyPress(e, sendMessage)}
+                />
+              )}
+              <img
+                src="images/add-photo-icon.svg"
+                className="add-photo"
+                role="presentation"
+                onClick={this.handleClick}
+              />
+              <input
+                type="file"
+                multiple={true}
+                accept="image/jpeg,image/gif,image/png"
+                ref={this.fileInput}
+                className="d-none"
+                onChange={async e => {
+                  const newImages = await getImages(
+                    config,
+                    e.currentTarget.files
+                  )
+                  this.setState(state => ({
+                    images: [...state.images, ...newImages]
+                  }))
+                }}
+              />
+              <button
+                className="btn btn-sm btn-primary btn-rounded"
+                type="submit"
+                children={fbt('Send', 'SendMessage.send')}
+              />
+            </form>
+          )}
+        </Mutation>
+      </>
     )
   }
 }
