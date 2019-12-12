@@ -143,7 +143,7 @@ class OnboardRewardsSignUp extends Component {
         <div className="help desc mt-3 mb-0 text-center">
           {hasReferralCode() ? (
             <fbt desc="Rewards.almostThere">
-              You&apos;re almost there! Sign up to claim your
+              You&apos;re almost there! Sign up to start earning your tokens.
             </fbt>
           ) : (
             <fbt desc="UserActivation.rewardsDesc">
