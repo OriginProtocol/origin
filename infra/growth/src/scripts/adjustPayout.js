@@ -105,7 +105,7 @@ class AdjustPayout {
       where: {
         toAddress: ethAddress,
         campaignId: campaign.id,
-        type: enums.GrowthPayoutStatuses.Adjustment,
+        type: enums.GrowthPayoutTypes.Adjustment,
         status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
     })
@@ -133,7 +133,7 @@ class AdjustPayout {
       fromAddress: this.distributor.supplier.toLowerCase(),
       toAddress: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
-      type: enums.GrowthPayoutStatuses.Adjustment,
+      type: enums.GrowthPayoutTypes.Adjustment,
       campaignId: campaign.id,
       amount: amountNaturalUnit,
       currency: campaign.currency,
