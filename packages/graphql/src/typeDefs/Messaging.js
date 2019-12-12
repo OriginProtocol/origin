@@ -29,8 +29,14 @@ module.exports = `
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
+    sendMessage(to: String!, content: String, media: [MediaInput]): SendMessageResponse
     markConversationRead(id: String!): MarkReadResult
+  }
+
+  type SendMessageResponse {
+    success: Boolean
+    conversation: Conversation
+    error: String
   }
 
   type MarkReadResult {

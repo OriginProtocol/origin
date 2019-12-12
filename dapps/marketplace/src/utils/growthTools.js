@@ -1,5 +1,5 @@
-import numberFormat from 'utils/numberFormat'
 import get from 'lodash/get'
+import numberFormat from 'utils/numberFormat'
 
 export function getAttestationReward({
   growthCampaigns,
@@ -230,12 +230,24 @@ export function hasReferralCode() {
   return !!localStorage.partner_referral_code
 }
 
-export function getReferralReward(campaign) {
+export function getReferralReward(campaign, campaignConfig) {
   const referralCode = localStorage.partner_referral_code
+
+  if (!referralCode) {
+    return null
+  }
+
+  const codeParts = referralCode.split(':')
+
+  // Invalid code
+  if (codeParts.length < 2) {
+    return null
+  }
 
   const actions = get(campaign, 'actions', [])
 
-  if (!referralCode || !actions.length) {
+  // Invalid campaign
+  if (!actions.length) {
     return null
   }
 
@@ -245,7 +257,17 @@ export function getReferralReward(campaign) {
       (referralCode.startsWith('op') ? 'PartnerReferral' : 'Referral')
   )
 
-  const reward = get(action, 'reward.amount')
+  // if there's no campaign action, nor config for the referral code, there's
+  // no point in continuing
+  if (
+    !action ||
+    !Object.prototype.hasOwnProperty.call(campaignConfig, codeParts[1]) ||
+    campaignConfig[codeParts[1]].reward.currency !== 'ogn'
+  ) {
+    return null
+  }
+
+  const reward = campaignConfig[codeParts[1]].reward.value
 
   if (!reward) {
     return null
