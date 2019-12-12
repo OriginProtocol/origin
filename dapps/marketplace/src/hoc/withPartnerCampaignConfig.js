@@ -23,7 +23,7 @@ function withPartnerCampaignConfig(WrappedComponent) {
       if (cachedCampaigns && Object.keys(cachedCampaigns).length) {
         return
       } else {
-        setTimeout(async () => {
+        timeout = setTimeout(async () => {
           setPartnerConfig(await fetchConfig())
         }, 3000)
       }
@@ -31,7 +31,7 @@ function withPartnerCampaignConfig(WrappedComponent) {
       return () => {
         clearTimeout(timeout)
       }
-    })
+    }, [])
 
     return (
       <WrappedComponent
