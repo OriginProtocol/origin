@@ -105,6 +105,7 @@ class AdjustPayout {
       where: {
         toAddress: ethAddress,
         campaignId: campaign.id,
+        type: enums.GrowthPayoutStatuses.Adjustment,
         status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
     })
