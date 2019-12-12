@@ -19,8 +19,8 @@ function withPartnerCampaignConfig(WrappedComponent) {
             console.error('Failed to fetch campaign config')
             return
           }
-          cachedCampaigns = await resp.json()
-          setPartnerConfig(cachedCampaigns)
+          const jason = await resp.json()
+          setPartnerConfig(jason)
         }, 3000)
       }
 
