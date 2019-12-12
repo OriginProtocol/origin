@@ -40,6 +40,7 @@ const Finished = ({
         onCompleted={() => {
           setFinished(true)
         }}
+        enrolled={enrolled}
         referralReward={enrolled ? formattedReward : null}
       />
     </div>
