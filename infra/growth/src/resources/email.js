@@ -288,7 +288,7 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
     ethAddress,
     amount,
     txLink: `https://etherscan.io/tx/${txHash}`,
-    campaignLink: 'https://shoporigin.com/#/welcome'
+    campaignLink: 'https://shoporigin.com'
   }
   const { subject, text, html } = generateEmail('payout', vars)
 
