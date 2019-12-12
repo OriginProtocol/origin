@@ -15,7 +15,7 @@ function withPartnerCampaignConfig(WrappedComponent) {
       } else {
         setTimeout(async () => {
           const resp = await fetch(PARNTER_REFERRAL_CONFIG_URL)
-          if (resp !== 200) {
+          if (resp.status !== 200) {
             console.error('Failed to fetch campaign config')
             return
           }
