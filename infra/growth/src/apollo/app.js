@@ -82,7 +82,7 @@ const server = new ApolloServer({
           authToken = status.authToken
 
           authorized = true
-          walletAddress = authData.address
+          walletAddress = authData.address.toLowerCase()
         } catch (e) {
           logger.error(
             'Authorization header present but unable to authenticate user',
