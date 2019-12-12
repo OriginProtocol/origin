@@ -50,7 +50,7 @@ class PinScreen extends Component {
           // Pin was verified
           this.props.setPin(this.state.pin)
           const { referralCode } = this.props.settings
-          if (referralCode && referralCode.startsWith('op:')) {
+          if (referralCode) {
             this.props.navigation.navigate('PartnerWelcome')
           } else {
             this.props.navigation.navigate('Main')

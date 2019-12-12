@@ -12,63 +12,83 @@ import WaitForTransaction from 'components/WaitForTransaction'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 
+import ToastMessage from 'components/ToastMessage'
+
 class DisputeOffer extends Component {
   state = { problem: '' }
   render() {
     return (
-      <Mutation mutation={SendMessage}>
-        {sendMessage => (
-          <Mutation
-            mutation={DisputeOfferMutation}
-            onCompleted={({ disputeOffer }) => {
-              this.setState({ waitFor: disputeOffer.id })
-              sendMessage({
-                variables: {
-                  to: this.props.offer.arbitrator.id,
-                  content: this.state.problem
-                }
-              })
-            }}
-            onError={errorData =>
-              this.setState({ waitFor: false, error: 'mutation', errorData })
-            }
-          >
-            {(disputeOffer, { client }) => (
-              <>
-                <button
-                  className={this.props.className}
-                  onClick={() => this.setState({ sure: true })}
-                  children={this.props.children}
-                />
-                {!this.state.sure ? null : (
-                  <Modal
-                    onClose={() =>
-                      this.setState({
-                        sure: false,
-                        sureShouldClose: false,
-                        describe: false
-                      })
-                    }
-                    shouldClose={this.state.sureShouldClose}
-                  >
-                    {this.state.describe
-                      ? this.renderDescribe(disputeOffer)
-                      : this.renderIsProblem()}
-                  </Modal>
-                )}
-                {this.renderWaitModal(client)}
-                {this.state.error && (
-                  <TransactionError
-                    reason={this.state.error}
-                    data={this.state.errorData}
-                    onClose={() => this.setState({ error: false })}
-                  />
-                )}
-              </>
-            )}
-          </Mutation>
+      <>
+        {this.state.messageError && (
+          <ToastMessage
+            message={this.state.messageError}
+            type="danger"
+            onClose={() => this.setState({ messageError: null })}
+          />
         )}
-      </Mutation>
+        <Mutation mutation={SendMessage}>
+          {sendMessage => (
+            <Mutation
+              mutation={DisputeOfferMutation}
+              onCompleted={async ({ disputeOffer }) => {
+                this.setState({ waitFor: disputeOffer.id })
+                const { data } = await sendMessage({
+                  variables: {
+                    to: this.props.offer.arbitrator.id,
+                    content: this.state.problem
+                  }
+                })
+
+                if (!data.sendMessage.success) {
+                  this.setState({
+                    messageError:
+                      data.sendMessage.error ||
+                      'Something went wrong. Please try again.'
+                  })
+                  return
+                }
+              }}
+              onError={errorData =>
+                this.setState({ waitFor: false, error: 'mutation', errorData })
+              }
+            >
+              {(disputeOffer, { client }) => (
+                <>
+                  <button
+                    className={this.props.className}
+                    onClick={() => this.setState({ sure: true })}
+                    children={this.props.children}
+                  />
+                  {!this.state.sure ? null : (
+                    <Modal
+                      onClose={() =>
+                        this.setState({
+                          sure: false,
+                          sureShouldClose: false,
+                          describe: false
+                        })
+                      }
+                      shouldClose={this.state.sureShouldClose}
+                    >
+                      {this.state.describe
+                        ? this.renderDescribe(disputeOffer)
+                        : this.renderIsProblem()}
+                    </Modal>
+                  )}
+                  {this.renderWaitModal(client)}
+                  {this.state.error && (
+                    <TransactionError
+                      reason={this.state.error}
+                      data={this.state.errorData}
+                      onClose={() => this.setState({ error: false })}
+                    />
+                  )}
+                </>
+              )}
+            </Mutation>
+          )}
+        </Mutation>
+      </>
     )
   }
 
