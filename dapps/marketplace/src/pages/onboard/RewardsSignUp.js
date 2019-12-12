@@ -1,26 +1,27 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
+
+import MobileModal from 'components/MobileModal'
+import Redirect from 'components/Redirect'
+import HelpOriginWallet from 'components/DownloadApp'
+import LoadingSpinner from 'components/LoadingSpinner'
+
+import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
-import MobileModal from 'components/MobileModal'
-import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
-import Redirect from 'components/Redirect'
-import { fbt } from 'fbt-runtime'
-import HelpOriginWallet from 'components/DownloadApp'
-import ListingPreview from './_ListingPreview'
-import HelpProfile from './_HelpProfile'
-
-import LoadingSpinner from 'components/LoadingSpinner'
-
-import Store from 'utils/store'
-
 import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
+import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
 
 import {
   formatTokens,
   hasReferralCode,
   getReferralReward
 } from 'utils/growthTools'
+import Store from 'utils/store'
+
+import ListingPreview from './_ListingPreview'
+import HelpProfile from './_HelpProfile'
 
 const localStore = Store('localStorage')
 
@@ -38,7 +39,10 @@ class OnboardRewardsSignUp extends Component {
   }
 
   getReferralReward() {
-    const reward = getReferralReward(this.props.activeGrowthCampaign)
+    const reward = getReferralReward(
+      this.props.activeGrowthCampaign,
+      this.props.partnerCampaignConfig
+    )
 
     if (!reward) {
       return null
@@ -241,7 +245,7 @@ class OnboardRewardsSignUp extends Component {
 }
 
 export default withActiveGrowthCampaign(
-  withIsMobile(withWallet(OnboardRewardsSignUp))
+  withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
 )
 
 require('react-styl')(`
