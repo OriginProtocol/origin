@@ -4,8 +4,12 @@ import { PARNTER_REFERRAL_CONFIG_URL } from 'constants/config'
 
 let cachedCampaigns = {}
 
-async function fetchConfig() {
-  const resp = await fetch(PARNTER_REFERRAL_CONFIG_URL)
+async function fetchConfig(signal) {
+  if (Object.keys(cachedCampaigns).length) {
+    return cachedCampaigns
+  }
+
+  const resp = await fetch(PARNTER_REFERRAL_CONFIG_URL, { signal })
   if (resp.status !== 200) {
     console.error('Failed to fetch campaign config')
     return
@@ -19,18 +23,15 @@ function withPartnerCampaignConfig(WrappedComponent) {
     const [partnerConfig, setPartnerConfig] = useState(cachedCampaigns)
 
     useEffect(() => {
-      let timeout
-      if (cachedCampaigns && Object.keys(cachedCampaigns).length) {
-        return
-      } else {
-        timeout = setTimeout(async () => {
-          setPartnerConfig(await fetchConfig())
-        }, 3000)
-      }
+      const abortController = new AbortController()
 
-      return () => {
-        clearTimeout(timeout)
-      }
+      fetchConfig(abortController.signal)
+        .then(data => setPartnerConfig(data))
+        .catch(() => {
+          // Probably aborted, do nothing
+        })
+
+      return () => abortController.abort()
     }, [])
 
     return (
