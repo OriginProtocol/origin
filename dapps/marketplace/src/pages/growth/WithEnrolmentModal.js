@@ -759,7 +759,7 @@ require('react-styl')(`
       display: block
       position: relative
       padding-left: 28px
-      margin-bottom: 0px
+      margin: 0 10px 0 10px
       cursor: pointer
       font-size: 18px
       -webkit-user-select: none
@@ -796,6 +796,8 @@ require('react-styl')(`
         transform: rotate(45deg)
     .country-check-label
       font-weight: 300
+      padding-left: 25px
+      padding-right: 25px
     .terms-title
       font-weight: 500
       color: black

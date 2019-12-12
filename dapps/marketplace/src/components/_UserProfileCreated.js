@@ -35,22 +35,11 @@ const UserProfileCreated = ({ onCompleted, isMobile, referralReward }) => {
         {referralReward ? (
           <>
             <Link
-              to="/welcome"
+              to="/campaigns"
               className="btn btn-primary btn-rounded mt-5 mb-3 mx-md-3"
             >
               <fbt desc="UserActivation.earnMore">Earn more OGN</fbt>
             </Link>
-            <button
-              type="button"
-              onClick={e => {
-                e.preventDefault()
-                if (onCompleted) {
-                  onCompleted()
-                }
-              }}
-              className="btn btn-dark btn-rounded mb-3 mx-md-3"
-              children={fbt('Go to Marketplace', 'Go to Marketplace')}
-            />
           </>
         ) : (
           <button
