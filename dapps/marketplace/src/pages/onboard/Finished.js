@@ -3,17 +3,18 @@ import React, { useState } from 'react'
 import Redirect from 'components/Redirect'
 import UserProfileCreated from 'components/_UserProfileCreated'
 
+import withEnrolmentStatus from 'hoc/withEnrolmentStatus'
 import withActiveGrowthCampaign from 'hoc/withActiveGrowthCampaign'
+import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
 
 import { formatTokens, getReferralReward } from 'utils/growthTools'
-
-import withEnrolmentStatus from 'hoc/withEnrolmentStatus'
 
 const Finished = ({
   linkPrefix,
   redirectto,
   activeGrowthCampaign,
-  growthEnrollmentStatus
+  growthEnrollmentStatus,
+  partnerCampaignConfig
 }) => {
   const continueTo = redirectto ? redirectto : `${linkPrefix}/onboard/back`
 
@@ -24,8 +25,7 @@ const Finished = ({
   }
 
   const enrolled = growthEnrollmentStatus === 'Enrolled'
-
-  const reward = getReferralReward(activeGrowthCampaign)
+  const reward = getReferralReward(activeGrowthCampaign, partnerCampaignConfig)
 
   const formattedReward = !reward ? null : `${formatTokens(reward)} OGN`
 
@@ -41,7 +41,9 @@ const Finished = ({
   )
 }
 
-export default withEnrolmentStatus(withActiveGrowthCampaign(Finished))
+export default withEnrolmentStatus(
+  withActiveGrowthCampaign(withPartnerCampaignConfig(Finished))
+)
 
 require('react-styl')(`
   .onboard .finished

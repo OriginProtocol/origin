@@ -178,7 +178,7 @@ async function getUserAuthStatusAndToken(address) {
 
   return {
     authStatus,
-    authToken: growthParticipant.authStatus
+    authToken: growthParticipant.authToken
   }
 }
 
