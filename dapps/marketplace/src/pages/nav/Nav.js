@@ -60,7 +60,7 @@ const getTitle = pathname => {
 }
 
 const Nav = ({
-  location: { pathname, state: locationState },
+  location: { pathname, state: locationState, search },
   isMobile,
   wallet,
   isOriginWallet,
@@ -173,7 +173,15 @@ const Nav = ({
           }`}
         >
           {isStacked && (
-            <a className="nav-back-icon" onClick={() => history.goBack()} />
+            <a className="nav-back-icon" onClick={() => {
+              const searchParams = new URLSearchParams(search)
+              const actionSource = searchParams.get('actionsource')
+              if (actionSource) {
+                history.push(actionSource)
+              } else {
+                history.goBack()
+              }
+            }} />
           )}
           {!isStacked && (
             <Mobile

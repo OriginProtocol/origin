@@ -182,8 +182,21 @@ class OnboardProfile extends Component {
   }
 
   renderSignTxModal() {
-    const { walletType } = this.props
+    const { walletType, isOriginWallet } = this.props
     const { shouldCloseSignTxModal } = this.state
+
+    if (isOriginWallet) {
+      return <AutoMutate mutation={() => {
+        if (this.state.deployIdentity) {
+          return
+        }
+
+        this.setState({
+          deployIdentity: true,
+          signTxModal: false
+        })
+      }} />
+    }
 
     return (
       <MobileModal

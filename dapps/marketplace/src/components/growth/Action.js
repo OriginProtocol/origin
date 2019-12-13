@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { formatTokens, getContentToShare } from 'utils/growthTools'
 
 import TelegramGroupNameQuery from 'queries/TelegramGroupName'
@@ -141,57 +141,59 @@ function Action(props) {
     window.scrollTo(0, 0)
   }
 
+  const redirectTo = '?actionsource=' + encodeURIComponent(props.location.pathname)
+
   if (type === 'Email') {
     foregroundImgSrc = 'images/growth/email-icon.svg'
     title = fbt('Verify your email address', 'RewardActions.emailTitle')
-    buttonLink = '/profile/email'
+    buttonLink = '/profile/email' + redirectTo
   } else if (type === 'Profile') {
     foregroundImgSrc = 'images/growth/profile-icon.svg'
     title = fbt('Add name and photo to profile', 'RewardActions.profileTitle')
   } else if (type === 'Phone') {
     foregroundImgSrc = 'images/growth/phone-icon.svg'
     title = fbt('Verify your phone number', 'RewardActions.phoneTitle')
-    buttonLink = '/profile/phone'
+    buttonLink = '/profile/phone' + redirectTo
   } else if (type === 'Twitter') {
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
     title = fbt('Verify your Twitter account', 'RewardActions.twitterTitle')
-    buttonLink = '/profile/twitter'
+    buttonLink = '/profile/twitter' + redirectTo
   } else if (type === 'Airbnb') {
     foregroundImgSrc = 'images/growth/airbnb-icon.svg'
     title = fbt('Verify your Airbnb account', 'RewardActions.airbnbTitle')
-    buttonLink = '/profile/airbnb'
+    buttonLink = '/profile/airbnb' + redirectTo
   } else if (type === 'Facebook') {
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Verify your Facebook account', 'RewardActions.facebookTitle')
-    buttonLink = '/profile/facebook'
+    buttonLink = '/profile/facebook' + redirectTo
   } else if (type === 'Google') {
     foregroundImgSrc = 'images/growth/google-icon.svg'
     title = fbt('Verify your Google account', 'RewardActions.googleTitle')
-    buttonLink = '/profile/google'
+    buttonLink = '/profile/google' + redirectTo
   } else if (type === 'Kakao') {
     foregroundImgSrc = 'images/growth/kakao-icon.svg'
     title = fbt('Verify your Kakao account', 'RewardActions.kakaoTitle')
-    buttonLink = '/profile/kakao'
+    buttonLink = '/profile/kakao' + redirectTo
   } else if (type === 'WeChat') {
     foregroundImgSrc = 'images/growth/wechat-icon.svg'
     title = fbt('Verify your Wechat account', 'RewardActions.wechatTitle')
-    buttonLink = '/profile/wechat'
+    buttonLink = '/profile/wechat' + redirectTo
   } else if (type === 'GitHub') {
     foregroundImgSrc = 'images/growth/github-icon.svg'
     title = fbt('Verify your GitHub account', 'RewardActions.githubTitle')
-    buttonLink = '/profile/github'
+    buttonLink = '/profile/github' + redirectTo
   } else if (type === 'LinkedIn') {
     foregroundImgSrc = 'images/growth/linkedin-icon.svg'
     title = fbt('Verify your LinkedIn account', 'RewardActions.linkedInTitle')
-    buttonLink = '/profile/linkedin'
+    buttonLink = '/profile/linkedin' + redirectTo
   } else if (type === 'Telegram') {
     foregroundImgSrc = 'images/growth/telegram-badge.svg'
     title = fbt('Verify your Telegram account', 'RewardActions.telegramTitle')
-    buttonLink = '/profile/telegram'
+    buttonLink = '/profile/telegram' + redirectTo
   } else if (type === 'Website') {
     foregroundImgSrc = 'images/growth/website-icon.svg'
     title = fbt('Verify your website', 'RewardActions.websiteTitle')
-    buttonLink = '/profile/website'
+    buttonLink = '/profile/website' + redirectTo
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a listing', 'RewardActions.listingCreatedTitle')
@@ -398,7 +400,7 @@ function Action(props) {
   )
 }
 
-export default Action
+export default withRouter(Action)
 
 require('react-styl')(`
   .growth-campaigns.container

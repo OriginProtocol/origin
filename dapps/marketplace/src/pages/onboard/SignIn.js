@@ -20,7 +20,8 @@ const OnboardSignIn = ({
   linkPrefix,
   isLoggedIn,
   isMobile,
-  walletLoading
+  walletLoading,
+  authStatusLoading
 }) => {
   const [completed, setCompleted] = useState(false)
 
@@ -36,7 +37,7 @@ const OnboardSignIn = ({
     return <Redirect to={`${linkPrefix}/onboard/email`} />
   }
 
-  if (walletLoading) {
+  if (walletLoading || authStatusLoading) {
     return <LoadingSpinner />
   }
 

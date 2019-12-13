@@ -66,11 +66,13 @@ class OnboardEmail extends Component {
       wallet,
       isOriginWallet,
       hasMessagingKeys,
-      messagingStatusLoading
+      messagingStatusLoading,
+      identityLoading,
+      walletLoading
     } = this.props
     const { finished, hasIdentity } = this.state
 
-    if (messagingStatusLoading) {
+    if (messagingStatusLoading || identityLoading || walletLoading) {
       return <LoadingSpinner />
     }
 
