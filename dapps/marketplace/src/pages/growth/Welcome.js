@@ -4,13 +4,16 @@ import get from 'lodash/get'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
-import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
-import withIsMobile from 'hoc/withIsMobile'
-import inviteInfoQuery from 'queries/InviteInfo'
-import DocumentTitle from 'components/DocumentTitle'
 import Onboard from 'pages/onboard/Onboard'
+
+import DocumentTitle from 'components/DocumentTitle'
 import Link from 'components/Link'
+
+import withIsMobile from 'hoc/withIsMobile'
+
+import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
+import inviteInfoQuery from 'queries/InviteInfo'
 
 class GrowthWelcome extends Component {
   constructor(props) {
