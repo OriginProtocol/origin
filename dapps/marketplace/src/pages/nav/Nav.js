@@ -173,15 +173,18 @@ const Nav = ({
           }`}
         >
           {isStacked && (
-            <a className="nav-back-icon" onClick={() => {
-              const searchParams = new URLSearchParams(search)
-              const actionSource = searchParams.get('actionsource')
-              if (actionSource) {
-                history.push(actionSource)
-              } else {
-                history.goBack()
-              }
-            }} />
+            <a
+              className="nav-back-icon"
+              onClick={() => {
+                const searchParams = new URLSearchParams(search)
+                const actionSource = searchParams.get('actionsource')
+                if (actionSource) {
+                  history.push(actionSource)
+                } else {
+                  history.goBack()
+                }
+              }}
+            />
           )}
           {!isStacked && (
             <Mobile

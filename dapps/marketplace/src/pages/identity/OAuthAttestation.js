@@ -109,7 +109,9 @@ class OAuthAttestation extends Component {
     const { search } = this.props.location
     const { provider } = this.props
     const redirect = isMobile
-      ? encodeURIComponent(`${origin}${pathname}#/profile/${provider}${search ? search : ''}`)
+      ? encodeURIComponent(
+          `${origin}${pathname}#/profile/${provider}${search ? search : ''}`
+        )
       : null
 
     const ModalComp = isMobile ? MobileModal : Modal
@@ -135,7 +137,9 @@ class OAuthAttestation extends Component {
           })
 
           this.props.onClose(completed)
-          this.props.history.replace(`/profile/${provider}${search ? search : ''}`)
+          this.props.history.replace(
+            `/profile/${provider}${search ? search : ''}`
+          )
         }}
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}

@@ -364,10 +364,7 @@ class UserProfile extends Component {
   }
 
   hasAttestationParam() {
-    const activeAttestation = get(
-      this.props,
-      'match.params.attestation'
-    )
+    const activeAttestation = get(this.props, 'match.params.attestation')
 
     return !!activeAttestation
   }
@@ -384,7 +381,6 @@ class UserProfile extends Component {
     } else {
       this.props.history.goBack()
     }
-
   }
 
   renderAttestationComponents() {
@@ -405,7 +401,6 @@ class UserProfile extends Component {
               [providerName]: false
             }
 
-            
             if (!completed) {
               if (this.hasAttestationParam()) {
                 // We have active provider appeneded to the URL

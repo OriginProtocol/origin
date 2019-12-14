@@ -141,7 +141,8 @@ function Action(props) {
     window.scrollTo(0, 0)
   }
 
-  const redirectTo = '?actionsource=' + encodeURIComponent(props.location.pathname)
+  const redirectTo =
+    '?actionsource=' + encodeURIComponent(props.location.pathname)
 
   if (type === 'Email') {
     foregroundImgSrc = 'images/growth/email-icon.svg'
