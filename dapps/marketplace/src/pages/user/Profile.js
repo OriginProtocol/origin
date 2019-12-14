@@ -363,6 +363,26 @@ class UserProfile extends Component {
     )
   }
 
+  hasAttestationParam() {
+    const activeAttestation = get(this.props, 'match.params.attestation')
+
+    return !!activeAttestation
+  }
+
+  goBack() {
+    const { search } = this.props.location
+
+    const searchParams = new URLSearchParams(search)
+
+    const actionSource = searchParams.get('actionsource')
+
+    if (actionSource) {
+      this.props.history.push(actionSource)
+    } else {
+      this.props.history.goBack()
+    }
+  }
+
   renderAttestationComponents() {
     return this.props.attestationProviders.map(providerName => {
       const AttestationComponent = AttestationComponents[providerName]
@@ -382,14 +402,11 @@ class UserProfile extends Component {
             }
 
             if (!completed) {
-              const activeAttestation = get(
-                this.props,
-                'match.params.attestation'
-              )
-              if (activeAttestation) {
+              if (this.hasAttestationParam()) {
                 // We have active provider appeneded to the URL
                 // Most likely, user navigated directly to here
-                this.props.history.goBack()
+                this.goBack()
+                return
               }
               // Show the verify modal only if the user closes
               // the attestation modal without making a change
@@ -432,6 +449,13 @@ class UserProfile extends Component {
         autoDeploy={true}
         skipSuccessScreen={true}
         onComplete={() => {
+          if (this.hasAttestationParam()) {
+            // We have active provider appeneded to the URL
+            // Most likely, user navigated directly to here
+            this.goBack()
+            return
+          }
+
           this.showDeploySuccessMessage(this.state.deployIdentity)
           this.props.identityRefetch()
           this.setState({

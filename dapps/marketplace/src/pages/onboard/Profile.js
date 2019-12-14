@@ -13,6 +13,7 @@ import EditProfile from 'pages/user/_EditProfile'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import Redirect from 'components/Redirect'
+import AutoMutate from 'components/AutoMutate'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
@@ -182,8 +183,25 @@ class OnboardProfile extends Component {
   }
 
   renderSignTxModal() {
-    const { walletType } = this.props
+    const { walletType, isOriginWallet } = this.props
     const { shouldCloseSignTxModal } = this.state
+
+    if (isOriginWallet) {
+      return (
+        <AutoMutate
+          mutation={() => {
+            if (this.state.deployIdentity) {
+              return
+            }
+
+            this.setState({
+              deployIdentity: true,
+              signTxModal: false
+            })
+          }}
+        />
+      )
+    }
 
     return (
       <MobileModal

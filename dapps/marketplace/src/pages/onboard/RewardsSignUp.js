@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
 import MobileModal from 'components/MobileModal'
 import Redirect from 'components/Redirect'
@@ -11,6 +12,7 @@ import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
+import { withRouter } from 'react-router-dom'
 
 import { hasReferralCode, getReferralReward } from 'utils/growthTools'
 import Store from 'utils/store'
@@ -33,6 +35,29 @@ class OnboardRewardsSignUp extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.shouldGoBack) {
+      return
+    }
+
+    const { walletLoading, wallet } = this.props
+
+    const onboardCompleted = walletLoading
+      ? false
+      : localStore.get(`${wallet}-onboarding-completed`)
+    const isFromWelcomePage = get(this.props, 'location.pathname', '')
+      .toLowerCase()
+      .startsWith('/welcome')
+
+    if (onboardCompleted || isFromWelcomePage) {
+      // If user went into onboarding from Rewards landing page,
+      // Redirect them to there during this step
+      return this.setState({
+        shouldGoBack: true
+      })
+    }
+  }
+
   getReferralReward() {
     const reward = getReferralReward(this.props.partnerCampaignConfig)
 
@@ -47,7 +72,8 @@ class OnboardRewardsSignUp extends Component {
     const {
       finished,
       confirmSkipModal,
-      shouldCloseConfirmSkipModal
+      shouldCloseConfirmSkipModal,
+      shouldGoBack
     } = this.state
 
     const {
@@ -63,9 +89,7 @@ class OnboardRewardsSignUp extends Component {
       return <LoadingSpinner />
     }
 
-    const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
-
-    if (onboardCompleted) {
+    if (shouldGoBack) {
       // Back to where you came from.
       return <Redirect to={`${linkPrefix}/onboard/back`} />
     }
@@ -239,8 +263,8 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withPartnerCampaignConfig(
-  withIsMobile(withWallet(OnboardRewardsSignUp))
+export default withRouter(
+  withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
 )
 
 require('react-styl')(`
