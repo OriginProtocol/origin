@@ -12,7 +12,7 @@ const ReferralRedirect = ({ match }) => {
   const [redirect, setRedirect] = useState(false)
 
   useEffect(() => {
-    if (inviteCode && inviteCode.length === 11) {
+    if (inviteCode && (inviteCode.length < 7 || inviteCode.length > 11)) {
       localStorage.setItem(localStorageKey, inviteCode)
     } else {
       console.warn('Skipping invalid invite code')
