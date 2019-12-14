@@ -35,10 +35,12 @@ import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
+
+import ReferralRedirect from './ReferralRedirect'
+
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
-
 import { setReferralCode } from 'utils/growthTools'
 
 class App extends Component {
@@ -178,6 +180,9 @@ class App extends Component {
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
+
+            <Route path="/referral/:inviteCode" component={ReferralRedirect} />
+
             <Route path="/search" component={Listings} />
             <Route component={Listings} />
           </Switch>
