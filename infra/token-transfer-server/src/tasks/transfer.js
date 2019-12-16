@@ -13,9 +13,7 @@ const enums = require('../enums')
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
 
-  let transferTask
-
-  await sequelize.transaction(
+  const transferTask = await sequelize.transaction(
     { isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE },
     async txn => {
       const outstandingTasks = await TransferTask.findAll(
@@ -27,9 +25,10 @@ const executeTransfers = async () => {
         { transaction: txn }
       )
       if (outstandingTasks.length > 0) {
-        throw new Error(
+        logger.warn(
           `Found incomplete transfer task(s), wait for completion or clean up manually.`
         )
+        return false
       }
 
       const waitingTransfers = await Transfer.findAll(
@@ -48,13 +47,14 @@ const executeTransfers = async () => {
         { transaction: txn }
       )
       if (waitingTransfers.length > 0) {
-        throw new Error(
+        logger.warn(
           `Found unconfirmed transfer(s). Fix before running this script again.`
         )
+        return false
       }
 
-      transferTask = await TransferTask.create(
       const now = moment.utc()
+      return await TransferTask.create(
         {
           start: now,
           created_at: now,
@@ -64,6 +64,8 @@ const executeTransfers = async () => {
       )
     }
   )
+
+  if (!transferTask) return
 
   const cutoffTime = moment.utc().subtract(largeTransferDelayMinutes, 'minutes')
   const transfers = await Transfer.findAll({

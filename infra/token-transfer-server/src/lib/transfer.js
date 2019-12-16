@@ -64,7 +64,7 @@ async function addTransfer(userId, address, amount, data = {}) {
   }
 
   logger.info(
-    `Added transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
+    `Transfer ${transfer.id} requested to ${address} by ${user.email} for ${amount}, pending email confirmation`
   )
 
   await sendTransferConfirmationEmail(transfer, user)
@@ -162,6 +162,10 @@ async function confirmTransfer(transfer, user) {
     )
   }
 
+  logger.info(
+    `Transfer ${transfer.id} was confirmed by email token for ${user.email}`
+  )
+
   return true
 }
 
@@ -180,7 +184,6 @@ async function executeTransfer(transfer, transferTaskId) {
 
   // Setup token library
   const token = new Token(networkId)
-
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
@@ -199,6 +202,10 @@ async function executeTransfer(transfer, transferTaskId) {
     )
     return { txHash: null, txStatus: enums.TransferStatuses.Failed }
   }
+
+  logger.info(
+    `Transfer ${transfer.id} processed with hash ${txHash}, waiting for confirmation`
+  )
 
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
