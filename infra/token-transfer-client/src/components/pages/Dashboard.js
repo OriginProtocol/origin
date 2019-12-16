@@ -93,6 +93,7 @@ const Dashboard = props => {
             isLocked={isLocked}
             unlockDate={unlockDate}
             onDisplayBonusModal={() => setDisplayBonusModal(true)}
+            onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
       </div>
