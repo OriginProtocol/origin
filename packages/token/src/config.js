@@ -78,7 +78,7 @@ function createProvider(networkId) {
       if (!privateKey && !mnemonic) {
         throw 'Must have either ORIGIN_PRIVATE_KEY or ORIGIN_MNEMONIC env var'
       }
-      providerUrl = 'https://eth.dev.originprotocol.com/rpc'
+      providerUrl = 'https://testnet.originprotocol.com/rpc'
       break
     default:
       throw `Unsupported network id ${networkId}`
