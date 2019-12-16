@@ -54,8 +54,11 @@ const executeTransfers = async () => {
       }
 
       transferTask = await TransferTask.create(
+      const now = moment.utc()
         {
-          start: moment.utc()
+          start: now,
+          created_at: now,
+          updated_at: now
         },
         { transaction: txn }
       )
