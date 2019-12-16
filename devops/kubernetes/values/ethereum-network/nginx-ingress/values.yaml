@@ -10,3 +10,4 @@ controller:
   extraArgs:
     enable-ssl-chain-completion: false
     force-namespace-isolation: true
+    watch-namespace: default
