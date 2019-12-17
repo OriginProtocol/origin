@@ -207,14 +207,11 @@ describe('Execute transfers', () => {
   })
 
   // TODO
-  it('should record success when checking block confirmation', async () => {
-  })
+  it('should record success when checking block confirmation', async () => {})
 
   // TODO
-  it('should record failure when checking block confirmation', async () => {
-  })
+  it('should record failure when checking block confirmation', async () => {})
 
   // TODO
-  it('should record timeout when checking block confirmation', async () => {
-  })
+  it('should record timeout when checking block confirmation', async () => {})
 })

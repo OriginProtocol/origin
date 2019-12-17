@@ -206,9 +206,7 @@ async function executeTransfer(transfer, transferTaskId) {
     return false
   }
 
-  logger.info(
-    `Transfer ${transfer.id} processed with hash ${txHash}`
-  )
+  logger.info(`Transfer ${transfer.id} processed with hash ${txHash}`)
 
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
