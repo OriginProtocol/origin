@@ -11,11 +11,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       start: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false
       },
       end: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATE
       }
     })
   },
