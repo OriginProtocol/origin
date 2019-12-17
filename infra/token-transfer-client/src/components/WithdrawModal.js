@@ -19,6 +19,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
+import { otcRequestEnabled } from '@/constants'
 
 class WithdrawModal extends Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class WithdrawModal extends Component {
     return initialState
   }
 
-  handleTransferFormSubmit = async event => {
+  handleFormSubmit = async event => {
     event.preventDefault()
 
     if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
@@ -154,9 +155,14 @@ class WithdrawModal extends Component {
 
   render() {
     return (
-      <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
+      <Modal
+        className="modal-lg"
+        appendToId="main"
+        onClose={this.handleModalClose}
+        closeBtn={true}
+      >
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
-        {this.state.modalState === 'Form' && this.renderTransferForm()}
+        {this.state.modalState === 'Form' && this.renderForm()}
         {this.state.modalState === 'TwoFactor' && this.renderTwoFactor()}
         {this.state.modalState === 'CheckEmail' && this.renderCheckEmail()}
       </Modal>
@@ -166,30 +172,65 @@ class WithdrawModal extends Component {
   renderDisclaimer() {
     return (
       <>
-        <h1 className="mb-2">Withdraw OGN</h1>
-        <div className="alert alert-warning m-4">
-          This transaction is not reversible and we cannot help you recover
-          these funds
+        <h1 className="mb-4">Withdraw OGN</h1>
+        <div className="alert alert-warning my-2 mx-4">
+          This transaction is <strong>not reversible</strong> and we{' '}
+          <strong>cannot help you recover these funds</strong> once you take
+          custody
         </div>
-        <ul className="my-4 mx-2 text-left">
-          <li className="mt-1">
-            You will need to confirm your withdrawal via email within five
-            minutes of making a request.
-          </li>
-          <li className="mt-1">
-            Be sure that only you have access to your account and that your
-            private key or seed phrase is backed up and stored safely.
-          </li>
-          <li className="mt-1">
-            Do not send any funds back to the account that they are sent from.
-          </li>
-          <li className="mt-1">
-            Large withdrawals may be delayed and will require a phone call for
-            verification.
-          </li>
-        </ul>
+        <div className="row">
+          <div className="col">
+            <ul className="my-4 mx-2 text-left">
+              <li className="mt-1">
+                You will need to <strong>confirm your withdrawal</strong> via
+                email within <strong>five minutes</strong> of making a request.
+              </li>
+              <li className="mt-1">
+                Be sure that <strong>only you</strong> have access to your
+                account and that your{' '}
+                <strong>private key or seed phrase is backed up</strong> and
+                stored safely.
+              </li>
+              <li className="mt-1">
+                Do not send any funds back to the account that they are sent
+                from.
+              </li>
+              <li className="mt-1">
+                Large withdrawals <strong>may be delayed</strong> and will
+                require a <strong>phone call for verification.</strong>
+              </li>
+            </ul>
+          </div>
+          {otcRequestEnabled && (
+            <div className="col">
+              <div
+                className="card text-left p-4 mt-4 mr-3"
+                style={{ backgroundColor: '#eff6f9' }}
+              >
+                <strong>Looking to buy or sell a large quantity of OGN?</strong>
+                <br />
+                <p>
+                  Try an OTC (over-the-counter) trade. OTC trades oftentimes
+                  result in a better overall price for large sellers.
+                </p>
+                <strong>
+                  <a
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault()
+                      this.handleModalClose()
+                      this.props.onCreateOtcRequest()
+                    }}
+                  >
+                    Create OTC Request &gt;
+                  </a>
+                </strong>
+              </div>
+            </div>
+          )}
+        </div>
         <button
-          className="btn btn-primary btn-lg mt-5"
+          className="btn btn-primary btn-lg mt-3"
           onClick={() => this.setState({ modalState: 'Form' })}
         >
           Continue
@@ -198,14 +239,14 @@ class WithdrawModal extends Component {
     )
   }
 
-  renderTransferForm() {
+  renderForm() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
       <>
         <h1 className="mb-2">Withdraw OGN</h1>
-        <form onSubmit={this.handleTransferFormSubmit}>
+        <form onSubmit={this.handleFormSubmit}>
           <div className="form-group">
             <label htmlFor="amount">Amount of Tokens</label>
             <div className="input-group">
