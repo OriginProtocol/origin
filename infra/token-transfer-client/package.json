@@ -69,7 +69,7 @@
     "redux-thunk": "2.3.0",
     "resolve": "1.13.1",
     "sass-loader": "8.0.0",
-    "semver": "7.0.0",
+    "semver": "7.1.0",
     "style-loader": "1.0.1",
     "superagent": "5.1.2",
     "swiper": "5.2.1",
@@ -79,7 +79,7 @@
     "typeface-poppins": "0.0.72",
     "url-loader": "3.0.0",
     "web3-utils": "^1.2.4",
-    "webpack": "4.41.2",
+    "webpack": "4.41.3",
     "webpack-dev-server": "3.9.0",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1"
