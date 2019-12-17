@@ -13,15 +13,15 @@ const enums = require('../enums')
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
 
-  const waitingConfirmation = await Transfer.findAll({
+  const waitingConfirmation = await Transfer.findOne({
     where: {
       status: enums.TransferStatuses.WaitingConfirmation
     }
   })
 
-  if (waitingConfirmation && waitingConfirmation.length > 0) {
-    logger.info('Found transfers waiting for block confirmation')
-    const isConfirmed = await checkBlockConfirmation(waitingConfirmation[0])
+  if (waitingConfirmation) {
+    logger.info('Found transfer waiting for block confirmation')
+    const isConfirmed = await checkBlockConfirmation(waitingConfirmation)
     if (!isConfirmed) {
       logger.info('Transfer not confirmed')
       return
@@ -72,7 +72,7 @@ const executeTransfers = async () => {
   if (!transferTask) return
 
   const cutoffTime = moment.utc().subtract(largeTransferDelayMinutes, 'minutes')
-  const transfers = await Transfer.findAll({
+  const transfer = await Transfer.findOne({
     where: {
       [Sequelize.Op.or]: [
         {
@@ -88,9 +88,7 @@ const executeTransfers = async () => {
     }
   })
 
-  logger.info(`Processing ${transfers.length} transfers`)
-
-  for (const transfer of transfers) {
+  if (transfer) {
     logger.info(`Processing transfer ${transfer.id}`)
     await executeTransfer(transfer, transferTask.id)
   }
