@@ -1,6 +1,5 @@
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
-const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 

@@ -30,7 +30,7 @@ const executeTransfers = async () => {
       }
     }
   }
-  
+
   const transferTask = await sequelize.transaction(
     { isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE },
     async txn => {
