@@ -198,7 +198,7 @@ async function _calcGasPrice() {
  * @returns {Promise<String>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId) {
-  const user = await hasBalance(transfer.userId, transfer.amount, transfer)
+  const user = await hasBalance(transfer.userId, transfer.amount)
 
   await transfer.update({
     status: enums.TransferStatuses.Processing,

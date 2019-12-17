@@ -1,3 +1,5 @@
+const BigNumber = require('bignumber.js')
+
 const { Grant, Lockup, Transfer, User } = require('../models')
 const {
   calculateVested,
@@ -57,19 +59,13 @@ async function hasBalance(userId, amount) {
     .minus(transferWithdrawnAmount)
     .minus(lockedAmount)
 
-  if (available < 0) {
-    logger.info(`Amount of available OGN is below 0 for user ${user.email}`)
-
+  if (available.lt(0)) {
     throw new RangeError(`Amount of available OGN is below 0`)
   }
 
-  if (amount > available) {
-    logger.info(
-      `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`
-    )
-
+  if (BigNumber(amount).gt(available)) {
     throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available balance`
+      `Amount of ${amount} OGN exceeds the ${available} available for ${user.email}`
     )
   }
 
