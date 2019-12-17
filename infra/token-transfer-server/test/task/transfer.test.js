@@ -54,11 +54,11 @@ describe('Execute transfers', () => {
       })
     ]
 
-    TransferLib.__Rewire__('token', new TokenMock())
+    TransferLib.__Rewire__('Token', TokenMock)
   })
 
   afterEach(async () => {
-    TransferLib.__ResetDependency__('token')
+    TransferLib.__ResetDependency__('Token')
   })
 
   it('should not run if outstanding tasks exist', async () => {

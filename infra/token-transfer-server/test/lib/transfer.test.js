@@ -42,11 +42,11 @@ describe('Token transfer library', () => {
       amount: 100000
     })
 
-    TransferLib.__Rewire__('token', new TokenMock())
+    TransferLib.__Rewire__('Token', TokenMock)
   })
 
   afterEach(async () => {
-    TransferLib.__ResetDependency__('token')
+    TransferLib.__ResetDependency__('Token')
   })
 
   it('should add a transfer', async () => {
