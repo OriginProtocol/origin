@@ -1,4 +1,3 @@
-const BigNumber = require('bignumber.js')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -16,12 +15,7 @@ const {
 const { Event, Transfer, User, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
-const {
-  clientUrl,
-  encryptionSecret,
-  gasPriceMultiplier,
-  networkId
-} = require('../config')
+const { clientUrl, encryptionSecret, networkId } = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -173,25 +167,6 @@ async function confirmTransfer(transfer, user) {
 }
 
 /**
- * Calculates gas price to use for sending transactions, by applying an
- * optional multiplier against the current median gas price
- * fetched from the network.
- *
- * @returns {Promise<{BigNumber}>} Gas price to use.
- */
-async function _calcGasPrice() {
-  // Get default gas price from web3 which is calculated as the
-  // last few blocks median gas price.
-  const medianGasPrice = await this.web3.eth.getGasPrice()
-
-  if (gasPriceMultiplier) {
-    const gasPrice = BigNumber(medianGasPrice).times(gasPriceMultiplier)
-    return gasPrice.integerValue()
-  }
-  return BigNumber(medianGasPrice)
-}
-
-/**
  * Sends a blockchain transaction to transfer tokens.
  * @param {Transfer} transfer: Db model transfer object
  * @param {Integer} transferTaskId: Id of the calling transfer task
@@ -212,14 +187,9 @@ async function executeTransfer(transfer, transferTaskId) {
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
 
-  const opts = {}
-  if (process.env.NODE_ENV !== 'test') {
-    opts.gasPrice = await _calcGasPrice()
-  }
-
   let txHash
   try {
-    txHash = await token.credit(transfer.toAddress, naturalAmount, opts)
+    txHash = await token.credit(transfer.toAddress, naturalAmount)
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
 
