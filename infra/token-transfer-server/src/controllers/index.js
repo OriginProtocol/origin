@@ -6,6 +6,7 @@ router.use('/api', require('./event'))
 router.use('/api', require('./grant'))
 router.use('/api', require('./lockup'))
 router.use('/api', require('./login'))
+router.use('/api', require('./otc'))
 router.use('/api', require('./transfer'))
 router.use('/api', require('./user'))
 
