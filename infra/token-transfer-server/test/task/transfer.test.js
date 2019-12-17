@@ -53,6 +53,8 @@ describe('Execute transfers', () => {
         amount: 10000000
       })
     ]
+
+    TransferLib.__Rewire__('Token', TokenMock)
   })
 
   afterEach(async () => {
@@ -87,11 +89,6 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a small transfer immediately', async () => {
-    const creditFake = sinon.fake.returns('testTxHash')
-    const credit = TokenMock.prototype.credit
-    TokenMock.prototype.credit = creditFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -109,8 +106,6 @@ describe('Execute transfers', () => {
     expect(transferTasks[0].start).to.not.equal(null)
     expect(transferTasks[0].end).to.not.equal(null)
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
-
-    TokenMock.prototype.credit = credit
   })
 
   it('should not execute a large transfer before cutoff time', async () => {
@@ -143,11 +138,6 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a large transfer after the cutoff time', async () => {
-    const creditFake = sinon.fake.returns('testTxHash')
-    const credit = TokenMock.prototype.credit
-    TokenMock.prototype.credit = creditFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -175,7 +165,6 @@ describe('Execute transfers', () => {
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
     clock.restore()
-    TokenMock.prototype.credit = credit
   })
 
   it('should record transfer failure on failure to credit', async () => {

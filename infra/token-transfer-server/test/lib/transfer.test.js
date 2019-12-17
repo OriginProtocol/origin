@@ -8,6 +8,7 @@ const moment = require('moment')
 const sinon = require('sinon')
 const sendgridMail = require('@sendgrid/mail')
 
+const enums = require('../../src/enums')
 const {
   addTransfer,
   confirmTransfer,
@@ -17,7 +18,6 @@ const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { transferConfirmationTimeout } = require('../../src/shared')
 const { TokenMock } = require('../util')
 const TransferLib = require('../../src/lib/transfer')
-const enums = require('../../src/enums')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 

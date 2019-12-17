@@ -66,7 +66,7 @@ async function addTransfer(userId, address, amount, data = {}) {
   }
 
   logger.info(
-    `Transfer ${transfer.id} requested to ${address} by ${user.email} for ${amount}, pending email confirmation`
+    `Transfer ${transfer.id} requested to ${address} by ${user.email} for ${amount} OGN, pending email confirmation`
   )
 
   await sendTransferConfirmationEmail(transfer, user)
@@ -80,7 +80,7 @@ async function addTransfer(userId, address, amount, data = {}) {
  * @param user
  */
 async function sendTransferConfirmationEmail(transfer, user) {
-  const token = jwt.sign(
+  const confirmationToken = jwt.sign(
     {
       transferId: transfer.id
     },
@@ -88,7 +88,9 @@ async function sendTransferConfirmationEmail(transfer, user) {
     { expiresIn: `${transferConfirmationTimeout}m` }
   )
 
-  const vars = { url: `${clientUrl}/withdrawal/${transfer.id}/${token}` }
+  const vars = {
+    url: `${clientUrl}/withdrawal/${transfer.id}/${confirmationToken}`
+  }
   await sendEmail(user.email, 'transfer', vars)
 
   logger.info(
@@ -146,7 +148,7 @@ async function confirmTransfer(transfer, user) {
       const webhookData = {
         embeds: [
           {
-            title: `A transfer of \`${transfer.amount}\` OGN was queued by \`${user.email}\``,
+            title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
             description: [
               `**ID:** \`${transfer.id}\``,
               `**Address:** \`${transfer.toAddress}\``,

@@ -21,11 +21,15 @@ const executeTransfers = async () => {
   })
 
   if (confirmingTransfers && confirmingTransfers.length > 0) {
-    logger.info('Found transfer waiting for block confirmation')
+    logger.info(
+      `Found ${confirmingTransfers.length} transfer(s) waiting for block confirmation`
+    )
     for (const transfer of confirmingTransfers) {
       const isConfirmed = await checkBlockConfirmation(transfer)
       if (!isConfirmed) {
-        logger.info(`Transfer ${transfer.id} not confirmed, exiting`)
+        logger.info(
+          `Transfer ${transfer.id} with hash ${transfer.txHash} not confirmed, exiting`
+        )
         return
       }
     }
