@@ -146,7 +146,7 @@ class Token {
    * been mined since the transaction was added.
    * @param {string} txHash: the transaction hash.
    * @param {number} numBlocks: the number of block confirmation to wait for
-   * @returns {Promise<{status:string, receipt:Object}>}
+   * @returns {Promise<{status:string, receipt:Object} || undefined>}
    * Possible values for status:
    *  'confirmed': the transaction was confirmed. A receipt is returned.
    *  'failed': the transaction was reverted by the EVM. A receipt is returned.
