@@ -297,13 +297,12 @@ describe('Token transfer library', () => {
     // Enqueue and execute a transfer
     const amount = 1000
     const transfer = await addTransfer(this.user.id, toAddress, amount)
-    const { txHash, txStatus } = await executeTransfer(transfer)
-    expect(txStatus).to.equal('confirmed')
+    const txHash = await executeTransfer(transfer)
     expect(txHash).to.equal('testTxHash')
 
     // Check the transfer row was updated as expected.
     transfer.reload()
-    expect(transfer.status).to.equal(enums.TransferStatuses.Success)
+    expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
 
     sendStub.restore()
   })

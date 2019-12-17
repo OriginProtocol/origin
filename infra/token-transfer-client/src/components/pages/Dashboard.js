@@ -35,11 +35,13 @@ import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
 import BonusModal from '@/components/BonusModal'
 import WithdrawModal from '@/components/WithdrawModal'
+import OtcRequestModal from '@/components/OtcRequestModal'
 import { earnOgnEnabled } from '@/constants'
 
 const Dashboard = props => {
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
   const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
+  const [displayOtcRequestModal, setDisplayOtcRequestModal] = useState(false)
 
   useEffect(() => {
     props.fetchAccounts(),
@@ -80,7 +82,13 @@ const Dashboard = props => {
           balance={props.balance}
           accounts={props.accounts}
           isLocked={props.isLocked}
+          onCreateOtcRequest={() => setDisplayOtcRequestModal(true)}
           onModalClose={() => setDisplayWithdrawModal(false)}
+        />
+      )}
+      {displayOtcRequestModal && (
+        <OtcRequestModal
+          onModalClose={() => setDisplayOtcRequestModal(false)}
         />
       )}
 
@@ -93,6 +101,7 @@ const Dashboard = props => {
             isLocked={isLocked}
             unlockDate={unlockDate}
             onDisplayBonusModal={() => setDisplayBonusModal(true)}
+            onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
       </div>

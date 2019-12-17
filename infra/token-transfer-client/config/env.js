@@ -84,6 +84,7 @@ function getClientEnvironment(publicUrl) {
         'INVESTOR_API_URL',
         'LOCKUP_BONUS_RATE',
         'NODE_ENV',
+        'OTC_REQUEST_ENABLED',
         'UNLOCK_DATE'
       ]
       if (whitelist.includes(key)) {

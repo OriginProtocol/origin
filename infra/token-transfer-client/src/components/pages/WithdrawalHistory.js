@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
@@ -99,7 +100,7 @@ const WithdrawalHistory = props => {
                       }
                     >
                       <td>{Number(transfer.amount).toLocaleString()} OGN</td>
-                      <td>{transfer.data.ip}</td>
+                      <td>{get(transfer.data, 'ip', 'Unknown')}</td>
                       <td>
                         <EthAddress address={transfer.toAddress} />
                       </td>
@@ -127,7 +128,8 @@ const WithdrawalHistory = props => {
                           ))}
                         {[
                           enums.TransferStatuses.Enqueued,
-                          enums.TransferStatuses.WaitingConfirmation
+                          enums.TransferStatuses.WaitingConfirmation,
+                          enums.TransferStatuses.Processing
                         ].includes(transfer.status) && (
                           <>
                             <div className="status-circle status-circle-warning mr-2"></div>
