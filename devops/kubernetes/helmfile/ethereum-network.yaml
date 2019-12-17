@@ -1,16 +1,30 @@
+repositories:
+  - name: jetstack
+    url: https://charts.jetstack.io
 releases:
+  # Requires manuall installation of CRDs
+  # https://cert-manager.io/docs/installation/kubernetes/
+  # TODO: Move CRD install into a chart
+  # https://github.com/zakkg3/cert-manager-installer
   - name: cert-manager
     namespace: kube-system
-    chart: stable/cert-manager
+    chart: jetstack/cert-manager
+    version: 0.12
+    hooks:
+      # Here we add the annotation to namespace /disable-validation=true and we
+      # do it pre install (preSync)
+      - events: ["presync"]
+        command: "kubectl"
+        args: ["label", "--overwrite", "namespace", "{{`{{.Release.Namespace}}`}}", "certmanager.k8s.io/disable-validation=true"]
     values:
       - ../values/ethereum-network/cert-manager/values.yaml
-
   - name: nginx-ingress
+    namespace: default
     chart: stable/nginx-ingress
     values:
       - ../values/ethereum-network/nginx-ingress/values.yaml
-
   - name: origin
+    namespace: default
     chart: ../charts/ethereum-network
     values:
       - ../values/ethereum-network/values.yaml
