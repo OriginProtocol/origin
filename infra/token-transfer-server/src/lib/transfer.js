@@ -15,7 +15,12 @@ const {
 const { Event, Transfer, User, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
-const { clientUrl, encryptionSecret, networkId } = require('../config')
+const {
+  clientUrl,
+  encryptionSecret,
+  gasPriceMultiplier,
+  networkId
+} = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -187,9 +192,14 @@ async function executeTransfer(transfer, transferTaskId) {
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
 
+  const opts = {}
+  if (gasPriceMultiplier) {
+    opts.gasPriceMultiplier = gasPriceMultiplier
+  }
+
   let txHash
   try {
-    txHash = await token.credit(transfer.toAddress, naturalAmount)
+    txHash = await token.credit(transfer.toAddress, naturalAmount, opts)
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
 

@@ -106,6 +106,20 @@ class Token {
   }
 
   /**
+   * Computes gas price by getting the default price from web3
+   * (which is the last few blocks median gas price) and applying a ratio.
+   *
+   * @param {Number} gasPriceMultiplier
+   * @returns {Promise<BigNumber>}
+   * @private
+   */
+  async _calcGasPrice(gasPriceMultiplier) {
+    const medianGasPrice = await this.web3.eth.getGasPrice()
+    const gasPrice = BigNumber(medianGasPrice).times(gasPriceMultiplier)
+    return gasPrice.integerValue()
+  }
+
+  /**
    * Sends an Ethereum transaction.
    * @param {transaction} transaction - These are returned by contract.methods.MyMethod()
    * @param {Object} opts - Options to be sent along with the transaction.
@@ -122,7 +136,12 @@ class Token {
     }
 
     if (opts.gasPrice) {
-      logger.info('Gas price:', opts.gasPrice)
+      logger.info('Fixed gas price:', opts.gasPrice)
+    } else if (opts.gasPriceMultiplier) {
+      opts.gasPrice = await this._calcGasPrice(opts.gasPriceMultiplier)
+      logger.info(
+        `Multiplier=${opts.gasPriceMultiplier} Computed gasPrice=${opts.gasPrice}`
+      )
     }
 
     // Send the transaction and grab the transaction hash when it's available.
