@@ -6,15 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       start: { type: DataTypes.DATE, allowNull: false },
-      end: { type: DataTypes.DATE },
-      created_at: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updated_at: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
+      end: { type: DataTypes.DATE }
     },
     {
       tableName: 't3_transfer_task'

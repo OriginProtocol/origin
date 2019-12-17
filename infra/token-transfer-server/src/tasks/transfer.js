@@ -6,12 +6,27 @@ const {
   largeTransferDelayMinutes
 } = require('../config')
 const { Transfer, TransferTask, sequelize } = require('../models')
-const { executeTransfer } = require('../lib/transfer')
+const { checkBlockConfirmation, executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
+
+  const waitingConfirmation = await Transfer.findAll({
+    where: {
+      status: enums.TransferStatuses.WaitingConfirmation
+    }
+  })
+
+  if (waitingConfirmation && waitingConfirmation.length > 0) {
+    logger.info('Found transfers waiting for block confirmation')
+    const isConfirmed = await checkBlockConfirmation(waitingConfirmation[0])
+    if (!isConfirmed) {
+      logger.info('Transfer not confirmed')
+      return
+    }
+  }
 
   const transferTask = await sequelize.transaction(
     { isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE },
@@ -25,31 +40,20 @@ const executeTransfers = async () => {
         { transaction: txn }
       )
       if (outstandingTasks.length > 0) {
-        logger.warn(
-          `Found incomplete transfer task(s), wait for completion or clean up manually.`
-        )
+        logger.warn(`Found incomplete transfer task(s), unable to proceed.`)
         return false
       }
 
-      const waitingTransfers = await Transfer.findAll(
+      const processingTransfers = await Transfer.findAll(
         {
           where: {
-            [Sequelize.Op.or]: [
-              {
-                status: enums.TransferStatuses.WaitingConfirmation
-              },
-              {
-                status: enums.TransferStatuses.Processing
-              }
-            ]
+            status: enums.TransferStatuses.Processing
           }
         },
         { transaction: txn }
       )
-      if (waitingTransfers.length > 0) {
-        logger.warn(
-          `Found unconfirmed transfer(s). Fix before running this script again.`
-        )
+      if (processingTransfers.length > 0) {
+        logger.warn(`Found processing transfers, unable to proceed`)
         return false
       }
 
@@ -88,10 +92,7 @@ const executeTransfers = async () => {
 
   for (const transfer of transfers) {
     logger.info(`Processing transfer ${transfer.id}`)
-    const result = await executeTransfer(transfer, transferTask.id)
-    logger.info(
-      `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
-    )
+    await executeTransfer(transfer, transferTask.id)
   }
 
   await transferTask.update({

@@ -1,5 +1,6 @@
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 
@@ -12,7 +13,7 @@ const {
   TRANSFER_REQUEST,
   TRANSFER_CONFIRMED
 } = require('../constants/events')
-const { Event, Transfer, sequelize } = require('../models')
+const { Event, Transfer, User, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
 const { clientUrl, encryptionSecret, networkId } = require('../config')
@@ -20,7 +21,7 @@ const enums = require('../enums')
 const logger = require('../logger')
 
 // Number of block confirmations required for a transfer to be consider completed.
-const NumBlockConfirmation = 8
+const NumBlockConfirmation = 3
 
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
@@ -170,9 +171,9 @@ async function confirmTransfer(transfer, user) {
 }
 
 /**
- * Sends a blockchain transaction to transfer tokens and waits for the transaction to get confirmed.
- * @param {Transfer} transfer: DB model Transfer object
- * @returns {Promise<{txHash: string, txStatus: string}>}
+ * Sends a blockchain transaction to transfer tokens.
+ * @param {Transfer} transfer: Db model transfer object
+ * @returns {Promise<String>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId) {
   const user = await hasBalance(transfer.userId, transfer.amount, transfer)
@@ -184,6 +185,7 @@ async function executeTransfer(transfer, transferTaskId) {
 
   // Setup token library
   const token = new Token(networkId)
+
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
@@ -193,6 +195,7 @@ async function executeTransfer(transfer, transferTaskId) {
     txHash = await token.credit(transfer.toAddress, naturalAmount)
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
+
     await updateTransferStatus(
       user,
       transfer,
@@ -200,11 +203,11 @@ async function executeTransfer(transfer, transferTaskId) {
       TRANSFER_FAILED,
       error.message
     )
-    return { txHash: null, txStatus: enums.TransferStatuses.Failed }
+    return false
   }
 
   logger.info(
-    `Transfer ${transfer.id} processed with hash ${txHash}, waiting for confirmation`
+    `Transfer ${transfer.id} processed with hash ${txHash}`
   )
 
   await transfer.update({
@@ -213,31 +216,62 @@ async function executeTransfer(transfer, transferTaskId) {
     txHash
   })
 
+  return txHash
+}
+
+/**
+ * Sends a blockchain transaction to transfer tokens.
+ * @param {Transfer} transfer: DB model Transfer object
+ * @returns {Promise<>}
+ */
+async function checkBlockConfirmation(transfer) {
+  // Setup token library
+  const token = new Token(networkId)
+
   // Wait for the transaction to get confirmed.
-  const { status } = await token.waitForTxConfirmation(txHash, {
-    numBlocks: NumBlockConfirmation,
-    timeoutSec: ConfirmationTimeoutSec
+  const result = await token.txIsConfirmed(transfer.txHash, {
+    numBlocks: NumBlockConfirmation
   })
 
   let transferStatus, eventAction, failureReason
-  switch (status) {
-    case 'confirmed':
-      transferStatus = enums.TransferStatuses.Success
-      eventAction = TRANSFER_DONE
-      break
-    case 'failed':
-      transferStatus = enums.TransferStatuses.Failed
-      eventAction = TRANSFER_FAILED
-      break
-    case 'timeout':
+  if (!result) {
+    // Check if too long elapsed
+    const timedOut =
+      moment.utc(transfer.updatedAt).diff(moment.utc(), 'seconds') >
+      ConfirmationTimeoutSec
+    if (timedOut) {
       transferStatus = enums.TransferStatuses.Failed
       eventAction = TRANSFER_FAILED
       failureReason = 'Confirmation timeout'
-      break
-    default:
-      throw new Error(`Unexpected status ${status} for txHash ${txHash}`)
+      logger.warn(`Transaction timed out ${transfer.txHash}`)
+    }
+    return null
+  } else {
+    switch (result.status) {
+      case 'confirmed':
+        transferStatus = enums.TransferStatuses.Success
+        eventAction = TRANSFER_DONE
+        break
+      case 'failed':
+        transferStatus = enums.TransferStatuses.Failed
+        eventAction = TRANSFER_FAILED
+        break
+      default:
+        throw new Error(
+          `Unexpected status ${result.status} for txHash ${transfer.txHash}`
+        )
+    }
   }
-  logger.info(`Received status ${status} for txHash ${txHash}`)
+
+  logger.info(
+    `Received status ${result.status} for transaction ${transfer.txHash}`
+  )
+
+  const user = await User.findOne({
+    where: {
+      id: transfer.userId
+    }
+  })
 
   await updateTransferStatus(
     user,
@@ -247,9 +281,18 @@ async function executeTransfer(transfer, transferTaskId) {
     failureReason
   )
 
-  return { txHash, txStatus: status }
+  return result.status
 }
 
+/**
+ * Update transfer status and add an event with the result of the transfer.
+ * @param {User} transfer: Db model user object
+ * @param {Transfer} transfer: Db model transfer object
+ * @param {String} transferStatus
+ * @param {String} eventAction:
+ * @param {String} failureReason
+ * @returns {Promise<undefined>}
+ */
 async function updateTransferStatus(
   user,
   transfer,
@@ -287,5 +330,6 @@ async function updateTransferStatus(
 module.exports = {
   addTransfer,
   confirmTransfer,
-  executeTransfer
+  executeTransfer,
+  checkBlockConfirmation
 }

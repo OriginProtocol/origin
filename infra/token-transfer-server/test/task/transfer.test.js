@@ -70,22 +70,6 @@ describe('Execute transfers', () => {
     }
   })
 
-  it('should not run if unconfirmed transfers exist', async () => {
-    await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.WaitingConfirmation,
-      toAddress: toAddress,
-      amount: 1,
-      currency: 'OGN'
-    })
-
-    try {
-      await executeTransfers()
-    } catch (error) {
-      expect(error.message).to.match(/unconfirmed/)
-    }
-  })
-
   it('should not run if processing transfers exist', async () => {
     await Transfer.create({
       userId: this.user.id,
@@ -103,14 +87,6 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a small transfer immediately', async () => {
-    const waitForTxConfirmationFake = sinon.fake.returns({
-      status: 'confirmed',
-      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
-    })
-    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -122,30 +98,19 @@ describe('Execute transfers', () => {
     await executeTransfers()
 
     await transfer.reload()
-    expect(transfer.status).to.equal(enums.TransferStatuses.Success)
+    expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
 
     const transferTasks = await TransferTask.findAll()
     expect(transferTasks[0].start).to.not.equal(null)
     expect(transferTasks[0].end).to.not.equal(null)
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
-    expect(waitForTxConfirmationFake.called).to.equal(true)
-
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_DONE')
     expect(events[0].data.transferId).to.equal(transfer.id)
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should not execute a large transfer before cutoff time', async () => {
-    const waitForTxConfirmationFake = sinon.fake.returns({
-      status: 'confirmed',
-      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
-    })
-    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -156,11 +121,6 @@ describe('Execute transfers', () => {
 
     await executeTransfers()
 
-    expect(waitForTxConfirmationFake.called).to.equal(false)
-
-    // Transfer should not have been executed so fake should not have been called
-    expect(waitForTxConfirmationFake.called).to.equal(false)
-    //
     // Move into the future
     const clock = sinon.useFakeTimers(
       moment
@@ -176,22 +136,10 @@ describe('Execute transfers', () => {
     expect(transferTasks[0].end).to.not.equal(null)
     expect(transfer.transferTaskId).to.equal(null)
 
-    // Transfer should not have been executed so fake should not have been called
-    expect(waitForTxConfirmationFake.called).to.equal(false)
-
     clock.restore()
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should execute a large transfer after the cutoff time', async () => {
-    const waitForTxConfirmationFake = sinon.fake.returns({
-      status: 'confirmed',
-      receipt: { txHash: '0x1234', blockNumber: 123, status: true }
-    })
-    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -211,21 +159,18 @@ describe('Execute transfers', () => {
     await executeTransfers()
 
     await transfer.reload()
+    expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
 
     const transferTasks = await TransferTask.findAll()
     expect(transferTasks[0].start).to.not.equal(null)
     expect(transferTasks[0].end).to.not.equal(null)
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
-    // Transfer should have been executed so fake should have been called
-    expect(waitForTxConfirmationFake.called).to.equal(true)
-
     clock.restore()
 
     const events = await Event.findAll()
     expect(events[0].action).to.equal('TRANSFER_DONE')
     expect(events[0].data.transferId).to.equal(transfer.id)
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
   })
 
   it('should record transfer failure on failure to credit', async () => {
@@ -261,69 +206,15 @@ describe('Execute transfers', () => {
     TokenMock.prototype.credit = credit
   })
 
-  it('should record transfer failure', async () => {
-    const waitForTxConfirmationFake = sinon.fake.returns({
-      status: 'failed'
-    })
-    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
-    TransferLib.__Rewire__('Token', TokenMock)
-
-    const transfer = await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.Enqueued,
-      toAddress: toAddress,
-      amount: 1,
-      currency: 'OGN'
-    })
-
-    await executeTransfers()
-
-    await transfer.reload()
-    expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
-
-    const transferTasks = await TransferTask.findAll()
-    expect(transferTasks[0].start).to.not.equal(null)
-    expect(transferTasks[0].end).to.not.equal(null)
-    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
-
-    const events = await Event.findAll()
-    expect(events[0].action).to.equal('TRANSFER_FAILED')
-    expect(events[0].data.transferId).to.equal(transfer.id)
-    expect(events[0].data.failureReason).to.equal(undefined)
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
+  // TODO
+  it('should record success when checking block confirmation', async () => {
   })
 
-  it('should record transfer timeout', async () => {
-    const waitForTxConfirmationFake = sinon.fake.returns({
-      status: 'timeout'
-    })
-    const waitForTxConfirmation = TokenMock.prototype.waitForTxConfirmation
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmationFake
-    TransferLib.__Rewire__('Token', TokenMock)
+  // TODO
+  it('should record failure when checking block confirmation', async () => {
+  })
 
-    const transfer = await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.Enqueued,
-      toAddress: toAddress,
-      amount: 1,
-      currency: 'OGN'
-    })
-
-    await executeTransfers()
-
-    await transfer.reload()
-    expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
-
-    const transferTasks = await TransferTask.findAll()
-    expect(transferTasks[0].start).to.not.equal(null)
-    expect(transferTasks[0].end).to.not.equal(null)
-    expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
-
-    const events = await Event.findAll()
-    expect(events[0].action).to.equal('TRANSFER_FAILED')
-    expect(events[0].data.failureReason).to.equal('Confirmation timeout')
-    expect(events[0].data.transferId).to.equal(transfer.id)
-    TokenMock.prototype.waitForTxConfirmation = waitForTxConfirmation
+  // TODO
+  it('should record timeout when checking block confirmation', async () => {
   })
 })

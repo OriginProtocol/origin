@@ -142,6 +142,48 @@ class Token {
   }
 
   /**
+   * Checks if a transaction is confirmed by checking if a number of blocks has
+   * been mined since the transaction was added.
+   * @param {string} txHash: the transaction hash.
+   * @param {number} numBlocks: the number of block confirmation to wait for
+   * @returns {Promise<{status:string, receipt:Object}>}
+   * Possible values for status:
+   *  'confirmed': the transaction was confirmed. A receipt is returned.
+   *  'failed': the transaction was reverted by the EVM. A receipt is returned.
+   */
+  async txIsConfirmed(txHash, { numBlocks = 8 }) {
+    let receipt
+    try {
+      receipt = await this.web3.eth.getTransactionReceipt(txHash)
+    } catch (e) {
+      logger.error(`getTransactionReceipt failure for txHash ${txHash}`, e)
+    }
+
+    // Note: we check on presence of both receipt and receipt.blockNumber
+    // to account for difference between Geth and Parity:
+    //  - Geth does not return a receipt until transaction mined
+    //  - Parity returns a receipt with no blockNumber until transaction mined.
+    if (receipt && receipt.blockNumber) {
+      if (!receipt.status) {
+        // Transaction was reverted by the EVM.
+        return { status: 'failed', receipt }
+      } else {
+        // Calculate the number of block confirmations.
+        try {
+          const blockNumber = await this.web3.eth.getBlockNumber()
+          const numConfirmations = blockNumber - receipt.blockNumber
+          if (numConfirmations >= numBlocks) {
+            // Transaction confirmed.
+            return { status: 'confirmed', receipt }
+          }
+        } catch (e) {
+          logger.error('getBlockNumber failure', e)
+        }
+      }
+    }
+  }
+
+  /**
    * Waits for a transaction to be confirmed.
    * @param {string} txHash: the transaction hash.
    * @param {number} numBlocks: the number of block confirmation to wait for
@@ -154,37 +196,11 @@ class Token {
    */
   async waitForTxConfirmation(txHash, { numBlocks = 8, timeoutSec = 600 }) {
     const start = Date.now()
-    let elapsed = 0,
-      receipt = null
+    let elapsed = 0
 
     do {
-      try {
-        receipt = await this.web3.eth.getTransactionReceipt(txHash)
-      } catch (e) {
-        logger.error(`getTransactionReceipt failure for txHash ${txHash}`, e)
-      }
-      // Note: we check on presence of both receipt and receipt.blockNumber
-      // to account for difference between Geth and Parity:
-      //  - Geth does not return a receipt until transaction mined
-      //  - Parity returns a receipt with no blockNumber until transaction mined.
-      if (receipt && receipt.blockNumber) {
-        if (!receipt.status) {
-          // Transaction was reverted by the EVM.
-          return { status: 'failed', receipt }
-        } else {
-          // Calculate the number of block confirmations.
-          try {
-            const blockNumber = await this.web3.eth.getBlockNumber()
-            const numConfirmations = blockNumber - receipt.blockNumber
-            if (numConfirmations >= numBlocks) {
-              // Transaction confirmed.
-              return { status: 'confirmed', receipt }
-            }
-          } catch (e) {
-            logger.error('getBlockNumber failure', e)
-          }
-        }
-      }
+      const result = txIsConfirmed(txHash, { numBlocks })
+      if (result) return result
       elapsed = (Date.now() - start) / 1000
       logger.debug(
         `Still waiting for txHash ${txHash} to get confirmed after ${elapsed} sec`
