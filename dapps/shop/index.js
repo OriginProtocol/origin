@@ -28,7 +28,10 @@ async function start() {
     skipContractsIfExists: process.env.CLEAN ? false : true
   })
 
-  const devServerArgs = ['--info=false', '--host=0.0.0.0']
+  const devServerArgs = ['--host=0.0.0.0']
+  if (process.env.NODE_ENV === 'production') {
+    devServerArgs.push('--info=false')
+  }
   if (process.env.NOOPENER !== 'true') {
     devServerArgs.push('--open')
   }
