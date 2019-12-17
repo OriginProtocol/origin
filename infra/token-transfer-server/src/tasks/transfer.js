@@ -16,7 +16,8 @@ const executeTransfers = async () => {
   const waitingConfirmation = await Transfer.findOne({
     where: {
       status: enums.TransferStatuses.WaitingConfirmation
-    }
+    },
+    order: [['updated_at', 'DESC']]
   })
 
   if (waitingConfirmation) {
@@ -85,7 +86,8 @@ const executeTransfers = async () => {
           amount: { [Sequelize.Op.lt]: largeTransferThreshold }
         }
       ]
-    }
+    },
+    order: [['updated_at', 'DESC']]
   })
 
   if (transfer) {

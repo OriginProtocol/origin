@@ -1,6 +1,5 @@
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
-const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 
@@ -22,9 +21,6 @@ const logger = require('../logger')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
-
-// Wait up to 20 min for a transaction to get confirmed
-const ConfirmationTimeoutSec = 20 * 60 * 60
 
 /**
  * Enqueues a request to transfer tokens.
@@ -173,6 +169,7 @@ async function confirmTransfer(transfer, user) {
 /**
  * Sends a blockchain transaction to transfer tokens.
  * @param {Transfer} transfer: Db model transfer object
+ * @param {Integer} transferTaskId: Id of the calling transfer task
  * @returns {Promise<String>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId) {
@@ -220,7 +217,7 @@ async function executeTransfer(transfer, transferTaskId) {
 /**
  * Sends a blockchain transaction to transfer tokens.
  * @param {Transfer} transfer: DB model Transfer object
- * @returns {Promise<>}
+ * @returns {Promise<String>}
  */
 async function checkBlockConfirmation(transfer) {
   // Setup token library
@@ -233,16 +230,6 @@ async function checkBlockConfirmation(transfer) {
 
   let transferStatus, eventAction, failureReason
   if (!result) {
-    // Check if too long elapsed
-    const timedOut =
-      moment.utc(transfer.updatedAt).diff(moment.utc(), 'seconds') >
-      ConfirmationTimeoutSec
-    if (timedOut) {
-      transferStatus = enums.TransferStatuses.Failed
-      eventAction = TRANSFER_FAILED
-      failureReason = 'Confirmation timeout'
-      logger.warn(`Transaction timed out ${transfer.txHash}`)
-    }
     return null
   } else {
     switch (result.status) {
