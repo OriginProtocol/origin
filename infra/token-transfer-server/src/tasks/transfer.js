@@ -13,19 +13,21 @@ const enums = require('../enums')
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
 
-  const waitingConfirmation = await Transfer.findOne({
+  const confirmingTransfers = await Transfer.findAll({
     where: {
       status: enums.TransferStatuses.WaitingConfirmation
     },
     order: [['updated_at', 'ASC']]
   })
 
-  if (waitingConfirmation) {
+  if (confirmingTransfers && confirmingTransfers.length > 0) {
     logger.info('Found transfer waiting for block confirmation')
-    const isConfirmed = await checkBlockConfirmation(waitingConfirmation)
-    if (!isConfirmed) {
-      logger.info('Transfer not confirmed')
-      return
+    for (const transfer of confirmingTransfers) {
+      const isConfirmed = await checkBlockConfirmation(transfer)
+      if (!isConfirmed) {
+        logger.info(`Transfer ${transfer.id} not confirmed, exiting`)
+        return
+      }
     }
   }
 
