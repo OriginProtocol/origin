@@ -53,7 +53,11 @@
   backface-visibility: hidden;
   align-items: center;
   color: black;
-  padding: 3rem;
+  padding: 2rem;
+}
+
+.modal-lg {
+  max-width: 700px !important;
 }
 
 .pl-modal .pl-modal-table .pl-modal-cell {

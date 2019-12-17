@@ -41,12 +41,16 @@ const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
 const gasPriceMultiplier = process.env.GAS_PRICE_MULTIPLIER
 
+const otcPartnerEmail =
+  process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
+
 module.exports = {
   discordWebhookUrl,
   encryptionSecret,
   lockupBonusRate,
   lockupDuration,
   networkId,
+  otcPartnerEmail,
   port,
   clientUrl,
   sendgridFromEmail,

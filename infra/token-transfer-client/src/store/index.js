@@ -6,6 +6,7 @@ import event from '@/reducers/event'
 import grant from '@/reducers/grant'
 import lockup from '@/reducers/lockup'
 import news from '@/reducers/news'
+import otc from '@/reducers/otc'
 import session from '@/reducers/session'
 import transfer from '@/reducers/transfer'
 import user from '@/reducers/user'
@@ -19,6 +20,7 @@ export default createStore(
     grant,
     lockup,
     news,
+    otc,
     session,
     transfer,
     user
