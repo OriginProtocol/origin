@@ -17,7 +17,7 @@ const executeTransfers = async () => {
     where: {
       status: enums.TransferStatuses.WaitingConfirmation
     },
-    order: [['updated_at', 'DESC']]
+    order: [['updated_at', 'ASC']]
   })
 
   if (waitingConfirmation) {
@@ -87,7 +87,7 @@ const executeTransfers = async () => {
         }
       ]
     },
-    order: [['updated_at', 'DESC']]
+    order: [['updated_at', 'ASC']]
   })
 
   if (transfer) {
