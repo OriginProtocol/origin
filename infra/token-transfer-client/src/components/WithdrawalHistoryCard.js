@@ -23,18 +23,27 @@ const WithdrawalHistoryCard = props => {
       <div className="row">
         <div className="col-12 col-md-4">
           <span className="text-muted">
-            Total Withdrawn: <span className="text-nowrap">{Number(props.withdrawnAmount).toLocaleString()}{' '}</span>
+            Total Withdrawn:{' '}
+            <span className="text-nowrap">
+              {Number(props.withdrawnAmount).toLocaleString()}{' '}
+            </span>
             OGN
           </span>
         </div>
         <div className="col-12 col-md-4">
           <span className="text-muted">
-            Unvested: <span className="text-nowrap">{Number(props.unvestedTotal).toLocaleString()} OGN</span>
+            Unvested:{' '}
+            <span className="text-nowrap">
+              {Number(props.unvestedTotal).toLocaleString()} OGN
+            </span>
           </span>
         </div>
         <div className="col-12 col-md-4">
           <span className="text-muted">
-            Total Purchase: <span className="text-nowrap">{Number(props.grantTotal).toLocaleString()} OGN</span>
+            Total Purchase:{' '}
+            <span className="text-nowrap">
+              {Number(props.grantTotal).toLocaleString()} OGN
+            </span>
           </span>
         </div>
       </div>

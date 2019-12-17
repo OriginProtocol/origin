@@ -103,7 +103,8 @@ class WithdrawalDetail extends Component {
                   <strong>Amount</strong>
                 </div>
                 <div className="col">
-                  {Number(transfer.amount).toLocaleString()} <span className="ogn">OGN</span>
+                  {Number(transfer.amount).toLocaleString()}{' '}
+                  <span className="ogn">OGN</span>
                 </div>
               </div>
               <div className="row mb-3">
