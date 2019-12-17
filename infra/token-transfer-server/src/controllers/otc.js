@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
-const { discordWebhookUrl } = require('../config')
+const { discordWebhookUrl, otcPartnerEmail } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('../lib/webhook')
 const { asyncMiddleware, getOtcRequestEnabled } = require('../utils')
@@ -54,7 +54,7 @@ router.post(
       action: req.body.action,
       email: req.user.email
     }
-    await sendEmail('investor-relations@originprotocol.com', 'otc', vars)
+    await sendEmail(otcPartnerEmail, 'otc', vars)
 
     return res.status(204).send('')
   })

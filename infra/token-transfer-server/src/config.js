@@ -40,6 +40,8 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
 const walletMnemonic = process.env.WALLET_MNEMONIC
+const otcPartnerEmail =
+  process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
 
 module.exports = {
   discordWebhookUrl,
@@ -47,6 +49,7 @@ module.exports = {
   lockupBonusRate,
   lockupDuration,
   networkId,
+  otcPartnerEmail,
   port,
   clientUrl,
   sendgridFromEmail,
@@ -56,4 +59,5 @@ module.exports = {
   largeTransferThreshold,
   largeTransferDelayMinutes,
   walletMnemonic
+  largeTransferDelayMinutes
 }
