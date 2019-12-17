@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
@@ -95,21 +96,22 @@ class WithdrawalDetail extends Component {
             </div>
           )}
         <div className="row">
-          <div className="col-12 col-xl-6">
+          <div className="col-12 col-xl-6 mt-3">
             <BorderedCard shadowed={true}>
               <div className="row mb-3">
                 <div className="col">
                   <strong>Amount</strong>
                 </div>
                 <div className="col">
-                  {Number(transfer.amount).toLocaleString()} OGN
+                  {Number(transfer.amount).toLocaleString()}{' '}
+                  <span className="ogn">OGN</span>
                 </div>
               </div>
               <div className="row mb-3">
                 <div className="col">
                   <strong>IP</strong>
                 </div>
-                <div className="col">{transfer.data.ip}</div>
+                <div className="col">{get(transfer.data, 'ip', 'Unknown')}</div>
               </div>
               <div className="row mb-3">
                 <div className="col">
@@ -135,7 +137,7 @@ class WithdrawalDetail extends Component {
               </div>
             </BorderedCard>
           </div>
-          <div className="col-12 col-xl-6">
+          <div className="col-12 col-xl-6 mt-3">
             <BorderedCard shadowed={true}>
               <ul>
                 <li className="mb-3">
