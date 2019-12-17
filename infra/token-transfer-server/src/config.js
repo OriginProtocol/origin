@@ -39,6 +39,8 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
+const gasPriceMultiplier = process.env.GAS_PRICE_MULTIPLIER
+
 const otcPartnerEmail =
   process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
 
@@ -56,5 +58,6 @@ module.exports = {
   sessionSecret,
   unlockDate,
   largeTransferThreshold,
-  largeTransferDelayMinutes
+  largeTransferDelayMinutes,
+  gasPriceMultiplier
 }
