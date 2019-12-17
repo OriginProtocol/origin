@@ -87,6 +87,11 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a small transfer immediately', async () => {
+    const creditFake = sinon.fake.returns('testTxHash')
+    const credit = TokenMock.prototype.credit
+    TokenMock.prototype.credit = creditFake
+    TransferLib.__Rewire__('Token', TokenMock)
+
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -105,9 +110,7 @@ describe('Execute transfers', () => {
     expect(transferTasks[0].end).to.not.equal(null)
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
-    const events = await Event.findAll()
-    expect(events[0].action).to.equal('TRANSFER_DONE')
-    expect(events[0].data.transferId).to.equal(transfer.id)
+    TokenMock.prototype.credit = credit
   })
 
   it('should not execute a large transfer before cutoff time', async () => {
@@ -140,6 +143,11 @@ describe('Execute transfers', () => {
   })
 
   it('should execute a large transfer after the cutoff time', async () => {
+    const creditFake = sinon.fake.returns('testTxHash')
+    const credit = TokenMock.prototype.credit
+    TokenMock.prototype.credit = creditFake
+    TransferLib.__Rewire__('Token', TokenMock)
+
     const transfer = await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
@@ -167,10 +175,7 @@ describe('Execute transfers', () => {
     expect(transfer.transferTaskId).to.equal(transferTasks[0].id)
 
     clock.restore()
-
-    const events = await Event.findAll()
-    expect(events[0].action).to.equal('TRANSFER_DONE')
-    expect(events[0].data.transferId).to.equal(transfer.id)
+    TokenMock.prototype.credit = credit
   })
 
   it('should record transfer failure on failure to credit', async () => {
