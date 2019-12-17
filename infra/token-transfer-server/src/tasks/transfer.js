@@ -6,16 +6,36 @@ const {
   largeTransferDelayMinutes
 } = require('../config')
 const { Transfer, TransferTask, sequelize } = require('../models')
-const { executeTransfer } = require('../lib/transfer')
+const { checkBlockConfirmation, executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
 const executeTransfers = async () => {
   logger.info('Running execute transfers job...')
 
-  let transferTask
+  const confirmingTransfers = await Transfer.findAll({
+    where: {
+      status: enums.TransferStatuses.WaitingConfirmation
+    },
+    order: [['updated_at', 'ASC']]
+  })
 
-  await sequelize.transaction(
+  if (confirmingTransfers && confirmingTransfers.length > 0) {
+    logger.info(
+      `Found ${confirmingTransfers.length} transfer(s) waiting for block confirmation`
+    )
+    for (const transfer of confirmingTransfers) {
+      const isConfirmed = await checkBlockConfirmation(transfer)
+      if (!isConfirmed) {
+        logger.info(
+          `Transfer ${transfer.id} with hash ${transfer.txHash} not confirmed, exiting`
+        )
+        return
+      }
+    }
+  }
+
+  const transferTask = await sequelize.transaction(
     { isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE },
     async txn => {
       const outstandingTasks = await TransferTask.findAll(
@@ -27,43 +47,39 @@ const executeTransfers = async () => {
         { transaction: txn }
       )
       if (outstandingTasks.length > 0) {
-        throw new Error(
-          `Found incomplete transfer task(s), wait for completion or clean up manually.`
-        )
+        logger.warn(`Found incomplete transfer task(s), unable to proceed.`)
+        return false
       }
 
-      const waitingTransfers = await Transfer.findAll(
+      const processingTransfers = await Transfer.findAll(
         {
           where: {
-            [Sequelize.Op.or]: [
-              {
-                status: enums.TransferStatuses.WaitingConfirmation
-              },
-              {
-                status: enums.TransferStatuses.Processing
-              }
-            ]
+            status: enums.TransferStatuses.Processing
           }
         },
         { transaction: txn }
       )
-      if (waitingTransfers.length > 0) {
-        throw new Error(
-          `Found unconfirmed transfer(s). Fix before running this script again.`
-        )
+      if (processingTransfers.length > 0) {
+        logger.warn(`Found processing transfers, unable to proceed`)
+        return false
       }
 
-      transferTask = await TransferTask.create(
+      const now = moment.utc()
+      return await TransferTask.create(
         {
-          start: moment.utc()
+          start: now,
+          created_at: now,
+          updated_at: now
         },
         { transaction: txn }
       )
     }
   )
 
+  if (!transferTask) return
+
   const cutoffTime = moment.utc().subtract(largeTransferDelayMinutes, 'minutes')
-  const transfers = await Transfer.findAll({
+  const transfer = await Transfer.findOne({
     where: {
       [Sequelize.Op.or]: [
         {
@@ -76,17 +92,13 @@ const executeTransfers = async () => {
           amount: { [Sequelize.Op.lt]: largeTransferThreshold }
         }
       ]
-    }
+    },
+    order: [['updated_at', 'ASC']]
   })
 
-  logger.info(`Processing ${transfers.length} transfers`)
-
-  for (const transfer of transfers) {
+  if (transfer) {
     logger.info(`Processing transfer ${transfer.id}`)
-    const result = await executeTransfer(transfer, transferTask.id)
-    logger.info(
-      `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
-    )
+    await executeTransfer(transfer, transferTask.id)
   }
 
   await transferTask.update({

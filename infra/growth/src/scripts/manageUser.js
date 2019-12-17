@@ -121,6 +121,8 @@ async function _loadAccountDetails(ethAddress) {
     )
   }
   logger.info('\n')
+
+  return addresses
 }
 
 async function banAccount(account, type, reason, doIt) {
@@ -194,16 +196,31 @@ async function unbanAccount(account, doIt) {
     )
   }
 
-  await _loadAccountDetails(account)
+  const addresses = await _loadAccountDetails(account)
+  const events = await db.GrowthEvent.findAll({
+    where: {
+      ethAddress: { [Sequelize.Op.in]: addresses },
+      status: enums.GrowthEventStatuses.Fraud
+    }
+  })
 
   if (doIt) {
+    // Update the account's growth_participant record status to Active.
     await participant.update({
       status: enums.GrowthParticipantStatuses.Active,
       ban: null
     })
+    // Change status of all growth_events from Fraud to Verified.
+
+    for (const event of events) {
+      await event.update({ status: enums.GrowthEventStatuses.Verified })
+    }
+    logger.info(`Changed status of ${events.length} events to Verified`)
     logger.info(`Unbanned account ${account}`)
   } else {
-    logger.info(`Would unban account ${account}`)
+    logger.info(
+      `Would unban account ${account} and change the status of ${events.length} events`
+    )
   }
 }
 
