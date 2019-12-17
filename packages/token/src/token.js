@@ -199,7 +199,7 @@ class Token {
     let elapsed = 0
 
     do {
-      const result = txIsConfirmed(txHash, { numBlocks })
+      const result = await this.txIsConfirmed(txHash, { numBlocks })
       if (result) return result
       elapsed = (Date.now() - start) / 1000
       logger.debug(
