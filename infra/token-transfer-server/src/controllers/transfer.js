@@ -143,7 +143,6 @@ router.post(
     }
 
     return res
-
       .status(201)
       .json(transfer.get({ plain: true }))
       .end()

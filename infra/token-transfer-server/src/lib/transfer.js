@@ -27,6 +27,9 @@ const logger = require('../logger')
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
 
+// Setup token library
+const token = new Token(networkId)
+
 /**
  * Enqueues a request to transfer tokens.
  * @param userId
@@ -80,7 +83,7 @@ async function addTransfer(userId, address, amount, data = {}) {
  * @param user
  */
 async function sendTransferConfirmationEmail(transfer, user) {
-  const token = jwt.sign(
+  const confirmationToken = jwt.sign(
     {
       transferId: transfer.id
     },
@@ -88,7 +91,9 @@ async function sendTransferConfirmationEmail(transfer, user) {
     { expiresIn: `${transferConfirmationTimeout}m` }
   )
 
-  const vars = { url: `${clientUrl}/withdrawal/${transfer.id}/${token}` }
+  const vars = {
+    url: `${clientUrl}/withdrawal/${transfer.id}/${confirmationToken}`
+  }
   await sendEmail(user.email, 'transfer', vars)
 
   logger.info(
@@ -185,9 +190,6 @@ async function executeTransfer(transfer, transferTaskId) {
     transferTaskId
   })
 
-  // Setup token library
-  const token = new Token(networkId)
-
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
@@ -230,9 +232,6 @@ async function executeTransfer(transfer, transferTaskId) {
  * @returns {Promise<String>}
  */
 async function checkBlockConfirmation(transfer) {
-  // Setup token library
-  const token = new Token(networkId)
-
   // Wait for the transaction to get confirmed.
   const result = await token.txIsConfirmed(transfer.txHash, {
     numBlocks: NumBlockConfirmation
