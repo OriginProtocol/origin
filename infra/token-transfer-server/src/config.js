@@ -39,8 +39,6 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
-const walletMnemonic = process.env.WALLET_MNEMONIC
-
 module.exports = {
   discordWebhookUrl,
   encryptionSecret,
@@ -54,6 +52,5 @@ module.exports = {
   sessionSecret,
   unlockDate,
   largeTransferThreshold,
-  largeTransferDelayMinutes,
-  walletMnemonic
+  largeTransferDelayMinutes
 }
