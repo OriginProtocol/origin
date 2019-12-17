@@ -1,6 +1,8 @@
 const cron = require('node-cron')
 const logger = require('./logger')
 
+const Token = require('@origin/token/src/token')
+
 const { executeTransfers } = require('./tasks/transfer')
 
 try {
@@ -105,7 +107,9 @@ const hasWallet =
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
   if (hasWallet) {
-    cron.schedule('*/10 * * * * *', executeTransfers)
+    // Setup token library
+    const token = new Token(networkId)
+    cron.schedule('*/10 * * * * *', () => executeTransfers(token))
   } else {
     logger.warn('Not wallet mnemonic found, not executing any transfers')
   }

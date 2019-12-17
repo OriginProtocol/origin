@@ -17,7 +17,6 @@ const {
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { transferConfirmationTimeout } = require('../../src/shared')
 const { TokenMock } = require('../util')
-const TransferLib = require('../../src/lib/transfer')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
@@ -41,12 +40,6 @@ describe('Token transfer library', () => {
       cliff: new Date('2015-10-10'),
       amount: 100000
     })
-
-    TransferLib.__Rewire__('Token', TokenMock)
-  })
-
-  afterEach(async () => {
-    TransferLib.__ResetDependency__('Token')
   })
 
   it('should add a transfer', async () => {
@@ -297,7 +290,7 @@ describe('Token transfer library', () => {
     // Enqueue and execute a transfer
     const amount = 1000
     const transfer = await addTransfer(this.user.id, toAddress, amount)
-    const txHash = await executeTransfer(transfer)
+    const txHash = await executeTransfer(transfer, null, new TokenMock())
     expect(txHash).to.equal('testTxHash')
 
     // Check the transfer row was updated as expected.
