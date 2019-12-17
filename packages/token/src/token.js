@@ -139,7 +139,9 @@ class Token {
       logger.info('Fixed gas price:', opts.gasPrice)
     } else if (opts.gasPriceMultiplier) {
       opts.gasPrice = await this._calcGasPrice(opts.gasPriceMultiplier)
-      logger.info(`Multiplier=${opts.gasPriceMultiplier} Computed gasPrice=${opts.gasPrice}`)
+      logger.info(
+        `Multiplier=${opts.gasPriceMultiplier} Computed gasPrice=${opts.gasPrice}`
+      )
     }
 
     // Send the transaction and grab the transaction hash when it's available.
