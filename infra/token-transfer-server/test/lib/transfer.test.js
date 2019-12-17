@@ -302,7 +302,7 @@ describe('Token transfer library', () => {
 
     // Check the transfer row was updated as expected.
     transfer.reload()
-    expect(transfer.status).to.equal(enums.TransferStatuses.Success)
+    expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
 
     sendStub.restore()
   })
