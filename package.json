@@ -60,7 +60,8 @@
       "truffle",
       "truffle-hdwallet-provider",
       "truffle-privatekey-provider",
-      "react-image-crop"
+      "react-image-crop",
+      "solc"
     ],
     "ignorePaths": [
       "mobile"
