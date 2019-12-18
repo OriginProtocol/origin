@@ -25,7 +25,6 @@ function useConfig() {
         config.supportEmailPlain = supportEmailPlain
         const netConfig = config.networks[NetID] || {}
         config = { ...config, ...netConfig }
-        console.log(config)
 
         setLoading(false)
       } catch (e) {

@@ -4,7 +4,6 @@ import Link from 'components/Link'
 import formatPrice from 'utils/formatPrice'
 import useIsMobile from 'utils/useIsMobile'
 
-import Categories from '../_Categories'
 import CartItem from './CartItem'
 
 import { useStateValue } from 'data/state'
@@ -67,30 +66,23 @@ const Cart = () => {
   const [{ cart }] = useStateValue()
 
   return (
-    <div className="row">
-      <div className="col-md-3 d-none d-md-block">
-        <Categories />
+    <div className="cart">
+      <div className="breadcrumbs">
+        <Link to="/">Home</Link>
+        <span>Your Shopping Cart</span>
       </div>
-      <div className="col-md-9">
-        <div className="cart">
-          <div className="breadcrumbs">
-            <Link to="/">Home</Link>
-            <span>Your Shopping Cart</span>
-          </div>
-          {cart.items.length ? (
-            <CartItems />
-          ) : (
-            <div>
-              <h3>Shopping Cart</h3>
-              <p>Your cart is currently empty.</p>
+      {cart.items.length ? (
+        <CartItems />
+      ) : (
+        <div>
+          <h3>Shopping Cart</h3>
+          <p>Your cart is currently empty.</p>
 
-              <p>
-                Continue browsing <Link to="/">here</Link>.
-              </p>
-            </div>
-          )}
+          <p>
+            Continue browsing <Link to="/">here</Link>.
+          </p>
         </div>
-      </div>
+      )}
     </div>
   )
 }

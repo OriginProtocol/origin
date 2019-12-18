@@ -11,7 +11,6 @@ import usePaginate from 'utils/usePaginate'
 import useSearchQuery from 'utils/useSearchQuery'
 import sortProducts from 'utils/sortProducts'
 
-import Categories from './_Categories'
 import ProductList from 'components/ProductList'
 import SortBy from 'components/SortBy'
 
@@ -47,51 +46,46 @@ const Products = () => {
   const pagedProducts = filteredProducts.slice(start, end)
 
   return (
-    <div className="row">
-      <div className="col-md-3">
-        <Categories />
-      </div>
-      <div className="col-md-9">
-        {isSearch ? (
-          <div className="collection">
-            <div className="breadcrumbs">
-              <Link to="/">Home</Link>
-              <span>{`Search for "${opts.q}"`}</span>
-            </div>
-            <div className="d-flex flex-row justify-content-between align-items-center">
-              <h3>
-                {collection
-                  ? collection.title
-                  : `Your search for "${opts.q}" revealed the following:`}
-              </h3>
-            </div>
+    <>
+      {isSearch ? (
+        <div className="collection">
+          <div className="breadcrumbs">
+            <Link to="/">Home</Link>
+            <span>{`Search for "${opts.q}"`}</span>
           </div>
-        ) : collection ? (
-          <div className="collection">
-            <div className="breadcrumbs">
-              <Link to="/">Home</Link>
-              <span>{collection.title}</span>
-            </div>
-            <div className="d-flex flex-row justify-content-between align-items-center">
-              <h3>{collection.title}</h3>
-              <SortBy />
-            </div>
+          <div className="d-flex flex-row justify-content-between align-items-center">
+            <h3>
+              {collection
+                ? collection.title
+                : `Your search for "${opts.q}" revealed the following:`}
+            </h3>
           </div>
-        ) : (
-          <div className="collection" />
-        )}
+        </div>
+      ) : collection ? (
+        <div className="collection">
+          <div className="breadcrumbs">
+            <Link to="/">Home</Link>
+            <span>{collection.title}</span>
+          </div>
+          <div className="d-flex flex-row justify-content-between align-items-center">
+            <h3>{collection.title}</h3>
+            <SortBy />
+          </div>
+        </div>
+      ) : (
+        <div className="collection" />
+      )}
 
-        {error ? (
-          'Error loading products'
-        ) : loading ? (
-          'Loading...'
-        ) : (
-          <ProductList products={pagedProducts} />
-        )}
+      {error ? (
+        'Error loading products'
+      ) : loading ? (
+        'Loading...'
+      ) : (
+        <ProductList products={pagedProducts} />
+      )}
 
-        <Paginate total={filteredProducts.length} />
-      </div>
-    </div>
+      <Paginate total={filteredProducts.length} />
+    </>
   )
 }
 

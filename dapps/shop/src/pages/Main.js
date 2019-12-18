@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import useIsMobile from 'utils/useIsMobile'
 import dataUrl from 'utils/dataUrl'
@@ -9,6 +9,7 @@ import Bars from 'components/icons/Bars.js'
 import Link from 'components/Link'
 
 import Nav from './_Nav'
+import Categories from './_Categories'
 import MobileMenu from './_MobileMenu'
 import Products from './Products'
 import Product from './Product'
@@ -17,27 +18,46 @@ import Cart from './cart/Cart'
 
 const Content = () => {
   const { config } = useConfig()
-  return (
-    <>
-      <main>
-        <Switch>
-          <Route path="/products/:id" component={Product} />
-          <Route path="/cart" component={Cart} />
+
+  const Routes = (
+    <Switch>
+      <Route path="/products/:id" component={Product} />
+      <Route path="/cart" component={Cart} />
+      <Route path="/search" component={Products} />
+      <Route path="/about" component={About} />
+      {config.singleProduct ? (
+        <Redirect to={`/products/${config.singleProduct}`} />
+      ) : (
+        <>
           <Route
             path="/collections/:collection/products/:id"
             component={Product}
           ></Route>
           <Route path="/collections/:collection" component={Products} />
-          <Route path="/search" component={Products} />
-          <Route path="/about" component={About} />
           <Route component={Products} />
-        </Switch>
+        </>
+      )}
+    </Switch>
+  )
+
+  return (
+    <>
+      <main>
+        {config.singleProduct ? (
+          Routes
+        ) : (
+          <div className="row">
+            <div className="col-md-3">
+              <Categories />
+            </div>
+            <div className="col-md-9">{Routes}</div>
+          </div>
+        )}
       </main>
       {!config.footer ? null : (
-        <div
-          className="footer my-4 py-4"
-          dangerouslySetInnerHTML={{ __html: config.footer }}
-        />
+        <div className="footer my-4 py-4">
+          <div dangerouslySetInnerHTML={{ __html: config.footer }} />
+        </div>
       )}
     </>
   )
