@@ -39,8 +39,9 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
-const otcPartnerEmail =
+const otcPartnerEmails = (
   process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
+).split(',')
 
 const gasPriceMultiplier = process.env.GAS_PRICE_MULTIPLIER
 
@@ -50,7 +51,7 @@ module.exports = {
   lockupBonusRate,
   lockupDuration,
   networkId,
-  otcPartnerEmail,
+  otcPartnerEmails,
   port,
   clientUrl,
   sendgridFromEmail,
