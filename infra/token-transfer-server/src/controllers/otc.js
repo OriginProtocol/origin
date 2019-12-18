@@ -19,7 +19,9 @@ router.post(
       .isNumeric()
       .toInt()
       .isInt({ min: 250000 })
-      .withMessage('OTC requests are only supported for amounts of 250k or larger'),
+      .withMessage(
+        'OTC requests are only supported for amounts of 250k or larger'
+      ),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
