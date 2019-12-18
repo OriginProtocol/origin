@@ -1,18 +1,24 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
+
+import MobileModal from 'components/MobileModal'
+import Redirect from 'components/Redirect'
+import HelpOriginWallet from 'components/DownloadApp'
+import LoadingSpinner from 'components/LoadingSpinner'
+
+import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
-import MobileModal from 'components/MobileModal'
-import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
-import Redirect from 'components/Redirect'
-import { fbt } from 'fbt-runtime'
-import HelpOriginWallet from 'components/DownloadApp'
+import withPartnerCampaignConfig from 'hoc/withPartnerCampaignConfig'
+import { withRouter } from 'react-router-dom'
+
+import { hasReferralCode, getReferralReward } from 'utils/growthTools'
+import Store from 'utils/store'
+
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
-
-import LoadingSpinner from 'components/LoadingSpinner'
-
-import Store from 'utils/store'
 
 const localStore = Store('localStorage')
 
@@ -29,22 +35,61 @@ class OnboardRewardsSignUp extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.shouldGoBack) {
+      return
+    }
+
+    const { walletLoading, wallet } = this.props
+
+    const onboardCompleted = walletLoading
+      ? false
+      : localStore.get(`${wallet}-onboarding-completed`)
+    const isFromWelcomePage = get(this.props, 'location.pathname', '')
+      .toLowerCase()
+      .startsWith('/welcome')
+
+    if (onboardCompleted || isFromWelcomePage) {
+      // If user went into onboarding from Rewards landing page,
+      // Redirect them to there during this step
+      return this.setState({
+        shouldGoBack: true
+      })
+    }
+  }
+
+  getReferralReward() {
+    const reward = getReferralReward(this.props.partnerCampaignConfig)
+
+    if (!reward) {
+      return null
+    }
+
+    return <div className="partner-referral-reward">{`${reward} OGN`}</div>
+  }
+
   render() {
     const {
       finished,
       confirmSkipModal,
-      shouldCloseConfirmSkipModal
+      shouldCloseConfirmSkipModal,
+      shouldGoBack
     } = this.state
 
-    const { linkPrefix, skip, onSkip, wallet, walletLoading } = this.props
+    const {
+      linkPrefix,
+      skip,
+      onSkip,
+      wallet,
+      walletLoading,
+      partnerCampaignLoading
+    } = this.props
 
-    if (walletLoading) {
+    if (walletLoading || partnerCampaignLoading) {
       return <LoadingSpinner />
     }
 
-    const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
-
-    if (onboardCompleted) {
+    if (shouldGoBack) {
       // Back to where you came from.
       return <Redirect to={`${linkPrefix}/onboard/back`} />
     }
@@ -119,11 +164,20 @@ class OnboardRewardsSignUp extends Component {
             className="onboard-rewards-logo"
           />
         </div>
-        <div className="help desc mt-3 mb-3 text-center">
-          <fbt desc="UserActivation.rewardsDesc">
-            Earn Origin Tokens (OGN) by strengthening your profile and
-            completing tasks in the Origin Marketplace.
-          </fbt>
+        <div className="help desc mt-3 mb-0 text-center">
+          {hasReferralCode() ? (
+            <fbt desc="Rewards.almostThere">
+              You&apos;re almost there! Sign up to start earning your tokens.
+            </fbt>
+          ) : (
+            <fbt desc="UserActivation.rewardsDesc">
+              Earn Origin Tokens (OGN) by strengthening your profile and
+              completing tasks in the Origin Marketplace.
+            </fbt>
+          )}
+        </div>
+        <div className="mb-3 text-center">
+          {hasReferralCode() ? this.getReferralReward() : null}
         </div>
         <div className="actions">
           <EnrollButton
@@ -209,7 +263,9 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withIsMobile(withWallet(OnboardRewardsSignUp))
+export default withRouter(
+  withPartnerCampaignConfig(withIsMobile(withWallet(OnboardRewardsSignUp)))
+)
 
 require('react-styl')(`
   .rewards-signup
@@ -223,6 +279,12 @@ require('react-styl')(`
         margin-top: auto
         > button
           width: 100%
+  .partner-referral-reward
+    font-family: Poppins
+    font-size: 2.125rem
+    font-weight: bold
+    color: #0d1d29
+    text-align: center !important
   .onboard .onboard-box.profile-rewards
     padding: 0
     > img

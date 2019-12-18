@@ -89,8 +89,8 @@ const BalanceCard = props => {
               <div className="status-circle status-circle-success mr-3"></div>
               Available
             </div>
-            <div className="col-5 text-right">
-              <strong>
+            <div className="col-6 text-right">
+              <strong className="text-nowrap">
                 {props.isLocked ? 0 : Number(props.balance).toLocaleString()}{' '}
                 <small className="ogn">OGN</small>
               </strong>
@@ -122,8 +122,8 @@ const BalanceCard = props => {
                 <div className="status-circle status-circle-info mr-3"></div>
                 Locked Tokens
               </div>
-              <div className="col-5 text-right">
-                <strong>
+              <div className="col-6 text-right">
+                <strong className="text-nowrap">
                   {props.locked} <small className="ogn">OGN</small>
                 </strong>
                 <Dropdown drop={'left'} style={{ display: 'inline' }}>

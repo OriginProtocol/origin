@@ -75,10 +75,12 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
 }
 
 export function formatTokens(tokenAmount, decimalDivision) {
+  const _div = decimalDivision || web3.utils.toBN(10).pow(web3.utils.toBN(18))
+
   return numberFormat(
     web3.utils
       .toBN(tokenAmount)
-      .div(decimalDivision)
+      .div(_div)
       .toString(),
     2,
     '.',
@@ -208,4 +210,54 @@ export function getContentToShare(action, locale) {
   )
 
   return translation ? translation.text : action.content.post.tweet.default
+}
+
+export function setReferralCode(code) {
+  if (!code) {
+    delete localStorage.partner_referral_code
+    return
+  }
+
+  if (localStorage.partner_referral_code === code) {
+    return
+  }
+
+  localStorage.partner_referral_code = code
+}
+
+export function hasReferralCode() {
+  return !!localStorage.partner_referral_code
+}
+
+export function getReferralReward(campaignConfig) {
+  const referralCode = localStorage.partner_referral_code
+
+  if (!referralCode) {
+    return null
+  }
+
+  const codeParts = referralCode.split(':')
+
+  // Invalid code
+  if (codeParts.length < 2) {
+    return null
+  }
+
+  // if there's no campaign action, nor config for the referral code, there's
+  // no point in continuing
+  if (
+    !campaignConfig ||
+    !Object.prototype.hasOwnProperty.call(campaignConfig, codeParts[1]) ||
+    campaignConfig[codeParts[1]].reward.currency !== 'ogn'
+  ) {
+    return null
+  }
+
+  const reward = campaignConfig[codeParts[1]].reward.value
+
+  if (!reward) {
+    return null
+  }
+
+  return reward
 }

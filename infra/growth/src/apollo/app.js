@@ -5,16 +5,13 @@
 const logger = require('../logger')
 require('dotenv').config()
 
-const {
-  getUserAuthenticationStatus,
-  getUser
-} = require('../resources/authentication')
-
 try {
   require('envkey')
 } catch (error) {
   logger.log('EnvKey not configured')
 }
+
+const { getUserAuthStatusAndToken } = require('../resources/authentication')
 
 const { ApolloServer } = require('apollo-server-express')
 const cors = require('cors')
@@ -24,6 +21,8 @@ const promBundle = require('express-prom-bundle')
 const enums = require('../enums')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
+
+const { validateToken } = require('@origin/auth-utils/src/index')
 
 const app = express()
 app.use(cors())
@@ -60,6 +59,8 @@ const server = new ApolloServer({
       walletAddress,
       identityOverriden = false
 
+    let authorized = false
+
     if (headers['x-growth-secret'] && headers['x-growth-wallet']) {
       if (headers['x-growth-secret'] === process.env.GROWTH_ADMIN_SECRET) {
         // Grant admin access.
@@ -70,18 +71,25 @@ const server = new ApolloServer({
       } else {
         logger.error('Invalid admin secret')
       }
-    } else if (headers.authentication) {
-      try {
-        authToken = JSON.parse(headers.authentication).growth_auth_token
-        authStatus = await getUserAuthenticationStatus(authToken)
+    } else if (headers.authorization) {
+      const { success, authData } = await validateToken(context.req)
 
-        walletAddress = (await getUser(authToken)).ethAddress
-      } catch (e) {
-        logger.error(
-          'Authentication header present but unable to authenticate user ',
-          e.message,
-          e.stack
-        )
+      if (success) {
+        try {
+          const status = await getUserAuthStatusAndToken(authData.address)
+
+          authStatus = status.authStatus
+          authToken = status.authToken
+
+          authorized = true
+          walletAddress = authData.address.toLowerCase()
+        } catch (e) {
+          logger.error(
+            'Authorization header present but unable to authenticate user',
+            e.message,
+            e.stack
+          )
+        }
       }
     }
 
@@ -90,7 +98,8 @@ const server = new ApolloServer({
       authToken,
       identityOverriden,
       walletAddress,
-      authentication: authStatus
+      authentication: authStatus,
+      authorized
     }
   }
 })

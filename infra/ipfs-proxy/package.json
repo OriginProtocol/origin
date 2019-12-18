@@ -27,7 +27,7 @@
     "file-type": "12.4.0",
     "http-proxy": "1.18.0",
     "ipfs": "0.40.0",
-    "ipfsd-ctl": "0.47.4",
+    "ipfsd-ctl": "1.0.2",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
@@ -42,7 +42,7 @@
     "chai": "4.2.0",
     "form-data": "3.0.0",
     "mocha": "6.2.2",
-    "nodemon": "2.0.1",
+    "nodemon": "2.0.2",
     "supertest": "4.0.2",
     "webrtcsupport": "2.2.0"
   },

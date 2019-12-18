@@ -2,15 +2,22 @@ const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-const Web3 = require('web3')
 const enums = require('../enums')
 const crypto = require('crypto')
 const { BannedUserError } = require('../util/bannedUserError')
 
-const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 // TODO: have this stored somewhere in the db
 const currentAgreementMessage =
   'I accept the terms of growth campaign version: 1.0'
+
+const participantStatusToAuthStatus = {
+  [enums.GrowthParticipantStatuses.Active]:
+    enums.GrowthParticipantAuthenticationStatus.Enrolled,
+  [enums.GrowthParticipantStatuses.Banned]:
+    enums.GrowthParticipantAuthenticationStatus.Banned,
+  [enums.GrowthParticipantStatuses.Closed]:
+    enums.GrowthParticipantAuthenticationStatus.Closed
+}
 
 /**
  * Authenticate and enroll the user into the Origin Rewards program.
@@ -25,7 +32,6 @@ const currentAgreementMessage =
 async function authenticateEnrollment(
   accountId,
   agreementMessage,
-  signature,
   fingerprintData,
   ip,
   country
@@ -34,14 +40,6 @@ async function authenticateEnrollment(
     throw new Error(
       `Incorrect agreementMessage. Expected: "${currentAgreementMessage}" received: "${agreementMessage}"`
     )
-  }
-  const recoveredAccountId = web3.eth.accounts.recover(
-    agreementMessage,
-    signature
-  )
-
-  if (accountId !== recoveredAccountId) {
-    throw new Error('Recovered and provided accounts do not match')
   }
 
   const participant = await db.GrowthParticipant.findOne({
@@ -108,9 +106,9 @@ async function getUser(token) {
 /**
  * Fetches user's authentication status
  * @param {string} token - Growth authentication token
- * @param {string} accountId - Optional accountIOd parameter
+ * @param {string} accountId - Optional accountId parameter
  *
- * returns GrowthParticipantAuthenticationStatus
+ * @returns GrowthParticipantAuthenticationStatus
  *  - Enrolled -> user participates in growth campaign
  *  - Banned -> user is banned
  *  - NotEnrolled -> user not a participant yet
@@ -134,17 +132,53 @@ async function getUserAuthenticationStatus(token, accountId) {
     return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
   }
 
-  switch (growthParticipant.status) {
-    case enums.GrowthParticipantStatuses.Active:
-      return enums.GrowthParticipantAuthenticationStatus.Enrolled
-    case enums.GrowthParticipantStatuses.Banned:
-      return enums.GrowthParticipantAuthenticationStatus.Banned
-    case enums.GrowthParticipantStatuses.Closed:
-      return enums.GrowthParticipantAuthenticationStatus.Closed
-    default:
-      throw new Error(
-        `Unexpected GrowthParticipant status ${growthParticipant.status}`
-      )
+  const authStatus = participantStatusToAuthStatus[growthParticipant.status]
+
+  if (!authStatus) {
+    throw new Error(
+      `Unexpected GrowthParticipant status ${growthParticipant.status}`
+    )
+  }
+
+  return authStatus
+}
+
+/**
+ * Fetches user's authentication status and token
+ * @param {string} address - ETH address
+ *
+ * @returns {{
+ *  authStatus,
+ *  authToken
+ * }}
+ */
+async function getUserAuthStatusAndToken(address) {
+  const whereFilter = {
+    where: {
+      ethAddress: address.toLowerCase()
+    }
+  }
+
+  const growthParticipant = await db.GrowthParticipant.findOne(whereFilter)
+
+  if (growthParticipant === null) {
+    return {
+      authToken: null,
+      authStatus: enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+    }
+  }
+
+  const authStatus = participantStatusToAuthStatus[growthParticipant.status]
+
+  if (!authStatus) {
+    throw new Error(
+      `Unexpected GrowthParticipant status ${growthParticipant.status}`
+    )
+  }
+
+  return {
+    authStatus,
+    authToken: growthParticipant.authToken
   }
 }
 
@@ -183,5 +217,6 @@ async function createInviteCode(accountId) {
 module.exports = {
   authenticateEnrollment,
   getUserAuthenticationStatus,
-  getUser
+  getUser,
+  getUserAuthStatusAndToken
 }

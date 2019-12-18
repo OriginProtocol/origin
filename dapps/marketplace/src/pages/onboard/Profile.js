@@ -13,6 +13,7 @@ import EditProfile from 'pages/user/_EditProfile'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import Redirect from 'components/Redirect'
+import AutoMutate from 'components/AutoMutate'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
@@ -74,14 +75,14 @@ class OnboardProfile extends Component {
   }
 
   getNextLink() {
-    const { linkPrefix, wallet, walletType, hasMessagingKeys } = this.props
+    const { linkPrefix, wallet, isOriginWallet, hasMessagingKeys } = this.props
 
     const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
 
     if (onboardCompleted && hasMessagingKeys) {
       // Back to where you came from.
       return `${linkPrefix}/onboard/back`
-    } else if (walletType === 'Origin Wallet') {
+    } else if (isOriginWallet) {
       // Keys are injected in Origin Wallet, so skip `messaging` step
       return `${linkPrefix}/onboard/rewards`
     } else {
@@ -182,8 +183,25 @@ class OnboardProfile extends Component {
   }
 
   renderSignTxModal() {
-    const { walletType } = this.props
+    const { walletType, isOriginWallet } = this.props
     const { shouldCloseSignTxModal } = this.state
+
+    if (isOriginWallet) {
+      return (
+        <AutoMutate
+          mutation={() => {
+            if (this.state.deployIdentity) {
+              return
+            }
+
+            this.setState({
+              deployIdentity: true,
+              signTxModal: false
+            })
+          }}
+        />
+      )
+    }
 
     return (
       <MobileModal

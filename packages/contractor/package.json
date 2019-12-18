@@ -1,0 +1,25 @@
+{
+  "name": "contractor",
+  "version": "0.1.0",
+  "description": "Origin contract REPL interface",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
+  },
+  "author": "",
+  "license": "MIT",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "dependencies": {
+    "commander": "^4.0.1",
+    "web3": "^1.2.4"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
+}

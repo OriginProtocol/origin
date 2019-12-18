@@ -182,9 +182,8 @@ const resolvers = {
 
       try {
         const authToken = await authenticateEnrollment(
-          args.accountId,
+          context.walletAddress,
           args.agreementMessage,
-          args.signature,
           args.fingerprintData,
           ip,
           countryCode

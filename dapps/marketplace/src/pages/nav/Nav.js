@@ -60,10 +60,10 @@ const getTitle = pathname => {
 }
 
 const Nav = ({
-  location: { pathname, state: locationState },
+  location: { pathname, state: locationState, search },
   isMobile,
   wallet,
-  walletType,
+  isOriginWallet,
   onShowFooter,
   navbarDarkMode,
   history,
@@ -160,9 +160,7 @@ const Nav = ({
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
     const canShowBack =
-      canGoBack &&
-      (walletType === 'Mobile' || walletType === 'Origin Wallet') &&
-      pathname.match(ShowBackRegex)
+      canGoBack && isOriginWallet && pathname.match(ShowBackRegex)
         ? true
         : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
@@ -175,7 +173,18 @@ const Nav = ({
           }`}
         >
           {isStacked && (
-            <a className="nav-back-icon" onClick={() => history.goBack()} />
+            <a
+              className="nav-back-icon"
+              onClick={() => {
+                const searchParams = new URLSearchParams(search)
+                const actionSource = searchParams.get('actionsource')
+                if (actionSource) {
+                  history.push(actionSource)
+                } else {
+                  history.goBack()
+                }
+              }}
+            />
           )}
           {!isStacked && (
             <Mobile

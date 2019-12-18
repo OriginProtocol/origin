@@ -119,8 +119,10 @@ class SamsungBKS extends React.Component {
                 An error occurred accessing Samsung Blockchain Keystore.
               </fbt>
             </Text>
+            <Text style={{ ...styles.subtitle, fontSize: 14 }}>
+              {this.renderError()}
+            </Text>
           </View>
-          <View style={styles.buttonContainer}>{this.renderError()}</View>
         </View>
       )
     }

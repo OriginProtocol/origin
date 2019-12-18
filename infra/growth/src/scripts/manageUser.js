@@ -1,5 +1,6 @@
 // Script to manage growth user accounts in production.
 const BigNumber = require('bignumber.js')
+const Sequelize = require('sequelize')
 
 const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
@@ -23,37 +24,56 @@ async function _loadAccount(ethAddress) {
 }
 
 async function _loadAccountDetails(ethAddress) {
+  logger.info('Wallet: ', ethAddress)
+  // Load proxy, if it exists.
+  const proxy = await db.Proxy.findOne({ where: { ownerAddress: ethAddress } })
+  const addresses = [ethAddress]
+  if (proxy) {
+    addresses.push(proxy.address)
+    logger.info('Proxy: ', proxy.address)
+  }
+  logger.info('\n')
+
   // Load identity
   const i = await db.Identity.findOne({ where: { ethAddress } })
-  logger.info('Identity:')
-  logger.info('First/LastName\tCountry\tEmail\tPhone\tTwitter\tCreatedAd')
-  logger.info('=================')
-  logger.info(
-    `${i.firstName} ${i.lastName}\t${i.country}\t${i.email}\t${i.phone}\t${
-      i.twitter
-    }\t${i.createdAt.toLocaleString()}`
-  )
+  if (i) {
+    logger.info('Identity:')
+    logger.info('First/LastName\tCountry\tEmail\tPhone\tTwitter\tCreatedAd')
+    logger.info('------------------------------------')
+    logger.info(
+      `${i.firstName} ${i.lastName}\t${i.country}\t${i.email}\t${i.phone}\t${
+        i.twitter
+      }\t${i.createdAt.toLocaleString()}`
+    )
+  } else {
+    logger.info('NO Identity!')
+  }
+  logger.info('\n')
 
   // Load events
   logger.info('Events:')
   logger.info('Id\tType\tStatus\tCreatedAt')
-  logger.info('=================')
+  logger.info('------------------------------------')
   const events = await db.GrowthEvent.findAll({
-    where: { ethAddress },
+    where: { ethAddress: { [Sequelize.Op.in]: addresses } },
     order: [['createdAt', 'ASC']]
   })
   for (const e of events) {
     logger.info(
-      `${e.id}\t${e.type.slice(0, 20)}\t${
-        e.status
-      }\t${e.createdAt.toLocaleString()}`
+      `${String(e.id).padEnd(8, ' ')}${e.type
+        .slice(0, 20)
+        .padEnd(20, ' ')}${e.status.padEnd(
+        10,
+        ' '
+      )}\t${e.createdAt.toLocaleString()}`
     )
   }
+  logger.info('\n')
 
   // Load referrals
   logger.info('Referrals')
   logger.info('EthAddress\tStatus\tCreatedAt')
-  logger.info('=================')
+  logger.info('------------------------------------')
   const referrals = await db.GrowthReferral.findAll({
     where: { referrerEthAddress: ethAddress },
     order: [['createdAt', 'ASC']]
@@ -66,11 +86,12 @@ async function _loadAccountDetails(ethAddress) {
       }\t${referee.createdAt.toLocaleString()}`
     )
   }
+  logger.info('\n')
 
   // Load rewards
   logger.info('Rewards')
   logger.info('Id\tCampaignId\tRuleId\tAmount')
-  logger.info('=================')
+  logger.info('------------------------------------')
   const rewards = await db.GrowthReward.findAll({
     where: { ethAddress },
     order: [['createdAt', 'ASC']]
@@ -82,11 +103,12 @@ async function _loadAccountDetails(ethAddress) {
       )} OGN`
     )
   }
+  logger.info('\n')
 
   // Load payouts
   logger.info('Payouts')
   logger.info('CampaignId\tAmount\tDate')
-  logger.info('=================')
+  logger.info('------------------------------------')
   const payouts = await db.GrowthPayout.findAll({
     where: { toAddress: ethAddress },
     order: [['createdAt', 'ASC']]
@@ -98,6 +120,9 @@ async function _loadAccountDetails(ethAddress) {
       )} OGN\t${p.createdAt.toLocaleString()}`
     )
   }
+  logger.info('\n')
+
+  return addresses
 }
 
 async function banAccount(account, type, reason, doIt) {
@@ -162,8 +187,58 @@ async function closeAccount(account, type, reason, doIt) {
   }
 }
 
+async function unbanAccount(account, doIt) {
+  const participant = await _loadAccount(account)
+  // Check account's current status.
+  if (participant.status !== 'Banned') {
+    throw new Error(
+      `Can't unban account ${account} status is not Banned but ${participant.status}`
+    )
+  }
+
+  const addresses = await _loadAccountDetails(account)
+  const events = await db.GrowthEvent.findAll({
+    where: {
+      ethAddress: { [Sequelize.Op.in]: addresses },
+      status: enums.GrowthEventStatuses.Fraud
+    }
+  })
+
+  if (doIt) {
+    // Update the account's growth_participant record status to Active.
+    await participant.update({
+      status: enums.GrowthParticipantStatuses.Active,
+      ban: null
+    })
+    // Change status of all growth_events from Fraud to Verified.
+
+    for (const event of events) {
+      await event.update({ status: enums.GrowthEventStatuses.Verified })
+    }
+    logger.info(`Changed status of ${events.length} events to Verified`)
+    logger.info(`Unbanned account ${account}`)
+  } else {
+    logger.info(
+      `Would unban account ${account} and change the status of ${events.length} events`
+    )
+  }
+}
+
+async function viewAccount(account) {
+  const participant = await _loadAccount(account)
+  logger.info('Status:', participant.status)
+  logger.info(
+    'Ban data:',
+    participant.data ? JSON.stringify(participant.data, null, 2) : 'null'
+  )
+  await _loadAccountDetails(account)
+}
+
 async function main(config) {
   switch (config.action) {
+    case 'view':
+      await viewAccount(config.account)
+      break
     case 'ban':
       await banAccount(config.account, config.type, config.reason, config.doIt)
       break
@@ -174,6 +249,9 @@ async function main(config) {
         config.reason,
         config.doIt
       )
+      break
+    case 'unban':
+      await unbanAccount(config.account, config.doIt)
       break
     default:
       throw new Error(`Invalid action ${config.action}`)

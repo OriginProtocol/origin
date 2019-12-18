@@ -1,6 +1,8 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const Web3 = require('web3')
 
+const logger = require('./logger')
+
 const MAINNET_NETWORK_ID = 1
 const ROPSTEN_NETWORK_ID = 3
 const RINKEBY_NETWORK_ID = 4
@@ -52,7 +54,7 @@ function createProvider(networkId) {
         throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
       }
       if (!process.env.ROPSTEN_PROVIDER_URL) {
-        throw 'Missing RPOSTEN_PROVIDER_URL env var'
+        throw 'Missing ROPSTEN_PROVIDER_URL env var'
       }
       providerUrl = process.env.ROPSTEN_PROVIDER_URL
       break
@@ -78,7 +80,7 @@ function createProvider(networkId) {
       if (!privateKey && !mnemonic) {
         throw 'Must have either ORIGIN_PRIVATE_KEY or ORIGIN_MNEMONIC env var'
       }
-      providerUrl = 'https://eth.dev.originprotocol.com/rpc'
+      providerUrl = 'https://testnet.originprotocol.com/rpc'
       break
     default:
       throw `Unsupported network id ${networkId}`
@@ -91,7 +93,7 @@ function createProvider(networkId) {
     web3.eth.defaultAccount = account.address
     provider = web3
     if (process.env.NODE_ENV !== 'test') {
-      console.log(
+      logger.info(
         `Network=${networkId} URL=${providerUrl} Using private key for account ${account.address}`
       )
     }
@@ -99,7 +101,7 @@ function createProvider(networkId) {
     if (process.env.NODE_ENV !== 'test') {
       const displayMnemonic =
         networkId === LOCAL_NETWORK_ID ? mnemonic : '[redacted]'
-      console.log(
+      logger.info(
         `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
       )
     }

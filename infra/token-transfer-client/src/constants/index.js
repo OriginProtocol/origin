@@ -1,6 +1,7 @@
 import {
   earnOgnEnabled,
   lockupBonusRate,
+  otcRequestEnabled,
   unlockDate
 } from '@origin/token-transfer-server/src/shared'
 
@@ -15,4 +16,10 @@ if (process.env.NODE_ENV === 'production') {
   apiUrl = 'http://localhost:5000'
 }
 
-export { apiUrl, earnOgnEnabled, unlockDate, lockupBonusRate }
+export {
+  apiUrl,
+  earnOgnEnabled,
+  otcRequestEnabled,
+  unlockDate,
+  lockupBonusRate
+}

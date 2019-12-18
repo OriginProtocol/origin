@@ -32,15 +32,15 @@
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.14.0",
-    "rate-limiter-flexible": "1.1.6",
-    "sequelize": "5.21.2",
+    "rate-limiter-flexible": "1.2.0",
+    "sequelize": "5.21.3",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "4.2.0",
     "mocha": "6.2.2",
-    "nodemon": "2.0.1"
+    "nodemon": "2.0.2"
   },
   "prettier": {
     "semi": false,

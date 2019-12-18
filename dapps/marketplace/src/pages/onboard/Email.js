@@ -64,13 +64,15 @@ class OnboardEmail extends Component {
     const {
       linkPrefix,
       wallet,
-      walletType,
+      isOriginWallet,
       hasMessagingKeys,
-      messagingStatusLoading
+      messagingStatusLoading,
+      identityLoading,
+      walletLoading
     } = this.props
     const { finished, hasIdentity } = this.state
 
-    if (messagingStatusLoading) {
+    if (messagingStatusLoading || identityLoading || walletLoading) {
       return <LoadingSpinner />
     }
 
@@ -82,7 +84,7 @@ class OnboardEmail extends Component {
         if (onboardCompleted && hasMessagingKeys) {
           // Back to where you came from.
           link = '/onboard/back'
-        } else if (walletType === 'Origin Wallet') {
+        } else if (isOriginWallet) {
           // Keys are injected in Origin Wallet, so skip `messaging` step
           link = '/onboard/rewards'
         } else if (!hasMessagingKeys) {

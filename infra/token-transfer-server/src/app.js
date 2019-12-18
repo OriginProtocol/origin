@@ -1,8 +1,9 @@
 const cron = require('node-cron')
 const logger = require('./logger')
 
+const Token = require('@origin/token/src/token')
+
 const { executeTransfers } = require('./tasks/transfer')
-const { walletMnemonic } = require('./config')
 
 try {
   require('envkey')
@@ -26,7 +27,7 @@ require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const helmet = require('helmet')
 
-const { sessionSecret, port } = require('./config')
+const { networkId, port, sessionSecret } = require('./config')
 
 // Session setup
 const sessionConfig = {
@@ -98,10 +99,17 @@ app.use(useragent.express())
 
 app.use(require('./controllers'))
 
+const hasWallet =
+  (networkId === 2222 && process.env.ORIGIN_MNEMONIC) ||
+  (networkId === 4 && process.env.RINKEBY_MNEMONIC) ||
+  (networkId === 1 && process.env.MAINNET_MNEMONIC)
+
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
-  if (walletMnemonic) {
-    cron.schedule('*/10 * * * * *', executeTransfers)
+  if (hasWallet) {
+    // Setup token library
+    const token = new Token(networkId)
+    cron.schedule('*/10 * * * * *', () => executeTransfers(token))
   } else {
     logger.warn('Not wallet mnemonic found, not executing any transfers')
   }

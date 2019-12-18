@@ -2,21 +2,29 @@ import React, { Component, Fragment } from 'react'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
-
 import omit from 'lodash/omit'
 
-import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
+
+import Enroll from 'pages/growth/mutations/Enroll'
+
 import QueryError from 'components/QueryError'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
-import Enroll from 'pages/growth/mutations/Enroll'
-import { mobileDevice } from 'utils/mobile'
-import withIsMobile from 'hoc/withIsMobile'
 import LoadingSpinner from 'components/LoadingSpinner'
+
+import withIsMobile from 'hoc/withIsMobile'
+import withAuthStatus from 'hoc/withAuthStatus'
+import withWallet from 'hoc/withWallet'
+
+import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
+import { mobileDevice } from 'utils/mobile'
+
+import store from 'utils/store'
+const sessionStore = store('sessionStorage')
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -94,15 +102,19 @@ function withEnrolmentModal(WrappedComponent) {
       this.props.history.push(href)
     }
 
-    handleClick(e, enrollmentStatus, walletPresent) {
+    handleClick(e, enrollmentStatus) {
       e.preventDefault()
+
+      const { isLoggedIn } = this.props
 
       if (mobileDevice() !== null && !rewardsOnMobileEnabled) {
         this.setState({
           open: true,
           stage: 'NotSupportedOnMobile'
         })
-      } else if (!walletPresent) {
+      } else if (!isLoggedIn) {
+        const { pathname, search } = this.props.location
+        sessionStore.set('getStartedRedirect', { pathname, search })
         this.historyNavigate(this.props.urlforonboarding)
       } else if (enrollmentStatus === 'Enrolled') {
         this.historyNavigate('/campaigns')
@@ -634,14 +646,21 @@ function withEnrolmentModal(WrappedComponent) {
                           'isMobile',
                           'isMobileApp',
                           'onAccountBlocked',
-                          'goToWelcomeWhenNotEnrolled'
+                          'goToWelcomeWhenNotEnrolled',
+                          'isLoggedIn',
+                          'isAuthTokenValid',
+                          'hasAuthTokenExpired',
+                          'willAuthTokenExpire',
+                          'authStatusRefetch',
+                          'authStatusLoading',
+                          'walletType',
+                          'walletLoading',
+                          'walletProxy',
+                          'walletPredictedProxy',
+                          'location'
                         ])}
                         onClick={e =>
-                          this.handleClick(
-                            e,
-                            data.enrollmentStatus,
-                            walletAddress
-                          )
+                          this.handleClick(e, data.enrollmentStatus)
                         }
                       />
                       {open && (
@@ -671,12 +690,16 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  return withIsMobile(
-    // do not pass staticContext prop to component to prevent react errors in browser console
-    // eslint-disable-next-line no-unused-vars
-    withRouter(({ staticContext, location, match, ...props }) => (
-      <WithEnrolmentModal {...props} />
-    ))
+  return withWallet(
+    withAuthStatus(
+      withIsMobile(
+        // do not pass staticContext prop to component to prevent react errors in browser console
+        // eslint-disable-next-line no-unused-vars
+        withRouter(({ staticContext, match, ...props }) => (
+          <WithEnrolmentModal {...props} />
+        ))
+      )
+    )
   )
 }
 
@@ -759,7 +782,7 @@ require('react-styl')(`
       display: block
       position: relative
       padding-left: 28px
-      margin-bottom: 0px
+      margin: 0 10px 0 10px
       cursor: pointer
       font-size: 18px
       -webkit-user-select: none
@@ -796,6 +819,8 @@ require('react-styl')(`
         transform: rotate(45deg)
     .country-check-label
       font-weight: 300
+      padding-left: 25px
+      padding-right: 25px
     .terms-title
       font-weight: 500
       color: black
