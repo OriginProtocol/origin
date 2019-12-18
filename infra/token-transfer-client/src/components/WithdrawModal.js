@@ -173,8 +173,8 @@ class WithdrawModal extends Component {
   renderDisclaimer() {
     return (
       <>
-        <h1 className="mb-4">Withdraw OGN</h1>
-        <div className="alert alert-warning my-2 mx-4">
+        <h1 className="mb-2">Withdraw OGN</h1>
+        <div className="alert alert-warning my-3 mx-4">
           This transaction is <strong>not reversible</strong> and we{' '}
           <strong>cannot help you recover these funds</strong> once you take
           custody
@@ -182,21 +182,21 @@ class WithdrawModal extends Component {
         <div className="row">
           <div className="col">
             <ul className="my-4 text-left">
-              <li className="mt-2">
+              <li className="mt-4">
                 You will need to <strong>confirm your withdrawal</strong> via
                 email within <strong>five minutes</strong> of making a request.
               </li>
-              <li className="mt-2">
+              <li className="mt-4">
                 Be sure that <strong>only you</strong> have access to your
                 account and that your{' '}
                 <strong>private key or seed phrase is backed up</strong> and
                 stored safely.
               </li>
-              <li className="mt-2">
+              <li className="mt-4">
                 Do not send any funds back to the account that they are sent
                 from.
               </li>
-              <li className="mt-2">
+              <li className="mt-4">
                 Large withdrawals <strong>may be delayed</strong> and will
                 require a <strong>phone call for verification.</strong>
               </li>
@@ -205,11 +205,13 @@ class WithdrawModal extends Component {
           {otcRequestEnabled && (
             <div className="col-5">
               <div
-                className="card text-left p-4 mt-4 mr-3"
+                className="card text-left p-4 mt-3 mr-3"
                 style={{ backgroundColor: '#eff6f9' }}
               >
                 <img src={OtcDesk} className="mb-3" />
-                <strong className="mb-2">Looking to sell a large quantity of OGN?</strong>
+                <strong className="mb-2">
+                  Looking to sell a large quantity of OGN?
+                </strong>
                 <p>
                   Try an OTC (over-the-counter) trade. OTC trades oftentimes
                   result in a better overall price for large sellers.
