@@ -18,8 +18,8 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 100 })
-      .withMessage('Amount must be 100 or greater'),
+      .isInt({ min: 250000 })
+      .withMessage('Amount must be 250000 or greater'),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
