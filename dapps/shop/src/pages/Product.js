@@ -11,6 +11,7 @@ import Gallery from 'components/Gallery'
 import SimilarProducts from 'components/SimilarProducts'
 import formatPrice from 'utils/formatPrice'
 import useIsMobile from 'utils/useIsMobile'
+import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
 import fetchProduct from 'data/fetchProduct'
@@ -29,6 +30,7 @@ const Product = ({ history, location, match }) => {
   const [{ collections }, dispatch] = useStateValue()
   const [productData, setProductData] = useState()
   const isMobile = useIsMobile()
+  const { config } = useConfig()
   const opts = queryString.parse(location.search)
 
   useEffect(() => {
@@ -166,13 +168,17 @@ const Product = ({ history, location, match }) => {
                 <Link to="/cart" className={`btn btn-primary${lg}`}>
                   View Cart
                 </Link>
-                <Link to="/" className={`btn btn-outline-primary${lg}`}>
-                  Continue Shopping
-                </Link>
+                {config.singleProduct ? null : (
+                  <Link to="/" className={`btn btn-outline-primary${lg}`}>
+                    Continue Shopping
+                  </Link>
+                )}
               </>
             ) : variant ? (
               <button
-                onClick={() => addToCart(productData.id, variant)}
+                onClick={() => {
+                  addToCart(productData.id, variant)
+                }}
                 className={`btn btn-outline-primary${lg}`}
               >
                 {onSale ? 'Pre-Order' : 'Add to Cart'}

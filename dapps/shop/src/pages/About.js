@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Categories from './_Categories'
 import Link from 'components/Link'
 
 const About = () => (
