@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ReactGA from 'react-ga'
+import get from 'lodash.get'
 
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import { submitOtcRequest } from '@/actions/otc'
@@ -29,7 +30,17 @@ class OtcRequestModal extends Component {
   }
 
   componentDidMount() {
-    ReactGA.modalview(`/otcRequest`)
+    ReactGA.modalview(`/otcRequest/${this.state.modalState.toLowerCase()}`)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (get(prevProps, 'otcError') !== this.props.otcError) {
+      this.handleServerError(this.props.otcError)
+    }
+
+    if (prevState.modalState !== this.state.modalState) {
+      ReactGA.modalview(`/otcRequest/${this.state.modalState.toLowerCase()}`)
+    }
   }
 
   handleServerError(error) {

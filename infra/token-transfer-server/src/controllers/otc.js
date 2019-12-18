@@ -19,7 +19,7 @@ router.post(
       .isNumeric()
       .toInt()
       .isInt({ min: 250000 })
-      .withMessage('Amount must be 250000 or greater'),
+      .withMessage('OTC requests are only supported for amounts of 250k or larger'),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
@@ -56,7 +56,7 @@ router.post(
       email: req.user.email
     }
 
-    for (const email in otcPartnerEmails) {
+    for (const email of otcPartnerEmails) {
       await sendEmail(email, 'otc', vars)
     }
 

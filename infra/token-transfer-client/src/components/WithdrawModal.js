@@ -20,6 +20,7 @@ import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
 import { otcRequestEnabled } from '@/constants'
+import OtcDesk from '@/assets/otc-desk.svg'
 
 class WithdrawModal extends Component {
   constructor(props) {
@@ -180,35 +181,35 @@ class WithdrawModal extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <ul className="my-4 mx-2 text-left">
-              <li className="mt-1">
+            <ul className="my-4 text-left">
+              <li className="mt-2">
                 You will need to <strong>confirm your withdrawal</strong> via
                 email within <strong>five minutes</strong> of making a request.
               </li>
-              <li className="mt-1">
+              <li className="mt-2">
                 Be sure that <strong>only you</strong> have access to your
                 account and that your{' '}
                 <strong>private key or seed phrase is backed up</strong> and
                 stored safely.
               </li>
-              <li className="mt-1">
+              <li className="mt-2">
                 Do not send any funds back to the account that they are sent
                 from.
               </li>
-              <li className="mt-1">
+              <li className="mt-2">
                 Large withdrawals <strong>may be delayed</strong> and will
                 require a <strong>phone call for verification.</strong>
               </li>
             </ul>
           </div>
           {otcRequestEnabled && (
-            <div className="col">
+            <div className="col-5">
               <div
                 className="card text-left p-4 mt-4 mr-3"
                 style={{ backgroundColor: '#eff6f9' }}
               >
-                <strong>Looking to buy or sell a large quantity of OGN?</strong>
-                <br />
+                <img src={OtcDesk} className="mb-3" />
+                <strong className="mb-2">Looking to sell a large quantity of OGN?</strong>
                 <p>
                   Try an OTC (over-the-counter) trade. OTC trades oftentimes
                   result in a better overall price for large sellers.
@@ -230,7 +231,7 @@ class WithdrawModal extends Component {
           )}
         </div>
         <button
-          className="btn btn-primary btn-lg mt-3"
+          className="btn btn-primary btn-lg mt-5"
           onClick={() => this.setState({ modalState: 'Form' })}
         >
           Continue
