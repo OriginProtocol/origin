@@ -12,9 +12,10 @@ An experimental decentralized e-commerce store served entirely from IPFS.
    cd dapps/shop
 
    # Copy example multi-product store data
-   cp -r data/example data/mystore # Multi-product store
+   cp -r data/example data/mystore
+
    # OR single-product store data
-   cp -r data/example-single data/mystore # Single-product store
+   cp -r data/example-single data/mystore
 
    # Copy PGP dist files
    cp -r ../../node_modules/openpgp/dist public
