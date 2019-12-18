@@ -3,6 +3,7 @@ import queryString from 'query-string'
 import pick from 'lodash/pick'
 import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
+import dayjs from 'dayjs'
 
 import Link from 'components/Link'
 import GalleryScroll from 'components/GalleryScroll'
@@ -13,8 +14,6 @@ import useIsMobile from 'utils/useIsMobile'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
 import fetchProduct from 'data/fetchProduct'
-
-import Categories from './_Categories'
 
 function getOptions(product, offset) {
   const options = new Set(
@@ -96,6 +95,17 @@ const Product = ({ history, location, match }) => {
     i => `${dataUrl()}${productData.id}/orig/${i}`
   )
   const lg = isMobile ? ' btn-lg' : ''
+  let onSale
+  if (productData.onSale) {
+    const availableDate = dayjs(productData.onSale)
+    if (availableDate.isAfter(dayjs())) {
+      onSale = (
+        <div className="on-sale mb-2">
+          <b>On Sale:</b> {availableDate.format('MM-DD-YYYY')}
+        </div>
+      )
+    }
+  }
 
   return (
     <div className="product-detail">
@@ -116,13 +126,27 @@ const Product = ({ history, location, match }) => {
         </div>
         <div className="col-sm-5">
           <h3>{productData.title}</h3>
-          <div className="price mb-4">{formatPrice(productData.price)}</div>
+          {!productData.byline ? null : (
+            <div className="byline mb-2">{productData.byline}</div>
+          )}
+          {!productData.author ? null : (
+            <div className="author mb-2">
+              {'by '}
+              <a href={productData.authorLink}>{productData.author}</a>
+            </div>
+          )}
+          {onSale}
+          <div className="price mb-4">{formatPrice(get(variant, 'price'))}</div>
           {!productOptions ||
           (productData.variants || []).length <= 1 ? null : (
-            <div className="product-options">
+            <div
+              className={`product-options${
+                productOptions.length <= 1 ? ' inline' : ''
+              }`}
+            >
               {productOptions.map((opt, idx) => (
                 <div key={`${productData.id}-${idx}`}>
-                  {opt}
+                  {`${opt}:`}
                   <select
                     className="form-control form-control-sm"
                     value={options[`option${idx + 1}`] || ''}
@@ -151,7 +175,7 @@ const Product = ({ history, location, match }) => {
                 onClick={() => addToCart(productData.id, variant)}
                 className={`btn btn-outline-primary${lg}`}
               >
-                Add to Cart
+                {onSale ? 'Pre-Order' : 'Add to Cart'}
               </button>
             ) : (
               <button className={`btn btn-outline-primary disabled${lg}`}>
@@ -165,23 +189,20 @@ const Product = ({ history, location, match }) => {
           />
         </div>
       </div>
+      {!productData.descriptionLong ? null : (
+        <div
+          className="mt-4"
+          dangerouslySetInnerHTML={{
+            __html: productData.descriptionLong.replace(/\n/g, '<br/>')
+          }}
+        />
+      )}
       <SimilarProducts product={productData} count={isMobile ? 4 : 3} />
     </div>
   )
 }
 
-const ProductWrap = props => (
-  <div className="row">
-    <div className="col-md-3">
-      <Categories />
-    </div>
-    <div className="col-md-9">
-      <Product {...props} />
-    </div>
-  </div>
-)
-
-export default ProductWrap
+export default Product
 
 require('react-styl')(`
   .product-detail
@@ -200,6 +221,15 @@ require('react-styl')(`
         flex-direction: column
         &:last-of-type
           margin-right: 0
+      &.inline > div
+        flex-direction: row
+        align-items: center
+        select
+          margin-left: 0.5rem
+    .price
+      font-size: 1.25rem
+    .byline
+      opacity: 0.6
     .actions
       *
         margin-right: 0.5rem
