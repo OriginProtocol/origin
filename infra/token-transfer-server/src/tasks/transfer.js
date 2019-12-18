@@ -10,7 +10,7 @@ const { checkBlockConfirmation, executeTransfer } = require('../lib/transfer')
 const logger = require('../logger')
 const enums = require('../enums')
 
-const executeTransfers = async () => {
+const executeTransfers = async token => {
   logger.info('Running execute transfers job...')
 
   const confirmingTransfers = await Transfer.findAll({
@@ -25,7 +25,7 @@ const executeTransfers = async () => {
       `Found ${confirmingTransfers.length} transfer(s) waiting for block confirmation`
     )
     for (const transfer of confirmingTransfers) {
-      const isConfirmed = await checkBlockConfirmation(transfer)
+      const isConfirmed = await checkBlockConfirmation(transfer, token)
       if (!isConfirmed) {
         logger.info(
           `Transfer ${transfer.id} with hash ${transfer.txHash} not confirmed, exiting`
@@ -98,7 +98,7 @@ const executeTransfers = async () => {
 
   if (transfer) {
     logger.info(`Processing transfer ${transfer.id}`)
-    await executeTransfer(transfer, transferTask.id)
+    await executeTransfer(transfer, transferTask.id, token)
   }
 
   await transferTask.update({
