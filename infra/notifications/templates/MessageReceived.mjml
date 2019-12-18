@@ -1,0 +1,17 @@
+<mj-section padding="0">
+  <mj-column>
+    <mj-text padding="0 25px">
+      <div style="font-size: 18px; font-weight: bold; line-height: 1.5px; font-weight: bold; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;">
+        You have received a message from
+        <%- senderName %>
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-section>
+  <mj-column>
+    <mj-text align="center">
+      <a href="<%= dappUrl %>/#/messages" target="_blank" style="background-color: #1a82ff;font-size: 16px; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; color: #ffffff; text-decoration: none; text-decoration: none;border-radius: 43px; padding: 10px 36px; border: 1px solid #1a82ff; display: inline-block;">View Messages</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
