@@ -1,12 +1,11 @@
 node_modules
 .DS_Store
-public/dist
-public/*.js
-public/*.css
-public/*.html
+public/*
+!public/images*
 !public/template.html
-public/fonts
-/data*
+!public/favicon.ico
+/data/*
+!/data/example*
 scripts/output*
 scripts/conv.sh
 backend/db/*.db

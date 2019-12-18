@@ -1,0 +1,67 @@
+{
+  "id": "origin-logo-tee",
+  "title": "Origin Logo Tee",
+  "description": "Designed for fit, comfort, and style, the Origin Logo Tee is made from 100% cotton and features our signature graphic across the chest.\n\nThis shirt is unisex but sizes are in men's.",
+  "price": 2000,
+  "available": true,
+  "options": ["Size"],
+  "images": ["img-0.png"],
+  "image": "img-0.png",
+  "variants": [
+    {
+      "id": 0,
+      "title": "Origin Logo Tee",
+      "option1": "XS",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["XS"],
+      "price": 2000
+    },
+    {
+      "id": 1,
+      "title": "Origin Logo Tee",
+      "option1": "Small",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Small"],
+      "price": 2000
+    },
+    {
+      "id": 2,
+      "title": "Origin Logo Tee",
+      "option1": "Medium",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Medium"],
+      "price": 2000
+    },
+    {
+      "id": 3,
+      "title": "Origin Logo Tee",
+      "option1": "Large",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Large"],
+      "price": 2000
+    },
+    {
+      "id": 4,
+      "title": "Origin Logo Tee",
+      "option1": "XL",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["XL"],
+      "price": 2000
+    }
+  ]
+}

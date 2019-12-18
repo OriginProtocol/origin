@@ -9,20 +9,19 @@ An experimental decentralized e-commerce store served entirely from IPFS.
    git clone https://github.com/OriginProtocol/origin.git origin-store
    cd origin-store
    yarn
-
-   # Seed data
    cd dapps/shop
-   mkdir data
-   cd data
-   curl https://gateway.pinata.cloud/ipfs/QmRhN3xGUQBG2DZPzqAT9fPPtptkD7VetNsiwKhaxJPnNv -o origin.zip
-   unzip origin.zip
-   rm origin.zip
-   cd ..
+
+   # Copy example multi-product store data
+   cp data/example data/mystore # Multi-product store
+   # OR single-product store data
+   cp data/example-single data/mystore # Single-product store
 
    # Copy PGP dist files
    cp -r ../../node_modules/openpgp/dist public
 
+   # Edit config in data/mystore/config.json
+
    # Start local
-   yarn start
+   DATA_DIR=mystore yarn start
 
 ```
