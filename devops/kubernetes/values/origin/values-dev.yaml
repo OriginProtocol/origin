@@ -26,7 +26,7 @@ discoveryImageTag: 'f2a9315'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'c69e43b'
+growthImageTag: 'f8b0f1b'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -55,7 +55,7 @@ cronImageTag: 'd4da76a'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '7fc7173'
+adminImageTag: 'f8b0f1b'
 
 # origin-relayer
 relayerImage: origin-relayer
@@ -71,7 +71,7 @@ t3ClientImageTag: '4b153cd'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '4b153cd'
+t3ServerImageTag: '2eac2b3'
 
 # origin-auth
 authImage: origin-auth

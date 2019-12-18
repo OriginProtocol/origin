@@ -21,7 +21,6 @@ const {
   largeTransferDelayMinutes
 } = require('../../src/config')
 const { TokenMock } = require('../util')
-const TransferLib = require('../../src/lib/transfer')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
@@ -53,12 +52,6 @@ describe('Execute transfers', () => {
         amount: 10000000
       })
     ]
-
-    TransferLib.__Rewire__('Token', TokenMock)
-  })
-
-  afterEach(async () => {
-    TransferLib.__ResetDependency__('Token')
   })
 
   it('should not run if outstanding tasks exist', async () => {
@@ -66,7 +59,7 @@ describe('Execute transfers', () => {
       start: moment.utc()
     })
     try {
-      await executeTransfers()
+      await executeTransfers(new TokenMock())
     } catch (error) {
       expect(error.message).to.match(/incomplete/)
     }
@@ -82,7 +75,7 @@ describe('Execute transfers', () => {
     })
 
     try {
-      await executeTransfers()
+      await executeTransfers(new TokenMock())
     } catch (error) {
       expect(error.message).to.match(/unconfirmed/)
     }
@@ -97,7 +90,7 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
-    await executeTransfers()
+    await executeTransfers(new TokenMock())
 
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
@@ -117,7 +110,7 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
-    await executeTransfers()
+    await executeTransfers(new TokenMock())
 
     // Move into the future
     const clock = sinon.useFakeTimers(
@@ -127,7 +120,7 @@ describe('Execute transfers', () => {
         .valueOf()
     )
 
-    await executeTransfers()
+    await executeTransfers(new TokenMock())
 
     const transferTasks = await TransferTask.findAll()
     expect(transferTasks[0].start).to.not.equal(null)
@@ -154,7 +147,7 @@ describe('Execute transfers', () => {
         .valueOf()
     )
 
-    await executeTransfers()
+    await executeTransfers(new TokenMock())
 
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.WaitingConfirmation)
@@ -173,7 +166,6 @@ describe('Execute transfers', () => {
     )
     const credit = TokenMock.prototype.credit
     TokenMock.prototype.credit = creditFake
-    TransferLib.__Rewire__('Token', TokenMock)
 
     const transfer = await Transfer.create({
       userId: this.user.id,
@@ -183,7 +175,7 @@ describe('Execute transfers', () => {
       currency: 'OGN'
     })
 
-    await executeTransfers()
+    await executeTransfers(new TokenMock())
 
     await transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Failed)
@@ -197,6 +189,8 @@ describe('Execute transfers', () => {
     expect(events[0].action).to.equal('TRANSFER_FAILED')
     expect(events[0].data.transferId).to.equal(transfer.id)
     expect(events[0].data.failureReason).to.equal('Supplier balance is too low')
+
+    // Restore mocked function
     TokenMock.prototype.credit = credit
   })
 

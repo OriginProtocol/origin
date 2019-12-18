@@ -1,8 +1,6 @@
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
-const Token = require('@origin/token/src/token')
-
 const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
@@ -15,12 +13,7 @@ const {
 const { Event, Transfer, User, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
-const {
-  clientUrl,
-  encryptionSecret,
-  gasPriceMultiplier,
-  networkId
-} = require('../config')
+const { clientUrl, encryptionSecret, gasPriceMultiplier } = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -177,18 +170,16 @@ async function confirmTransfer(transfer, user) {
  * Sends a blockchain transaction to transfer tokens.
  * @param {Transfer} transfer: Db model transfer object
  * @param {Integer} transferTaskId: Id of the calling transfer task
+ * @param {Token} token: An instance of the token library (@origin/token)
  * @returns {Promise<String>} Hash of the transaction
  */
-async function executeTransfer(transfer, transferTaskId) {
+async function executeTransfer(transfer, transferTaskId, token) {
   const user = await hasBalance(transfer.userId, transfer.amount)
 
   await transfer.update({
     status: enums.TransferStatuses.Processing,
     transferTaskId
   })
-
-  // Setup token library
-  const token = new Token(networkId)
 
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
@@ -204,7 +195,6 @@ async function executeTransfer(transfer, transferTaskId) {
     txHash = await token.credit(transfer.toAddress, naturalAmount, opts)
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
-
     await updateTransferStatus(
       user,
       transfer,
@@ -229,12 +219,10 @@ async function executeTransfer(transfer, transferTaskId) {
 /**
  * Sends a blockchain transaction to transfer tokens.
  * @param {Transfer} transfer: DB model Transfer object
+ * @param {Token} token: An instance of the token library (@origin/token)
  * @returns {Promise<String>}
  */
-async function checkBlockConfirmation(transfer) {
-  // Setup token library
-  const token = new Token(networkId)
-
+async function checkBlockConfirmation(transfer, token) {
   // Wait for the transaction to get confirmed.
   const result = await token.txIsConfirmed(transfer.txHash, {
     numBlocks: NumBlockConfirmation
