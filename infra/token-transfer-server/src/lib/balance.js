@@ -5,23 +5,19 @@ const {
   calculateVested,
   calculateUnlockedEarnings,
   calculateWithdrawn,
-  calculateLocked,
-  calculateEarnings
+  calculateLocked
 } = require('../shared')
 const logger = require('../logger')
 
 /**
- * Helper method to check if a user has balance available for adding a transfer
- * or a lockup.
- *
- * Throws an exception in case the request is invalid.
+ * Calculate a users balances
  *
  * @param userId
- * @param amount
- * @returns Promise<User>
- * @private
+ * @returns BigNumber: balance available for withdrawal
+ *
  */
-async function hasBalance(userId, amount) {
+async function calculateAvailableBalance(userId) {
+  // Get the user with associated models needed for calculating balance.
   const user = await User.findOne({
     where: {
       id: userId
@@ -63,16 +59,25 @@ async function hasBalance(userId, amount) {
     throw new RangeError(`Amount of available OGN is below 0`)
   }
 
-  if (BigNumber(amount).gt(available)) {
-    throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available for ${user.email}`
-    )
-  }
+  return available
+}
 
-  return user
+/**
+ * Helper method to check if a user has balance available for adding a transfer
+ * or a lockup.
+ *
+ * Throws an exception in case the request is invalid.
+ *
+ * @param userId
+ * @param amount
+ * @returns Boolean
+ */
+async function hasBalance(userId, amount) {
+  const available = await calculateAvailableBalance(userId)
+  return BigNumber(amount).lt(available)
 }
 
 module.exports = {
-  calculateEarnings,
+  calculateAvailableBalance,
   hasBalance
 }

@@ -78,7 +78,7 @@ router.post(
     try {
       await lock.acquire(req.user.id, async () => {
         lockup = await addLockup(
-          req.user.id,
+          req.user,
           amount,
           await getFingerprintData(req)
         )

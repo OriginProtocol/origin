@@ -71,7 +71,7 @@ router.post(
     try {
       await lock.acquire(req.user.id, async () => {
         transfer = await addTransfer(
-          req.user.id,
+          req.user,
           address,
           amount,
           await getFingerprintData(req)
@@ -87,6 +87,7 @@ router.post(
         throw e
       }
     }
+
     res.status(201).json(transfer.get({ plain: true }))
   })
 )

@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -11,7 +12,7 @@ const {
   TRANSFER_CONFIRMED
 } = require('../constants/events')
 const { Event, Transfer, User, sequelize } = require('../models')
-const { hasBalance } = require('./balance')
+const { calculateAvailableBalance, hasBalance } = require('./balance')
 const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
 const { clientUrl, encryptionSecret, gasPriceMultiplier } = require('../config')
 const enums = require('../enums')
@@ -27,8 +28,13 @@ const NumBlockConfirmation = 3
  * @param amount
  * @returns {Promise<Transfer>} Transfer object.
  */
-async function addTransfer(userId, address, amount, data = {}) {
-  const user = await hasBalance(userId, amount)
+async function addTransfer(user, address, amount, data = {}) {
+  const balanceCheck = await hasBalance(user.id, amount)
+  if (!balanceCheck) {
+    throw new RangeError(
+      `Transfer of ${amount} OGN exceeds the available balance for ${user.email}`
+    )
+  }
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -213,6 +219,8 @@ async function executeTransfer(transfer, transferTaskId, token) {
     txHash
   })
 
+  logBalances()
+
   return txHash
 }
 
@@ -267,6 +275,21 @@ async function checkBlockConfirmation(transfer, token) {
   )
 
   return result.status
+}
+
+/**
+ * Calculate available balances for all users and log the maximum and sum.
+ * @returns undefined
+ */
+async function logBalances() {
+  const users = await User.findAll()
+  const availableBalances = await Promise.all(
+    users.map(u => calculateAvailableBalance(u.id))
+  )
+  const maximumWithdrawal = await BigNumber.max.apply(null, availableBalances)
+  const totalWithdrawals = await BigNumber.sum.apply(null, availableBalances)
+  logger.info(`Maximum withdrawal ${maximumWithdrawal} OGN`)
+  logger.info(`Total available for withdrawal ${totalWithdrawals} OGN`)
 }
 
 /**

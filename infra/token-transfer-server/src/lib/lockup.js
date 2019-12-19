@@ -21,8 +21,13 @@ const { encryptionSecret, clientUrl } = require('../config')
  * @param amount - the amount to be locked
  * @returns {Promise<Lockup>} Lockup object.
  */
-async function addLockup(userId, amount, data = {}) {
-  const user = await hasBalance(userId, amount)
+async function addLockup(user, amount, data = {}) {
+  const balanceCheck = await hasBalance(user.id, amount)
+  if (!balanceCheck) {
+    throw new RangeError(
+      `Lockup of ${amount} OGN exceeds the available balance for ${user.email}`
+    )
+  }
 
   const unconfirmedLockups = await Lockup.findAll({
     where: {
@@ -63,7 +68,7 @@ async function addLockup(userId, amount, data = {}) {
     await txn.commit()
   } catch (e) {
     await txn.rollback()
-    logger.error(`Failed to add lockup for user ${userId}: ${e}`)
+    logger.error(`Failed to add lockup for user ${user.id}: ${e}`)
     throw e
   }
 
