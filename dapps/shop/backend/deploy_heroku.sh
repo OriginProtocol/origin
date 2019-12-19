@@ -1,4 +1,15 @@
 #!/bin/bash
+################################################################################
+## This script will deploy the dshop backend to Heroku.  It will configure the
+## application using your .env.  Make sure it has been configured to match the
+## configuration you want for this deploeyd instance.
+##
+## Usage
+## -----
+## ./deploy_heroku.sh [myapp]
+## 
+## [myapp] will be the name of the application on Heroku.
+################################################################################
 
 APP_NAME="$1"
 PWD="$(pwd)"
