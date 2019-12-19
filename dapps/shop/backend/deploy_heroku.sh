@@ -62,10 +62,12 @@ while read line; do
 
     FIRST="${line:0:1}"
     if [[ $FIRST != "#" && $FIRST != "" ]]; then
-        read -ra parts <<< "$line"
-        VAR="${parts[0]}"
-        VAL="${parts[1]}"
-        #[[ -n "$TEST_RUN" ]] && echo " ::.. Setting $VAR=$VAL"
+        VAR=$(cut -d "=" -f 1 <<< "$line")
+        VAL=$(cut -d "=" -f 2- <<< "$line")
+        # The following removes leading and trailing quotes
+        VAL="${VAL%\"}"
+        VAL="${VAL#\"}"
+        #echo " ::.. Setting $VAR=$VAL"
         echo " ::.. Setting $VAR"
         [[ -z "$TEST_RUN" ]] && heroku config:set -a $APP_NAME "$VAR=$VAL"
     fi
