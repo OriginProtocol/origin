@@ -121,7 +121,7 @@ const webpackConfig = {
       NODE_ENV: process.env.NODE_ENV || 'development',
       MARKETPLACE_CONTRACT: localContractAddress,
       NETWORK: process.env.NETWORK || 'localhost',
-      DATA_DIR: process.env.DATA_DIR || '',
+      DATA_DIR: process.env.DATA_DIR || 'example',
       CONTENT_CDN: process.env.CONTENT_CDN || '',
       CONTENT_HASH: process.env.CONTENT_HASH || ''
     })

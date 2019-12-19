@@ -25,18 +25,15 @@ const Content = () => {
       <Route path="/cart" component={Cart} />
       <Route path="/search" component={Products} />
       <Route path="/about" component={About} />
-      {config.singleProduct ? (
+      {!config.singleProduct ? null : (
         <Redirect to={`/products/${config.singleProduct}`} />
-      ) : (
-        <>
-          <Route
-            path="/collections/:collection/products/:id"
-            component={Product}
-          ></Route>
-          <Route path="/collections/:collection" component={Products} />
-          <Route component={Products} />
-        </>
       )}
+      <Route
+        path="/collections/:collection/products/:id"
+        component={Product}
+      ></Route>
+      <Route path="/collections/:collection" component={Products} />
+      <Route component={Products} />
     </Switch>
   )
 
