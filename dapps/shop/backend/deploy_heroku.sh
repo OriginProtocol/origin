@@ -17,7 +17,7 @@ DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 DEPLOY_DIR="/tmp/dshop-$APP_NAME-$(date +'%Y%m%d%H%M%s')"
 ADD_ONS=( "heroku-postgresql" "sendgrid:starter" )
 ENV_LOC=".env"
-REQUIRED_ENVS=( "DATA_URL" "NETWORK_ID" "PGP_PRIVATE_KEY" "PGP_PRIVATE_KEY_PASS" "PROVIDER" "SENDGRID_API_KEY" "WEB3_PK" )
+REQUIRED_ENVS=( "DATA_URL" "NETWORK_ID" "PGP_PRIVATE_KEY" "PGP_PRIVATE_KEY_PASS" "PROVIDER" "WEB3_PK" )
 IFS="="  # used with `read` as delimiter for
 
 echo " :: Deploying $APP_NAME"
