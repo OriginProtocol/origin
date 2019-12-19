@@ -14788,7 +14788,7 @@ ipfs-cluster-api@0.0.9:
     pump "^3.0.0"
     qs "^6.5.1"
 
-ipfs-deploy@^7.13.0:
+ipfs-deploy@7.13.0:
   version "7.13.0"
   resolved "https://registry.yarnpkg.com/ipfs-deploy/-/ipfs-deploy-7.13.0.tgz#c37d137288a46ea684903f4aabea21e83faf4b46"
   integrity sha512-1ylsG7RHHNJE6YmoMkgaVAZ359PIwHHeL1dHIVDMeD0KW08b2ZPmkcPytq8Ce51TinQff2uKc9TNf3H3EBB1sw==
@@ -14806,7 +14806,7 @@ ipfs-deploy@^7.13.0:
     ipfs-http-client "^39.0.2"
     lodash "^4.17.15"
     multiaddr "^7.1.0"
-    neat-frame "https://github.com/agentofuser/neat-frame#wrap-ansi-options"
+    neat-frame "git+https://github.com/agentofuser/neat-frame.git#wrap-ansi-options"
     open "^7.0.0"
     ora "^4.0.2"
     recursive-fs "^1.1.2"
