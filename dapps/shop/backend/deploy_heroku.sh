@@ -6,6 +6,7 @@ DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 DEPLOY_DIR="/tmp/dshop-$APP_NAME-$(date +'%Y%m%d%H%M%s')"
 ADD_ONS=( "heroku-postgresql" "sendgrid:starter" )
 ENV_LOC=".env"
+REQUIRED_ENVS=( "DATA_URL" "NETWORK_ID" "PGP_PRIVATE_KEY" "PGP_PRIVATE_KEY_PASS" "PROVIDER" "SENDGRID_API_KEY" "WEB3_PK" )
 IFS="="  # used with `read` as delimiter for
 
 echo " :: Deploying $APP_NAME"
@@ -15,10 +16,6 @@ echo " :: Copying backend code to build dir at $DEPLOY_DIR"
 [[ -z "$TEST_RUN" ]] && cp -R $DIR/* $DEPLOY_DIR/
 [[ -z "$TEST_RUN" ]] && cd $DEPLOY_DIR
 
-echo " :: Creating heroku application '$APP_NAME'"
-[[ -z "$TEST_RUN" ]] && heroku apps:create --buildpack=heroku/nodejs $APP_NAME
-# TODO, transfer to team?
-
 echo " :: Looking for .env"
 test -f "$DIR/$ENV_LOC"
 if [[ $? -eq "0" ]]; then
@@ -26,13 +23,28 @@ if [[ $? -eq "0" ]]; then
 else
     test -f "$DIR/../$ENV_LOC"
     if [[ $? -eq "0" ]]; then
-        ENV_LOC="$DIR/../$ENV_LOC"
+        ENV_LOC=$(realpath "$DIR/../$ENV_LOC")
     else
         echo "ERR .env not found!"
         exit 1
     fi
 fi
 echo " :: Found at $ENV_LOC"
+
+echo " :: Checking configuration..."
+for env_var in "${REQUIRED_ENVS[@]}"
+do
+    # Look for env var that isn't commented
+    grep "$env_var=" $ENV_LOC | grep -v "^#" > 2&>1
+    if [[ "$?" -ne "0" ]]; then
+        echo ".env appears to be missing $env_var"
+        exit 1
+    fi
+done
+
+echo " :: Creating heroku application '$APP_NAME'"
+[[ -z "$TEST_RUN" ]] && heroku apps:create --buildpack=heroku/nodejs $APP_NAME
+# TODO, transfer to team?
 
 echo " :: Configuring Heroku using .env file..."
 while read line; do
