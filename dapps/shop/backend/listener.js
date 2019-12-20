@@ -15,7 +15,9 @@ const web3 = new Web3()
 
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
-const PrivateKey = process.env.PGP_PRIVATE_KEY
+const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
+  ? process.env.PGP_PRIVATE_KEY
+    : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
 const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
 
 const SubscribeToLogs = address =>

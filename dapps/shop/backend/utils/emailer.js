@@ -7,14 +7,23 @@ const aws = require('aws-sdk')
 const { DATA_URL, PUBLIC_URL } = process.env
 
 let transporter
-if (process.env.SENDGRID_API_KEY) {
-  transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
-    auth: {
+if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
+  let auth
+  if (process.env.SENDGRID_API_KEY) {
+    auth = {
       user: 'apikey',
       pass: process.env.SENDGRID_API_KEY
     }
+  } else {
+    auth = {
+      user: process.env.SENDGRID_USERNAME,
+      pass: process.env.SENDGRID_PASSWORD
+    }
+  }
+  transporter = nodemailer.createTransport({
+    host: 'smtp.sendgrid.net',
+    port: 587,
+    auth
   })
 } else if (process.env.MAILGUN_SMTP_SERVER) {
   transporter = nodemailer.createTransport({
