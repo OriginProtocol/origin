@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
 
 import MobileModal from 'components/MobileModal'
 import Redirect from 'components/Redirect'
@@ -45,11 +44,8 @@ class OnboardRewardsSignUp extends Component {
     const onboardCompleted = walletLoading
       ? false
       : localStore.get(`${wallet}-onboarding-completed`)
-    const isFromWelcomePage = get(this.props, 'location.pathname', '')
-      .toLowerCase()
-      .startsWith('/welcome')
 
-    if (onboardCompleted || isFromWelcomePage) {
+    if (onboardCompleted) {
       // If user went into onboarding from Rewards landing page,
       // Redirect them to there during this step
       return this.setState({
