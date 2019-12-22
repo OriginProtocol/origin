@@ -618,7 +618,7 @@ const jan2020Config = {
     fortune: {
       titleKey: 'growth.share.content27.title',
       detailsKey: 'growth.share.content27.details',
-      image: 'images/growth/share-content27.jpg',
+      image: 'images/growth/share-content27.png',
       link: 'https://www.originprotocol.com/video/fortune-magazine-with-origin-founders',
       linkKey: 'growth.share.content27.link',
       post: {

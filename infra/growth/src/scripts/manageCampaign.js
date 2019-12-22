@@ -294,6 +294,7 @@ async function updateJan2020ProdRules() {
     where: { nameKey: 'growth.jan2020.name' }
   })
   await campaign.update({ rules: JSON.stringify(jan2020Config) })
+}
 
 const args = {}
 process.argv.forEach(arg => {
