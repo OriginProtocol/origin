@@ -52,14 +52,15 @@ function ActionGroupList(props) {
         notCompletedActions={[]}
         {...props}
       />
-      {/* Uncomment this action once we start having campaigns with rewards for purchases again.
-      <ActionGroup
-        type="purchases"
-        completedActions={completedPurchaseActions}
-        notCompletedActions={notCompletedPurchaseActions}
-        {...props}
-      />
-    */}
+      {(completedPurchaseActions.length > 0 ||
+        notCompletedPurchaseActions.length > 0) && (
+        <ActionGroup
+          type="purchases"
+          completedActions={completedPurchaseActions}
+          notCompletedActions={notCompletedPurchaseActions}
+          {...props}
+        />
+      )}
     </div>
   )
 }
