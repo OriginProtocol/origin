@@ -23,6 +23,8 @@ const Growth$FbtEnum = {
   'growth.nov2019.short_name': 'November 2019',
   'growth.dec2019.name': 'December 2019 Campaign',
   'growth.dec2019.short_name': 'December 2019',
+  'growth.jan2020.name': 'January 2020 Campaign',
+  'growth.jan2020.short_name': 'January 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
@@ -309,7 +311,62 @@ const Growth$FbtEnum = {
     'Joey Krug Co-founder of Augur Explains the Value of Origin',
   'growth.share.content25.details':
     'Joey Krug Co-founder of Augur & Co-investment Officer at Pantera Capital explains the value of Origin.',
-  'growth.share.content25.link': 'Watch the video'
+  'growth.share.content25.link': 'Watch the video',
+
+  // Jan 2020 campaign
+  'growth.share.content26.title':
+    'World-class investors believe Origin will disrupt the sharing economy',
+  'growth.share.content26.details':
+    'Origin has more than 500+ investors around the world who support the vision of enabling true P2P commerce.',
+  'growth.share.content26.link': 'Watch the video',
+
+  'growth.share.content27.title':
+    `Fortune Magazine's Balancing the Ledger with Origin's Founders`,
+  'growth.share.content27.details':
+    `In this interview with Fortune Magazine, Origin's founders discuss their vision for creating a truly decentralized sharing economy.`,
+  'growth.share.content27.link': 'Watch the video',
+
+  'growth.share.content28.title':
+    'YouTube Founder and Origin Investor Discusses Strength of Origin Team',
+  'growth.share.content28.details':
+    'Steve Chen, co-founder of YouTube discusses strength of Origin team.',
+  'growth.share.content28.link': 'Watch the video',
+
+  'growth.share.content29.title':
+    'PayPal Cofounder & First YouTube Engineer Talks About His Work at Origin',
+  'growth.share.content29.details':
+    `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at Origin.`,
+  'growth.share.content29.link': 'Watch the video',
+
+  'growth.share.content30.title':
+    `Pantera Capital's Paul Veradittakit on How Origin Enables Freedom`,
+  'growth.share.content30.details':
+    `Meet Paul, Co-investment Officer at Pantera Capital.`,
+  'growth.share.content30.link': 'Watch the video',
+
+  'growth.share.content31.title':
+    'The Future of the Sharing Economy',
+  'growth.share.content31.details':
+    `Origin is building the future of the sharing economy.`,
+  'growth.share.content31.link': 'Watch the video',
+
+  'growth.share.content32.title':
+    'Follow Origin on Blockfolio Signal!',
+  'growth.share.content32.details':
+    `Follow Origin on Blockfolio & receive latest updates from Origin's core team.`,
+  'growth.share.content32.link': 'Follow Origin',
+
+  'growth.share.content33.title':
+    `Join Origin's Telegram and earn OGN`,
+  'growth.share.content33.details':
+    `Follow Origin on Telegram and earn free Origin Tokens!`,
+  'growth.share.content33.link': 'Follow Origin',
+
+  'growth.share.content34.title':
+    'Creating the New Sharing Economy',
+  'growth.share.content34.details':
+    `Origin has built a decentralized marketplace protocol on the ethereum mainnet that replaces middlemen & connects buyers and sellers with a smart contract.`,
+  'growth.share.content34.link': 'Follow Origin'
 }
 
 module.exports = Growth$FbtEnum
