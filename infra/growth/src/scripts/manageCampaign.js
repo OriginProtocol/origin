@@ -14,7 +14,6 @@ const novemberConfig = require('../../campaigns/november')
 const decemberConfig = require('../../campaigns/december')
 const jan2020Config = require('../../campaigns/jan2020')
 
-
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
 
