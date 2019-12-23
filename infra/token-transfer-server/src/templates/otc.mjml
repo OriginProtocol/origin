@@ -1,30 +1,37 @@
 <mjml>
-    <mj-head>
-        <mj-attributes>
-            <mj-all font-family="Arial" />
-        </mj-attributes>
-    </mj-head>
-    <mj-body background-color="#f7fbfd">
-        <mj-wrapper padding-top="50px">
-            <!-- Header -->
-            <mj-include path="<%= path %>/header.mjml" />
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f7fbfd">
+    <mj-wrapper padding-top="50px">
+      <!-- Header -->
+      <mj-include path="<%= path %>/header.mjml" />
 
-            <!-- Introduction Text -->
-            <mj-section background-color="white">
-                <mj-column>
-                    <mj-text font-size="28px" font-weight="bold">
-                        Origin Investor Portal
-                    </mj-text>
-                </mj-column>
-            </mj-section>
+      <!-- Introduction Text -->
+      <mj-section background-color="white">
+        <mj-column>
+          <mj-text font-size="28px" font-weight="bold">
+            Origin Investor Portal
+          </mj-text>
+        </mj-column>
+      </mj-section>
 
-            <!-- Main Text -->
-            <mj-section background-color="white">
-                <mj-column>
-                    <mj-text font-size="18px" line-height="1.67">
-			An OTC request has been submitted to <%= action %> <%= amount %> OGN by <%= email %>.
-                    </mj-text>
-                </mj-column>
-            </mj-section>
-    </mj-body>
+      <!-- Main Text -->
+      <mj-section background-color="white">
+        <mj-column>
+          <mj-text font-size="18px" line-height="1.67">
+            An OTC request has been submitted to <%= action %> <%= amount %> OGN by <%= name %>.
+          </mj-text>
+          <mj-text font-size="18px" line-height="1.67">
+            Email: <%= email %>
+          </mj-text>
+          <mj-text font-size="18px" line-height="1.67">
+            Phone: <%= phone %>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
 </mjml>
