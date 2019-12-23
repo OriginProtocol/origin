@@ -610,7 +610,7 @@ const jan2020Config = {
       linkKey: 'growth.share.content26.link',
       post: {
         tweet: {
-          default: `Here is why investors believe in @OriginProtocol. https://www.originprotocol.com/video/origin-investor-video`,
+          default: `Here is why over 800 investors believe in @OriginProtocol. https://www.originprotocol.com/video/origin-investor-video`,
           translations: [ ]
         }
       }
@@ -636,7 +636,7 @@ const jan2020Config = {
       linkKey: 'growth.share.content28.link',
       post: {
         tweet: {
-          default: `Steve Chen, co-founder of @YouTube, talks about what it was like working with some of @OriginProtocol's employees in the early days of YouTube: https://www.originprotocol.com/video/steve-chen-youtube-founder`,
+          default: `Steve Chen, co-founder of @YouTube and investor of @OriginProtocol, talks about what it was like working with some of Origin's employees in the early days of YouTube: https://www.originprotocol.com/video/steve-chen-youtube-founder`,
           translations: [ ]
         }
       }
@@ -649,7 +649,7 @@ const jan2020Config = {
       linkKey: 'growth.share.content29.link',
       post: {
         tweet: {
-          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at @OriginProtocol: https://www.originprotocol.com/video/yu-pan-paypal-cofounder-and-first-youtube-engineer`,
+          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now lead R&D engineer at @OriginProtocol: https://www.originprotocol.com/video/yu-pan-paypal-cofounder-and-first-youtube-engineer`,
           translations: [ ]
         }
       }
@@ -701,7 +701,7 @@ const jan2020Config = {
       linkKey: 'growth.share.content33.link',
       post: {
         tweet: {
-          default: `Follow @OriginProtocol on #Telegram and earn free Origin Token (OGN) today! https://t.me/originprotocol`,
+          default: `Follow @OriginProtocol on #Telegram and earn Origin Token (OGN) today! https://t.me/originprotocol`,
           translations: [ ]
         }
       }

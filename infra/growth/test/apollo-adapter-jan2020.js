@@ -587,7 +587,7 @@ describe('Apollo adapter - Jan 2020 campaign', () => {
       {
         id: eventId++,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: '1c1a58b843d10e79fc704daeb0284b72', // use bridge/src/utils/webhook-helpers.js:hashContent to get this hash
+        customId: 'd5ccf3d5334d8c78095af435192c0d42', // use bridge/src/utils/webhook-helpers.js:hashContent to get this hash
         data: {
           twitterProfile: {
             verified: false,

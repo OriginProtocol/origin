@@ -332,7 +332,7 @@ const Growth$FbtEnum = {
 
   'growth.share.content29.title':
     'PayPal Cofounder & First YouTube Engineer Talks About His Work at Origin',
-  'growth.share.content29.details': `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at Origin.`,
+  'growth.share.content29.details': `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now lead R&D engineer at Origin.`,
   'growth.share.content29.link': 'Watch the video',
 
   'growth.share.content30.title': `Pantera Capital's Paul Veradittakit on How Origin Enables Freedom`,
@@ -344,11 +344,11 @@ const Growth$FbtEnum = {
   'growth.share.content31.link': 'Watch the video',
 
   'growth.share.content32.title': 'Follow Origin on Blockfolio Signal!',
-  'growth.share.content32.details': `Follow Origin on Blockfolio & receive latest updates from Origin's core team.`,
+  'growth.share.content32.details': `Follow Origin on Blockfolio and receive the latest news updates and OGN airdrops from Origin's core team. `,
   'growth.share.content32.link': 'Follow Origin',
 
   'growth.share.content33.title': `Join Origin's Telegram and earn OGN`,
-  'growth.share.content33.details': `Follow Origin on Telegram and earn free Origin Tokens!`,
+  'growth.share.content33.details': `Follow Origin on Telegram and earn Origin Tokens (OGN)!`,
   'growth.share.content33.link': 'Follow Origin',
 
   'growth.share.content34.title': 'Creating the New Sharing Economy',
