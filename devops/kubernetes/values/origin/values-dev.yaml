@@ -67,7 +67,7 @@ graphqlImageTag: 'efbdaab'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: 'efbdaab'
+t3ClientImageTag: 'f1f3d7a'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
