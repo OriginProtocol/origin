@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
-const { discordWebhookUrl, otcPartnerEmail } = require('../config')
+const { discordWebhookUrl, otcPartnerEmails } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('../lib/webhook')
 const { asyncMiddleware, getOtcRequestEnabled } = require('../utils')
@@ -18,8 +18,10 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .isInt({ min: 100 })
-      .withMessage('Amount must be 100 or greater'),
+      .isInt({ min: 250000 })
+      .withMessage(
+        'OTC requests are only supported for amounts of 250k or larger'
+      ),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
@@ -49,12 +51,16 @@ router.post(
       logger.error(`Failed sending Discord webhook for new OTC request`, e)
     }
 
+    // Send emails to each of the configured OTC partners
     const vars = {
       amount: req.body.amount,
       action: req.body.action,
       email: req.user.email
     }
-    await sendEmail(otcPartnerEmail, 'otc', vars)
+
+    for (const email of otcPartnerEmails) {
+      await sendEmail(email, 'otc', vars)
+    }
 
     return res.status(204).send('')
   })

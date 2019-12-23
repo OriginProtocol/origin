@@ -12,13 +12,13 @@ async function generate(name, passphrase) {
   console.log(`Pass phrase: ${passphrase}\n`)
   console.log('Public key:')
   console.log(key.publicKeyArmored)
-  console.log('\nPrivate key:\n')
+  console.log('\nPrivate key:')
   console.log(key.privateKeyArmored)
 
   console.log('Public key:')
-  console.log(JSON.stringify(key.publicKeyArmored))
-  console.log('\nPrivate key:\n')
-  console.log(JSON.stringify(key.privateKeyArmored))
+  console.log(JSON.stringify(key.publicKeyArmored).replace(/\\r/g, ''))
+  console.log('\nPrivate key:')
+  console.log(JSON.stringify(key.privateKeyArmored).replace(/\\r/g, ''))
 }
 
 generate('test', 'abc123')

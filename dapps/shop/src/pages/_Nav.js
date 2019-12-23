@@ -1,12 +1,18 @@
 import React from 'react'
 
 import { useStateValue } from 'data/state'
+import useConfig from 'utils/useConfig'
+
 import Link from 'components/Link'
 import CartIcon from 'components/icons/Cart'
 import Search from './_Search'
 
 const Nav = () => {
   const [{ cart }] = useStateValue()
+  const { config } = useConfig()
+  if (config.singleProduct) {
+    return <div className="nav-border" />
+  }
 
   return (
     <nav className="navbar navbar-expand-md">
@@ -43,7 +49,7 @@ const Nav = () => {
 export default Nav
 
 require('react-styl')(`
-  .navbar
+  .navbar,.nav-border
     border-top: 5px solid black
   .navbar > .container
     position: relative

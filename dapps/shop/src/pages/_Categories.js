@@ -3,14 +3,8 @@ import { useRouteMatch } from 'react-router-dom'
 import get from 'lodash/get'
 
 import useCollections from 'utils/useCollections'
-import useConfig from 'utils/useConfig'
 import Link from 'components/Link'
-
-import TwitterIcon from 'components/icons/Twitter'
-import MediumIcon from 'components/icons/Medium'
-import InstagramIcon from 'components/icons/Instagram'
-import FacebookIcon from 'components/icons/Facebook'
-import YouTubeIcon from 'components/icons/YouTube'
+import SocialLinks from 'components/SocialLinks'
 
 const Item = ({ id, children, active, onClick }) => (
   <li className={active ? 'active' : null}>
@@ -22,11 +16,9 @@ const Item = ({ id, children, active, onClick }) => (
 
 const Categories = () => {
   const { collections } = useCollections()
-  const { config } = useConfig()
   const match = useRouteMatch('/collections/:collection')
   const aboutMatch = useRouteMatch('/about')
   const active = get(match, 'params.collection')
-  const social = config.twitter || config.medium || config.instagram
 
   return (
     <div className="categories d-none d-md-block">
@@ -40,35 +32,7 @@ const Categories = () => {
           <Link to="/about">About</Link>
         </li>
       </ul>
-      {!social ? null : (
-        <div className="social">
-          {!config.twitter ? null : (
-            <a href={config.twitter} title="Twitter">
-              <TwitterIcon />
-            </a>
-          )}
-          {!config.facebook ? null : (
-            <a href={config.facebook} title="Facebook">
-              <FacebookIcon />
-            </a>
-          )}
-          {!config.youtube ? null : (
-            <a href={config.youtube} title="YouTube">
-              <YouTubeIcon />
-            </a>
-          )}
-          {!config.medium ? null : (
-            <a href={config.medium} title="Medium">
-              <MediumIcon />
-            </a>
-          )}
-          {!config.instagram ? null : (
-            <a href={config.instagram} title="Instagram">
-              <InstagramIcon />
-            </a>
-          )}
-        </div>
-      )}
+      <SocialLinks />
     </div>
   )
 }

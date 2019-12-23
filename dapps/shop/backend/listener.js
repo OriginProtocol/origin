@@ -1,3 +1,4 @@
+require('dotenv').config()
 const config = require('./config')
 
 const WebSocket = require('ws')
@@ -10,11 +11,13 @@ const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
 const { Network, Transactions, Orders } = require('./data/db')
 const sendMail = require('./utils/emailer')
 
-const web3 = new Web3(config.provider)
+const web3 = new Web3()
 
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
-const PrivateKey = process.env.PGP_PRIVATE_KEY
+const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
+  ? process.env.PGP_PRIVATE_KEY
+    : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
 const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
 
 const SubscribeToLogs = address =>
@@ -54,12 +57,13 @@ let ws
 async function connectWS() {
   let lastBlock
   const siteConfig = await config.getSiteConfig()
+  web3.setProvider(siteConfig.provider)
   const listingId = siteConfig.listingId.split('-')[2]
-  console.log(`Connecting to ${config.provider} (netId ${netId})`)
+  console.log(`Connecting to ${siteConfig.provider} (netId ${netId})`)
   console.log(`Watching listing ${siteConfig.listingId}`)
   const res = await Network.findOne({ where: { network_id: netId } })
   if (res) {
-    lastBlock = res.last_block - 400
+    lastBlock = res.last_block
     console.log(`Last recorded block: ${lastBlock}`)
   } else {
     console.log('No recorded block found')
@@ -70,7 +74,7 @@ async function connectWS() {
   }
 
   console.log('Trying to connect...')
-  ws = new WebSocket(config.provider)
+  ws = new WebSocket(siteConfig.provider)
 
   function heartbeat() {
     console.log('Got ping...')
@@ -116,7 +120,6 @@ async function connectWS() {
     } else if (data.id === 2) {
       heads = data.result
     } else if (data.id === 3) {
-      console.log(data)
       console.log(`Got ${data.result.length} unhandled logs`)
       data.result.map(handleLog)
     } else if (get(data, 'params.subscription') === logs) {
@@ -126,8 +129,7 @@ async function connectWS() {
       const blockDiff = number - lastBlock
       if (blockDiff > 500) {
         console.log('Too many new blocks. Skip past log fetch.')
-      } else if (blockDiff > 1) {
-        //} && config.fetchPastLogs) {
+      } else if (blockDiff > 1 && config.fetchPastLogs) {
         console.log(`Fetching ${blockDiff} past logs...`)
         ws.send(
           GetPastLogs({ fromBlock: lastBlock, toBlock: number, listingId })

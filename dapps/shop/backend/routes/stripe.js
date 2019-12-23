@@ -10,12 +10,16 @@ const abi = require('../utils/_abi')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
-const web3 = new Web3()
+// TODO: This needs to be cleaner, all of this conf does
+const web3 = new Web3(process.env.PROVIDER)
 const PK = process.env.WEB3_PK
 let walletAddress
 if (PK) {
   const account = web3.eth.accounts.wallet.add(PK)
   walletAddress = account.address
+  console.log(`using walletAddress ${walletAddress}`)
+} else {
+  throw new Error('WEB3_PK must be defined')
 }
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
@@ -40,7 +44,7 @@ module.exports = function(app) {
   // Stripe CLI for testing webhook:
   //    stripe listen --forward-to localhost:3000/webhook
   //    STRIPE_WEBHOOK_SECRET=xxx node backend/payment.js
-  //    stripe trigger payment_intent.created
+  //    stripe trigger payment_intent.succeeded
 
   app.post('/webhook', rawJson, async (req, res) => {
     const siteConfig = await config.getSiteConfig()
@@ -72,7 +76,13 @@ module.exports = function(app) {
         encryptedData
       }
 
-      const res = await post(config.ipfsApi, offer, true)
+      let res
+      try {
+        res = await post(siteConfig.ipfsApi, offer, true)
+      } catch (err) {
+        console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
+        throw err
+      }
       const listingId = siteConfig.listingId.split('-')[2]
       const Marketplace = new web3.eth.Contract(
         abi,
