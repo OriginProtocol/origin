@@ -41,49 +41,48 @@ try {
 }
 
 const reducer = (state, action) => {
-  let newState = state
-  console.log('reduce', action)
+  let newState = cloneDeep(state)
   if (action.type === 'addToCart') {
     const { product, variant } = action.item
     const existing = state.cart.items.findIndex(
       i => i.product === product && i.variant === variant
     )
     if (existing >= 0) {
-      const quantity = get(state, 'cart.items[existing].quantity')
-      newState = set(state, `cart.items[${existing}].quantity`, quantity + 1)
+      const quantity = get(newState, `cart.items[${existing}].quantity`)
+      newState = set(newState, `cart.items[${existing}].quantity`, quantity + 1)
     } else {
       const lastIdx = state.cart.items.length
-      newState = set(state, `cart.items[${lastIdx}]`, action.item)
+      newState = set(newState, `cart.items[${lastIdx}]`, action.item)
     }
   } else if (action.type === 'removeFromCart') {
     const items = get(state, 'cart.items')
     items.splice(action.item, 1)
-    newState = set(state, 'cart.items', items)
+    newState = set(newState, 'cart.items', items)
   } else if (action.type === 'updateCartQuantity') {
     const { quantity } = action
-    newState = set(state, `cart.items[${action.item}].quantity`, quantity)
+    newState = set(newState, `cart.items[${action.item}].quantity`, quantity)
   } else if (action.type === 'setProducts') {
-    newState = set(state, `products`, action.products)
+    newState = set(newState, `products`, action.products)
     const index = FlexSearch.create()
     action.products.forEach(product => index.add(product.id, product.title))
-    newState = set(state, `productIndex`, index)
+    newState = set(newState, `productIndex`, index)
     const productIds = action.products.map(p => p.id)
     newState = set(
-      state,
+      newState,
       'cart.items',
       state.cart.items.filter(i => productIds.indexOf(i.product) >= 0)
     )
   } else if (action.type === 'setCollections') {
-    newState = set(state, `collections`, action.collections)
+    newState = set(newState, `collections`, action.collections)
   } else if (action.type === 'setShippingZones') {
-    newState = set(state, `shippingZones`, action.zones)
+    newState = set(newState, `shippingZones`, action.zones)
   } else if (action.type === 'setOrders') {
-    newState = set(state, `orders`, action.orders)
+    newState = set(newState, `orders`, action.orders)
   } else if (action.type === 'setDiscounts') {
-    newState = set(state, `discounts`, action.discounts)
+    newState = set(newState, `discounts`, action.discounts)
   } else if (action.type === 'updateUserInfo') {
     newState = set(
-      state,
+      newState,
       `cart.userInfo`,
       pick(
         action.info,
@@ -120,7 +119,7 @@ const reducer = (state, action) => {
     newState = set(newState, 'cart.discount', 0)
   }
 
-  newState.cart.subTotal = state.cart.items.reduce((total, item) => {
+  newState.cart.subTotal = newState.cart.items.reduce((total, item) => {
     return total + item.quantity * item.price
   }, 0)
 
@@ -141,6 +140,7 @@ const reducer = (state, action) => {
 
   localStorage.cart = JSON.stringify(pick(newState, 'cart'))
   // console.log(newState)
+  console.log('reduce', { action, state, newState })
   return cloneDeep(newState)
 }
 

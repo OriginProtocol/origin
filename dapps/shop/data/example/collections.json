@@ -1,0 +1,12 @@
+[
+  {
+    "id": "shirts",
+    "title": "Shirts",
+    "products": ["origin-logo-tee", "cut-out-the-middleman-baseball-tee"]
+  },
+  {
+    "id": "accessories",
+    "title": "Accessories",
+    "products": ["origin-coffee-mug"]
+  }
+]

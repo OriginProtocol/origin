@@ -39,7 +39,11 @@ const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
 
 const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
 
-const walletMnemonic = process.env.WALLET_MNEMONIC
+const otcPartnerEmails = (
+  process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
+).split(',')
+
+const gasPriceMultiplier = process.env.GAS_PRICE_MULTIPLIER
 
 module.exports = {
   discordWebhookUrl,
@@ -47,6 +51,7 @@ module.exports = {
   lockupBonusRate,
   lockupDuration,
   networkId,
+  otcPartnerEmails,
   port,
   clientUrl,
   sendgridFromEmail,
@@ -55,5 +60,5 @@ module.exports = {
   unlockDate,
   largeTransferThreshold,
   largeTransferDelayMinutes,
-  walletMnemonic
+  gasPriceMultiplier
 }

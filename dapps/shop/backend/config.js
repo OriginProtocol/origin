@@ -31,7 +31,12 @@ const getSiteConfig = memoize(async function getSiteConfig() {
   const data = await dataRaw.json()
   const defaultData = Defaults[NETWORK_ID || defaultNetwork] || {}
   const networkData = data.networks[NETWORK_ID || defaultNetwork] || {}
-  const siteConfig = { ...data, ...defaultData, ...networkData }
+  const siteConfig = {
+    provider: process.env.PROVIDER,
+    ...data,
+    ...defaultData,
+    ...networkData
+  }
   return siteConfig
 })
 

@@ -154,6 +154,8 @@ const transferConfirmationTimeout =
 
 const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
+const otcRequestEnabled = process.env.OTC_REQUEST_ENABLED || false
+
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -165,6 +167,7 @@ module.exports = {
   toMoment,
   momentizeLockup,
   momentizeGrant,
+  otcRequestEnabled,
   unlockDate,
   lockupHasExpired,
   lockupBonusRate,

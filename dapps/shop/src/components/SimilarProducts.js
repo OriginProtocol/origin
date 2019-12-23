@@ -42,6 +42,10 @@ const SimilarProducts = ({ product, count = 3 }) => {
     .slice(0, count)
     .map(id => products.find(p => p.id === id))
 
+  if (!filteredProducts.length) {
+    return null
+  }
+
   return (
     <div className="similar-products">
       <h4 className="mb-3">You might also like</h4>

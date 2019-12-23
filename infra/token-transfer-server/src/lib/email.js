@@ -44,6 +44,12 @@ const lockupTextTemplate = template(
 const lockupMjmlTemplate = template(
   fs.readFileSync(`${templateDir}/lockup.mjml`).toString()
 )
+const otcTextTemplate = template(
+  fs.readFileSync(`${templateDir}/otc.txt`).toString()
+)
+const otcMjmlTemplate = template(
+  fs.readFileSync(`${templateDir}/otc.mjml`).toString()
+)
 
 /**
  * Returns the content to be used for an email.
@@ -91,6 +97,15 @@ function _generateEmail(emailType, vars) {
       subject = `Confirm Your Origin Token Lockup`
       text = lockupTextTemplate(vars)
       mjml = mjml2html(lockupMjmlTemplate(vars))
+      if (mjml.errors.length) {
+        throw new Error('Email template error:', mjml.errors)
+      }
+      html = mjml.html
+      break
+    case 'otc':
+      subject = `New OTC Request`
+      text = otcTextTemplate(vars)
+      mjml = mjml2html(otcMjmlTemplate(vars))
       if (mjml.errors.length) {
         throw new Error('Email template error:', mjml.errors)
       }

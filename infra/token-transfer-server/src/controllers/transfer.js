@@ -142,8 +142,6 @@ router.post(
       return res.status(422).send(e.message)
     }
 
-    logger.info(`Transfer ${transfer.id} confirmed for ${req.user.email}`)
-
     return res
       .status(201)
       .json(transfer.get({ plain: true }))
