@@ -14850,7 +14850,7 @@ ipfs-deploy@7.13.0:
     ipfs-http-client "^39.0.2"
     lodash "^4.17.15"
     multiaddr "^7.1.0"
-    neat-frame "git+https://github.com/agentofuser/neat-frame.git#wrap-ansi-options"
+    neat-frame "https://github.com/agentofuser/neat-frame#wrap-ansi-options"
     open "^7.0.0"
     ora "^4.0.2"
     recursive-fs "^1.1.2"
@@ -20297,7 +20297,6 @@ ndjson@^1.5.0, "ndjson@github:hugomrdias/ndjson#feat/readable-stream3":
 
 "neat-frame@https://github.com/agentofuser/neat-frame#wrap-ansi-options":
   version "1.0.2"
-  uid b244ca11078bd35f63b2d7cb22d5e4b5c12ae2aa
   resolved "https://github.com/agentofuser/neat-frame#b244ca11078bd35f63b2d7cb22d5e4b5c12ae2aa"
   dependencies:
     inspect-with-kind "^1.0.5"
