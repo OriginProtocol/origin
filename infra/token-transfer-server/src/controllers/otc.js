@@ -20,7 +20,7 @@ router.post(
       .toInt()
       .isInt({ min: 250000 })
       .withMessage(
-        'OTC requests are only supported for amounts of 250k or larger'
+        'OTC requests are only supported for amounts of 250k OGN or larger'
       ),
     ensureLoggedIn
   ],
@@ -55,10 +55,13 @@ router.post(
     const vars = {
       amount: req.body.amount,
       action: req.body.action,
-      email: req.user.email
+      name: req.user.name,
+      email: req.user.email,
+      phone: req.user.phone
     }
 
     for (const email of otcPartnerEmails) {
+      logger.info('Sending OTC email to', email)
       await sendEmail(email, 'otc', vars)
     }
 

@@ -51,6 +51,7 @@
     "passport-http-bearer": "^1.0.1",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
+    "prettier": "^1.19.1",
     "qrcode": "^1.4.2",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
