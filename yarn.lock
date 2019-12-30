@@ -141,7 +141,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@7.7.7":
+"@babel/core@7.7.7", "@babel/core@^7.7.5":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.7.7.tgz#ee155d2e12300bcc0cff6a8ad46f2af5063803e9"
   integrity sha512-jlSjuj/7z138NLZALxVgrx13AOtqip42ATZP7+kYl53GvDV6+4dCek1mVUo8z8c8Xnw/mx2q3d9HWh3griuesQ==
@@ -3870,6 +3870,13 @@
   dependencies:
     type-detect "4.0.8"
 
+"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.7.0.tgz#f90ffc52a2e519f018b13b6c4da03cbff36ebed6"
+  integrity sha512-qbk9AP+cZUsKdW1GJsBpxPKFmCJ0T8swwzVje3qFd+AkQb74Q/tiuzrdfFg8AD2g5HH/XbE/I8Uc1KYHVYWfhg==
+  dependencies:
+    type-detect "4.0.8"
+
 "@sinonjs/formatio@^3.2.1":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-3.2.2.tgz#771c60dfa75ea7f2d68e3b94c7e888a78781372c"
@@ -3877,6 +3884,14 @@
   dependencies:
     "@sinonjs/commons" "^1"
     "@sinonjs/samsam" "^3.1.0"
+
+"@sinonjs/formatio@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-4.0.1.tgz#50ac1da0c3eaea117ca258b06f4f88a471668bdb"
+  integrity sha512-asIdlLFrla/WZybhm0C8eEzaDNNrzymiTqHMeJl6zPW2881l3uuVRpm0QlRQEjqYWv6CcKMGYME3LbrLJsORBw==
+  dependencies:
+    "@sinonjs/commons" "^1"
+    "@sinonjs/samsam" "^4.2.0"
 
 "@sinonjs/samsam@^3.1.0", "@sinonjs/samsam@^3.3.3":
   version "3.3.3"
@@ -3886,6 +3901,15 @@
     "@sinonjs/commons" "^1.3.0"
     array-from "^2.1.1"
     lodash "^4.17.15"
+
+"@sinonjs/samsam@^4.2.0", "@sinonjs/samsam@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-4.2.1.tgz#cee77dc95f8d00339633e1683e026f2d73ed1d3a"
+  integrity sha512-7+5S4C4wpug5pzHS+z/63+XUwsH7dtyYELDafoT1QnfruFh7eFjlDWwZXltUB0GLk6y5eMeAt34Bjx8wJ4KfSA==
+  dependencies:
+    "@sinonjs/commons" "^1.6.0"
+    lodash.get "^4.4.2"
+    type-detect "^4.0.8"
 
 "@sinonjs/text-encoding@^0.7.1":
   version "0.7.1"
@@ -3897,40 +3921,80 @@
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
   integrity sha512-j7KnilGyZzYr/jhcrSYS3FGWMZVaqyCG0vzMCwzvei0coIkczuYMcniK07nI0aHJINciujjH11T72ICW5eL5Ig==
 
+"@svgr/babel-plugin-add-jsx-attribute@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-5.0.1.tgz#744853b6533e83ce712d41d1873200b3e0a0b6fc"
+  integrity sha512-av76JbSudaN2CUOGuKQp5BVqLFidtojg4ApRTg1PBOVsskXK2ORwKnBYhIu0JLA6ynmuNDprlHNCD6IwLiYidw==
+
 "@svgr/babel-plugin-remove-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-remove-jsx-attribute/-/babel-plugin-remove-jsx-attribute-4.2.0.tgz#297550b9a8c0c7337bea12bdfc8a80bb66f85abc"
   integrity sha512-3XHLtJ+HbRCH4n28S7y/yZoEQnRpl0tvTZQsHqvaeNXPra+6vE5tbRliH3ox1yZYPCxrlqaJT/Mg+75GpDKlvQ==
+
+"@svgr/babel-plugin-remove-jsx-attribute@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-remove-jsx-attribute/-/babel-plugin-remove-jsx-attribute-5.0.1.tgz#5df0ccf99e4745e105f76059025986d4da8443cd"
+  integrity sha512-oXyByaDQEK4Ut/eC75698MDKnaadbWmp/LS2w22cZAaoObCkkiwYYgZTZ+bvb3moo//AxvKkBtNrlz6+xBb9ZQ==
 
 "@svgr/babel-plugin-remove-jsx-empty-expression@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-remove-jsx-empty-expression/-/babel-plugin-remove-jsx-empty-expression-4.2.0.tgz#c196302f3e68eab6a05e98af9ca8570bc13131c7"
   integrity sha512-yTr2iLdf6oEuUE9MsRdvt0NmdpMBAkgK8Bjhl6epb+eQWk6abBaX3d65UZ3E3FWaOwePyUgNyNCMVG61gGCQ7w==
 
+"@svgr/babel-plugin-remove-jsx-empty-expression@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-remove-jsx-empty-expression/-/babel-plugin-remove-jsx-empty-expression-5.0.1.tgz#25621a8915ed7ad70da6cea3d0a6dbc2ea933efd"
+  integrity sha512-LA72+88A11ND/yFIMzyuLRSMJ+tRKeYKeQ+mR3DcAZ5I4h5CPWN9AHyUzJbWSYp/u2u0xhmgOe0+E41+GjEueA==
+
 "@svgr/babel-plugin-replace-jsx-attribute-value@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-replace-jsx-attribute-value/-/babel-plugin-replace-jsx-attribute-value-4.2.0.tgz#310ec0775de808a6a2e4fd4268c245fd734c1165"
   integrity sha512-U9m870Kqm0ko8beHawRXLGLvSi/ZMrl89gJ5BNcT452fAjtF2p4uRzXkdzvGJJJYBgx7BmqlDjBN/eCp5AAX2w==
+
+"@svgr/babel-plugin-replace-jsx-attribute-value@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-replace-jsx-attribute-value/-/babel-plugin-replace-jsx-attribute-value-5.0.1.tgz#0b221fc57f9fcd10e91fe219e2cd0dd03145a897"
+  integrity sha512-PoiE6ZD2Eiy5mK+fjHqwGOS+IXX0wq/YDtNyIgOrc6ejFnxN4b13pRpiIPbtPwHEc+NT2KCjteAcq33/F1Y9KQ==
 
 "@svgr/babel-plugin-svg-dynamic-title@^4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-svg-dynamic-title/-/babel-plugin-svg-dynamic-title-4.3.3.tgz#2cdedd747e5b1b29ed4c241e46256aac8110dd93"
   integrity sha512-w3Be6xUNdwgParsvxkkeZb545VhXEwjGMwExMVBIdPQJeyMQHqm9Msnb2a1teHBqUYL66qtwfhNkbj1iarCG7w==
 
+"@svgr/babel-plugin-svg-dynamic-title@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-svg-dynamic-title/-/babel-plugin-svg-dynamic-title-5.0.1.tgz#221abd28898130c6466b018bf19e905648100c38"
+  integrity sha512-IbFiDBvq5WpANPndjEom1Y9k1pHCNfJs87jCN1Lt8NEA7yrNVPSoAjBVmmfi0aVBERfp8IT/lgjn2a/S85lXGg==
+
 "@svgr/babel-plugin-svg-em-dimensions@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-svg-em-dimensions/-/babel-plugin-svg-em-dimensions-4.2.0.tgz#9a94791c9a288108d20a9d2cc64cac820f141391"
   integrity sha512-C0Uy+BHolCHGOZ8Dnr1zXy/KgpBOkEUYY9kI/HseHVPeMbluaX3CijJr7D4C5uR8zrc1T64nnq/k63ydQuGt4w==
+
+"@svgr/babel-plugin-svg-em-dimensions@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-svg-em-dimensions/-/babel-plugin-svg-em-dimensions-5.0.1.tgz#bd77607634deb1d970dbd8c0b1397b41e28c59dd"
+  integrity sha512-7kL9LtqCm1ca+zAbBsrD4ME3EQeVcRxkdrf2GsbKPgkzWJ+399vS4VqCP462+WvFRbG13jSwpNCrvhekdyvXsA==
 
 "@svgr/babel-plugin-transform-react-native-svg@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-transform-react-native-svg/-/babel-plugin-transform-react-native-svg-4.2.0.tgz#151487322843359a1ca86b21a3815fd21a88b717"
   integrity sha512-7YvynOpZDpCOUoIVlaaOUU87J4Z6RdD6spYN4eUb5tfPoKGSF9OG2NuhgYnq4jSkAxcpMaXWPf1cePkzmqTPNw==
 
+"@svgr/babel-plugin-transform-react-native-svg@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-transform-react-native-svg/-/babel-plugin-transform-react-native-svg-5.0.1.tgz#8c593dcfe17179f5a87734a76c9174aac91d2a2b"
+  integrity sha512-ITG1jJ0zHQ4yft6ISQqlMW4fHIzsrSB/FmrMxAcJtkTjh9M2/9M8wfKxQya9NnTfZ5WMSlQjXMQNZmGQsuxRrw==
+
 "@svgr/babel-plugin-transform-svg-component@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-transform-svg-component/-/babel-plugin-transform-svg-component-4.2.0.tgz#5f1e2f886b2c85c67e76da42f0f6be1b1767b697"
   integrity sha512-hYfYuZhQPCBVotABsXKSCfel2slf/yvJY8heTVX1PCTaq/IgASq1IyxPPKJ0chWREEKewIU/JMSsIGBtK1KKxw==
+
+"@svgr/babel-plugin-transform-svg-component@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-transform-svg-component/-/babel-plugin-transform-svg-component-5.0.1.tgz#31c7c7ad82f12ae09df14bbf9e3ac42a694b0f98"
+  integrity sha512-TYJ5L0QJgWqeMnuc8GEVy2jorwj/jp7y/mGLPwJhNrvrtAuVN7wEvc/Dzi1o1krsKKN7h6WpW/w3AQ6Na7qYEw==
 
 "@svgr/babel-preset@^4.3.3":
   version "4.3.3"
@@ -3946,6 +4010,20 @@
     "@svgr/babel-plugin-transform-react-native-svg" "^4.2.0"
     "@svgr/babel-plugin-transform-svg-component" "^4.2.0"
 
+"@svgr/babel-preset@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/babel-preset/-/babel-preset-5.0.1.tgz#16aff48213b83573c2b438457c60a79dc4522e6b"
+  integrity sha512-V2u6rAHLD//0xu+p/Il6laOLfuU5ySpaU1t2HBBXsRp6G9GTTNpAjxUw0iRulfd56AoWcr2j+Fap/J1yz/cx0w==
+  dependencies:
+    "@svgr/babel-plugin-add-jsx-attribute" "^5.0.1"
+    "@svgr/babel-plugin-remove-jsx-attribute" "^5.0.1"
+    "@svgr/babel-plugin-remove-jsx-empty-expression" "^5.0.1"
+    "@svgr/babel-plugin-replace-jsx-attribute-value" "^5.0.1"
+    "@svgr/babel-plugin-svg-dynamic-title" "^5.0.1"
+    "@svgr/babel-plugin-svg-em-dimensions" "^5.0.1"
+    "@svgr/babel-plugin-transform-react-native-svg" "^5.0.1"
+    "@svgr/babel-plugin-transform-svg-component" "^5.0.1"
+
 "@svgr/core@^4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@svgr/core/-/core-4.3.3.tgz#b37b89d5b757dc66e8c74156d00c368338d24293"
@@ -3955,10 +4033,26 @@
     camelcase "^5.3.1"
     cosmiconfig "^5.2.1"
 
+"@svgr/core@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/core/-/core-5.0.1.tgz#b7ec46665de21248b650fe94a2325a30b25569a9"
+  integrity sha512-F/HXJpKbN6Cab31ngiSFiUXYV9y+yiJaDaOZuc7Yqzc19+ncIrM+wSKoytjwcwc+Haj8gvEHsPqRX9L4yM1ftA==
+  dependencies:
+    "@svgr/plugin-jsx" "^5.0.1"
+    camelcase "^5.3.1"
+    cosmiconfig "^6.0.0"
+
 "@svgr/hast-util-to-babel-ast@^4.3.2":
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/@svgr/hast-util-to-babel-ast/-/hast-util-to-babel-ast-4.3.2.tgz#1d5a082f7b929ef8f1f578950238f630e14532b8"
   integrity sha512-JioXclZGhFIDL3ddn4Kiq8qEqYM2PyDKV0aYno8+IXTLuYt6TOgHUbUAAFvqtb0Xn37NwP0BTHglejFoYr8RZg==
+  dependencies:
+    "@babel/types" "^7.4.4"
+
+"@svgr/hast-util-to-babel-ast@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/hast-util-to-babel-ast/-/hast-util-to-babel-ast-5.0.1.tgz#0dce60a955465f0bd86bcd9c523b21472d6531d3"
+  integrity sha512-G7UHNPNhLyDK5p6RJvSh4TRpHszTxG8jPp5lAxC6Ez6O6rj1plEAjrCDdYj50mvilUuT9IKjqn87F8+agpKaSw==
   dependencies:
     "@babel/types" "^7.4.4"
 
@@ -3972,12 +4066,31 @@
     "@svgr/hast-util-to-babel-ast" "^4.3.2"
     svg-parser "^2.0.0"
 
+"@svgr/plugin-jsx@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/plugin-jsx/-/plugin-jsx-5.0.1.tgz#a60b20983bef86fc021554f365b88d88c45300ea"
+  integrity sha512-9mEinzosJshc/VdLqVkoBZQgs2d+ASbL61sX/2XCxcJ+/81KXdZcxmxSycJN37BvlM7F5fuj2ZF7IZwZ7ZOKaQ==
+  dependencies:
+    "@babel/core" "^7.7.5"
+    "@svgr/babel-preset" "^5.0.1"
+    "@svgr/hast-util-to-babel-ast" "^5.0.1"
+    svg-parser "^2.0.2"
+
 "@svgr/plugin-svgo@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@svgr/plugin-svgo/-/plugin-svgo-4.3.1.tgz#daac0a3d872e3f55935c6588dd370336865e9e32"
   integrity sha512-PrMtEDUWjX3Ea65JsVCwTIXuSqa3CG9px+DluF1/eo9mlDrgrtFE7NE/DjdhjJgSM9wenlVBzkzneSIUgfUI/w==
   dependencies:
     cosmiconfig "^5.2.1"
+    merge-deep "^3.0.2"
+    svgo "^1.2.2"
+
+"@svgr/plugin-svgo@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/plugin-svgo/-/plugin-svgo-5.0.1.tgz#37cd74b7c337efbed9e29ee8b36944b4469189b6"
+  integrity sha512-h/V30j1swWANLV1mB0w+1YYZ0U0CnWm721xyUKVHJrvMe4wl5XronZdvVAD2hhQf9+JgaQARrRJ0Vg1Dxi+SFg==
+  dependencies:
+    cosmiconfig "^6.0.0"
     merge-deep "^3.0.2"
     svgo "^1.2.2"
 
@@ -3993,6 +4106,20 @@
     "@svgr/core" "^4.3.3"
     "@svgr/plugin-jsx" "^4.3.3"
     "@svgr/plugin-svgo" "^4.3.1"
+    loader-utils "^1.2.3"
+
+"@svgr/webpack@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@svgr/webpack/-/webpack-5.0.1.tgz#d53765aa5a813017d015eaa744bdf506fb503689"
+  integrity sha512-mqVVHee+AVV+Sj/IOvTmUvIktb/xTIsI14Y3dR0e9obuJInvEdI1/sP8abRYn4vHS/hIorR9rm3DlMKBMYp75w==
+  dependencies:
+    "@babel/core" "^7.4.5"
+    "@babel/plugin-transform-react-constant-elements" "^7.0.0"
+    "@babel/preset-env" "^7.4.5"
+    "@babel/preset-react" "^7.0.0"
+    "@svgr/core" "^5.0.1"
+    "@svgr/plugin-jsx" "^5.0.1"
+    "@svgr/plugin-svgo" "^5.0.1"
     loader-utils "^1.2.3"
 
 "@szmarczak/http-timer@^1.1.2":
@@ -9965,6 +10092,11 @@ diff@3.5.0, diff@^3.5.0:
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
   integrity sha512-A46qtFgd+g7pDZinpnwiRJtxbC1hpgf0uzP3iG89scHk0AUC7A1TGxf5OiiOUv/JMZR8GOt8hL900hV0bOy5xA==
 
+diff@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.1.tgz#0c667cb467ebbb5cea7f14f135cc2dba7780a8ff"
+  integrity sha512-s2+XdvhPCOF01LRQBC8hf4vhbVmI2CGS5aZnxLJlT5FtdhPCDFq80q++zK2KlrVorVDdL5BOGZ/VfLrVtYNF+Q==
+
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -10738,12 +10870,12 @@ eslint-plugin-babel@5.3.0:
   dependencies:
     eslint-rule-composer "^0.3.0"
 
-eslint-plugin-es@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-es/-/eslint-plugin-es-2.0.0.tgz#0f5f5da5f18aa21989feebe8a73eadefb3432976"
-  integrity sha512-f6fceVtg27BR02EYnBhgWLFQfK6bN4Ll0nQFrBHOlCsAyxeZkn0NHns5O0YZOPrV1B3ramd6cgFwaoFLcSkwEQ==
+eslint-plugin-es@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-es/-/eslint-plugin-es-3.0.0.tgz#98cb1bc8ab0aa807977855e11ad9d1c9422d014b"
+  integrity sha512-6/Jb/J/ZvSebydwbBJO1R9E5ky7YeElfK56Veh7e4QGFHCXoIXGH9HhVz+ibJLM3XJ1XjP+T7rKBLUa/Y7eIng==
   dependencies:
-    eslint-utils "^1.4.2"
+    eslint-utils "^2.0.0"
     regexpp "^3.0.0"
 
 eslint-plugin-eslint-plugin@^2.1.0:
@@ -10815,13 +10947,13 @@ eslint-plugin-jsx-a11y@6.2.3:
     has "^1.0.3"
     jsx-ast-utils "^2.2.1"
 
-eslint-plugin-node@10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-node/-/eslint-plugin-node-10.0.0.tgz#fd1adbc7a300cf7eb6ac55cf4b0b6fc6e577f5a6"
-  integrity sha512-1CSyM/QCjs6PXaT18+zuAXsjXGIGo5Rw630rSKwokSs2jrYURQc4R5JZpoanNCqwNmepg+0eZ9L7YiRUJb8jiQ==
+eslint-plugin-node@11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-node/-/eslint-plugin-node-11.0.0.tgz#365944bb0804c5d1d501182a9bc41a0ffefed726"
+  integrity sha512-chUs/NVID+sknFiJzxoN9lM7uKSOEta8GC8365hw1nDfwIPIjjpRSwwPvQanWv8dt/pDe9EV4anmVSwdiSndNg==
   dependencies:
-    eslint-plugin-es "^2.0.0"
-    eslint-utils "^1.4.2"
+    eslint-plugin-es "^3.0.0"
+    eslint-utils "^2.0.0"
     ignore "^5.1.1"
     minimatch "^3.0.4"
     resolve "^1.10.1"
@@ -10907,10 +11039,17 @@ eslint-scope@^5.0.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-utils@^1.3.1, eslint-utils@^1.4.2, eslint-utils@^1.4.3:
+eslint-utils@^1.3.1, eslint-utils@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/eslint-utils/-/eslint-utils-1.4.3.tgz#74fec7c54d0776b6f67e0251040b5806564e981f"
   integrity sha512-fbBN5W2xdY45KulGXmLHZ3c3FHfVYmKg0IrAKGOkT/464PQsx2UeIzfz1RmEci+KLm1bBaAzZAh8+/E+XAeZ8Q==
+  dependencies:
+    eslint-visitor-keys "^1.1.0"
+
+eslint-utils@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-utils/-/eslint-utils-2.0.0.tgz#7be1cc70f27a72a76cd14aa698bcabed6890e1cd"
+  integrity sha512-0HCPuJv+7Wv1bACm8y5/ECVfYdfsAm9xmVb7saeFlxjPYALefjhbYoCkBjPdPzGH8wWyTpAez82Fh3VKYEZ8OA==
   dependencies:
     eslint-visitor-keys "^1.1.0"
 
@@ -18737,6 +18876,13 @@ lolex@^4.1.0, lolex@^4.2.0:
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-4.2.0.tgz#ddbd7f6213ca1ea5826901ab1222b65d714b3cd7"
   integrity sha512-gKO5uExCXvSm6zbF562EvM+rd1kQDnB9AZBbiQVzf1ZmdDpxUSvpnAaVOP83N/31mRK8Ml8/VE8DMvsAZQ+7wg==
 
+lolex@^5.0.1, lolex@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/lolex/-/lolex-5.1.2.tgz#953694d098ce7c07bc5ed6d0e42bc6c0c6d5a367"
+  integrity sha512-h4hmjAvHTmd+25JSwrtTIuwbKdwg5NzZVRMLn9saij4SZaepCrTCxPr35H/3bjwfMJtN+t3CX8672UIkglz28A==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+
 long@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
@@ -20348,6 +20494,18 @@ nise@^1.5.2:
     "@sinonjs/text-encoding" "^0.7.1"
     just-extend "^4.0.2"
     lolex "^4.1.0"
+    path-to-regexp "^1.7.0"
+
+nise@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-3.0.1.tgz#0659982af515e5aac15592226246243e8da0013d"
+  integrity sha512-fYcH9y0drBGSoi88kvhpbZEsenX58Yr+wOJ4/Mi1K4cy+iGP/a73gNoyNhu5E9QxPdgTlVChfIaAlnyOy/gHUA==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+    "@sinonjs/formatio" "^4.0.1"
+    "@sinonjs/text-encoding" "^0.7.1"
+    just-extend "^4.0.2"
+    lolex "^5.0.1"
     path-to-regexp "^1.7.0"
 
 no-case@^2.2.0:
@@ -25925,7 +26083,20 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sinon@7.5.0, sinon@^7.3.2, sinon@^7.4.1:
+sinon@8.0.2, sinon@^8.0.0:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-8.0.2.tgz#cc5f6daa9cc351b86b03faaca1e9c3650a04ae11"
+  integrity sha512-8W1S7BnCyvk7SK+Xi15B1QAVLuS81G/NGmWefPb31+ly6xI3fXaug/g5oUdfc8+7ruC4Ay51AxuLlYm8diq6kA==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+    "@sinonjs/formatio" "^4.0.1"
+    "@sinonjs/samsam" "^4.2.1"
+    diff "^4.0.1"
+    lolex "^5.1.2"
+    nise "^3.0.1"
+    supports-color "^7.1.0"
+
+sinon@^7.3.2:
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.5.0.tgz#e9488ea466070ea908fd44a3d6478fd4923c67ec"
   integrity sha512-AoD0oJWerp0/rY9czP/D6hDTTUYGpObhZjMpd7Cl/A6+j0xBE+ayL/ldfggkBXUs0IkvIiM1ljM8+WkOc5k78Q==
@@ -27029,7 +27200,7 @@ supports-hyperlinks@^2.0.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
-svg-parser@^2.0.0:
+svg-parser@^2.0.0, svg-parser@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.2.tgz#d134cc396fa2681dc64f518330784e98bd801ec8"
   integrity sha512-1gtApepKFweigFZj3sGO8KT8LvVZK8io146EzXrpVuWCDAbISz/yMucco3hWTkpZNoPabM+dnMOpy6Swue68Zg==
@@ -27803,7 +27974,7 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-type-detect@4.0.8, type-detect@^4.0.0, type-detect@^4.0.5:
+type-detect@4.0.8, type-detect@^4.0.0, type-detect@^4.0.5, type-detect@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==

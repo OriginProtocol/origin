@@ -58,7 +58,7 @@
     "redis": "^2.8.0",
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
-    "sinon": "^7.3.2",
+    "sinon": "^8.0.0",
     "superagent": "^5.1.0",
     "web3": "1.0.0-beta.34"
   },
