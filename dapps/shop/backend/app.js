@@ -1,8 +1,11 @@
 const express = require('express')
 const cors = require('cors')
+const serveStatic = require('serve-static')
 const app = express()
 
 app.use(cors({ origin: true, credentials: true }))
+
+app.use(serveStatic(`${__dirname}/public`))
 
 app.get('/', (req, res) => {
   res.send('')
