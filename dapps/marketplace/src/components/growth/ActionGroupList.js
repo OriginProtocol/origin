@@ -52,12 +52,15 @@ function ActionGroupList(props) {
         notCompletedActions={[]}
         {...props}
       />
-      <ActionGroup
-        type="purchases"
-        completedActions={completedPurchaseActions}
-        notCompletedActions={notCompletedPurchaseActions}
-        {...props}
-      />
+      {(completedPurchaseActions.length > 0 ||
+        notCompletedPurchaseActions.length > 0) && (
+        <ActionGroup
+          type="purchases"
+          completedActions={completedPurchaseActions}
+          notCompletedActions={notCompletedPurchaseActions}
+          {...props}
+        />
+      )}
     </div>
   )
 }

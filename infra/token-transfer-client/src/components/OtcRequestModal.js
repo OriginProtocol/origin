@@ -100,6 +100,11 @@ class OtcRequestModal extends Component {
       <>
         <h1 className="mb-2">Create OTC Request</h1>
         <form onSubmit={this.handleFormSubmit}>
+          <p>
+            By submitting this OTC request, you grant Origin the right to share
+            your email address, phone number, and desired trade amount with one
+            or more OTC desk partners.
+          </p>
           <div className="form-group">
             <div className="btn-group btn-group-toggle" data-toggle="buttons">
               <label
