@@ -34,7 +34,7 @@
     "libphonenumber-js": "1.7.29",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
-    "pg": "7.15.1",
+    "pg": "7.17.0",
     "sequelize": "5.21.3",
     "sequelize-cli": "5.5.1",
     "url": "0.11.0",
