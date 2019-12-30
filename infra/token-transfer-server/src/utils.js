@@ -30,7 +30,7 @@ const getFingerprintData = async req => {
   // Parsed user agent from express-useragent
   const device = req.useragent
   return {
-    ip: req.headers['x-real-ip'],
+    ip: req.headers['x-real-ip'] || req.headers['x-forwarded-for'],
     device: {
       source: device.source,
       browser: device.browser,
