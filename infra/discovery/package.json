@@ -55,7 +55,7 @@
     "nodemon": "2.0.2",
     "prettier": "1.19.1",
     "rewire": "4.0.1",
-    "sinon": "7.5.0"
+    "sinon": "8.0.2"
   },
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
