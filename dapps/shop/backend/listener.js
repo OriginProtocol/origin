@@ -15,9 +15,10 @@ const web3 = new Web3()
 
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
+const localContract = process.env.MARKETPLACE_CONTRACT
 const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
   ? process.env.PGP_PRIVATE_KEY
-    : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
+  : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
 const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
 
 const SubscribeToLogs = address =>
@@ -101,7 +102,7 @@ async function connectWS() {
   ws.on('open', function open() {
     console.log('Connection open')
     this.heartbeat()
-    ws.send(SubscribeToLogs(siteConfig.marketplaceContract))
+    ws.send(SubscribeToLogs(siteConfig.marketplaceContract || localContract))
     ws.send(SubscribeToNewHeads)
   })
 

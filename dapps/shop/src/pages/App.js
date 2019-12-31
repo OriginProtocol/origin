@@ -7,6 +7,7 @@ import Order from './OrderLoader'
 import Admin from './admin/Admin'
 
 import useConfig from 'utils/useConfig'
+import dataUrl from 'utils/dataUrl'
 
 const App = ({ location }) => {
   const { loading, config } = useConfig()
@@ -34,6 +35,13 @@ const App = ({ location }) => {
       const css = document.createElement('style')
       css.appendChild(document.createTextNode(config.css))
       document.head.appendChild(css)
+    }
+    if (config && config.fullTitle) {
+      document.title = config.fullTitle
+    }
+    if (config && config.favicon) {
+      const favicon = document.querySelector('link[rel="icon"]')
+      favicon.href = `${dataUrl()}/${config.favicon}`
     }
   }, [config])
 

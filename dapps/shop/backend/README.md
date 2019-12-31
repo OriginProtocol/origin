@@ -1,5 +1,16 @@
 # Dshop Backend
 
+This is the supporting backend for Origin Shop. It's primary functions are:
+
+- Handling off-chain payments, such as credit card transactions
+- Sending out confirmation emails
+- Order management
+- Discount code management
+
+It works by watching the Ethereum blockchain for relevant activity on the Origin
+Marketplace contract. Order data is downloaded from IPFS, decrypted and stored
+in a Postgres database.
+
 ## Deploy to Heroku script
 
 Make sure your `.env` file has all the values you want to see configured. Make
@@ -13,31 +24,18 @@ configuration(it can be changed later), run the deploy script:
 Configure a stripe webhook with your new Heroku URL, then set
 `STRIPE_WEBHOOK_SECRET` to the generated signing secret given by Stripe.
 
-### Old Notes
-
-This is the supporting backend for Origin Shop. It's primary functions are:
-
-- Handling off-chain payments, such as credit card transactions
-- Sending out confirmation emails
-- Order management
-- Discount code management
-
-It works by watching the Ethereum blockchain for relevant activity on the Origin
-Marketplace contract. Order data is downloaded from IPFS, decrypted and stored
-in a Postgres database.
-
-## Prerequisites
+## Manual Deploy
 
 This assumes you have already followed the steps to setup and deploy a store to
 IPFS. You will need your Public URL, PGP Private Key and password, and a
 websocket provider URL (eg via Infura or Alchemy).
 
-### Deploy to Heroku
+### Manual deploy to Heroku
 
 Please note that Heroku's free tier puts processes to sleep after some
 inactivity. This causes the process watching the blockchain to stop, meaning new
-orders will not be processed. Please use a paid Heroku dyno to ensure this does
-not happen.
+orders will not be processed. Please use a paid Heroku dyno (\$7/month) to
+ensure this does not happen.
 
     # Install and login to heroku if you have not already done so...
     curl https://cli-assets.heroku.com/install.sh | sh
@@ -63,16 +61,6 @@ not happen.
     # Origin Marketplace contract will be made with this account.
     heroku config:set WEB3_PK=0xprivatekey
 
-    # To setup email notifications we need to get an API key from Sendgrid
-    heroku addons:open sendgrid
-
-    # Settings -> API Keys -> Create API Key
-    # API Key name: heroku
-    # Create and View
-    # Copy key to clipboard
-
-    heroku config:set SENDGRID_API_KEY=<PASTE VALUE>
-
     # Commit files
     git add .
     git commit -m "Origin Shop backend"
@@ -81,7 +69,7 @@ not happen.
 
     git push heroku master
 
-    # Switch to 'hobby' type dyno to prevent sleeping
+    # Switch to 'hobby' type dyno to prevent sleeping ($7/month)
 
     heroku ps:type worker=hobby
 

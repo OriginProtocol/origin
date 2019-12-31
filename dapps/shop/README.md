@@ -31,6 +31,12 @@ First create a listing on shoporigin.com and make a note of the listing ID.
    DATA_DIR=mystore yarn start
 ```
 
+## Build
+
+```sh
+   PROVIDER=<provider> NETWORK=<mainnet|rinkeby> DATA_DIR=mystore npm run build
+```
+
 ## Host on IPFS
 
 First, sign up for [Pinata](https://pinata.cloud/signup)

@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <title>Origin Protocol Swag Store</title>
+  <title>Origin Protocol Store</title>
   <meta charset="utf-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no">
@@ -34,7 +34,7 @@
 <script>
   localStorage.metaMaskEnabled = true
   localStorage.ognNetwork = "<%= htmlWebpackPlugin.options.network %>"
-  localStorage.customConfig = '{"performanceMode":false,"proxyAccountsEnabled":false,"relayerEnabled":false}'
+  localStorage.customConfig = '{"performanceMode":false,"proxyAccountsEnabled":false,"relayerEnabled":false<% if (htmlWebpackPlugin.options.provider) { %>,"provider":"<%= htmlWebpackPlugin.options.provider %>"<% } %>}'
 </script>
 <% _.forEach(htmlWebpackPlugin.files.js, function(file, index) { %>
 <% if (htmlWebpackPlugin.files.jsIntegrity) { %>
