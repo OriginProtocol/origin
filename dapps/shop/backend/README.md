@@ -1,9 +1,20 @@
 # Dshop Backend
 
-## Deploy to Heroku
+This is the supporting backend for Origin Shop. It's primary functions are:
 
-Make sure your `.env` file has all the values you want to see configured.  Make
-sure your PGP keys are base64 encoded (see below).  If you're satisfied with the
+- Handling off-chain payments, such as credit card transactions
+- Sending out confirmation emails
+- Order management
+- Discount code management
+
+It works by watching the Ethereum blockchain for relevant activity on the Origin
+Marketplace contract. Order data is downloaded from IPFS, decrypted and stored
+in a Postgres database.
+
+## Deploy to Heroku script
+
+Make sure your `.env` file has all the values you want to see configured. Make
+sure your PGP keys are base64 encoded (see below). If you're satisfied with the
 configuration(it can be changed later), run the deploy script:
 
     ./deploy_heroku.sh myAppName
@@ -13,32 +24,54 @@ configuration(it can be changed later), run the deploy script:
 Configure a stripe webhook with your new Heroku URL, then set
 `STRIPE_WEBHOOK_SECRET` to the generated signing secret given by Stripe.
 
-### Old Notes
+## Manual Deploy
 
-Setup new heroku app
+This assumes you have already followed the steps to setup and deploy a store to
+IPFS. You will need your Public URL, PGP Private Key and password, and a
+websocket provider URL (eg via Infura or Alchemy).
 
-    git push heroku master
+### Manual deploy to Heroku
+
+Please note that Heroku's free tier puts processes to sleep after some
+inactivity. This causes the process watching the blockchain to stop, meaning new
+orders will not be processed. Please use a paid Heroku dyno (\$7/month) to
+ensure this does not happen.
+
+    # Install and login to heroku if you have not already done so...
+    curl https://cli-assets.heroku.com/install.sh | sh
+    heroku login
+
+    # Create a new heroku app called 'myshop'
+    heroku create myshop
+
+    # Enable Postgres and Sendgrid addons
     heroku addons:create heroku-postgresql:hobby-dev
     heroku addons:create sendgrid:starter
 
-    heroku config:set PUBLIC_URL=
-    heroku config:set DATA_URL=
-    heroku config:set ADMIN_PW=
-    heroku config:set NETWORK_ID=
-    heroku config:set PROVIDER=
-    heroku config:set WEB3_PK=
-    heroku config:set PGP_PRIVATE_KEY_PASS=
+    # Set environment variables
+    heroku config:set PUBLIC_URL=https://myshop.eth.link
+    heroku config:set DATA_URL=https://myshop.eth.link/myshop/
+    heroku config:set ADMIN_PW=secretpassword
+    heroku config:set NETWORK_ID=1
+    heroku config:set PROVIDER=wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
+    heroku config:set PGP_PRIVATE_KEY_PASS=secretpgp
     heroku config:set PGP_PRIVATE_KEY='<PASTE_MULTI_LINE>'
 
-    heroku addons:open sendgrid
+    # If you're taking credit card orders, provide a private key. Offers on the
+    # Origin Marketplace contract will be made with this account.
+    heroku config:set WEB3_PK=0xprivatekey
 
-    # Settings -> API Keys -> Create API Key
-    # API Key name: heroku
-    # Create and View
-    # Copy key
-    # Go back to terminal
+    # Commit files
+    git add .
+    git commit -m "Origin Shop backend"
 
-    heroku config:set SENDGRID_API_KEY=<PASTE VALUE>
+    # Deploy app to Heroku
+
+    git push heroku master
+
+    # Switch to 'hobby' type dyno to prevent sleeping ($7/month)
+
+    heroku ps:type worker=hobby
 
 ## PGP/GPG Key Export
 

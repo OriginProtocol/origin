@@ -1,4 +1,5 @@
 const openpgp = require('openpgp')
+const inquirer = require('inquirer')
 
 openpgp.config.show_comment = false
 openpgp.config.show_version = false
@@ -9,7 +10,6 @@ async function generate(name, passphrase) {
     curve: 'ed25519',
     passphrase
   })
-  console.log(`Pass phrase: ${passphrase}\n`)
   console.log('Public key:')
   console.log(key.publicKeyArmored)
   console.log('\nPrivate key:')
@@ -21,4 +21,15 @@ async function generate(name, passphrase) {
   console.log(JSON.stringify(key.privateKeyArmored).replace(/\\r/g, ''))
 }
 
-generate('test', 'abc123')
+inquirer
+  .prompt([
+    {
+      type: 'password',
+      message: 'Enter a password',
+      name: 'password',
+      mask: '*'
+    }
+  ])
+  .then(answers => {
+    generate('originstore', answers.password)
+  })

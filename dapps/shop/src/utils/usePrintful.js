@@ -13,9 +13,12 @@ function usePrintful(orderId) {
       const headers = new Headers({ authorization: admin })
       const myRequest = new Request(url, { headers })
       const raw = await fetch(myRequest)
-
-      const order = await raw.json()
-      setOrder(order)
+      if (raw.ok) {
+        const order = await raw.json()
+        if (order !== 'Not Found') {
+          setOrder(order)
+        }
+      }
     }
     fetchOrder()
   }, [])
