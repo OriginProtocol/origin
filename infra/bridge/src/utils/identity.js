@@ -113,7 +113,7 @@ async function _postToWebhook(
  * and server would check it.
  *
  * @param {{ethAddress:string, email:string, firstName: string, lastName: string}} identity
- * @param {string} ip
+ * @param {string} ip: IP address the identity update originated from.
  * @returns {Promise<void>}
  */
 async function postToEmailWebhook(identity, ip) {
