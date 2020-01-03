@@ -78,7 +78,7 @@ function getClientEnvironment(publicUrl) {
     'process.env': Object.keys(raw).reduce((env, key) => {
       const whitelist = [
         'CLIENT_SENTRY_DSN',
-        'EMPLOYEE_API_URL',
+        'TEAM_API_URL',
         'ENABLE_GA',
         'EARN_OGN_ENABLED',
         'INVESTOR_API_URL',
