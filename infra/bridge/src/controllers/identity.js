@@ -146,7 +146,7 @@ router.post('/', authMiddleware, identityWriteVerify, async (req, res) => {
   await pinIdentityToIpfs(identity)
 
   // Call webhook to record the user's email in the insight tool.
-  await postToEmailWebhook(identity)
+  await postToEmailWebhook(identity, metadata.ip)
 
   return res.status(200).send({ ethAddress: owner })
 })
