@@ -142,9 +142,7 @@ async function postToEmailWebhook(identity, ip) {
     identity.lastName || ''
   )}&phone=${encodeURIComponent(
     identity.phone || ''
-  )}&ip_addr=${encodeURIComponent(
-    ip || ''
-  )}&country_code=${encodeURIComponent(
+  )}&ip_addr=${encodeURIComponent(ip || '')}&country_code=${encodeURIComponent(
     identity.country || ''
   )}&dapp_user=1`
   await _postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
