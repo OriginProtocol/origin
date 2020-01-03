@@ -4,7 +4,14 @@ import dayjs from 'dayjs'
 import AvailabilityCalculator from '../src/utils/AvailabilityCalculator'
 
 describe('Availability Calculator', function() {
-  const year = dayjs().year() + 1
+  let year = dayjs().year()
+
+  const currentMonth = dayjs().month()
+
+  if (currentMonth >= 2) {
+    year = year + 1
+  }
+
   let instance
 
   beforeEach(() => {

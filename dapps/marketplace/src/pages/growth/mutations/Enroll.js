@@ -22,11 +22,20 @@ const Error = props => (
  */
 const ENROLL_MESSAGE = 'I accept the terms of growth campaign version: 1.0'
 
-const Enroll = ({ fingerprintData, onAccountBlocked, onSuccess }) => {
+const Enroll = ({
+  fingerprintData,
+  fingerprintLoading,
+  onAccountBlocked,
+  onSuccess
+}) => {
   const [enroll] = useMutation(GrowthEnroll)
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    if (fingerprintLoading) {
+      return
+    }
+
     enroll({
       variables: {
         agreementMessage: ENROLL_MESSAGE,
@@ -51,7 +60,7 @@ const Enroll = ({ fingerprintData, onAccountBlocked, onSuccess }) => {
           )
         )
       })
-  }, [])
+  }, [fingerprintData, fingerprintLoading])
 
   if (error) {
     return <Error error={error} />
