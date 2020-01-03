@@ -113,9 +113,10 @@ async function _postToWebhook(
  * and server would check it.
  *
  * @param {{ethAddress:string, email:string, firstName: string, lastName: string}} identity
+ * @param {string} ip: IP address the identity update originated from.
  * @returns {Promise<void>}
  */
-async function postToEmailWebhook(identity) {
+async function postToEmailWebhook(identity, ip) {
   if (process.env.NODE_ENV !== 'production') {
     logger.info('Test environment. Skipping email webhook.')
     return
@@ -139,7 +140,9 @@ async function postToEmailWebhook(identity) {
     identity.firstName || ''
   )}&last_name=${encodeURIComponent(
     identity.lastName || ''
-  )}&phone=${encodeURIComponent(identity.phone || '')}&dapp_user=1`
+  )}&phone=${encodeURIComponent(identity.phone || '')}&ip=${encodeURIComponent(
+    ip || ''
+  )}&country_code=${encodeURIComponent(identity.country || '')}&dapp_user=1`
   await _postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 

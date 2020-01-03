@@ -107,14 +107,7 @@ const webpackConfig = {
       template: 'public/template.html',
       inject: false,
       network: process.env.NETWORK || 'localhost',
-      metaMask: true
-    }),
-    new HtmlWebpackPlugin({
-      template: 'public/template.html',
-      inject: false,
-      filename: 'localhost.html',
-      network: 'localhost',
-      metaMask: true
+      provider: process.env.PROVIDER
     }),
     new webpack.EnvironmentPlugin({
       WEBPACK_BUILD: true,

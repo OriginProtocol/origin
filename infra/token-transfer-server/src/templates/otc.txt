@@ -1,1 +1,4 @@
-An OTC request has been submitted to <%= action %> <%= amount %> OGN by <%= email %>.
+An OTC request has been submitted to <%= action %> <%= amount %> OGN by <%= name %>.
+
+Email: <%= email %>
+Phone <%= phone %>

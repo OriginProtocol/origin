@@ -66,11 +66,11 @@
     "@babel/node": "7.7.7",
     "chai": "4.2.0",
     "crypto-js": "3.1.9-1",
-    "eslint": "6.7.2",
+    "eslint": "6.8.0",
     "eth-ecies": "1.0.3",
     "nodemon": "2.0.2",
     "prettier": "1.19.1",
-    "secp256k1": "3.7.1",
+    "secp256k1": "3.8.0",
     "supertest": "4.0.2"
   },
   "prettier": {

@@ -52,7 +52,11 @@ const Subs = () => {
     client.reFetchObservableQueries()
   }
 
-  const net = data.config
+  if (!data) {
+    return null
+  }
+
+  const net = get(data, 'config')
   const config = pick(
     get(data, 'configObj', {}),
     'relayerEnabled',

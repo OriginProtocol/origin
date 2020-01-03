@@ -30,7 +30,15 @@ function generatePrintfulOrder(order, printfulIds) {
     items: data.items.map(item => ({
       sync_variant_id: get(printfulIds, `[${item.product}][${item.variant}]`),
       quantity: item.quantity
-    }))
+    })),
+
+    costs: {
+      subtotal: (data.subTotal / 100).toFixed(2),
+      discount: (data.discount / 100).toFixed(2),
+      shipping: (data.shipping.amount / 100).toFixed(2),
+      tax: '0.00',
+      total: (data.total / 100).toFixed(2)
+    }
   }
   return printfulData
 }
