@@ -71,7 +71,7 @@ graphqlImageTag: '3585a9f'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '99cd16e'
+t3ClientImageTag: 'e30c51d'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
