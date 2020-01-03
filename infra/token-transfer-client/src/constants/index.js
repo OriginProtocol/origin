@@ -7,8 +7,8 @@ import {
 
 let apiUrl
 if (process.env.NODE_ENV === 'production') {
-  if (window.location.hostname.includes('employee')) {
-    apiUrl = process.env.EMPLOYEE_API_URL
+  if (window.location.hostname.includes('team')) {
+    apiUrl = process.env.TEAM_API_URL
   } else {
     apiUrl = process.env.INVESTOR_API_URL
   }
