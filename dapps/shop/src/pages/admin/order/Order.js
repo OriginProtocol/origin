@@ -39,17 +39,15 @@ const AdminOrder = () => {
           </NavLink>
         </li>
       </ul>
-      <div className="checkout">
-        <Switch>
-          <Route path={`${urlPrefix}/printful`}>
-            <Printful />
-          </Route>
-          <Route path={`${urlPrefix}/payment`}>Payment</Route>
-          <Route>
-            <OrderDetails cart={cart} />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path={`${urlPrefix}/printful`}>
+          <Printful />
+        </Route>
+        <Route path={`${urlPrefix}/payment`}>Payment</Route>
+        <Route>
+          <OrderDetails cart={cart} />
+        </Route>
+      </Switch>
     </>
   )
 }

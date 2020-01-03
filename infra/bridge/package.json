@@ -58,13 +58,13 @@
     "redis": "^2.8.0",
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
-    "sinon": "^7.3.2",
+    "sinon": "^8.0.0",
     "superagent": "^5.1.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "eslint": "6.7.2",
+    "eslint": "6.8.0",
     "mocha": "6.2.2",
     "nodemon": "2.0.2",
     "supertest": "4.0.2"

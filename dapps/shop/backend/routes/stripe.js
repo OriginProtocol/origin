@@ -61,6 +61,8 @@ module.exports = function(app) {
 
     if (event.type === 'payment_intent.succeeded') {
       const encryptedData = get(event, 'data.object.metadata.encryptedData')
+      const contractAddr =
+        siteConfig.marketplaceContract || process.env.MARKETPLACE_CONTRACT
 
       const offer = {
         schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
@@ -84,10 +86,7 @@ module.exports = function(app) {
         throw err
       }
       const listingId = siteConfig.listingId.split('-')[2]
-      const Marketplace = new web3.eth.Contract(
-        abi,
-        siteConfig.marketplaceContract
-      )
+      const Marketplace = new web3.eth.Contract(abi, contractAddr)
 
       Marketplace.methods
         .makeOffer(

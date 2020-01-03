@@ -118,10 +118,10 @@ async function _loadValueFromAttestation(addresses, method) {
 }
 
 /**
- * Returns the country of the identity based on IP from the most recent attestation.
+ * Returns the country code of the identity based on IP from the most recent attestation.
  *
  * @param {Array<string>} addresses
- * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
+ * @returns {Promise<{country: string, ip: string}> || null} 2 letters country code or null if lookup failed.
  * @private
  */
 async function _countryLookup(addresses) {
@@ -132,11 +132,12 @@ async function _countryLookup(addresses) {
   }
 
   // Do the IP to geo lookup.
-  const geo = await ip2geo(attestation.remoteIpAddress)
+  const ip = attestation.remoteIpAddress
+  const geo = await ip2geo(ip)
   if (!geo) {
     return null
   }
-  return geo.countryCode
+  return { country: geo.countryCode, ip }
 }
 
 /**
@@ -248,7 +249,9 @@ async function loadAttestationMetadata(addresses, attestations) {
   )
 
   // Add country of origin based on IP.
-  metadata.country = await _countryLookup(addresses)
+  const data = await _countryLookup(addresses)
+  metadata.country = data ? data.country : null
+  metadata.ip = data ? data.ip : null
 
   return metadata
 }
