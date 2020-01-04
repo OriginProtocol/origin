@@ -11,6 +11,13 @@ export CLIENT_URL"=http://localhost:3000/#"
 export DATABASE_URL="postgres://origin:origin@localhost/origin"
 ```
 
+Setup 
+
+```
+nvm install 10.15.3
+yarn install
+```
+
 Run migration
 ```
 yarn run migrate
