@@ -66,9 +66,16 @@ const getFingerprint = memoize(getFingerprintFn)
 
 function withFingerprint(WrappedComponent) {
   const WithFingerprint = props => {
-    const [fingerprintData, setFingerprintData] = useState(
+    const [fingerprintData, _setFingerprintData] = useState(
       cachedFingerprintData
     )
+
+    const [loading, setLoading] = useState(fingerprintData ? false : true)
+
+    const setFingerprintData = data => {
+      _setFingerprintData(data)
+      setLoading(false)
+    }
 
     useEffect(() => {
       let timeout, idleCallback
@@ -92,7 +99,13 @@ function withFingerprint(WrappedComponent) {
       }
     })
 
-    return <WrappedComponent {...props} fingerprintData={fingerprintData} />
+    return (
+      <WrappedComponent
+        {...props}
+        fingerprintData={fingerprintData}
+        fingerprintLoading={loading}
+      />
+    )
   }
   return withWallet(WithFingerprint)
 }
