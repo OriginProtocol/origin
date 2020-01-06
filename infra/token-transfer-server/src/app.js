@@ -65,7 +65,7 @@ if (process.env.HEROKU) {
   // Whitelisted domains
   const corsWhitelist = [
     'https://investor.originprotocol.com',
-    'https://employee.originprotocol.com'
+    'https://team.originprotocol.com'
   ]
 
   app.use(

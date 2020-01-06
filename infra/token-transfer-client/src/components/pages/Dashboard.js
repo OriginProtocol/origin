@@ -68,6 +68,8 @@ const Dashboard = props => {
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
   const isLocked = !unlockDate || moment.utc() < unlockDate
+  const isEmployee = !!get(props.user, 'employee')
+  const displayBonusCard = earnOgnEnabled && !isEmployee
 
   return (
     <>
@@ -113,10 +115,11 @@ const Dashboard = props => {
             vested={vestedTotal}
             unvested={unvestedTotal}
             isLocked={isLocked}
+            isEmployee={isEmployee}
           />
         </div>
         <div className="col-12 col-xl-6 mb-4">
-          {earnOgnEnabled ? (
+          {displayBonusCard ? (
             <BonusCard
               lockups={props.lockups}
               locked={props.lockupTotals.locked}
@@ -139,13 +142,13 @@ const Dashboard = props => {
         </div>
       </div>
       <div className="row">
-        {!get(props.user, 'employee') && (
+        {!isEmployee && (
           <div className="col-12 col-lg-6 mb-5">
             <GrantDetailCard grants={props.grants} user={props.user} />
           </div>
         )}
         <div className="col-12 col-lg-6 mb-4">
-          {earnOgnEnabled && <NewsHeadlinesCard />}
+          {displayBonusCard && <NewsHeadlinesCard />}
         </div>
       </div>
     </>

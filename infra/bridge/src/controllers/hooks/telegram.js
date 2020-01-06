@@ -83,7 +83,7 @@ router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
       replyWithMessage(
         res,
         message.chat.id,
-        'Hey there, Get back to the Origin Marketplace app to continue'
+        'Great, now go back to the Origin Marketplace app to continue'
       )
     } else {
       // Log unexpected private chat messages to DB

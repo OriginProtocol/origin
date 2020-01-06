@@ -139,20 +139,20 @@ class GrowthInvite extends Component {
           return (
             <div className="send-invites mt-4 pt-2">
               <div className="emphasis lesser-title">
-                <fbt desc="RewardInvite.inviteWithYourCode">
-                  Invite with your code
+                <fbt desc="RewardInvite.inviteWithYourLink">
+                  Invite with Your Link
                 </fbt>
               </div>
               <div>
                 <fbt desc="RewardInvite.sendFriendInviteCode">
-                  Send a friend your unique invitation code.
+                  Send a friend your unique invitation link.
                 </fbt>
               </div>
 
               <div className={`d-flex pt-3 ${isMobile ? 'flex-column' : ''}`}>
                 <div className="col-12 col-md-8 pl-0 pr-0">
                   <div className="normal">
-                    <fbt desc="RewardInvite.copyCode">Copy code</fbt>
+                    <fbt desc="RewardInvite.copyLink">Copy Link</fbt>
                   </div>
                   <div className="d-flex mt-2">
                     <input
