@@ -311,6 +311,11 @@ async function handleCallbacks({ callbacks, val }) {
 async function handleHash({ hash, from, mutation }) {
   debug(`got hash ${hash}`)
 
+  if (typeof txHash !== 'string' || ![66, 64].includes(hash.length)) {
+    console.error(`Received hash: ${hash}`)
+    throw new Error('handleHash got invalid tx hash!')
+  }
+
   contracts.transactions[from] = contracts.transactions[from] || []
   contracts.transactions[from].unshift({
     id: hash,
@@ -465,7 +470,12 @@ async function sendViaRelayer({
     let receipt
     const responseBlocks = async ({ newBlock }) => {
       if (!receipt) {
-        receipt = await web3.eth.getTransactionReceipt(txHash)
+        try {
+          receipt = await web3.eth.getTransactionReceipt(txHash)
+        } catch (err) {
+          console.error(err)
+          return
+        }
       }
       /**
        * There some potential races going on here, where we can't use === for
@@ -582,10 +592,23 @@ async function sendViaWeb3({
       })
     })
     .on('error', function(error) {
+      /**
+       * This seems like an internal web3.js error and not caused by our code.
+       * it should be temporary, so we're just gonna ignore it.
+       */
+      if (error && error.message && error.message.includes('Invalid params')) {
+        console.error(error.message)
+        return
+      }
+
       if (txHash) {
+        const hashTosend =
+          typeof txHash === 'string' && [66, 64].includes(txHash.length)
+            ? txHash
+            : null
         pubsub.publish('TRANSACTION_UPDATED', {
           transactionUpdated: {
-            id: txHash,
+            id: hashTosend,
             status: 'error',
             error,
             mutation
