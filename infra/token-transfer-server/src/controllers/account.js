@@ -67,9 +67,11 @@ router.post(
         .send(`email=${encodeURIComponent(req.user.email)}`)
         .send(`investor=1`)
         .send(`eth_address=${req.body.address}`)
+        .send(`name=${encodeURIComponent(req.user.name || req.user.email)}`)
         .send(
-          `name=${encodeURIComponent(req.user.name) ||
-            encodeURIComponent(req.user.email)}`
+          `ip_addr=${encodeURIComponent(
+            req.headers['x-real-ip'] || req.headers['x-forwarded-for']
+          )}`
         )
         .then(
           response => {
