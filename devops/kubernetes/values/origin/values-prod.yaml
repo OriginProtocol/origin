@@ -34,7 +34,7 @@ messagingImageTag: 'e530ec2'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '871651d'
+notificationsImageTag: 'e530ec2'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
