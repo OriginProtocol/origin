@@ -311,7 +311,7 @@ async function handleCallbacks({ callbacks, val }) {
 async function handleHash({ hash, from, mutation }) {
   debug(`got hash ${hash}`)
 
-  if (typeof txHash !== 'string' || ![66, 64].includes(hash.length)) {
+  if (typeof hash !== 'string' || ![66, 64].includes(hash.length)) {
     console.error(`Received hash: ${hash}`)
     throw new Error('handleHash got invalid tx hash!')
   }
