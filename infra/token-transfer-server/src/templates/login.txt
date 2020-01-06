@@ -1,4 +1,4 @@
-Welcome to the Origin Investor Portal. Here is your single-use sign in link.
+Welcome to the Origin <%= portalType %> Portal. Here is your single-use sign in link.
 
 <%= url %>
 

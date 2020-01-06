@@ -86,7 +86,10 @@ async function sendLockupConfirmationEmail(lockup, user) {
     { expiresIn: `${lockupConfirmationTimeout}m` }
   )
 
-  const vars = { url: `${clientUrl}/lockup/${lockup.id}/${token}` }
+  const vars = {
+    url: `${clientUrl}/lockup/${lockup.id}/${token}`,
+    employee: user.employee
+  }
 
   await sendEmail(user.email, 'lockup', vars)
 

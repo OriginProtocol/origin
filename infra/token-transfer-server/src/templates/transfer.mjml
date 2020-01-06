@@ -13,7 +13,7 @@
             <mj-section background-color="white">
                 <mj-column>
                     <mj-text font-size="28px" font-weight="bold">
-                        Origin Investor Portal
+		    	Origin <%= portalType %> Portal
                     </mj-text>
                 </mj-column>
             </mj-section>
