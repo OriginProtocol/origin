@@ -18,7 +18,7 @@ const logger = require('../logger')
  *
  * @param userId
  * @param amount
- * @paraam currentTransferId
+ * @param currentTransferId
  * @returns Promise<User>
  * @private
  */
