@@ -11,7 +11,7 @@ const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 
 process.env.ENCRYPTION_SECRET = 'test'
-process.env.LOCKUP_BONUS_RATE = 10
+process.env.LOCKUP_BONUS_RATE = 10.5
 process.env.LOCKUP_DURATION = 12
 
 const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')

@@ -56,6 +56,7 @@ const PrivateRoute = ({
                   <Navigation
                     onExpandSidebar={toggleSidebar}
                     expandSidebar={expandSidebar}
+                    user={user}
                   />
                   <div id="main" className={expandSidebar ? 'd-none' : ''}>
                     <div className="d-none d-md-block">

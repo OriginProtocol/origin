@@ -82,7 +82,8 @@ async function sendTransferConfirmationEmail(transfer, user) {
   )
 
   const vars = {
-    url: `${clientUrl}/withdrawal/${transfer.id}/${confirmationToken}`
+    url: `${clientUrl}/withdrawal/${transfer.id}/${confirmationToken}`,
+    employee: user.employee
   }
   await sendEmail(user.email, 'transfer', vars)
 

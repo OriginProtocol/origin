@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
+import get from 'lodash.get'
 
 import { apiUrl } from '@/constants'
 import { earnOgnEnabled } from '@/constants'
@@ -23,6 +24,9 @@ const Navigation = props => {
   if (redirectTo) {
     return <Redirect push to={redirectTo} />
   }
+
+  const isEmployee = !!get(props.user, 'employee')
+  const displayBonusLink = earnOgnEnabled && !isEmployee
 
   return (
     <nav
@@ -57,7 +61,7 @@ const Navigation = props => {
               News
             </NavLink>
           </li>
-          {earnOgnEnabled && (
+          {displayBonusLink && (
             <li className="nav-item mb-3">
               <NavLink to="/lockup" className="nav-link text">
                 <Earn

@@ -57,7 +57,8 @@ router.post(
       action: req.body.action,
       name: req.user.name,
       email: req.user.email,
-      phone: req.user.phone
+      phone: req.user.phone,
+      employee: req.user.employee
     }
 
     for (const email of otcPartnerEmails) {

@@ -16,14 +16,16 @@ const VestingCard = props => {
         isLocked={props.isLocked}
       />
       {props.isLocked ? (
-        <>
-          <h2>Revised Vesting Schedule</h2>
-          <p>
-            The purple line shows the proposed amendment to the token release
-            schedule.
-          </p>
-          <img src={VestingSchedule} className="img-fluid mx-auto mt-2" />
-        </>
+        !props.isEmployee && (
+          <>
+            <h2>Revised Vesting Schedule</h2>
+            <p>
+              The purple line shows the proposed amendment to the token release
+              schedule.
+            </p>
+            <img src={VestingSchedule} className="img-fluid mx-auto mt-2" />
+          </>
+        )
       ) : (
         <VestingHistory
           grants={props.grants}
