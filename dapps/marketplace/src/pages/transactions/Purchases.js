@@ -94,13 +94,13 @@ const Listings = props => (
     </h1>
 
     <Filter>
-      <FilterItem to="/my-purchases" exact>
+      <FilterItem to="/my-purchases/pending" exact>
         <fbt desc="Purchases.pending">Pending</fbt>
       </FilterItem>
-      <FilterItem to="/my-purchases/active">
+      <FilterItem to="/my-purchases/complete">
         <fbt desc="Purchases.complete">Complete</fbt>
       </FilterItem>
-      <FilterItem to="/my-purchases/inactive">
+      <FilterItem to="/my-purchases/all">
         <fbt desc="Purchases.all">All</fbt>
       </FilterItem>
     </Filter>
