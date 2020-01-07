@@ -4,6 +4,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 
 global.fetch = require('node-fetch')
 
+import { bundle } from './prom'
 import typeDefs from './typeDefs/index'
 import resolvers from './resolvers/server'
 import { setNetwork, shutdown } from './contracts'
@@ -83,6 +84,8 @@ if (typeof API_KEY !== 'undefined') {
 }
 
 const app = express()
+app.use(bundle)
+
 const server = new ApolloServer(options)
 server.applyMiddleware({ app })
 server.shutdown = shutdown

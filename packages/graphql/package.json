@@ -50,6 +50,7 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "express": "^4.17.1",
+    "express-prom-bundle": "^5.1.5",
     "graphql": "^14.4.0",
     "graphql-fields": "^2.0.3",
     "graphql-subscriptions": "^1.1.0",
@@ -61,6 +62,7 @@
     "mocha": "^7.0.0",
     "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
+    "prom-client": "^11.5.3",
     "rlp": "^2.2.3",
     "subscriptions-transport-ws": "^0.9.16",
     "web3": "1.0.0-beta.34"
