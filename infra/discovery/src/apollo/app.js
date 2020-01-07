@@ -53,17 +53,21 @@ function extractGqlQuery(req) {
   return query.slice(query.indexOf('query'), queryMaxExtractSize)
 }
 
-app.use(morgan(function (tokens, req, res) {
-  const gqlQuery = extractGqlQuery(req)
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    gqlQuery
-  ].join(' ')
-}))
+app.use(
+  morgan(function(tokens, req, res) {
+    const gqlQuery = extractGqlQuery(req)
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
+      gqlQuery
+    ].join(' ')
+  })
+)
 
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
