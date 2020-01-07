@@ -67,11 +67,11 @@ graphqlImageTag: '10f178d'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '16e2015'
+t3ClientImageTag: 'a171c3c'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'd423a08'
+t3ServerImageTag: 'a171c3c'
 
 # origin-auth
 authImage: origin-auth

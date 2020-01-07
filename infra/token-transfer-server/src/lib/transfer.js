@@ -175,7 +175,7 @@ async function confirmTransfer(transfer, user) {
  * @returns {Promise<String>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId, token) {
-  const user = await hasBalance(transfer.userId, transfer.amount)
+  const user = await hasBalance(transfer.userId, transfer.amount, transfer.id)
 
   await transfer.update({
     status: enums.TransferStatuses.Processing,
