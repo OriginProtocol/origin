@@ -3,6 +3,7 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const request = require('superagent')
 const { ip2geo } = require('@origin/ip2geo')
+const get = require('lodash.get')
 
 const { asyncMiddleware } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
@@ -64,7 +65,7 @@ router.post(
       // Add account address to Wallet Insights. Only logs a warning on failure,
       // doesn't block the account add action.
       const ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for']
-      const countryCode = await ip2geo(ip)
+      const location = await ip2geo(ip)
       request
         .post('https://www.originprotocol.com/mailing-list/join')
         .send(`email=${encodeURIComponent(req.user.email)}`)
@@ -72,7 +73,7 @@ router.post(
         .send(`eth_address=${req.body.address}`)
         .send(`name=${encodeURIComponent(req.user.name || req.user.email)}`)
         .send(`ip_addr=${ip || ''}`)
-        .send(`country_code=${countryCode || ''}`)
+        .send(`country_code=${get(location, 'countryCode', '')}`)
         .then(
           response => {
             if (response.body.success) {
