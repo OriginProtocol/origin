@@ -81,7 +81,7 @@ const Dashboard = props => {
       )}
       {displayWithdrawModal && (
         <WithdrawModal
-          balance={props.balance}
+          balance={balanceAvailable}
           accounts={props.accounts}
           isLocked={props.isLocked}
           onCreateOtcRequest={() => setDisplayOtcRequestModal(true)}

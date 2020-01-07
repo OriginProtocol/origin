@@ -18,10 +18,11 @@ const logger = require('../logger')
  *
  * @param userId
  * @param amount
+ * @param currentTransferId
  * @returns Promise<User>
  * @private
  */
-async function hasBalance(userId, amount) {
+async function hasBalance(userId, amount, currentTransferId = null) {
   const user = await User.findOne({
     where: {
       id: userId
@@ -43,8 +44,11 @@ async function hasBalance(userId, amount) {
     `User ${user.email} unlocked earnings from lockups`,
     lockupEarnings.toString()
   )
-  // Sum amount withdrawn or pending in transfers
-  const transferWithdrawnAmount = calculateWithdrawn(user.Transfers)
+  // Sum amount withdrawn or pending in transfers excluding the current transfer
+  // if provided (balance check while exeucting transfer)
+  const transferWithdrawnAmount = calculateWithdrawn(
+    user.Transfers.filter(t => t.id !== currentTransferId)
+  )
   logger.debug(
     `User ${user.email} pending or transferred tokens`,
     transferWithdrawnAmount.toString()
