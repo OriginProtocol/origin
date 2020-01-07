@@ -64,7 +64,17 @@ router.post(
       // Add account address to Wallet Insights. Only logs a warning on failure,
       // doesn't block the account add action.
       const ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for']
-      const countryCode = await ip2geo(ip)
+      let countryCode = ''
+      try {
+        const geo = await ip2geo(ip)
+        if (geo) {
+          countryCode = geo.countryCode
+        }
+      } catch (e) {
+        logger.warn(
+          `Failed resolving IP ${ip} to a country for sending to Insight`
+        )
+      }
       request
         .post('https://www.originprotocol.com/mailing-list/join')
         .send(`email=${encodeURIComponent(req.user.email)}`)
