@@ -1,4 +1,5 @@
-import { ApolloServer } from 'apollo-server'
+import express from 'express'
+import { ApolloServer } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 
 global.fetch = require('node-fetch')
@@ -81,7 +82,9 @@ if (typeof API_KEY !== 'undefined') {
   }
 }
 
+const app = express()
 const server = new ApolloServer(options)
+server.applyMiddleware({ app })
 server.shutdown = shutdown
 
-export default server
+export default app
