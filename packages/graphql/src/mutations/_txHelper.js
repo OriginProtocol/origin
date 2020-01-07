@@ -41,6 +41,15 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
+/**
+ * Check if the hash is a valid transaction hash
+ * @param hash {string} - A suspected transaction hash
+ * @returns {boolean} - if hash was a valid transaction hash
+ */
+function isValidHash(hash) {
+  return typeof hash === 'string' && [66, 64].includes(hash.length)
+}
+
 // Should we try to use the relayer
 function useRelayer({ mutation, value }) {
   if (isServer) return
@@ -311,7 +320,7 @@ async function handleCallbacks({ callbacks, val }) {
 async function handleHash({ hash, from, mutation }) {
   debug(`got hash ${hash}`)
 
-  if (typeof hash !== 'string' || ![66, 64].includes(hash.length)) {
+  if (!isValidHash(hash)) {
     console.error(`Received hash: ${hash}`)
     throw new Error('handleHash got invalid tx hash!')
   }
@@ -446,7 +455,7 @@ async function sendViaRelayer({
     throw new Error('No transaction hash from relayer!')
   }
   const txHash = resp.id
-  if (typeof txHash !== 'string' || ![66, 64].includes(txHash.length)) {
+  if (!isValidHash(txHash)) {
     throw new Error('Invalid transaction hash returned by relayer!')
   }
 
@@ -573,10 +582,7 @@ async function sendViaWeb3({
     } else if (txHash === null) {
       console.error(tx)
       throw new Error('Transaction hash returned null.  Invalid tx?')
-    } else if (
-      typeof txHash !== 'string' ||
-      ![66, 64].includes(txHash.length)
-    ) {
+    } else if (!isValidHash(txHash)) {
       console.error('Invaild hash: ', txHash)
       throw new Error('Invalid transaction hash returned by web3!')
     }
@@ -602,10 +608,7 @@ async function sendViaWeb3({
       }
 
       if (txHash) {
-        const hashTosend =
-          typeof txHash === 'string' && [66, 64].includes(txHash.length)
-            ? txHash
-            : null
+        const hashTosend = isValidHash(txHash) ? txHash : null
         pubsub.publish('TRANSACTION_UPDATED', {
           transactionUpdated: {
             id: hashTosend,
