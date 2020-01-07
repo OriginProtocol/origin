@@ -14,6 +14,7 @@ const { ApolloServer } = require('apollo-server-express')
 const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
+const morgan = require('morgan')
 
 const logger = require('./logger')
 const resolvers = require('./resolvers')
@@ -30,6 +31,39 @@ const bundle = promBundle({
   }
 })
 app.use(bundle)
+
+// Extract functions name and calling args.
+const gqlQueryExtractRe = /query *(.*) *\{/
+
+// Extract at most 32 chars to avoid spamming the logs.
+const queryMaxExtractSize = 32
+
+// Utility method to extract a Graphl query from the POST body.
+function extractGqlQuery(req) {
+  if (!req.body || !req.body.query) {
+    return ''
+  }
+  const query = req.body.query
+  const matches = query.match(gqlQueryExtractRe)
+  if (matches && matches.length) {
+    return matches[1].slice(0, queryMaxExtractSize)
+  }
+  // Fallback to extract the first 32 chars after the query string.
+  console.log('FALLING BACK')
+  return query.slice(query.indexOf('query'), queryMaxExtractSize)
+}
+
+app.use(morgan(function (tokens, req, res) {
+  const gqlQuery = extractGqlQuery(req)
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    gqlQuery
+  ].join(' ')
+}))
 
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
