@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router'
 import { Switch } from 'react-router-dom'
 
@@ -30,10 +30,16 @@ import WithdrawalDetail from '@/components/pages/WithdrawalDetail'
 import WithdrawalHistory from '@/components/pages/WithdrawalHistory'
 import Security from '@/components/pages/Security'
 
+import { pageTitle } from '@/constants'
+
 const App = () => {
   const [displayMobileWarning, setDisplayMobileWarning] = useState(
     window.innerWidth < 768 && !localStorage.getItem('mobileWarningDismissed')
   )
+
+  useEffect(() => {
+    document.title = pageTitle
+  }, [])
 
   const dismissMobileWarning = () => {
     localStorage.setItem('mobileWarningDismissed', true)

@@ -16,10 +16,18 @@ if (process.env.NODE_ENV === 'production') {
   apiUrl = 'http://localhost:5000'
 }
 
+let pageTitle
+if (window.location.hostname.includes('team')) {
+  pageTitle = 'Origin Team Portal'
+} else {
+  pageTitle = 'Origin Investor Portal'
+}
+
 export {
   apiUrl,
   earnOgnEnabled,
+  lockupBonusRate,
   otcRequestEnabled,
-  unlockDate,
-  lockupBonusRate
+  pageTitle,
+  unlockDate
 }
