@@ -6,7 +6,7 @@ bridgeImageTag: '21a864b'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '21a864b'
+dappImageTag: 'd9df5e8'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -71,11 +71,11 @@ graphqlImageTag: '21a864b'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '21a864b'
+t3ClientImageTag: 'd9df5e8'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '21a864b'
+t3ServerImageTag: 'd9df5e8'
 
 # origin-auth
 authImage: origin-auth

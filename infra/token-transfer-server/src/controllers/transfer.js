@@ -83,10 +83,12 @@ router.post(
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
         res.status(422).send(e.message)
+        return
       } else {
         throw e
       }
     }
+
     res.status(201).json(transfer.get({ plain: true }))
   })
 )
