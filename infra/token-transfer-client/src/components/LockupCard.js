@@ -52,7 +52,7 @@ const LockupCard = ({ lockup }) => {
             {Number(
               BigNumber((lockup.amount * lockup.bonusRate) / 100).toFixed(
                 0,
-                BigNumber.ROUND_UP
+                BigNumber.ROUND_HALF_UP
               )
             ).toLocaleString()}
           </strong>{' '}

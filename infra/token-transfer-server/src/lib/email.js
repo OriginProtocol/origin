@@ -64,10 +64,14 @@ function _generateEmail(emailType, vars) {
   // Note: We add the templates directory to dynamic vars. It is used to set
   // the path in the mjml-include directives.
   vars.path = templateDir
+  vars.portalType = vars.employee ? 'Team' : 'Investor'
+  vars.supportEmail = vars.employee
+    ? 'founders@originprotocol.com'
+    : 'investor-relations@originprotocol.com'
 
   switch (emailType) {
     case 'welcome':
-      subject = 'Welcome to the Origin Investor Portal'
+      subject = `Welcome to the Origin ${vars.portalType} Portal`
       text = welcomeTextTemplate(vars)
       mjml = mjml2html(welcomeMjmlTemplate(vars))
       if (mjml.errors.length) {
@@ -76,7 +80,7 @@ function _generateEmail(emailType, vars) {
       html = mjml.html
       break
     case 'login':
-      subject = 'Your Origin Token Portal Verification Code'
+      subject = `Welcome to the Origin ${vars.portalType} Portal`
       text = loginTextTemplate(vars)
       mjml = mjml2html(loginMjmlTemplate(vars))
       if (mjml.errors.length) {
@@ -155,7 +159,10 @@ async function sendLoginToken(email) {
       { expiresIn: '30m' }
     )
 
-    const vars = { url: `${clientUrl}/login_handler/${token}` }
+    const vars = {
+      url: `${clientUrl}/login_handler/${token}`,
+      employee: user.employee
+    }
     await sendEmail(user.email, 'login', vars)
     logger.info(`Sent email token to ${email}`)
   } else {

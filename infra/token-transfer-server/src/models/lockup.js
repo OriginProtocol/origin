@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       start: DataTypes.DATE,
       end: DataTypes.DATE,
-      bonusRate: DataTypes.INTEGER,
+      bonusRate: DataTypes.DECIMAL,
       amount: DataTypes.INTEGER,
       confirmed: DataTypes.BOOLEAN,
       data: DataTypes.JSONB
