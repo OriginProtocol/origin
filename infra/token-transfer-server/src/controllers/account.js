@@ -70,8 +70,10 @@ router.post(
         if (geo) {
           countryCode = geo.countryCode
         }
-      } catch(e) {
-        logger.warn(`Failed resolving IP ${ip} to a country for sending to Insight`)
+      } catch (e) {
+        logger.warn(
+          `Failed resolving IP ${ip} to a country for sending to Insight`
+        )
       }
       request
         .post('https://www.originprotocol.com/mailing-list/join')
