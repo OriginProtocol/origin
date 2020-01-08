@@ -17,15 +17,22 @@ import SignIn from './SignIn'
 const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      skipRewards: false
+    }
+  }
+
   render() {
     const {
       listing,
       hideOriginWallet,
       linkprefix,
-      redirectTo,
-      skipRewards,
-      onSkipRewards
+      redirectTo
     } = this.props
+
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
     const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')
 
@@ -71,8 +78,12 @@ class Onboard extends Component {
               <RewardsSignUp
                 listing={listing}
                 linkPrefix={linkPrefix}
-                skip={skipRewards}
-                onSkip={onSkipRewards}
+                skip={this.state.skipRewards}
+                onSkip={() => {
+                  this.setState({
+                    skipRewards: true
+                  })
+                }}
               />
             )}
           />

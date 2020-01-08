@@ -11,9 +11,12 @@ import DocumentTitle from 'components/DocumentTitle'
 import Link from 'components/Link'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
+import QRCode from 'davidshimjs-qrcodejs'
 
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import inviteInfoQuery from 'queries/InviteInfo'
+import * as clipboard from 'clipboard-polyfill'
 
 class GrowthWelcome extends Component {
   constructor(props) {
@@ -27,6 +30,7 @@ class GrowthWelcome extends Component {
 
   componentDidMount() {
     let inviteCode = get(this.props, 'match.params.inviteCode')
+
     // onboarding url is also going to match the path. Not a valid invite
     // code so ignore it.
     inviteCode = inviteCode !== 'onboard' ? inviteCode : undefined
@@ -41,10 +45,14 @@ class GrowthWelcome extends Component {
     const localStorageKey = 'growth_invite_code'
 
     const storedInviteCode = localStorage.getItem(localStorageKey)
-    // prefer the stored invite code, over newly fetched invite code
+
+    const inviteCodeToUse = storedInviteCode || inviteCode || null
+    //prefer the stored invite code, over newly fetched invite code
     this.setState({
-      inviteCode: storedInviteCode || inviteCode || null
+      inviteCode: inviteCodeToUse,
+      meLink: `${location.origin}/#/welcome${inviteCodeToUse ? `/${inviteCodeToUse}` : ''}`
     })
+
     if (storedInviteCode === null && inviteCode !== undefined) {
       localStorage.setItem(localStorageKey, inviteCode)
     }
@@ -103,307 +111,180 @@ class GrowthWelcome extends Component {
     )
   }
 
-  renderFirstFold(
-    personalised,
-    firstName,
-    urlForOnboarding,
-    arrivedFromOnboarding
-  ) {
-    const { isMobile } = this.props
-
-    return (
-      <div className="container d-flex">
-        <div
-          className={`${
-            isMobile ? 'col-12' : 'col-6 top-padding'
-          } d-flex flex-column`}
-        >
-          <Link to="/" className="mr-auto d-none d-md-block">
-            <img className="logo" src="images/origin-logo.svg" />
-          </Link>
-          {personalised && (
-            <Fragment>
-              <div className="personalised-bar d-flex justify-content-left">
-                <div className="profile-holder d-flex justify-content-center">
-                  <img src="images/growth/profile-person.svg" />
-                </div>
-                <div className="invited-by ml-3 d-flex align-items-center">
-                  <div className="d-flex flex-column">
-                    <fbt desc="GrowthWelcome.invitedBy">Invited by</fbt>
-                    <div>{firstName}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="title-text">
-                <fbt desc="GrowthWelcome.titleTextPersonalized">
-                  Your friend
-                  <fbt:param name="name">{firstName}</fbt:param>
-                  has invited you to join Origin
-                </fbt>
-              </div>
-            </Fragment>
-          )}
-          {!personalised && (
-            <div className="title-text">
-              <fbt desc="GrowthWelcome.titleText">
-                Sign up and earn FREE Origin Tokens
-              </fbt>
-            </div>
-          )}
-          <div className="sub-title">
-            <fbt desc="GrowthWelcome.subTitleTextSignUp">
-              Sign up for Origin today.
-            </fbt>
-            &nbsp;
-            {personalised && (
-              <Fragment>
-                <fbt desc="GrowthWelcome.subTitleTextYouAndFriend">
-                  <fbt:param name="firstName">{firstName}</fbt:param>
-                  and you will both earn Origin cryptocurrency tokens (OGN).
-                </fbt>
-                &nbsp;
-              </Fragment>
-            )}
-            <fbt desc="GrowthWelcome.subTitleTextEarnAdditional">
-              Earn additional tokens when you verify your profile, invite your
-              friends, and buy and sell on Origin.
-            </fbt>
-          </div>
-          <this.EnrollButton
-            className={`btn btn-primary btn-rounded enroll-button${
-              isMobile ? ' mobile' : ''
-            }`}
-            type="submit"
-            children={fbt('Sign Up Now', 'Sign Up Now')}
-            urlforonboarding={urlForOnboarding}
-            startopen={arrivedFromOnboarding.toString()}
-          />
-        </div>
-        {!isMobile && (
-          <div
-            className={`spaceman col-9 top-padding ${
-              !personalised ? 'center' : ''
-            }
-          `}
-          />
-        )}
-      </div>
-    )
-  }
-
-  renderFeatureRow(picture, text) {
-    return (
-      <div className="d-flex feature-row">
-        <img src={picture} />
-        <div className="feature-text">{text}</div>
-      </div>
-    )
-  }
-
-  renderWhatIsOriginFold() {
-    const { isMobile } = this.props
-
-    return (
-      <div className="second-fold-holder">
-        <div className="container d-flex">
-          <div
-            className={`${
-              isMobile ? 'col-12' : 'col-6'
-            } d-flex flex-column left-column`}
-          >
-            <div className="title">
-              <fbt desc="GrowthWelcome.whatIsOrigin">What is Origin?</fbt>
-            </div>
-            <div className={`sub-title ${isMobile ? 'mobile' : ''}`}>
-              <fbt desc="GrowthWelcome.whatIsOriginExplanation">
-                Origin is the first peer-to-peer marketplace built entirely on
-                the blockchain
-              </fbt>
-            </div>
-            <div>
-              {this.renderFeatureRow(
-                'images/growth/feature-1.svg',
-                fbt(
-                  'Free to use with 0% transaction fees',
-                  'GrowthWelcome.freeFeature'
-                )
-              )}
-              {this.renderFeatureRow(
-                'images/growth/feature-2.svg',
-                fbt(
-                  'Censorship-resistant browsing and searching',
-                  'GrowthWelcome.censorshipFeature'
-                )
-              )}
-              {this.renderFeatureRow(
-                'images/growth/feature-3.svg',
-                fbt(
-                  'Dozens of categories like gift cards, homesharing, ecommerce, and services',
-                  'GrowthWelcome.categoriesFeature'
-                )
-              )}
-            </div>
-          </div>
-          {!isMobile && <div className="origin-showcase col-8" />}
-        </div>
-      </div>
-    )
-  }
-
-  renderWhatAreOriginTokensFold() {
-    return (
-      <div className="third-fold-holder">
-        <div className="container">
-          <div className="title">
-            <fbt desc="GrowthWelcome.whatAreTokens">
-              What are Origin Tokens?
-            </fbt>
-          </div>
-          <div className="sub-title mt-3">
-            <fbt desc="GrowthWelcome.whatAreTokensExplanation">
-              Origin cryptocurrency tokens (OGN) are ERC-20 tokens that can be
-              used on the platform in many ways.
-            </fbt>
-          </div>
-          <div className="text mt-3">
-            <fbt desc="GrowthWelcome.whatAreTokensText">
-              Earned Origin tokens (OGN) are currently locked for use on the
-              Origin app and platform. They cannot be transferred to other users
-              at this time. In the future, it is expected that OGN will be
-              unlocked and transferrable.
-            </fbt>
-          </div>
-          <button
-            className="btn btn-primary btn-rounded"
-            children={fbt('Learn more', 'GrowthWelcome.learnMore')}
-            onClick={() => open('https://www.originprotocol.com/tokens')}
-          />
-        </div>
-      </div>
-    )
-  }
-
-  renderPromotingAndRewardsFold() {
-    const { isMobile } = this.props
-
-    return (
-      <div className="d-md-flex fourth-fold-holder">
-        <div className="col col-md-6 pl-0 pr-0 order-md-2">
-          {isMobile && <div className="coins-section" />}
-          <div
-            className={`rewards-section d-flex flex-column ${
-              isMobile ? 'mobile' : ''
-            }`}
-          >
-            <div className="text-holder mr-auto">
-              <div className="title">
-                <fbt desc="GrowthWelcome.rewards">Rewards</fbt>
-              </div>
-              <div className="text mt-3">
-                <fbt desc="GrowthWelcome.rewardsExplanation">
-                  OGN is a rewards cryptocurrency earned by Origin users. Earn
-                  rewards when you verify your account or invite your friends to
-                  join Origin. Even get OGN as cash back when you buy and sell.
-                </fbt>
-              </div>
-            </div>
-          </div>
-          {!isMobile && <div className="arrows-section" />}
-        </div>
-
-        <div className="col col-md-6 pl-0 pr-0 order-md-1">
-          {isMobile ? (
-            <div className="arrows-section" />
-          ) : (
-            <div className="coins-section" />
-          )}
-          <div
-            className={`promoting-section d-flex flex-column ${
-              isMobile ? 'mobile' : ''
-            }`}
-          >
-            <div className="text-holder ml-md-auto">
-              <div className="title">
-                <fbt desc="GrowthWelcome.promoting">Promoting</fbt>
-              </div>
-              <div className="text mt-3">
-                <fbt desc="GrowthWelcome.promotingExplanation">
-                  Sellers use OGN to promote their listings on the marketplace.
-                  This gives their listings higher visibility and placement.
-                  Listings with OGN have a higher chance of being sold quickly.
-                </fbt>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  renderStartEarningFold(urlForOnboarding, arrivedFromOnboarding) {
-    return (
-      <div className="start-earning-fold-holder">
-        <div className="container d-flex flex-column">
-          <div className="title mb-2">
-            <fbt desc="GrowthWelcome.startEarning">
-              Start earning Origin tokens within minutes
-            </fbt>
-          </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
-            1
-          </div>
-          <div className="text">
-            <fbt desc="GrowthWelcome.connectCurrency">
-              Connect your cryptocurrency wallet to Origin
-            </fbt>
-          </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
-            2
-          </div>
-          <div className="text">
-            <fbt desc="GrowthWelcome.signUpVerify">
-              Sign up and verify your account and eligibility
-            </fbt>
-          </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
-            3
-          </div>
-          <div className="text">
-            <fbt desc="GrowthWelcome.beginEarning">Begin earning today</fbt>
-          </div>
-          <this.EnrollButton
-            className="btn btn-primary btn-rounded mr-auto ml-auto"
-            children={fbt('Get Started', 'GrowthWelcome.getStarted')}
-            urlforonboarding={urlForOnboarding}
-            startopen={arrivedFromOnboarding.toString()}
-          />
-          <div className="text link-holder">
-            <fbt desc="GrowthWelcome.haveQuestions">Have questions?</fbt>
-            <a href="mailto:support@originprotocol.com" className="ml-1">
-              <fbt desc="GrowthWelcome.GetInTouch">Get in touch</fbt>
-            </a>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
     const { firstName } = identity || {}
     const personalised = !!identity
+    const isOriginWallet = ['Origin Wallet', 'Mobile'].includes(this.props.walletType)
+
+    // This is semi legit ¯\_(ツ)_/¯
+    const reward_value = 1000
+    const isIOS = navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
+    const appStoreUrl = "https://itunes.apple.com/app/origin-wallet/id1446091928"
+    const playStoreUrl = "https://play.google.com/store/apps/details?id=com.origincatcher"
+
+    const onStoreButtonClick = (e) => {
+      e.preventDefault()
+
+      const inviteCode = this.state.inviteCode
+      const prefix = 'or:'
+      const referralCode = inviteCode && inviteCode.startsWith(prefix) ? inviteCode : `${prefix}${inviteCode}`
+
+      clipboard.writeText(referralCode)
+
+      const url = isIOS ? appStoreUrl : playStoreUrl
+
+      const opened = window.open(url)
+        // If we got snagged by a popup blocker(firefox) just go direct
+        if (!opened) {
+          window.location = url
+        }
+    }
+
+    if (this.state.meLink && !isOriginWallet) {
+      const qrOptions = {
+        text: this.state.meLink,
+        width: 140,
+        height: 140,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      }
+
+      // dirty way of clearing previous possible QrCodes
+      const qrcode1 = document.getElementById('qrcode1')
+      const qrcode2 = document.getElementById('qrcode2')
+
+      if (qrcode1 && qrcode2) {
+        qrcode1.innerHTML = ''
+        qrcode2.innerHTML = ''
+
+        new QRCode('qrcode1', qrOptions)
+        new QRCode('qrcode2', qrOptions)
+      }
+    }
 
     return (
-      <div className="growth-welcome">
-        {this.renderFirstFold(
-          personalised,
-          firstName,
-          urlForOnboarding,
-          arrivedFromOnboarding
-        )}
-        {this.renderWhatIsOriginFold()}
-        {this.renderWhatAreOriginTokensFold()}
-        {this.renderPromotingAndRewardsFold()}
-        {this.renderStartEarningFold(urlForOnboarding, arrivedFromOnboarding)}
+      <div className="growth-welcome growth-welcome-holder">
+         <main className="growth-welcome">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 d-flex flex-column">
+                <div className="d-none d-md-flex" id="referral-campaign-header">
+                  <div className="origin logo"><a href="/"><img src="images/growth/origin-logo@3x.png" alt="Origin" /></a></div>
+                </div>
+                <section id="tagline">
+                  <div className="avatar-container clearfix">
+                    <p className="avatar-text">
+                      <fbt desc="GrowthWelcome.joinToEarn">
+                        Join Origin Rewards to earn
+                      </fbt>
+                    </p>
+                  </div>
+                </section>
+                <hr />
+                <section id="callout">
+                  <p>
+                    <span className="value">{reward_value}</span>
+                    <fbt desc="GrowthWelcome.originTokens">
+                      Origin Tokens
+                    </fbt>
+                  </p>
+                </section>
+                <hr />
+                {isOriginWallet && <this.EnrollButton
+                    className="signup-button my-4 mobile-signup"
+                    children={fbt('Sign Up Now', 'GrowthWelcome.signUpNow')}
+                    urlforonboarding={urlForOnboarding}
+                    startopen={arrivedFromOnboarding.toString()}
+                  />}
+                {!isOriginWallet && 
+                  <>
+                    <section id="intro">
+                      <p>
+                        <fbt desc="GrowthWelcome.getStartedByDownloading">
+                          Get started by downloading Origin Marketplace - the app that allows you to buy and sell anything using crypto right from your phone.
+                        </fbt>
+                      </p>
+                    </section>
+                    <section className="qrcode-wrapper d-none d-md-block">
+                      <div id="qrcode1"></div>
+                      <p>
+                        <fbt desc="GrowthWelcome.scanToInstall">
+                          Scan to install our app
+                        </fbt>
+                      </p>
+                    </section>
+                    <p id="conjunction" className="d-none d-md-block mb-2 mt-2 text-center">
+                      <fbt desc="GrowthWelcome.or">
+                        or
+                      </fbt>
+                    </p>
+                    <section id="download">
+                      <button
+                        id="app-download-button"
+                        className="d-md-none"
+                        onClick={onStoreButtonClick}
+                      >
+                        {isIOS && <img className={isIOS ? 'ios' : 'not-ios'} src="images/growth/app-store.svg" alt="Origin" />}
+                        {!isIOS && <img className={isIOS ? 'ios' : 'not-ios'} src="images/growth/play-store.svg" alt="Origin" />}
+                      </button>
+                      <this.EnrollButton
+                        className="d-none d-md-block signup-button"
+                        children={fbt('Earn From Desktop', 'GrowthWelcome.earnFromDesktop')}
+                        urlforonboarding={urlForOnboarding}
+                        startopen={arrivedFromOnboarding.toString()}
+                      />
+                    </section>
+                  </>
+                }
+              </div>
+              <div className="col-md-6">
+                <section id="screenshot1">
+                  <img className="d-md-none" src="images/growth/iphone-1.png" />
+                  <img className="d-none d-md-block" src="images/growth/iphone-1-full.png" />
+                  <hr />
+                </section>
+              </div>
+            </div>
+          </div>
+          <hr className="d-none d-md-block page-splitter container" />
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <section id="screenshot2-desktop" className="d-none d-md-block">
+                  <img src="images/growth/iphone-2-full.png" />
+                  <hr className="d-md-none" />
+                </section>
+              </div>
+              <div className="col-md-6 what">
+                <section id="rewards">
+                  <h2>
+                    <fbt desc="GrowthWelcome.whatAreRewards">
+                      What are Origin Rewards?
+                    </fbt>
+                  </h2>
+                  <p>
+                    <fbt desc="GrowthWelcome.ognIsRewardsEarned">
+                      OGN is a rewards cryptocurrency earned by Origin users. Earn rewards when you verify your account or invite your friends to join Origin. Even get OGN as cash back when you buy and sell.
+                    </fbt>
+                  </p>
+                </section>
+                <section id="screenshot2" className="d-md-none">
+                  <img src="images/growth/iphone-2.png" />
+                  <hr />
+                </section>
+                <section className="qrcode-wrapper d-none d-md-block">
+                  <div id="qrcode2"></div>
+                  <p>
+                    <fbt desc="GrowthWelcome.scanToInstall">
+                      Scan to install our app
+                    </fbt>
+                  </p>
+                </section>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
@@ -458,216 +339,226 @@ class GrowthWelcome extends Component {
   }
 }
 
-export default withIsMobile(GrowthWelcome)
+export default withWallet(withIsMobile(GrowthWelcome))
 
 require('react-styl')(`
+  .growth-welcome-holder
+    height: 100vh
   .growth-welcome
-    background-color: #131d27
-    .top-padding
-      padding-top: 60px
-    .logo
-      width: 118px
-    .enroll-button
-      margin-bottom: 134px
-      max-width: 100%
-      &.mobile
-        margin-bottom: 40px
-    .title-text
-      margin-top: 40px
-      margin-bottom: 16px
-      font-family: Poppins
-      font-size: 48px
-      font-weight: 600
-      line-height: 1.27
+    background: #007fff
+    color: #fff
+    .container
+      width: 100%
+      padding-right: 15px
+      padding-left: 15px
+      margin-right: auto
+      margin-left: auto
+    p
+      color: #fff
+      font-weight: 300
+    hr
+      margin-block-start: 0.5em
+      margin-block-end: 0.5em
+      background: #fff
+      height: 1px
+      width: 84%
+      border: 0
+      padding: 0
+    #app-download-button
+      background-color: #007fff
+      border: 0
+      margin: 0 auto 50px
+      width: 280px
+      img
+        &.ios
+          height: 93px
+        &.not-ios
+          height: 84px
+    .mobile-signup
+      width: 84%
+    .signup-button
+      font-size: 1.125rem
+      width: 100%
+      border-radius: 26px
+      border: solid 1px var(--white)
+      padding: 12px 0
+      margin: 0 auto
+      max-width: 350px
       color: white
-    .sub-title
-      font-size: 24px
-      font-weight: normal
-      color: white
-      line-height: 1.38
-      color: white
-    .invited-by
-      color: white
-      font-weight: normal
-    .spaceman.center
-      background-position: center left
-    .spaceman
-      background-image: url(images/growth/spaceman.svg)
-      background-position: bottom left
-      background-repeat: no-repeat
-      margin-left: -100px
-      padding-left: 100px
-      max-width: 600px
-    .btn
-      margin-top: 40px
-      width: 336px
-      height: 60px
-      font-size: 24px
-      font-weight: 900
-    .personalised-bar
-      margin-top: 64px
-      .profile-holder
-        background-color: var(--dark-grey-blue)
-        width: 80px
-        height: 80px
-        border-radius: 75px
-        overflow: hidden
-      .profile-holder img
-        margin-top: 20px
-    .second-fold-holder
-      background-color: white
-      font-family: Lato
-      font-color: var(--dark)
-      .left-column
-        padding-bottom: 75px
-      .container
-        padding-top: 73px
-      .title
-        font-size: 36px
-        font-weight: 600
-        font-family: Poppins
-      .sub-title
-        font-weight: normal
-        color: var(--dusk)
-        padding-right: 100px
-      .sub-title.mobile
-        padding-right: 0px
-      .feature-row
-        margin-top: 50px
-        padding-left: 6px
-      .feature-text
-        margin-left: 27px
-        margin-right: 55px
-        font-weight: bold
-    .third-fold-holder
-      background-color: var(--pale-grey-eight)
-      padding-bottom: 145px
-      padding-top: 145px
+      background-color: transparent
       text-align: center
-      .container
-        max-width: 650px
-      .title
-        font-size: 36px
-        font-weight: 600
-        font-family: Poppins
-      .sub-title
-        font-weight: normal
-        color: var(--dusk)
-        line-height: normal
-      .text
-        font-size: 12px
-        font-weight: normal
-        font-family: Lato
-        color: var(--dusk)
-        line-height: normal
-      .btn
-        font-size: 18px
-        width: 200px
-        height: 50px
-    .fourth-fold-holder
-      .coins-section
-        background-color: var(--clear-blue)
-        height: 340px
-        width: 100%
-        background-image: url(images/growth/reward-ogn-coins.svg)
-        background-position: bottom right
-        background-repeat: no-repeat
-      .promoting-section
-        background-color: var(--pale-grey-eight)
-        height: 500px
-        padding-top: 150px
-        padding-right: 135px
-        padding-left: 35px
-        .text-holder
-          max-width: 350px
-        .title
-          font-family: Poppins
-          font-size: 36px
-          font-weight: 600
-          font-style: normal
-          line-height: 1.14
-          color: var(--dark)
-        .text
-          font-family: Lato
-          font-weight: normal
-          line-height: 1.44
-          color: var(--dark)
-      .promoting-section.mobile
-        padding-top: 50px
-        padding-right: 35px
-      .arrows-section
-        background-color: #5f41d2
-        height: 340px
-        width: 100%
-        background-image: url(images/growth/purple-up-arrow.svg)
-        background-position: bottom left
-        background-repeat: repeat
-      .rewards-section
-        background-color: var(--dark-grey-blue)
-        height: 500px
-        padding-top: 150px
-        padding-left: 135px
-        padding-right: 35px
-        .text-holder
-          max-width: 350px
-        .title
-          font-family: Poppins
-          font-size: 36px
-          font-weight: 600
-          font-style: normal
-          line-height: 1.14
-          color: white
-        .text
-          font-family: Lato
-          font-weight: normal
-          line-height: 1.44
-          color: white
-      .rewards-section.mobile
-        padding-top: 50px
-        padding-left: 35px
-    .start-earning-fold-holder
-      background-color: var(--clear-blue)
-      color: white
-      padding-top: 140px
-      padding-bottom: 135px
-      text-align: center
-      margin-bottom: -64px
-      .title
-        font-family: Poppins
-        font-size: 36px
-        font-weight: 600
-      .text
-        font-family: Lato
-        font-weight: normal
-        font-style: normal
-        margin-top: 10px
-      .number-point
-        font-family: Lato
-        font-weight: normal
-        border: solid 1px var(--white)
-        border-radius: 50px
-        width: 46px
-        height: 46px
-        margin-top: 42px
-      .btn
-        font-size: 18px
-        min-width: 200px
+    .qrcode-wrapper
+      p
+        color: black
+    .signup-button:hover
+      background-color: #036ddd
+      cursor: pointer
+    #referral-campaign-header
+      display: block
+      margin-top: 10px
+      margin-left: 10px
+      .logo
+        display: block
+        margin: 10px 0
+        padding: 15px
+      img
+        height: 22px
         width: auto
-        height: 50px
-        border: solid 1px white
-        margin-top: 62px
-      .btn:hover
-        color: var(--clear-blue)
-        background-color: white
-      a
-        color: white
-        text-decoration: underline
-      .link-holder
-        margin-top: 60px
-    .origin-showcase
-      background-image: url(images/growth/marketplace-screenshots-graphic.png)
-      background-position: bottom left
-      background-repeat: no-repeat
-      max-width: 600px
+        margin: 10px auto
+    #tagline
+      margin: 0 25px 25px 25px
+    #intro
+      p
+        font-family: Lato, sans-serif
+        font-size: 20px
+        line-height: 1.3
+        margin: 30px
+    #callout
+      p
+        font-family: "Poppins", sans-serif
+        text-align: center
+        font-size: 27px
+        font-weight: 1000
+        text-transform: uppercase
+      .value
+        display: block
+        font-size: 72px
+    #download
+      text-align: center
+    #rewards
+      font-family: Lato, sans-serif
+      font-size: 18px
+      line-height: 1.44
+      margin: 30px
+      h2
+        font-family: Lato, sans-serif
+        font-size: 18px
+        font-weight: bold
+    #screenshot1
+      text-align: center
+      img
+        position: relative
+        left: 15px
+    #screenshot2
+      img
+        position: relative
+        left: 15px
+    #screenshot1
+      hr
+        width: 100%
+        margin: 0
+    #screenshot2
+      text-align: center
+    #screenshot2
+      hr
+        width: 100%
+        margin: 0
+    .avatar
+      float: left
+      height: 80px
+      width: 80px
+      border: 1px #fff solid
+      border-radius: 40px
+      margin: 5px
+      padding: 0
+      overflow: hidden
+      background-position: center
+      background-size: contain
+    .avatar-container
+      p
+        display: block
+        margin: 0 auto
+        padding-top: 15px
+        font-family: "Lato" sans-serif
+        font-size: 20px
+        line-height: 1.3
+        text-align: center
 
+  @media only screen and (min-width: 768px)
+    .growth-welcome
+      padding-bottom: 50px
+      clear: both
+      #screenshot1
+        margin-top: 100px
+      #screenshot1
+        hr
+          display: none
+      #screenshot2
+        hr
+          display: none
+      #tagline
+        p
+          font-size: 25px
+      #callout
+        font-size: 32px
+      #callout
+        .value
+          font-size: 88px
+      #intro
+        p
+          font-size: 18px
+      #referral-campaign-header
+        margin-left: 30px
+      #screenshot2
+        img
+          left: 0
+      #screenshot2-desktop
+        img
+          left: 0
+      .avatar
+        margin: 25px
+      .avatar-container
+        p
+          padding-top: 30px
+      .qrcode-wrapper
+        p
+          font-family: Lato, sans-serif
+          font-size: 14px
+          font-weight: normal
+          line-height: 1.86
+          margin-top: 2px
+          text-align: center
+      .qrcode-wrapper
+        img
+          margin: 0 auto
+          margin-top: 10px
+      .qrcode-wrapper
+        background: #fff
+        color: #000
+        padding: 5px
+        margin: 0 auto
+        width: 190px
+        height: 190px
+        border-radius: 20px
+      .what
+        .qrcode-wrapper
+          margin: 0 0 0 30px
+      .page-splitter
+        width: 100%
+        margin: 50px auto
+  @media only screen and (min-width: 990px)
+    .container
+      max-width: 960px;
+    #screenshot1
+      img
+        left: 60px
+    #screenshot2
+      img
+        left: 60px
+    #screenshot2-desktop
+      img
+        left: 60px
+
+  @media only screen and (min-width: 1200px)
+    .container
+      max-width: 1140px
+    #screenshot1
+      img
+        left: 110px
+    #screenshot2
+      img
+        left: 110px
+    #screenshot2-desktop
+      img
+        left: 110px
 `)

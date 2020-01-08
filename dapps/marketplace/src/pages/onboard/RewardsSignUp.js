@@ -81,6 +81,7 @@ class OnboardRewardsSignUp extends Component {
       partnerCampaignLoading
     } = this.props
 
+
     if (walletLoading || partnerCampaignLoading) {
       return <LoadingSpinner />
     }
@@ -95,6 +96,7 @@ class OnboardRewardsSignUp extends Component {
       return <Redirect to={`${linkPrefix}/onboard/finished`} />
     }
 
+    console.log(this.props)
     return (
       <>
         {this.renderContent()}
