@@ -130,7 +130,7 @@ class GrowthWelcome extends Component {
     const playStoreUrl =
       'https://play.google.com/store/apps/details?id=com.origincatcher'
 
-    const onStoreButtonClick = e => {
+    const onStoreButtonClick = async e => {
       e.preventDefault()
 
       const inviteCode = this.state.inviteCode
@@ -140,7 +140,7 @@ class GrowthWelcome extends Component {
           ? inviteCode
           : `${prefix}${inviteCode}`
 
-      clipboard.writeText(referralCode)
+      await clipboard.writeText(referralCode)
 
       const url = isIOS ? appStoreUrl : playStoreUrl
 
