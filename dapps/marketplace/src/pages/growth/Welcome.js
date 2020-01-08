@@ -50,7 +50,9 @@ class GrowthWelcome extends Component {
     //prefer the stored invite code, over newly fetched invite code
     this.setState({
       inviteCode: inviteCodeToUse,
-      meLink: `${location.origin}/#/welcome${inviteCodeToUse ? `/${inviteCodeToUse}` : ''}`
+      meLink: `${location.origin}/#/welcome${
+        inviteCodeToUse ? `/${inviteCodeToUse}` : ''
+      }`
     })
 
     if (storedInviteCode === null && inviteCode !== undefined) {
@@ -114,30 +116,38 @@ class GrowthWelcome extends Component {
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
     const { firstName } = identity || {}
     const personalised = !!identity
-    const isOriginWallet = ['Origin Wallet', 'Mobile'].includes(this.props.walletType)
+    const isOriginWallet = ['Origin Wallet', 'Mobile'].includes(
+      this.props.walletType
+    )
 
     // This is semi legit ¯\_(ツ)_/¯
     const reward_value = 1000
-    const isIOS = navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
-    const appStoreUrl = "https://itunes.apple.com/app/origin-wallet/id1446091928"
-    const playStoreUrl = "https://play.google.com/store/apps/details?id=com.origincatcher"
+    const isIOS =
+      navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
+    const appStoreUrl =
+      'https://itunes.apple.com/app/origin-wallet/id1446091928'
+    const playStoreUrl =
+      'https://play.google.com/store/apps/details?id=com.origincatcher'
 
-    const onStoreButtonClick = (e) => {
+    const onStoreButtonClick = e => {
       e.preventDefault()
 
       const inviteCode = this.state.inviteCode
       const prefix = 'or:'
-      const referralCode = inviteCode && inviteCode.startsWith(prefix) ? inviteCode : `${prefix}${inviteCode}`
+      const referralCode =
+        inviteCode && inviteCode.startsWith(prefix)
+          ? inviteCode
+          : `${prefix}${inviteCode}`
 
       clipboard.writeText(referralCode)
 
       const url = isIOS ? appStoreUrl : playStoreUrl
 
       const opened = window.open(url)
-        // If we got snagged by a popup blocker(firefox) just go direct
-        if (!opened) {
-          window.location = url
-        }
+      // If we got snagged by a popup blocker(firefox) just go direct
+      if (!opened) {
+        window.location = url
+      }
     }
 
     if (this.state.meLink && !isOriginWallet) {
@@ -145,9 +155,9 @@ class GrowthWelcome extends Component {
         text: this.state.meLink,
         width: 140,
         height: 140,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
       }
 
       // dirty way of clearing previous possible QrCodes
@@ -165,12 +175,19 @@ class GrowthWelcome extends Component {
 
     return (
       <div className="growth-welcome growth-welcome-holder">
-         <main className="growth-welcome">
+        <main className="growth-welcome">
           <div className="container">
             <div className="row">
               <div className="col-md-6 d-flex flex-column">
                 <div className="d-none d-md-flex" id="referral-campaign-header">
-                  <div className="origin logo"><a href="/"><img src="images/growth/origin-logo@3x.png" alt="Origin" /></a></div>
+                  <div className="origin logo">
+                    <a href="/">
+                      <img
+                        src="images/growth/origin-logo@3x.png"
+                        alt="Origin"
+                      />
+                    </a>
+                  </div>
                 </div>
                 <section id="tagline">
                   <div className="avatar-container clearfix">
@@ -185,24 +202,26 @@ class GrowthWelcome extends Component {
                 <section id="callout">
                   <p>
                     <span className="value">{reward_value}</span>
-                    <fbt desc="GrowthWelcome.originTokens">
-                      Origin Tokens
-                    </fbt>
+                    <fbt desc="GrowthWelcome.originTokens">Origin Tokens</fbt>
                   </p>
                 </section>
                 <hr />
-                {isOriginWallet && <this.EnrollButton
+                {isOriginWallet && (
+                  <this.EnrollButton
                     className="signup-button my-4 mobile-signup"
                     children={fbt('Sign Up Now', 'GrowthWelcome.signUpNow')}
                     urlforonboarding={urlForOnboarding}
                     startopen={arrivedFromOnboarding.toString()}
-                  />}
-                {!isOriginWallet && 
+                  />
+                )}
+                {!isOriginWallet && (
                   <>
                     <section id="intro">
                       <p>
                         <fbt desc="GrowthWelcome.getStartedByDownloading">
-                          Get started by downloading Origin Marketplace - the app that allows you to buy and sell anything using crypto right from your phone.
+                          Get started by downloading Origin Marketplace - the
+                          app that allows you to buy and sell anything using
+                          crypto right from your phone.
                         </fbt>
                       </p>
                     </section>
@@ -214,10 +233,11 @@ class GrowthWelcome extends Component {
                         </fbt>
                       </p>
                     </section>
-                    <p id="conjunction" className="d-none d-md-block mb-2 mt-2 text-center">
-                      <fbt desc="GrowthWelcome.or">
-                        or
-                      </fbt>
+                    <p
+                      id="conjunction"
+                      className="d-none d-md-block mb-2 mt-2 text-center"
+                    >
+                      <fbt desc="GrowthWelcome.or">or</fbt>
                     </p>
                     <section id="download">
                       <button
@@ -225,23 +245,41 @@ class GrowthWelcome extends Component {
                         className="d-md-none"
                         onClick={onStoreButtonClick}
                       >
-                        {isIOS && <img className={isIOS ? 'ios' : 'not-ios'} src="images/growth/app-store.svg" alt="Origin" />}
-                        {!isIOS && <img className={isIOS ? 'ios' : 'not-ios'} src="images/growth/play-store.svg" alt="Origin" />}
+                        {isIOS && (
+                          <img
+                            className={isIOS ? 'ios' : 'not-ios'}
+                            src="images/growth/app-store.svg"
+                            alt="Origin"
+                          />
+                        )}
+                        {!isIOS && (
+                          <img
+                            className={isIOS ? 'ios' : 'not-ios'}
+                            src="images/growth/play-store.svg"
+                            alt="Origin"
+                          />
+                        )}
                       </button>
                       <this.EnrollButton
                         className="d-none d-md-block signup-button"
-                        children={fbt('Earn From Desktop', 'GrowthWelcome.earnFromDesktop')}
+                        children={fbt(
+                          'Earn From Desktop',
+                          'GrowthWelcome.earnFromDesktop'
+                        )}
                         urlforonboarding={urlForOnboarding}
                         startopen={arrivedFromOnboarding.toString()}
                       />
                     </section>
                   </>
-                }
+                )}
               </div>
               <div className="col-md-6">
                 <section id="screenshot1">
                   <img className="d-md-none" src="images/growth/iphone-1.png" />
-                  <img className="d-none d-md-block" src="images/growth/iphone-1-full.png" />
+                  <img
+                    className="d-none d-md-block"
+                    src="images/growth/iphone-1-full.png"
+                  />
                   <hr />
                 </section>
               </div>
@@ -265,7 +303,10 @@ class GrowthWelcome extends Component {
                   </h2>
                   <p>
                     <fbt desc="GrowthWelcome.ognIsRewardsEarned">
-                      OGN is a rewards cryptocurrency earned by Origin users. Earn rewards when you verify your account or invite your friends to join Origin. Even get OGN as cash back when you buy and sell.
+                      OGN is a rewards cryptocurrency earned by Origin users.
+                      Earn rewards when you verify your account or invite your
+                      friends to join Origin. Even get OGN as cash back when you
+                      buy and sell.
                     </fbt>
                   </p>
                 </section>

@@ -81,7 +81,6 @@ class OnboardRewardsSignUp extends Component {
       partnerCampaignLoading
     } = this.props
 
-
     if (walletLoading || partnerCampaignLoading) {
       return <LoadingSpinner />
     }

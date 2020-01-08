@@ -26,12 +26,7 @@ class Onboard extends Component {
   }
 
   render() {
-    const {
-      listing,
-      hideOriginWallet,
-      linkprefix,
-      redirectTo
-    } = this.props
+    const { listing, hideOriginWallet, linkprefix, redirectTo } = this.props
 
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
     const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')

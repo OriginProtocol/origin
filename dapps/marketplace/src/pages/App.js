@@ -130,12 +130,7 @@ class App extends Component {
         )}
         <main>
           <Switch>
-            <Route
-              path="/onboard"
-              component={() => (
-                <Onboard />
-              )}
-            />
+            <Route path="/onboard" component={() => <Onboard />} />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/promote/:listingID" component={PromoteListing} />
             <Route path="/purchases/:offerId" component={Transaction} />
