@@ -65,7 +65,7 @@ const Nav = ({
   wallet,
   isOriginWallet,
   onShowFooter,
-  navbarDarkMode,
+  navbarBlueMode,
   history,
   isLoggedIn
 }) => {
@@ -168,7 +168,7 @@ const Nav = ({
     return (
       <>
         <nav
-          className={`navbar no-border ${navbarDarkMode ? 'dark' : ''} ${
+          className={`navbar no-border ${navbarBlueMode ? 'blue' : ''} ${
             isProfilePage ? 'fixed-nav' : ''
           }`}
         >
@@ -234,7 +234,7 @@ const Nav = ({
   const EarnTokens = withEnrolmentModal('a')
 
   return (
-    <nav className={`navbar navbar-expand-md ${navbarDarkMode ? 'dark' : ''}`}>
+    <nav className={`navbar navbar-expand-md ${navbarBlueMode ? 'blue' : ''}`}>
       <div className="container">
         <Brand />
         <Search className="form-inline mr-auto" />
@@ -321,8 +321,8 @@ export default withRouter(withWallet(withIsMobile(withAuthStatus(Nav))))
 require('react-styl')(`
   .navbar
     padding: 0 1rem
-    &.dark
-      background-color: #131d27
+    &.blue
+      background-color: #007fff
       .navbar-brand
         background: url(images/origin-logo.svg) no-repeat center
     &:not(.no-border)

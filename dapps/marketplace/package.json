@@ -48,6 +48,7 @@
     "blueimp-load-image": "^2.22.0",
     "clipboard-polyfill": "^2.8.1",
     "copy-to-clipboard": "^3.2.0",
+    "davidshimjs-qrcodejs": "0.0.2",
     "dayjs": "^1.8.14",
     "express": "^4.17.1",
     "fbt-runtime": "^0.9.4",
@@ -159,4 +160,3 @@
     "proseWrap": "always"
   }
 }
-
