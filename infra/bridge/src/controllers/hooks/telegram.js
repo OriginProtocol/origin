@@ -85,6 +85,14 @@ router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
         message.chat.id,
         'Great, now go back to the Origin Marketplace app to continue'
       )
+    } else if (message.text.startsWith('/start')) {
+      // User tried to send /start directly
+      logger.debug('Ignoring invalid attestation request')
+      replyWithMessage(
+        res,
+        message.chat.id,
+        "Sorry, we couldn't verify your account. Please go through the Telegram Attestation from Origin Marketplace again."
+      )
     } else {
       // Log unexpected private chat messages to DB
       logger.debug('Logging chat')
