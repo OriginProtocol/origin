@@ -104,7 +104,6 @@ function extractGqlQuery(req) {
     return matches[1].slice(0, queryMaxExtractSize)
   }
   // Fallback to extract the first 32 chars after the query string.
-  console.log('FALLING BACK')
   return query.slice(query.indexOf('query'), queryMaxExtractSize)
 }
 
