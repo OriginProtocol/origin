@@ -257,6 +257,8 @@ PODS:
     - React
   - RNCPushNotificationIOS (1.0.3):
     - React
+  - RNDeviceInfo (5.4.0):
+    - React
   - RNGestureHandler (1.5.0):
     - React
   - RNLocalize (1.3.1):
@@ -308,6 +310,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
@@ -386,6 +389,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
@@ -435,6 +440,7 @@ SPEC CHECKSUMS:
   ReactCommon: a6a294e7028ed67b926d29551aa9394fd989c24c
   RNCAsyncStorage: 3c304d1adfaea02ec732ac218801cb13897aa8c0
   RNCPushNotificationIOS: 83ec11fe19d4ea9e32cc339d8e7d2cc3c88f543e
+  RNDeviceInfo: c7b1dc457611b9231bb780a882102e2c93edc7af
   RNGestureHandler: a4ddde1ffc6e590c8127b8b7eabfdade45475c74
   RNLocalize: 07eb7a91d10021cdf59d80061ebf3adb8a5b5688
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
