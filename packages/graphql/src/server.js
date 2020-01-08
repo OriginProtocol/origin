@@ -1,8 +1,11 @@
-import { ApolloServer } from 'apollo-server'
+import express from 'express'
+import { ApolloServer } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
+import morgan from 'morgan'
 
 global.fetch = require('node-fetch')
 
+import { bundle } from './prom'
 import typeDefs from './typeDefs/index'
 import resolvers from './resolvers/server'
 import { setNetwork, shutdown } from './contracts'
@@ -81,7 +84,47 @@ if (typeof API_KEY !== 'undefined') {
   }
 }
 
+const app = express()
+app.use(bundle)
+
+// Extract functions name and calling args.
+const gqlQueryExtractRe = /query *(.*) *\{/
+
+// Extract at most 32 chars to avoid spamming the logs.
+const queryMaxExtractSize = 32
+
+// Utility method to extract a Graphl query from the POST body.
+function extractGqlQuery(req) {
+  if (!req.body || !req.body.query) {
+    return ''
+  }
+  const query = req.body.query
+  const matches = query.match(gqlQueryExtractRe)
+  if (matches && matches.length) {
+    return matches[1].slice(0, queryMaxExtractSize)
+  }
+  // Fallback to extract the first 32 chars after the query string.
+  return query.slice(query.indexOf('query'), queryMaxExtractSize)
+}
+
+app.use(
+  morgan(function(tokens, req, res) {
+    const gqlQuery = extractGqlQuery(req)
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
+      gqlQuery
+    ].join(' ')
+  })
+)
+
 const server = new ApolloServer(options)
+server.applyMiddleware({ app })
 server.shutdown = shutdown
 
-export default server
+export default app
