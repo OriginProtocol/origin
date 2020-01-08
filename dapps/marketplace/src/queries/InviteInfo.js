@@ -5,6 +5,7 @@ export default gql`
     inviteInfo(code: $code) {
       firstName
       lastName
+      avatarURL
     }
   }
 `
