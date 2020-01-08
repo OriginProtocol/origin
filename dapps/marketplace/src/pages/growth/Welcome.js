@@ -8,7 +8,6 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Onboard from 'pages/onboard/Onboard'
 
 import DocumentTitle from 'components/DocumentTitle'
-import Link from 'components/Link'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
@@ -114,14 +113,14 @@ class GrowthWelcome extends Component {
   }
 
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
-    const { firstName } = identity || {}
-    const personalised = !!identity
+    // const { firstName } = identity || {}
+    // const personalised = !!identity
     const isOriginWallet = ['Origin Wallet', 'Mobile'].includes(
       this.props.walletType
     )
 
     // This is semi legit ¯\_(ツ)_/¯
-    const reward_value = 1000
+    const rewardValue = 1000
     const isIOS =
       navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
     const appStoreUrl =
@@ -201,7 +200,7 @@ class GrowthWelcome extends Component {
                 <hr />
                 <section id="callout">
                   <p>
-                    <span className="value">{reward_value}</span>
+                    <span className="value">{rewardValue}</span>
                     <fbt desc="GrowthWelcome.originTokens">Origin Tokens</fbt>
                   </p>
                 </section>
