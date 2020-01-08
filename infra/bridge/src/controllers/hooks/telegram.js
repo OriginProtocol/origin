@@ -91,7 +91,7 @@ router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
       replyWithMessage(
         res,
         message.chat.id,
-        "Sorry, we couldn't verify your account. Please go through the Telegram Attestation from Origin Marketplace again."
+        'Please return to the Origin Marketplace app and retry your Telegram verification.'
       )
     } else {
       // Log unexpected private chat messages to DB
