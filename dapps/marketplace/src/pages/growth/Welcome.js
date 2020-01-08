@@ -8,6 +8,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Onboard from 'pages/onboard/Onboard'
 
 import DocumentTitle from 'components/DocumentTitle'
+import Avatar from 'components/Avatar'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
@@ -113,8 +114,9 @@ class GrowthWelcome extends Component {
   }
 
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
-    // const { firstName } = identity || {}
-    // const personalised = !!identity
+    const { firstName, lastName, avatarURL } = identity || {}
+    const personalised = !!identity
+
     const isOriginWallet = ['Origin Wallet', 'Mobile'].includes(
       this.props.walletType
     )
@@ -188,13 +190,30 @@ class GrowthWelcome extends Component {
                     </a>
                   </div>
                 </div>
-                <section id="tagline">
+                <section
+                  id="tagline"
+                  className={`${personalised ? 'personalised' : ''}`}
+                >
                   <div className="avatar-container clearfix">
-                    <p className="avatar-text">
-                      <fbt desc="GrowthWelcome.joinToEarn">
-                        Join Origin Rewards to earn
-                      </fbt>
-                    </p>
+                    {!personalised && (
+                      <p className="avatar-text">
+                        <fbt desc="GrowthWelcome.joinToEarn">
+                          Join Origin Rewards to earn
+                        </fbt>
+                      </p>
+                    )}
+                    {personalised && (
+                      <>
+                        <Avatar avatarUrl={avatarURL} />
+                        <p className="avatar-text personalised">
+                          <fbt desc="GrowthWelcome.joinToEarnPersonalized">
+                            Your friend
+                            <fbt:param name="name">{`${firstName} ${lastName}`}</fbt:param>
+                            has invited you to earn
+                          </fbt>
+                        </p>
+                      </>
+                    )}
                   </div>
                 </section>
                 <hr />
@@ -445,8 +464,13 @@ require('react-styl')(`
         height: 22px
         width: auto
         margin: 10px auto
+    .avatar-text
+      &.personalised
+        text-align: left
     #tagline
       margin: 0 25px 25px 25px
+      &.personalised
+        margin-top: 10px
     #intro
       p
         font-family: Lato, sans-serif
