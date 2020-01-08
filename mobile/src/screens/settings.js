@@ -166,7 +166,7 @@ class settingsScreen extends React.Component {
                 onPress={() => this.props.setNetwork(network)}
               >
                 <View style={styles.menuItem}>
-                  <Text style={styles.menuText}>{network.name === 'Origin' ? 'Testing' : network.name}</Text>
+                  <Text style={styles.menuText}>{network.name}</Text>
                   <View style={styles.menuItemIconContainer}>
                     {network.name === this.props.settings.network.name && (
                       <Image
