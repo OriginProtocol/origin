@@ -44,5 +44,9 @@ export default {
   loggedIn: {
     resolve: ({ loggedIn }) => ({ loggedIn }),
     subscribe: () => pubsub.asyncIterator('LOGGED_IN')
+  },
+  walletUpdate: {
+    resolve: ({ walletUpdate }) => ({ walletUpdate }),
+    subscribe: () => pubsub.asyncIterator('WALLET_UPDATE')
   }
 }
