@@ -4,6 +4,7 @@ module.exports = `
     newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
     transactionUpdated2(id: String!): TransactionUpdate
+    walletUpdate: WalletUpdate
   }
 
   type TransactionUpdate {
@@ -146,6 +147,10 @@ module.exports = `
     privateKey: String
     name: String
     role: String
+  }
+
+  type WalletUpdate {
+    primaryAccount: Account
   }
 
 `
