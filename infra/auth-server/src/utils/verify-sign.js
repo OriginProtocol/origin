@@ -27,7 +27,8 @@ const verifySign = ({ address, signature, payload }) => {
     const minTimestamp = now - signExpLimit
 
     // To account for clock differences among clients
-    const clockDiffOffset = 5 * 60 * 1000 // 5 mins
+    const clockDiffOffset =
+      parseInt(process.env.CLOCK_DIFF_OFFSET || 15) * 60 * 1000
     const maxTimestamp = now + clockDiffOffset
 
     if (payload.timestamp < minTimestamp || payload.timestamp > maxTimestamp) {
