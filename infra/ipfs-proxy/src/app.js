@@ -85,25 +85,23 @@ function handleFileUpload(req, res) {
           .post(url)
           .set(req.headers)
           .attach('file', buffer)
-          .then(
-            response => {
-              let responseData = response.text
-              if (response.headers['content-encoding'] === 'gzip') {
-                // Compress the response so the header is correct if necessary
-                responseData = zlib.gzipSync(response.text)
-              } else if (response.headers['content-encoding'] === 'deflate') {
-                responseData = zlib.deflateSync(response.text)
-              }
-              res.writeHead(response.status, response.headers)
-              res.end(responseData)
-            },
-            error => {
-              logger.error(`An error occurred proxying request to IPFS`)
-              logger.error(error)
-              res.writeHead(500, { Connection: 'close' })
-              res.end()
+          .then(response => {
+            let responseData = response.text
+            if (response.headers['content-encoding'] === 'gzip') {
+              // Compress the response so the header is correct if necessary
+              responseData = zlib.gzipSync(response.text)
+            } else if (response.headers['content-encoding'] === 'deflate') {
+              responseData = zlib.deflateSync(response.text)
             }
-          )
+            res.writeHead(response.status, response.headers)
+            res.end(responseData)
+          })
+          .catch(error => {
+            logger.error(`An error occurred proxying request to IPFS`)
+            logger.error(error)
+            res.writeHead(500, { Connection: 'close' })
+            res.end()
+          })
       }
     })
   })
