@@ -36,6 +36,7 @@
     "@origin/ip2geo": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
+    "bottleneck": "^2.19.5",
     "connect-session-sequelize": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
