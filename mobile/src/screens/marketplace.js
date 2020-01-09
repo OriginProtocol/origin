@@ -27,6 +27,7 @@ import get from 'lodash.get'
 import stringify from 'json-stable-stringify'
 
 import DeviceInfo from 'react-native-device-info'
+import { NativeModules } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
@@ -481,6 +482,14 @@ class MarketplaceScreen extends PureComponent {
       Dimensions.get('window').width
     )}x${Math.round(Dimensions.get('window').height)}`
 
+    let locale
+
+    if (Platform.OS === 'android') {
+      locale = NativeModules.I18nManager.localeIdentifier
+    } else if (Platform.OS === 'ios') {
+      locale = NativeModules.SettingsManager.settings.AppleLocale
+    }
+
     const fingerprint = {
       deviceId: DeviceInfo.getDeviceId(),
       brand: DeviceInfo.getBrand(),
@@ -490,7 +499,8 @@ class MarketplaceScreen extends PureComponent {
       userAgent: await DeviceInfo.getUserAgent(),
       uuid: DeviceInfo.getUniqueId(),
       ipAddress: await DeviceInfo.getIpAddress(),
-      screenResolution
+      screenResolution,
+      locale
     }
 
     // Inject device fingerprint
