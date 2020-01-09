@@ -47,7 +47,6 @@ class App extends Component {
   state = {
     hasError: false,
     footer: false,
-    skipOnboardRewards: false,
     isTestBuild: window.location.pathname.startsWith('/test-builds')
   }
 
@@ -126,24 +125,12 @@ class App extends Component {
         {!hideNavbar && (
           <Nav
             onShowFooter={() => this.setState({ footer: true })}
-            navbarDarkMode={isOnWelcomeAndNotOboard}
+            navbarBlueMode={isOnWelcomeAndNotOboard}
           />
         )}
         <main>
           <Switch>
-            <Route
-              path="/onboard"
-              component={() => (
-                <Onboard
-                  skipRewards={this.state.skipOnboardRewards}
-                  onSkipRewards={() => {
-                    this.setState({
-                      skipOnboardRewards: true
-                    })
-                  }}
-                />
-              )}
-            />
+            <Route path="/onboard" component={() => <Onboard />} />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/promote/:listingID" component={PromoteListing} />
             <Route path="/purchases/:offerId" component={Transaction} />

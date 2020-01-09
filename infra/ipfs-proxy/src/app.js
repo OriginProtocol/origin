@@ -150,6 +150,7 @@ proxy.on('error', err => {
 
 const server = http
   .createServer((req, res) => {
+    logger.info(req.url)
     if (req.url.startsWith('/api/v0/add')) {
       handleFileUpload(req, res)
     } else if (req.url.startsWith('/ipfs')) {
