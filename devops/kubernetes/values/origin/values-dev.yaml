@@ -10,7 +10,7 @@ dappImageTag: '45be95c'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '10f178d'
+ipfsProxyImageTag: '913d9e8'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -63,7 +63,7 @@ relayerImageTag: '10f178d'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '1a63edc'
+graphqlImageTag: '74f24e1'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
