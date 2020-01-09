@@ -10,7 +10,7 @@ dappImageTag: '289fa0d'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'e530ec2'
+ipfsProxyImageTag: 'd5e8bb8'
 
 # origin-faucet
 faucetImage: origin-faucet
