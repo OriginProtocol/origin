@@ -28,7 +28,6 @@ export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const config = Configs[settings.network.name.toLowerCase()]
 
   const exchangeURL = `${config.bridge}/utils/exchange-rate?market=${cryptoParam}-${fiatParam}`
-  console.debug("PAIRS ZZZZ", exchangeURL)
   return new Promise(resolve => {
     fetch(exchangeURL)
       .then(res => {
@@ -39,7 +38,6 @@ export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
       })
       .then(text => {
         try {
-          console.debug("exchange result: ", text)
           const json = JSON.parse(text)
           resolve({
             // Note: Bridge returns the value of ETH per USD
@@ -198,7 +196,6 @@ export const updateExchangeRate = async (
     fiatCurrencyCode,
     cryptoCurrencyCode
   )
-  console.debug("XXXX", fiatCurrencyCode, cryptoCurrencyCode, exchangeRate)
   if (!exchangeRate.cacheHit) {
     // Not a cache hit, store the update in redux
     store.dispatch(
