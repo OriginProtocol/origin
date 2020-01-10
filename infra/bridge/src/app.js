@@ -62,7 +62,10 @@ app.listen(5000, () => {
 
   populateValidContents()
 
-  if (process.env.TELEGRAM_DISABLE_WEBHOOKS === 'true') {
+  if (
+    process.env.NODE_ENV !== 'test' &&
+    process.env.TELEGRAM_DISABLE_WEBHOOKS === 'true'
+  ) {
     // Start polling on restart, if telegram webhooks are disabled
     startPollingFallback()
   }
