@@ -132,8 +132,10 @@ async function getExchangeRates(market) {
   }
 
   const [token, fiat] = market.split('-')
-  const tokenExchangeRate = CACHED_EXCHANGE_RATES[token] || FALLBACK_EXCHANGE_RATES[token]
-  const fiatExchangeRate = fiat && CACHED_EXCHANGE_RATES[fiat] || FALLBACK_EXCHANGE_RATES[fiat]
+  const tokenExchangeRate =
+    CACHED_EXCHANGE_RATES[token] || FALLBACK_EXCHANGE_RATES[token]
+  const fiatExchangeRate =
+    (fiat && CACHED_EXCHANGE_RATES[fiat]) || FALLBACK_EXCHANGE_RATES[fiat]
 
   // if no fiat given assume USD
   if (!fiat) {
