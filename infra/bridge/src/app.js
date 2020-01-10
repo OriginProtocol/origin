@@ -9,6 +9,8 @@ const bodyParser = require('body-parser')
 const { pollExchangeRate } = require('./utils/exchange-rate')
 const { populateValidContents } = require('./utils/webhook-helpers')
 
+const { startPollingFallback } = require('./hooks/telegram')
+
 const db = require('./models')
 // Initalize sequelize with session store
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
@@ -59,6 +61,14 @@ app.listen(5000, () => {
   pollExchangeRate()
 
   populateValidContents()
+
+  if (
+    process.env.NODE_ENV !== 'test' &&
+    process.env.TELEGRAM_DISABLE_WEBHOOKS === 'true'
+  ) {
+    // Start polling on restart, if telegram webhooks are disabled
+    startPollingFallback()
+  }
 })
 
 module.exports = app
