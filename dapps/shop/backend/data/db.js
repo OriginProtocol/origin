@@ -5,6 +5,22 @@ const SqliteURI = `sqlite:${__dirname}/net_${config.network}.db`
 const URI = process.env.DATABASE_URL || SqliteURI
 const sequelize = new Sequelize(URI, { logging: false })
 
+const Shop = sequelize.define(
+  'shop',
+  {
+    // attributes
+    name: {
+      type: Sequelize.STRING
+    },
+    config: {
+      type: Sequelize.TEXT
+    }
+  },
+  {
+    // options
+  }
+)
+
 const Network = sequelize.define(
   'network',
   {
@@ -108,6 +124,7 @@ const Discounts = sequelize.define(
 sequelize.sync()
 
 module.exports = {
+  Shop,
   Network,
   Transactions,
   Orders,
