@@ -14,7 +14,8 @@ import {
   ScrollView,
   Text,
   View,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
@@ -24,6 +25,9 @@ import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import stringify from 'json-stable-stringify'
+
+import DeviceInfo from 'react-native-device-info'
+import { NativeModules } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
@@ -473,6 +477,45 @@ class MarketplaceScreen extends PureComponent {
     )
   }
 
+  injectDeviceFingerprint = async () => {
+    const screenResolution = `${Math.round(
+      Dimensions.get('window').width
+    )}x${Math.round(Dimensions.get('window').height)}`
+
+    let locale
+
+    if (Platform.OS === 'android') {
+      locale = NativeModules.I18nManager.localeIdentifier
+    } else if (Platform.OS === 'ios') {
+      locale = NativeModules.SettingsManager.settings.AppleLocale
+    }
+
+    const fingerprint = {
+      deviceId: DeviceInfo.getDeviceId(),
+      brand: DeviceInfo.getBrand(),
+      deviceType: DeviceInfo.getDeviceType(),
+      osName: DeviceInfo.getSystemName(),
+      osVersion: DeviceInfo.getSystemVersion(),
+      userAgent: await DeviceInfo.getUserAgent(),
+      uuid: DeviceInfo.getUniqueId(),
+      ipAddress: await DeviceInfo.getIpAddress(),
+      screenResolution,
+      locale
+    }
+
+    // Inject device fingerprint
+    this.injectJavaScript(
+      `
+        if (window && window.localStorage) {
+          window.localStorage.deviceFingerprint = '${JSON.stringify(
+            fingerprint
+          )}';
+        }
+      `,
+      'device fingerprint'
+    )
+  }
+
   requestAndroidCameraPermissions = () => {
     if (Platform.OS === 'android') {
       PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA)
@@ -680,6 +723,10 @@ class MarketplaceScreen extends PureComponent {
     if (Platform.OS === 'android') {
       this.injectScrollHandler()
     }
+
+    // Inject device fingerprint
+    this.injectDeviceFingerprint()
+
     // Set state to ready in redux
     this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared

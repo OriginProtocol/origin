@@ -24,7 +24,22 @@ function fetchFingerprint() {
     components
       .filter(x => browserPropsWhitelist.includes(x.key))
       .forEach(x => (browserProps[x.key] = x.value))
-    cachedFingerprintData = { fingerprint: hash, ...browserProps }
+
+    // Fingerprint injected by mobile app
+    let mobileFingerprint
+    try {
+      if (window.localStorage.deviceFingerprint) {
+        mobileFingerprint = JSON.parse(window.localStorage.deviceFingerprint)
+      }
+    } catch (err) {
+      console.error('Failed to fetch mobile device fingerprint', err)
+    }
+
+    cachedFingerprintData = {
+      fingerprint: hash,
+      ...browserProps,
+      mobileFingerprint
+    }
   })
 }
 
