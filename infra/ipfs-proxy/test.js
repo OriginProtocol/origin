@@ -7,6 +7,7 @@ const Logger = require('logplease')
 Logger.setLogLevel('NONE')
 
 const expect = chai.expect
+process.env.IPFS_SHORT_CIRCUIT = 1 //Set to test the short circuit
 
 // Known hashes for sample files
 const ipfsHashes = {
@@ -26,7 +27,7 @@ describe('upload', () => {
 
   before(done => {
     server = require('./src/app')
-    ipfsFactory = ipfsdCtl.create({
+    ipfsFactory = ipfsdCtl.createFactory({
       type: 'js'
     })
 
@@ -34,9 +35,8 @@ describe('upload', () => {
       {
         disposable: true,
         defaultAddrs: true
-      },
-      (err, node) => {
-        expect(err).to.be.null
+      }).then(
+      node => {
         ipfsd = node
         done()
       }
@@ -45,7 +45,7 @@ describe('upload', () => {
 
   after(done => {
     server.close()
-    ipfsd.stop(done)
+    ipfsd.stop().then(()=> {done() })
   })
 
   it('should prevent uploads larger than size limit', done => {
@@ -153,6 +153,7 @@ describe('upload', () => {
       .attach('image', image)
       .set('Accept-Encoding', 'gzip')
       .then(response => {
+        console.log("Got a gzip status:", response.status)
         expect(response.status).to.equal(200)
         expect(JSON.parse(response.text)['Hash']).to.equal(
           ipfsHashes['sample_1mb.jpg']
@@ -170,7 +171,7 @@ describe('download', () => {
   before(done => {
     server = require('./src/app')
 
-    ipfsFactory = ipfsdCtl.create({
+    ipfsFactory = ipfsdCtl.createFactory({
       type: 'js'
     })
 
@@ -178,9 +179,8 @@ describe('download', () => {
       {
         disposable: true,
         defaultAddrs: true
-      },
-      (err, node) => {
-        expect(err).to.be.null
+      }).then(
+      node => {
         ipfsd = node
         Promise.all([
           ipfsd.api.addFromFs('./fixtures/sample_1mb.jpg'),
@@ -193,13 +193,12 @@ describe('download', () => {
         ]).then(() => {
           done()
         })
-      }
-    )
+      })
   })
 
   after(done => {
     server.close()
-    ipfsd.stop(done)
+    ipfsd.stop().then(()=> {done()})
   })
 
   it('should allow gif downloads', done => {
