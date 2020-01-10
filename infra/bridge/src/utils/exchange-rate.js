@@ -28,22 +28,22 @@ const currencies = [
 let pollInterval
 
 // OGN price is constant for now
-const USD_PER_OGN = 0.15 // 1 OGN = 0.15 USD
+const USD_PER_OGN = 0.21 // 1 OGN = 0.21 USD
 
 // To be used when API is down and there is nothing in cache
 // Kind of very rare edge case
 const FALLBACK_EXCHANGE_RATES = {
-  ETH: 0.005515,
-  DAI: 0.9957,
-  KRW: 1169.8,
-  SGD: 1.358,
-  GBP: 0.7724,
-  EUR: 0.8986,
-  JPY: 107.94,
-  CNY: 7.144,
-  USDC: 1.001,
-  GUSD: 1.036,
-  OKB: 0.3377,
+  ETH: 0.007072,
+  DAI: 0.9992,
+  KRW: 1141.5,
+  SGD: 1.344,
+  GBP: 0.7653,
+  EUR: 0.9017,
+  JPY: 109,
+  CNY: 7.54,
+  USDC: 0.9996,
+  GUSD: 0.9863,
+  OKB: 0.3467,
   OGN: USD_PER_OGN,
   USDT: 1,
   USD: 1
