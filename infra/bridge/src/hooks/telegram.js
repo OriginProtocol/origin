@@ -119,7 +119,7 @@ async function poller() {
   const pollInterval = process.env.TELEGRAM_POLL_INTERVAL || 2000
 
   // Telegram has a rate limit of 30 requests per second fot bots
-  const reqBottleneck = new Bottleneck({ minTime: 3330 })
+  const reqBottleneck = new Bottleneck({ minTime: 34 })
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
