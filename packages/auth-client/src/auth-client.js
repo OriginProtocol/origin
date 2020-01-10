@@ -97,7 +97,7 @@ class AuthClient {
 
     const payload = {
       message: message || 'I intend to sign in to Origin Marketplace',
-      timestamp: Date.now()
+      timestamp: await this.getServerTime()
     }
 
     let signature
@@ -379,6 +379,32 @@ class AuthClient {
    */
   _removeCache(wallet) {
     window.localStorage.removeItem(`auth:${wallet}`)
+  }
+
+  /**
+   * Get server time
+   */
+  async getServerTime() {
+    try {
+      let url = new URL(this.authServer)
+      url.pathname = '/api/now'
+      url = url.toString()
+
+      const rawResponse = await fetch(url)
+
+      const response = await rawResponse.json()
+
+      if (!response.timestamp) {
+        throw new Error('Timestamp missing from response')
+      }
+
+      return response.timestamp
+    } catch (err) {
+      console.error('Failed to get timestamp from server', err)
+    }
+
+    // Fallback
+    return Date.now()
   }
 }
 
