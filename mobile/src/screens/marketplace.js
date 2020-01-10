@@ -47,10 +47,7 @@ import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 import UpdatePrompt from 'components/update-prompt'
 
-const authClient = new AuthClient({
-  authServer: this.props.config.authServer || 'https://auth.originprotocol.com',
-  disablePersistence: true
-})
+import withConfig from 'hoc/withConfig'
 
 class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
@@ -278,6 +275,12 @@ class MarketplaceScreen extends PureComponent {
    */
   injectAuthSign = async () => {
     const { wallet } = this.props
+
+    const authClient = new AuthClient({
+      authServer:
+        this.props.config.authServer || 'https://auth.originprotocol.com',
+      disablePersistence: true
+    })
 
     const payload = {
       message: AUTH_MESSAGE,
@@ -898,8 +901,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setMarketplaceWebViewError(error))
 })
 
-export default withOriginGraphql(
-  connect(mapStateToProps, mapDispatchToProps)(MarketplaceScreen)
+export default withConfig(
+  withOriginGraphql(
+    connect(mapStateToProps, mapDispatchToProps)(MarketplaceScreen)
+  )
 )
 
 const styles = StyleSheet.create({
