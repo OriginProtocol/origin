@@ -28,7 +28,7 @@ Bridge, by behaviour, only looks for messages directly sent to the bot and `new_
 ### To setup the webhook:
   1. Remove the key `TELEGRAM_DISABLE_WEBHOOKS` or set it's to `false`
   2. Restart the bridge server
-  3. Go to following URL in the browser: https://bridge.originprotocol.com/hooks/telegram/__init
+  3. Go to following URL in the browser: `/hooks/telegram/__init`
 
 ### To setup polling:
   1. Set `TELEGRAM_DISABLE_WEBHOOKS` to `true`
