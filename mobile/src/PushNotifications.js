@@ -313,10 +313,16 @@ class PushNotifications extends Component {
       return
     }
 
+    const authClient = new AuthClient({
+      authServer:
+        this.props.config.authServer || 'https://auth.originprotocol.com',
+      disablePersistence: true
+    })
+
     const message = AUTH_MESSAGE
     const payload = {
       message,
-      timestamp: Date.now()
+      timestamp: await authClient.getServerTime()
     }
 
     let signature
@@ -336,12 +342,6 @@ class PushNotifications extends Component {
 
       signature = await ethersWallet.signMessage(stringify(payload))
     }
-
-    const authClient = new AuthClient({
-      authServer:
-        this.props.config.authServer || 'https://auth.originprotocol.com',
-      disablePersistence: true
-    })
 
     try {
       const tokenData = await authClient.getTokenWithSignature(
