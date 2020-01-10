@@ -394,11 +394,11 @@ class AuthClient {
 
       const response = await rawResponse.json()
 
-      if (!response.body.timestamp) {
+      if (!response.timestamp) {
         throw new Error('Timestamp missing from response')
       }
 
-      return response.body.timestamp
+      return response.timestamp
     } catch (err) {
       console.error('Failed to get timestamp from server', err)
     }
