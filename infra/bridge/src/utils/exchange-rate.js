@@ -45,7 +45,8 @@ const FALLBACK_EXCHANGE_RATES = {
   GUSD: 1.036,
   OKB: 0.3377,
   OGN: USD_PER_OGN,
-  USDT: 1
+  USDT: 1,
+  USD: 1
 }
 
 // To cache the rates in memory
@@ -130,9 +131,16 @@ async function getExchangeRates(market) {
     return CACHED_EXCHANGE_RATES
   }
 
-  const token = market.split('-')[0]
+  const [token, fiat] = market.split('-')
+  const tokenExchangeRate = CACHED_EXCHANGE_RATES[token] || FALLBACK_EXCHANGE_RATES[token]
+  const fiatExchangeRate = fiat && CACHED_EXCHANGE_RATES[fiat] || FALLBACK_EXCHANGE_RATES[fiat]
 
-  return CACHED_EXCHANGE_RATES[token] || FALLBACK_EXCHANGE_RATES[token]
+  // if no fiat given assume USD
+  if (!fiat) {
+    return tokenExchangeRate
+  } else {
+    return tokenExchangeRate / fiatExchangeRate
+  }
 }
 
 module.exports = {
