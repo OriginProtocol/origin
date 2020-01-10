@@ -47,10 +47,13 @@ spec:
           name: gateway
         volumeMounts:
           - mountPath: /data/ipfs
+          {{- if eq .Release.Namespace "prod" }}
             name: {{ template "ipfs.fullname" . }}-data-ssd
-          - mountPath: /data/ipfs-old
+          {{ else }}
             name: {{ template "ipfs.fullname" . }}-data
+          {{- end }}
   volumeClaimTemplates:
+  {{- if eq .Release.Namespace "prod" }}
   - metadata:
       name: {{ template "ipfs.fullname" . }}-data-ssd
     spec:
@@ -60,6 +63,7 @@ spec:
       resources:
         requests:
           storage: {{ default "500Gi" .Values.ipfsStorageRequestSize }}
+  {{ else }}
   - metadata:
       name: {{ template "ipfs.fullname" . }}-data
     spec:
@@ -68,4 +72,5 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: {{ default "500Gi" .Values.ipfsStorageRequestSize }}
+          storage: {{ default "8Gi" .Values.ipfsStorageRequestSize }}
+  {{- end }}
