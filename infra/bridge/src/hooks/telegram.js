@@ -28,13 +28,13 @@ async function subscribeToHooks() {
   }
 
   if (response.body.result === true) {
-    logger.info(
+    logger.debug(
       `Webhook already live on the URL: ${decodeURIComponent(webhookURL)}`
     )
     return
   }
 
-  logger.info(`Webhook is live on ${response.body.result.url}`)
+  logger.debug(`Webhook is live on ${response.body.result.url}`)
 }
 
 async function deleteWebhook() {
@@ -51,7 +51,7 @@ async function deleteWebhook() {
     return
   }
 
-  logger.info('Failed to delete webhook', response.body)
+  logger.error('Failed to delete webhook', response.body)
 
   throw response.body
 }
@@ -96,6 +96,7 @@ async function clearOutstandingQueue() {
 }
 
 async function sendMessage(chatID, message) {
+  logger.debug('Sending message to chat', chatID, message)
   const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`
 
   const response = await request
@@ -135,6 +136,12 @@ async function poller() {
     try {
       const updates = await getUpdates(lastUpdateID ? lastUpdateID + 1 : null)
 
+      logger.debug(
+        `Received ${updates.result.length} updates from telegram with offset ${
+          lastUpdateID ? lastUpdateID + 1 : '-'
+        }`
+      )
+
       if (updates.result.length === 0) {
         continue
       }
@@ -146,6 +153,7 @@ async function poller() {
           processMessage({
             message: upd.message,
             onReplyMessage: (chatID, message) => {
+              logger.debug('Scheduling reply message for chat', chatID, message)
               reqBottleneck.schedule(() => sendMessage(chatID, message))
             }
           })
@@ -160,6 +168,8 @@ async function poller() {
 async function startPollingFallback() {
   if (pollRunning) return
 
+  logger.debug('Starting to poll for updates...')
+
   try {
     // getUpdates won't work when webhook is active
     // Try to delete webhook
@@ -173,9 +183,12 @@ async function startPollingFallback() {
   pollRunning = true
 
   poller()
+
+  logger.debug('Telegram poller stated')
 }
 
 const cancelPolling = () => {
+  logger.debug('Aborting telegram updates polling...')
   if (!pollingAborted) {
     pollingAborted = true
   }
