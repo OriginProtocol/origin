@@ -29,6 +29,8 @@ import stringify from 'json-stable-stringify'
 import DeviceInfo from 'react-native-device-info'
 import { NativeModules } from 'react-native'
 
+import AuthClient from '@origin/auth-client/src/auth-client'
+
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
 
@@ -44,6 +46,8 @@ import { PROMPT_MESSAGE, PROMPT_PUB_KEY, AUTH_MESSAGE } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 import UpdatePrompt from 'components/update-prompt'
+
+import withConfig from 'hoc/withConfig'
 
 class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
@@ -272,9 +276,15 @@ class MarketplaceScreen extends PureComponent {
   injectAuthSign = async () => {
     const { wallet } = this.props
 
+    const authClient = new AuthClient({
+      authServer:
+        this.props.config.authServer || 'https://auth.originprotocol.com',
+      disablePersistence: true
+    })
+
     const payload = {
       message: AUTH_MESSAGE,
-      timestamp: Date.now()
+      timestamp: await authClient.getServerTime()
     }
 
     // Sign the message
@@ -891,8 +901,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setMarketplaceWebViewError(error))
 })
 
-export default withOriginGraphql(
-  connect(mapStateToProps, mapDispatchToProps)(MarketplaceScreen)
+export default withConfig(
+  withOriginGraphql(
+    connect(mapStateToProps, mapDispatchToProps)(MarketplaceScreen)
+  )
 )
 
 const styles = StyleSheet.create({

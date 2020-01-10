@@ -6,16 +6,20 @@ import withWallet from 'hoc/withWallet'
 
 import LoginMutation from 'mutations/Login'
 
-const SignInContent = ({ wallet, className }) => {
+import UserActivationLink from 'components/UserActivationLink'
+
+const SignInContent = ({ wallet, walletLoading, className }) => {
   const client = useApolloClient()
-  const [login] = useMutation(LoginMutation, {
-    variables: {
-      wallet
-    }
-  })
+  const [login] = useMutation(LoginMutation)
 
   const [loading, setLoading] = useState(loading)
   const [error, setError] = useState(null)
+
+  const [redirect, setRedirect] = useState(false)
+
+  if (redirect) {
+    return <UserActivationLink forceRedirect />
+  }
 
   return (
     <div className={`${className ? className + ' ' : ''}signin-content`}>
@@ -32,10 +36,20 @@ const SignInContent = ({ wallet, className }) => {
         className="btn btn-outline-primary btn-bordered btn-block"
         onClick={async e => {
           e.preventDefault()
+
+          if (!wallet) {
+            // Redirect to onboarding
+            return setRedirect(true)
+          }
+
           setLoading(true)
           setError(null)
           try {
-            const resp = await login()
+            const resp = await login({
+              variables: {
+                wallet
+              }
+            })
 
             if (resp.data.login.success) {
               await client.reFetchObservableQueries()
@@ -49,9 +63,9 @@ const SignInContent = ({ wallet, className }) => {
 
           setLoading(false)
         }}
-        disabled={loading}
+        disabled={loading || walletLoading}
       >
-        {loading ? (
+        {loading || walletLoading ? (
           <fbt desc="Loading...">Loading...</fbt>
         ) : (
           <fbt desc="Auth.SignIn">Sign In</fbt>

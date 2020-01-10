@@ -264,15 +264,10 @@ class GrowthWelcome extends Component {
                         onClick={onStoreButtonClick}
                       >
                         {isIOS && (
-                          <img
-                            className={isIOS ? 'ios' : 'not-ios'}
-                            src="images/growth/app-store.svg"
-                            alt="Origin"
-                          />
+                          <img src="images/growth/app-store.svg" alt="Origin" />
                         )}
                         {!isIOS && (
                           <img
-                            className={isIOS ? 'ios' : 'not-ios'}
                             src="images/growth/play-store.svg"
                             alt="Origin"
                           />
@@ -429,10 +424,8 @@ require('react-styl')(`
       margin: 0 auto 50px
       width: 280px
       img
-        &.ios
-          height: 93px
-        &.not-ios
-          height: 84px
+        width: 100%
+        max-width: 260px
     .mobile-signup
       width: 84%
     .signup-button
