@@ -21,7 +21,7 @@ To observe the tests running in the browser:
 
 For more information please see the README in the `test` sub-directory.
 
-##Troubleshoot
+## Troubleshoot
 - To be able to access location features in developer environment Chrome requires the page to run using https protocol. 
   To circumvent that add an exception in Chrome flags. In url bar type: 
   `chrome://flags/#unsafely-treat-insecure-origin-as-secure`
