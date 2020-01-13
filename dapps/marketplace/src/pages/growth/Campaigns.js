@@ -465,6 +465,7 @@ class GrowthCampaigns extends Component {
                 notCompletedFollowActions = undefined
 
               if (activeCampaign) {
+                /* eslint-disable-next-line no-extra-semi */
                 ;({
                   completedPurchaseActions,
                   notCompletedPurchaseActions,
