@@ -157,7 +157,11 @@ const PaymentMethods = ({
           <AcceptedTokenListItem
             key={token}
             token={token}
-            selected={storedPaymentMethodAvailable ? paymentMethod === token : index === 0}
+            selected={
+              storedPaymentMethodAvailable
+                ? paymentMethod === token
+                : index === 0
+            }
             onSelect={setTokenCallback}
             hideTooltip={true}
           />
