@@ -2,23 +2,23 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'c9544fe'
+bridgeImageTag: 'ca836f3'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'e0cb7dc'
+dappImageTag: 'ca836f3'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'fcb1081'
+ipfsProxyImageTag: 'ca836f3'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '21a864b'
+faucetImageTag: 'ca836f3'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'e0cb7dc'
+eventlistenerImageTag: 'ca836f3'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,15 +26,15 @@ discoveryImageTag: '01c08a5'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '36076e5'
+growthImageTag: 'ca836f3'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '21a864b'
+messagingImageTag: 'ca836f3'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '21a864b'
+notificationsImageTag: 'ca836f3'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -42,7 +42,7 @@ creatorClientImageTag: '1078040'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'eb01c6c'
+creatorServerImageTag: 'ca836f3'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -59,15 +59,15 @@ cronImageTag: '7d04c87'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '36076e5'
+adminImageTag: 'ca836f3'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '21a864b'
+relayerImageTag: 'ca836f3'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'e0cb7dc'
+graphqlImageTag: 'ca836f3'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
@@ -75,8 +75,8 @@ t3ClientImageTag: '36076e5'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'f2c211d'
+t3ServerImageTag: 'ca836f3'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '0e5b8dd'
+authImageTag: 'ca836f3'
