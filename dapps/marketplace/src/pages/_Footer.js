@@ -187,7 +187,7 @@ class Footer extends Component {
                 </Link>
               </span>
               <span className="d-none d-md-inline">
-                <a href='#' onClick={onShowHelp}>
+                <a href="#" onClick={onShowHelp}>
                   <fbt desc="footer.help">Help</fbt>
                 </a>
               </span>
