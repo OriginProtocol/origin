@@ -135,6 +135,8 @@ const PaymentMethods = ({
 
   const title = <fbt desc="PaymentMethod.title">Payment Method</fbt>
 
+  const storedPaymentMethodAvailable = acceptedTokens.includes(paymentMethod)
+
   return (
     <div className="container payment-methods-page">
       <DocumentTitle>
@@ -151,11 +153,15 @@ const PaymentMethods = ({
         <div className="my-4">
           <fbt desc="PaymentMethod.acceptedCurrencies">This seller accepts</fbt>
         </div>
-        {acceptedTokens.map(token => (
+        {acceptedTokens.map((token, index) => (
           <AcceptedTokenListItem
             key={token}
             token={token}
-            selected={paymentMethod === token}
+            selected={
+              storedPaymentMethodAvailable
+                ? paymentMethod === token
+                : index === 0
+            }
             onSelect={setTokenCallback}
             hideTooltip={true}
           />

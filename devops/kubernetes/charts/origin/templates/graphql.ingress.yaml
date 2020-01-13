@@ -17,6 +17,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/limit-rps: "25"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120s"
 spec:
   tls:
     - secretName: {{ template "graphql.host" . }}
