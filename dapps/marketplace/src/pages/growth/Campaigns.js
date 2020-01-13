@@ -349,18 +349,26 @@ class GrowthCampaign extends Component {
         {navigation === 'currentCampaign' && !activeCampaign && (
           <div>
             <h1 className="mb-2 infra/growth/src/apollo/app.jspt-4 mt-4">
-              Campaign has ended
+              <fbt desc="growth.campaigns.campaignHasEnded">
+                Campaign has ended
+              </fbt>
             </h1>
             <div className="mt-3">
-              Budget allocated for the last campaign has been reached earlier
-              than expected.
+              <fbt desc="growth.campaigns.bidgetReached">
+                Budget allocated for the last campaign has been reached earlier
+                than expected.
+              </fbt>
             </div>
             <div className="mt-3">
-              Check our{' '}
-              <a href="https://discordapp.com/invite/jyxpUSe">
-                #announcements Discord
-              </a>{' '}
-              channel for information about future campaigns.
+              <fbt desc="EventDescription.joinDiscord">
+                Check our{' '}
+                <fbt:param name="discord channel">
+                  <a href="https://discordapp.com/invite/jyxpUSe">
+                    #announcements Discord
+                  </a>
+                </fbt:param>{' '}
+                channel for information about future campaigns.
+              </fbt>
             </div>
           </div>
         )}
