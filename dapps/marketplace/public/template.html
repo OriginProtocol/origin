@@ -48,7 +48,12 @@
         return
       }
 
-      zE.hide()
+      var zeHideInterval = setInterval(function () {
+        if (zE && zE.hide) {
+          zE.hide()
+          clearInterval(zeHideInterval)
+        }
+      }, 1000)
     }
   </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
