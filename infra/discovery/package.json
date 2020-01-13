@@ -37,9 +37,9 @@
     "lodash-es": "4.17.15",
     "logplease": "1.2.15",
     "morgan": "1.9.1",
-    "p-limit": "2.2.1",
+    "p-limit": "2.2.2",
     "per-env": "1.0.2",
-    "pg": "7.17.0",
+    "pg": "7.17.1",
     "pg-hstore": "2.3.3",
     "redis": "2.8.0",
     "sequelize": "5.21.3",
@@ -56,7 +56,7 @@
     "nodemon": "2.0.2",
     "prettier": "1.19.1",
     "rewire": "4.0.1",
-    "sinon": "8.0.2"
+    "sinon": "8.0.4"
   },
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
