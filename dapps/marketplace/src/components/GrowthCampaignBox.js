@@ -32,7 +32,7 @@ const renderEnrolledBox = (props, walletAddress) => {
     campaign => campaign.status === 'Active'
   )
 
-  if (activeCampaign === null) {
+  if (activeCampaign === null || activeCampaign === undefined) {
     return (
       <fbt desc="growthCampaignBox.noActiveCampaignFound">
         No active campaign found
