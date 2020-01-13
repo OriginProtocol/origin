@@ -9,6 +9,7 @@ import Onboard from 'pages/onboard/Onboard'
 
 import DocumentTitle from 'components/DocumentTitle'
 import Avatar from 'components/Avatar'
+import Link from 'components/Link'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
@@ -182,12 +183,12 @@ class GrowthWelcome extends Component {
               <div className="col-md-6 d-flex flex-column">
                 <div className="d-none d-md-flex" id="referral-campaign-header">
                   <div className="origin logo">
-                    <a href="/">
+                    <Link to="/" className="custom-brand">
                       <img
                         src="images/growth/origin-logo@3x.png"
                         alt="Origin"
                       />
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <section
