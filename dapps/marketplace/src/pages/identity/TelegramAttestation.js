@@ -288,7 +288,10 @@ class TelegramAttestation extends Component {
                 })
               }}
               onError={error => {
-                console.error('Failed to verify attestation data', this.state.data)
+                console.error(
+                  'Failed to verify attestation data',
+                  this.state.data
+                )
                 this.setState({
                   error,
                   loading: false,
