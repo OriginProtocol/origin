@@ -733,6 +733,14 @@ app.ws('/message-events/:address', (ws, req) => {
   })
 })
 
+// Catch all
+app.all('*', function(req, res) {
+  res.status(404)
+    .send({
+      errors: ['The page you are looking for does not exist']
+    })
+})
+
 app.listen(port, () => {
   logger.debug(`REST endpoint listening on port ${port}`)
   subscribeToMarketplaceEvents()
