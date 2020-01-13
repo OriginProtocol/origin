@@ -41,6 +41,15 @@
     if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
       gtag('js', new Date());
     }
+
+    // override Zendesk widget default behavior
+    window.onload = () => {
+      if (typeof zE === 'undefined') {
+        return
+      }
+
+      zE.hide()
+    }
   </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
 </html>
