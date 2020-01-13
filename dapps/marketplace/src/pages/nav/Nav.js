@@ -189,6 +189,7 @@ const Nav = ({
           {!isStacked && (
             <Mobile
               {...navProps('mobile')}
+              onShowHelp={onShowHelp}
               onShowFooter={onShowFooter}
               onConsoleClick={() => {
                 setConsoleOpen(!consoleOpen)

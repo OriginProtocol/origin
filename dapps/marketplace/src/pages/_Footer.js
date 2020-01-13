@@ -9,8 +9,6 @@ import withIsMobile from 'hoc/withIsMobile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
-const SupportLink = 'https://forms.gle/KxBDiGjZwaXhitSn9'
-
 const urlPrefixesForShortButton = ['/messages']
 
 class Footer extends Component {
@@ -84,13 +82,12 @@ class Footer extends Component {
         type="button"
         onClick={() => this.onToggle()}
       >
-        {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
-        {!isMobile && !open && !isButtonShort && (
-          <fbt desc="footer.supportSettingsAndMore">
-            Support, settings, &amp; more
+        {!open && !isButtonShort && (
+          <fbt desc="footer.helpSettingsAndMore">
+            Help, settings, &amp; more
           </fbt>
         )}
-        {!isMobile && open && !closing && <fbt desc="footer.Close">Close</fbt>}
+        {open && !closing && <fbt desc="footer.Close">Close</fbt>}
       </button>
     )
   }
@@ -108,7 +105,8 @@ class Footer extends Component {
       locale,
       onLocale,
       currency,
-      onCurrency
+      onCurrency,
+      onShowHelp
     } = this.props
 
     return (
@@ -189,8 +187,8 @@ class Footer extends Component {
                 </Link>
               </span>
               <span className="d-none d-md-inline">
-                <a href={SupportLink}>
-                  <fbt desc="footer.giveFeedback">Give Feedback</fbt>
+                <a href='#' onClick={onShowHelp}>
+                  <fbt desc="footer.help">Help</fbt>
                 </a>
               </span>
             </div>
