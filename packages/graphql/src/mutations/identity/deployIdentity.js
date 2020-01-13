@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import pick from 'lodash/pick'
 import pickBy from 'lodash/pickBy'
 
-import { post } from '@origin/ipfs'
+// import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
