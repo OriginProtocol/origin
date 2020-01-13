@@ -33,12 +33,14 @@
     localStorage.ognNetwork = '{NET}'
     localStorage.metaMaskEnabled = '{MM_ENABLED}'
 
-    window.onload = () => {
+    window.onload = function () {
       if (typeof zE === 'undefined') {
         return
       }
 
-      zE.hide()
+      setTimeout(function () {
+        zE.hide()
+      }, 2000)
     }
   </script>
   <!--<script crossorigin src="http://192.168.1.6:8083/app.js"></script>-->
