@@ -124,7 +124,7 @@ class App extends Component {
         ) : null}
         {!hideNavbar && (
           <Nav
-            onShowHelp={() => window.zE.activate}
+            onShowHelp={() => window.zE.activate()}
             onShowFooter={() => this.setState({ footer: true })}
             navbarBlueMode={isOnWelcomeAndNotOboard}
           />
@@ -181,7 +181,7 @@ class App extends Component {
         <Footer
           open={this.state.footer}
           onClose={() => this.setState({ footer: false })}
-          onShowHelp={() => window.zE.activate}
+          onShowHelp={() => window.zE.activate()}
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
