@@ -438,8 +438,17 @@ class GrowthCampaigns extends Component {
                 campaign => campaign.status === 'Active'
               )
 
+              let completedPurchaseActions,
+                notCompletedPurchaseActions,
+                completedVerificationActions,
+                notCompletedVerificationActions,
+                completedPromotionActions,
+                notCompletedPromotionActions,
+                completedFollowActions,
+                notCompletedFollowActions = undefined
+
               if (activeCampaign) {
-                const {
+                ({
                   completedPurchaseActions,
                   notCompletedPurchaseActions,
                   completedVerificationActions,
@@ -448,7 +457,7 @@ class GrowthCampaigns extends Component {
                   notCompletedPromotionActions,
                   completedFollowActions,
                   notCompletedFollowActions
-                } = calculatePendingAndAvailableActions(activeCampaign)
+                } = calculatePendingAndAvailableActions(activeCampaign))
               }
 
               return (
