@@ -28,9 +28,18 @@
     openpgp.config.show_version = false
     openpgp.initWorker({ path: 'vendor/openpgp.worker.min.js' })
   </script> -->
+  <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=28724146-15b3-4832-9439-a90ae062f591"></script>
   <script>
     localStorage.ognNetwork = '{NET}'
     localStorage.metaMaskEnabled = '{MM_ENABLED}'
+
+    window.onload = () => {
+      if (typeof zE === 'undefined') {
+        return
+      }
+
+      zE.hide()
+    }
   </script>
   <!--<script crossorigin src="http://192.168.1.6:8083/app.js"></script>-->
   <script crossorigin src="{HOST}app.js"></script>

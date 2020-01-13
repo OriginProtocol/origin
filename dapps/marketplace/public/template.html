@@ -43,13 +43,13 @@
     }
 
     // override Zendesk widget default behavior
-    document.onload(() => {
+    window.onload = () => {
       if (typeof zE === 'undefined') {
         return
       }
 
       zE.hide()
-    })
+    }
   </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
 </html>
