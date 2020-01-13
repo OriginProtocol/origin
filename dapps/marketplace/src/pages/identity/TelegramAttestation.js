@@ -16,6 +16,16 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
+import Sentry from 'utils/sentry'
+
+const captureException = error => {
+  if (error instanceof Error) {
+    Sentry.captureException(error)
+  } else {
+    Sentry.captureException(new Error(error))
+  }
+}
+
 const TelegramVerifyAttestation = ({
   identity,
   onComplete,
@@ -48,6 +58,7 @@ const TelegramVerifyAttestation = ({
   useEffect(() => {
     if (error) {
       console.error('error', error)
+      captureException(error)
       onError(
         <fbt desc="checkTelegramStatus.failed">
           Failed to verify status. Please try again.
@@ -64,6 +75,7 @@ const TelegramVerifyAttestation = ({
     if (verified) {
       onComplete(attestation)
     } else if (response.reason) {
+      captureException(response.reason)
       onError(response.reason)
     }
   }, [data, verified, response])
@@ -96,6 +108,7 @@ const TelegramGenerateCode = ({ wallet, onComplete, onError }) => {
         onComplete(result)
       })
       .catch(res => {
+        captureException(res)
         onError(res)
       })
   }, [wallet])
@@ -275,6 +288,10 @@ class TelegramAttestation extends Component {
                 })
               }}
               onError={error => {
+                console.error(
+                  'Failed to verify attestation data',
+                  this.state.data
+                )
                 this.setState({
                   error,
                   loading: false,
