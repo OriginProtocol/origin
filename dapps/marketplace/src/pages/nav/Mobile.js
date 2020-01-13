@@ -8,12 +8,11 @@ import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const SupportLink = 'https://forms.gle/KxBDiGjZwaXhitSn9'
-
 const MobileNav = ({
   open,
   onClose,
   onOpen,
+  onShowHelp,
   onShowFooter,
   onConsoleClick,
   screenConsoleEnabled,
@@ -137,10 +136,14 @@ const MobileNav = ({
               children={fbt('Settings', 'navigation.settings')}
             />
             <a
-              href={SupportLink}
-              onClick={() => onClose()}
-              className="dropdown-item feedback"
-              children={fbt('Feedback', 'navigation.feedback')}
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                onShowHelp()
+                onClose()
+              }}
+              className="dropdown-item help"
+              children={fbt('Help', 'navigation.help')}
             />
             {screenConsoleEnabled && (
               <a
@@ -250,7 +253,7 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
-        &.feedback::before
+        &.help::before
           background-image: url(images/nav/feedback-icon.svg)
         &.more::before
           background-image: url(images/nav/more-icon.svg)

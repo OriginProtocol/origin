@@ -264,10 +264,7 @@ class GrowthWelcome extends Component {
                         onClick={onStoreButtonClick}
                       >
                         {isIOS && (
-                          <img
-                            src="images/growth/app-store.svg"
-                            alt="Origin"
-                          />
+                          <img src="images/growth/app-store.svg" alt="Origin" />
                         )}
                         {!isIOS && (
                           <img
