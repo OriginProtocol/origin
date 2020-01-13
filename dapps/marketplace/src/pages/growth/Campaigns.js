@@ -338,13 +338,20 @@ class GrowthCampaign extends Component {
           }}
           isMobile={isMobile}
         />
-        {navigation === 'currentCampaign' && (
+        {navigation === 'currentCampaign' && activeCampaign && (
           <Campaign
             campaign={activeCampaign}
             accountId={accountId}
             decimalDivision={decimalDivision}
             isMobile={isMobile}
           />
+        )}
+        {navigation === 'currentCampaign' && !activeCampaign && (
+          <div>
+            <h1 className="mb-2 infra/growth/src/apollo/app.jspt-4 mt-4">Campaign has ended</h1>
+            <div className="mt-3">Budget allocated for the last campaign has been reached earlier than expected.</div>
+            <div className="mt-3">Check our <a href="https://discordapp.com/invite/jyxpUSe">#announcements Discord</a> channel for information about future campaigns.</div>
+          </div>
         )}
         {navigation === 'pastCampaigns' && (
           <PastCampaigns
@@ -420,16 +427,18 @@ class GrowthCampaigns extends Component {
                 campaign => campaign.status === 'Active'
               )
 
-              const {
-                completedPurchaseActions,
-                notCompletedPurchaseActions,
-                completedVerificationActions,
-                notCompletedVerificationActions,
-                completedPromotionActions,
-                notCompletedPromotionActions,
-                completedFollowActions,
-                notCompletedFollowActions
-              } = calculatePendingAndAvailableActions(activeCampaign)
+              if (activeCampaign) {
+                const {
+                  completedPurchaseActions,
+                  notCompletedPurchaseActions,
+                  completedVerificationActions,
+                  notCompletedVerificationActions,
+                  completedPromotionActions,
+                  notCompletedPromotionActions,
+                  completedFollowActions,
+                  notCompletedFollowActions
+                } = calculatePendingAndAvailableActions(activeCampaign)
+              }
 
               return (
                 <Query
@@ -451,23 +460,13 @@ class GrowthCampaigns extends Component {
                     }
 
                     return (
-                      <Fragment>
+                      <>
                         {navigation === 'Campaigns' && (
                           <GrowthCampaign
                             campaigns={campaigns}
                             accountId={accountId}
                             decimalDivision={decimalDivision}
                             isMobile={isMobile}
-                            completedVerificationActions={
-                              completedVerificationActions
-                            }
-                            notCompletedVerificationActions={
-                              notCompletedVerificationActions
-                            }
-                            completedPurchaseActions={completedPurchaseActions}
-                            notCompletedPurchaseActions={
-                              notCompletedPurchaseActions
-                            }
                           />
                         )}
                         {navigation === 'invitations' && (
@@ -530,7 +529,7 @@ class GrowthCampaigns extends Component {
                             }
                           />
                         )}
-                      </Fragment>
+                      </>
                     )
                   }}
                 </Query>
