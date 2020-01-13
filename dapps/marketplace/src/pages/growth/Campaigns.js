@@ -354,20 +354,29 @@ class GrowthCampaign extends Component {
               </fbt>
             </h1>
             <div className="mt-3">
-              <fbt desc="growth.campaigns.bidgetReached">
+              <fbt desc="growth.campaigns.budgetReached">
                 Budget allocated for the last campaign has been reached earlier
                 than expected.
               </fbt>
             </div>
             <div className="mt-3">
-              <fbt desc="EventDescription.joinDiscord">
-                Check our{' '}
-                <fbt:param name="discord channel">
-                  <a href="https://discordapp.com/invite/jyxpUSe">
-                    #announcements Discord
+              <fbt desc="EventDescription.checkBlogPost">
+                Read our{' '}
+                <fbt:param name="blog post">
+                  <a href="https://medium.com/originprotocol/holiday-rewards-campaign-ending-soon-as-origins-community-grows-by-100k-members-358cd22da43d">
+                    blog post
                   </a>
-                </fbt:param>{' '}
-                channel for information about future campaigns.
+                </fbt:param>
+                {'.'}
+              </fbt>
+            </div>
+            <div className="mt-3">
+              <fbt desc="EventDescription.joinTelegram">
+                To get the latest updates about Origin Rewards, join our{' '}
+                <fbt:param name="telegram">
+                  <a href="https://t.me/originprotocol">Telegram channel</a>
+                </fbt:param>
+                {'.'}
               </fbt>
             </div>
           </div>
@@ -456,7 +465,7 @@ class GrowthCampaigns extends Component {
                 notCompletedFollowActions = undefined
 
               if (activeCampaign) {
-                ({
+                ;({
                   completedPurchaseActions,
                   notCompletedPurchaseActions,
                   completedVerificationActions,
