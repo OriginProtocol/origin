@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const logger = require('./logger')
 const { lockupBonusRate, lockupDuration } = require('./shared')
 
