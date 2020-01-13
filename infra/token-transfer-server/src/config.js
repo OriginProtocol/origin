@@ -1,5 +1,5 @@
 const logger = require('./logger')
-const { lockupBonusRate, lockupDuration, unlockDate } = require('./shared')
+const { lockupBonusRate, lockupDuration } = require('./shared')
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL || null
 
@@ -44,6 +44,12 @@ const otcPartnerEmails = (
 ).split(',')
 
 const gasPriceMultiplier = process.env.GAS_PRICE_MULTIPLIER
+
+// Unlock date, if undefined assume tokens are locked with an unknown unlock
+// date
+const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
+  ? moment.utc(process.env.UNLOCK_DATE)
+  : undefined
 
 module.exports = {
   discordWebhookUrl,
