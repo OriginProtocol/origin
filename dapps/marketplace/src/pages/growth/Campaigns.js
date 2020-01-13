@@ -349,14 +349,12 @@ class GrowthCampaign extends Component {
         {navigation === 'currentCampaign' && !activeCampaign && (
           <div>
             <h1 className="mb-2 infra/growth/src/apollo/app.jspt-4 mt-4">
-              <fbt desc="growth.campaigns.campaignHasEnded">
-                Campaign has ended
-              </fbt>
+              <fbt desc="growth.campaigns.campaignEnded">Campaign Ended</fbt>
             </h1>
             <div className="mt-3">
               <fbt desc="growth.campaigns.budgetReached">
-                Budget allocated for the last campaign has been reached earlier
-                than expected.
+                The budget allocated for this campaign has been reached. No more
+                tokens are available to earn for this campaign.
               </fbt>
             </div>
             <div className="mt-3">
@@ -371,10 +369,12 @@ class GrowthCampaign extends Component {
               </fbt>
             </div>
             <div className="mt-3">
-              <fbt desc="EventDescription.joinTelegram">
-                To get the latest updates about Origin Rewards, join our{' '}
-                <fbt:param name="telegram">
-                  <a href="https://t.me/originprotocol">Telegram channel</a>
+              <fbt desc="EventDescription.forUpdates">
+                To get the latest updates about Origin Rewards,{' '}
+                <fbt:param name="joinTelegram">
+                  <a href="https://t.me/originprotocol">
+                    join our Telegram channel
+                  </a>
                 </fbt:param>
                 {'.'}
               </fbt>
