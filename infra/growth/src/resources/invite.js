@@ -72,7 +72,7 @@ class GrowthInvite {
    */
   static async makeReferralConnection(code, walletAddress) {
     try {
-      const { referrer } = growth.makeReferralConnection(code, walletAddress)
+      const { referrer } = await growth.makeReferralConnection(code, walletAddress)
       logger.info(
         `Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`
       )

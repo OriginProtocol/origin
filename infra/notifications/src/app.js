@@ -19,10 +19,7 @@ const EmailSender = require('./emailSend')
 const MobileRegistry = require('./models').MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
-const {
-  GrowthReferral,
-  GrowthInviteCode
-} = require('@origin/growth-event/src/models')
+const { growth } = require('@origin/utils')
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
 
@@ -273,21 +270,19 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
       )
     } else if (mobileRegister.referralCode.startsWith('or')) {
       const parts = mobileRegister.referralCode.split(':')
-      const inviteCode = await GrowthInviteCode.findOne({
-        where: {
-          code: parts[1]
-        }
-      })
-      if (inviteCode) {
-        await GrowthReferral.upsert({
-          referrerEthAddress: inviteCode.ethAddress,
-          refereeEthAddress: mobileRegister.ethAddress
-        })
+      const code = parts[1]
+
+      try {
+        const { referrer } = await growth.makeReferralConnection(code, mobileRegister.ethAddress)
         logger.info(
-          `Invite code ${mobileRegister.referralCode} has been used by ${mobileRegister.ethAddress}`
+          `Recorded referral. Referrer: ${referrer} Referee: ${mobileRegister.ethAddress}`
         )
-      } else {
-        logger.warn(`Invite code ${mobileRegister.referralCode} was not found!`)
+      } catch (e) {
+        logger.warn(
+          `Can not make referral connection for user ${mobileRegister.ethAddress}: `,
+          e.message,
+          e.stack
+        )
       }
     } else {
       logger.error(
