@@ -462,6 +462,13 @@ app.post('/events', async (req, res) => {
   res.status(200).send({ status: 'ok' })
 })
 
+// Catch all
+app.all('*', function(req, res) {
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
+})
+
 app.listen(port, () =>
   logger.info(`Notifications server listening at http://localhost:${port}`)
 )

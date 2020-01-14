@@ -349,25 +349,34 @@ class GrowthCampaign extends Component {
         {navigation === 'currentCampaign' && !activeCampaign && (
           <div>
             <h1 className="mb-2 infra/growth/src/apollo/app.jspt-4 mt-4">
-              <fbt desc="growth.campaigns.campaignHasEnded">
-                Campaign has ended
-              </fbt>
+              <fbt desc="growth.campaigns.campaignEnded">Campaign Ended</fbt>
             </h1>
             <div className="mt-3">
-              <fbt desc="growth.campaigns.bidgetReached">
-                Budget allocated for the last campaign has been reached earlier
-                than expected.
+              <fbt desc="growth.campaigns.budgetReached">
+                The budget allocated for this campaign has been reached. No more
+                tokens are available to earn for this campaign.
               </fbt>
             </div>
             <div className="mt-3">
-              <fbt desc="EventDescription.joinDiscord">
-                Check our{' '}
-                <fbt:param name="discord channel">
-                  <a href="https://discordapp.com/invite/jyxpUSe">
-                    #announcements Discord
+              <fbt desc="EventDescription.checkBlogPost">
+                Read our{' '}
+                <fbt:param name="blog post">
+                  <a href="https://medium.com/originprotocol/holiday-rewards-campaign-ending-soon-as-origins-community-grows-by-100k-members-358cd22da43d">
+                    blog post
                   </a>
-                </fbt:param>{' '}
-                channel for information about future campaigns.
+                </fbt:param>
+                {'.'}
+              </fbt>
+            </div>
+            <div className="mt-3">
+              <fbt desc="EventDescription.forUpdates">
+                To get the latest updates about Origin Rewards,{' '}
+                <fbt:param name="joinTelegram">
+                  <a href="https://t.me/originprotocol">
+                    join our Telegram channel
+                  </a>
+                </fbt:param>
+                {'.'}
               </fbt>
             </div>
           </div>
@@ -456,7 +465,8 @@ class GrowthCampaigns extends Component {
                 notCompletedFollowActions = undefined
 
               if (activeCampaign) {
-                ({
+                /* eslint-disable-next-line no-extra-semi */
+                ;({
                   completedPurchaseActions,
                   notCompletedPurchaseActions,
                   completedVerificationActions,
