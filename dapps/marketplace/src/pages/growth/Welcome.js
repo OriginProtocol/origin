@@ -36,13 +36,6 @@ class GrowthWelcome extends Component {
     // code so ignore it.
     inviteCode = inviteCode !== 'onboard' ? inviteCode : undefined
 
-    if (inviteCode && inviteCode.length !== 11) {
-      console.warn(
-        `Unexpected invite code ${inviteCode}. Invite code should be 11 characters long.`
-      )
-      inviteCode = undefined
-    }
-
     const localStorageKey = 'growth_invite_code'
 
     const storedInviteCode = localStorage.getItem(localStorageKey)
