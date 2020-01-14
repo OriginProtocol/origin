@@ -326,7 +326,8 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
               <fbt desc="EnrollmentModal.termsExplanationParagraph1">
-                Earned OGN will be distributed at the end of each campaign at the sole discretion of Origin.
+                Earned OGN will be distributed at the end of each campaign at
+                the sole discretion of Origin.
               </fbt>
             </div>
             <div className="mt-3 normal-line-height terms-body explanation">
