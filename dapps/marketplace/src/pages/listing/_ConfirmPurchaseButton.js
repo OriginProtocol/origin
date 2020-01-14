@@ -34,7 +34,8 @@ const ConfirmPurchaseButton = ({
     messagingStatusLoading ||
     identityLoading ||
     walletLoading ||
-    messagingKeysLoading
+    // wallet should be available for messaging keys to possibly be in loading state
+    (wallet && messagingKeysLoading)
   ) {
     return (
       <button

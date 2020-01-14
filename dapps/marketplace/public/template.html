@@ -28,8 +28,54 @@
   <script>
     localStorage.ognNetwork = "<%= htmlWebpackPlugin.options.network %>"
     localStorage.metaMaskEnabled = "<%= htmlWebpackPlugin.options.metaMask %>"
+
+    const offScreenOffset = {
+      webWidget: {
+        offset: {
+          horizontal: '-100%',
+          vertical: '-100%',
+          mobile: {
+            horizontal: '-100%',
+            vertical: '-100%'
+          }
+        }
+      }
+    }
+
+    window.zESettings = offScreenOffset
+    
+    // override Zendesk widget default behavior
+    window.onload = () => {
+      if (typeof zE === 'undefined') {
+        return
+      }
+
+      function openZendeskChat() {
+        zE.activate()
+        zE('webWidget', 'updateSettings', {
+            webWidget: {
+              offset: {
+                vertical: '0px',
+                horizontal: '0px',
+                mobile: {
+                  vertical: '0px',
+                  horizontal: '0px'
+                }
+              }
+            }
+        })
+      }
+
+      zE('webWidget:on', 'close', function () {
+        zE('webWidget', 'updateSettings', offScreenOffset)
+      })
+
+      window.openZendeskChat = openZendeskChat
+    }
   </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2"></script>
+  <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=28724146-15b3-4832-9439-a90ae062f591"></script>
+
   <script>
     var hostname = window.location.hostname
     window.dataLayer = window.dataLayer || []

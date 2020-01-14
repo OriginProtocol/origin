@@ -119,21 +119,29 @@ const createTelegramAttestation = async ({ message, identity }) => {
     ? `https://t.me/${userProfileData.username}`
     : null
 
+  const userProps = {
+    userId: {
+      raw: String(userProfileData.id)
+    }
+  }
+
+  if (userProfileData.username) {
+    userProps.username = {
+      raw: userProfileData.username
+    }
+
+    userProps.profileUrl = {
+      raw: profileUrl
+    }
+  }
+
   const attestationBody = {
     verificationMethod: {
       oAuth: true
     },
     site: {
       siteName: 'telegram.com',
-      userId: {
-        raw: String(userProfileData.id)
-      },
-      username: {
-        raw: userProfileData.username
-      },
-      profileUrl: {
-        raw: profileUrl
-      }
+      ...userProps
     }
   }
 

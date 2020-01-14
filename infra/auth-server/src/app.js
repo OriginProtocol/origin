@@ -15,6 +15,13 @@ app.use(cors({ origin: true, credentials: true }))
 
 app.use(require('./controllers'))
 
+// Catch all
+app.all('*', function(req, res) {
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
+})
+
 app.listen(5200, () => {
   logger.info('Origin Auth server running on port 5200...')
 })

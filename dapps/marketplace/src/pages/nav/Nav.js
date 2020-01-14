@@ -67,7 +67,8 @@ const Nav = ({
   onShowFooter,
   navbarBlueMode,
   history,
-  isLoggedIn
+  isLoggedIn,
+  onShowHelp
 }) => {
   const [open, setOpen] = useState()
   const [consoleOpen, setConsoleOpen] = useState(false)
@@ -189,6 +190,7 @@ const Nav = ({
           {!isStacked && (
             <Mobile
               {...navProps('mobile')}
+              onShowHelp={onShowHelp}
               onShowFooter={onShowFooter}
               onConsoleClick={() => {
                 setConsoleOpen(!consoleOpen)
