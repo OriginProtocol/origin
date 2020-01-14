@@ -137,7 +137,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      wait-for.sh -t 0 -q services:8545 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/messaging"
 
   ipfs-proxy:
@@ -170,7 +170,7 @@ services:
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
-      - PROVIDER_URL=http://services:8545
+      - PROVIDER_URL=http://services:1111
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - REDIS_URL=redis://redis-master:6379
@@ -185,7 +185,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q services:8545 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run start:listener --prefix infra/discovery"
 
   discovery:
@@ -210,7 +210,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q services:8545 --
+      wait-for.sh -t 0 -q services:1111 --
       node infra/discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix infra/discovery"
 
@@ -222,8 +222,8 @@ services:
       - DOCKER=true
       - NETWORK=docker
       - GRAPHQL_SERVER_PORT=4007
-      - PROVIDER_URL=http://services:8545
-      - PROVIDER_WS_URL=ws://services:8545
+      - PROVIDER_URL=http://services:1111
+      - PROVIDER_WS_URL=ws://services:1111
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
@@ -238,7 +238,7 @@ services:
       - "4007:4007"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q services:8545 --
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix packages/graphql"
 
   notifications:
@@ -277,7 +277,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      wait-for.sh -t 0 -q services:8545 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/notifications"
 
   growth:
@@ -308,7 +308,7 @@ services:
       - "4008:4008"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q services:8545 --
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
       npm run fixtures --prefix infra/growth &&
       npm run start --prefix infra/growth"
 
@@ -362,7 +362,7 @@ services:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       wait-for.sh -t 0 -q redis-master:6379 --
-      wait-for.sh -t 0 -q services:8545 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/bridge"
 
   auth-server:
