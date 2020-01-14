@@ -273,7 +273,10 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
       const code = parts[1]
 
       try {
-        const { referrer } = await growth.makeReferralConnection(code, mobileRegister.ethAddress)
+        const { referrer } = await growth.makeReferralConnection(
+          code,
+          mobileRegister.ethAddress
+        )
         logger.info(
           `Recorded referral. Referrer: ${referrer} Referee: ${mobileRegister.ethAddress}`
         )

@@ -125,7 +125,7 @@ class App extends Component {
         {!hideNavbar && (
           <Nav
             onShowHelp={() => {
-              /* eslint-disable-next-line no-extra-semi */
+              /* eslint-disable-next-line no-undef */
               return openZendeskChat()
             }}
             onShowFooter={() => this.setState({ footer: true })}
@@ -185,7 +185,7 @@ class App extends Component {
           open={this.state.footer}
           onClose={() => this.setState({ footer: false })}
           onShowHelp={() => {
-            /* eslint-disable-next-line no-extra-semi */
+            /* eslint-disable-next-line no-undef */
             return openZendeskChat()
           }}
           locale={this.props.locale}
