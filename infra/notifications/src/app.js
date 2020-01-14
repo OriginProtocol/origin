@@ -17,9 +17,11 @@ const _ = require('lodash')
 const MobilePush = require('./mobilePush')
 const EmailSender = require('./emailSend')
 const MobileRegistry = require('./models').MobileRegistry
-const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
-const { growth } = require('@origin/utils')
+const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
+const {
+  makeReferralConnection
+} = require('@origin/growth-shared/src/resources/referral')
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
 
@@ -273,7 +275,7 @@ app.post('/mobile/register', authMiddleware, async (req, res) => {
       const code = parts[1]
 
       try {
-        const { referrer } = await growth.makeReferralConnection(
+        const { referrer } = await makeReferralConnection(
           code,
           mobileRegister.ethAddress
         )

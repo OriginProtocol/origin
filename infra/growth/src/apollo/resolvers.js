@@ -20,7 +20,7 @@ const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 const { BannedUserError } = require('../util/bannedUserError')
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 
 const requireEnrolledUser = context => {
   if (

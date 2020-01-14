@@ -4,7 +4,9 @@ const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-const { growth } = require('@origin/utils')
+const {
+  makeReferralConnection
+} = require('@origin/growth-shared/src/resources/referral')
 
 const DBToSchemaStatus = {
   Sent: 'Pending',
@@ -72,10 +74,7 @@ class GrowthInvite {
    */
   static async makeReferralConnection(code, walletAddress) {
     try {
-      const { referrer } = await growth.makeReferralConnection(
-        code,
-        walletAddress
-      )
+      const { referrer } = await makeReferralConnection(code, walletAddress)
       logger.info(
         `Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`
       )

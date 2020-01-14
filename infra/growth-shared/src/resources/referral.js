@@ -1,7 +1,7 @@
 const {
   GrowthReferral,
   GrowthInviteCode
-} = require('@origin/growth-event/src/models')
+} = require('@origin/growth-shared/src/models')
 
 async function _getReferrer(code) {
   // Lookup the code.
@@ -13,14 +13,15 @@ async function _getReferrer(code) {
 }
 
 async function makeReferralConnection(code, walletAddress) {
+  walletAddress = walletAddress.toLowerCase()
   const referralLink = await GrowthReferral.findOne({
     where: {
-      refereeEthAddress: walletAddress.toLowerCase()
+      refereeEthAddress: walletAddress
     }
   })
   const referrer = await _getReferrer(code)
 
-  if (referrer === walletAddress.toLowerCase()) {
+  if (referrer === walletAddress) {
     throw new Error(`Referrer ${referrer} can't use own referral code`)
   }
 
@@ -54,7 +55,7 @@ async function makeReferralConnection(code, walletAddress) {
 
   await GrowthReferral.create({
     referrerEthAddress: referrer,
-    refereeEthAddress: walletAddress.toLowerCase()
+    refereeEthAddress: walletAddress
   })
 
   return returnObj
