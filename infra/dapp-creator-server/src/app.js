@@ -101,10 +101,9 @@ app.post('/validate/subdomain', async (req, res) => {
 
 // Catch all
 app.all('*', function(req, res) {
-  res.status(404)
-    .send({
-      errors: ['The page you are looking for does not exist']
-    })
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
 })
 
 app.listen(port, () => logger.info(`Listening on port ${port}`))
