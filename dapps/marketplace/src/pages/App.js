@@ -124,7 +124,7 @@ class App extends Component {
         ) : null}
         {!hideNavbar && (
           <Nav
-            onShowHelp={() => openZendeskChat()}
+            onShowHelp={() => window.openZendeskChat()}
             onShowFooter={() => this.setState({ footer: true })}
             navbarBlueMode={isOnWelcomeAndNotOboard}
           />
@@ -181,7 +181,7 @@ class App extends Component {
         <Footer
           open={this.state.footer}
           onClose={() => this.setState({ footer: false })}
-          onShowHelp={() => openZendeskChat()}
+          onShowHelp={() => window.openZendeskChat()}
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
