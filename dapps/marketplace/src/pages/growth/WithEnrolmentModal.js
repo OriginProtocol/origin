@@ -326,10 +326,7 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
               <fbt desc="EnrollmentModal.termsExplanationParagraph1">
-                Earned OGN will be distributed at the end of each campaign. OGN
-                is currently locked for usage on the Origin platform and cannot
-                be transferred. It is expected that OGN will be unlocked and
-                transferrable in the future.
+                Earned OGN will be distributed at the end of each campaign.
               </fbt>
             </div>
             <div className="mt-3 normal-line-height terms-body explanation">
