@@ -1,3 +1,3 @@
 # `Utils`
 
-Smaller common paces of code used by different packages lie here
+Here are smaller common pieces of code used by different packages
