@@ -1,0 +1,55 @@
+{
+  "name": "@origin/utils",
+  "version": "0.1.0",
+  "description": "Origin utils",
+  "author": "Origin Protocol",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
+  },
+  "dependencies": {
+    "@origin/growth-event": "^0.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.7.7",
+    "@babel/plugin-proposal-class-properties": "7.7.4",
+    "@babel/plugin-proposal-export-default-from": "7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "7.7.7",
+    "@babel/plugin-transform-destructuring": "7.7.4",
+    "@babel/plugin-transform-object-assign": "7.7.4",
+    "@babel/plugin-transform-runtime": "7.7.6",
+    "@babel/preset-env": "7.7.7",
+    "@babel/preset-react": "7.7.4",
+    "@babel/register": "7.7.7",
+    "@babel/runtime": "7.7.7",
+    "cross-fetch": "3.0.4",
+    "eslint": "6.8.0",
+    "mocha": "7.0.0",
+    "nock": "11.7.0",
+    "prettier": "1.19.1",
+    "supertest": "4.0.2",
+    "web3-eth": "1.2.4",
+    "web3": "1.0.0-beta.34"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}

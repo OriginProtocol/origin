@@ -203,7 +203,7 @@ async function createTestData() {
     shortNameKey: 'growth.dec2019.short_name',
     rules: JSON.stringify(decemberConfig),
     startDate: Date.parse('December 1, 2019'), // TODO CHANGE THIS
-    endDate: Date.parse('January 1, 2020'),
+    endDate: Date.parse('January 30, 2020'),
     distributionDate: Date.parse('January 1, 2020'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,

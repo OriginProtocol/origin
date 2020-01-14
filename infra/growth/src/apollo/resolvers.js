@@ -205,7 +205,7 @@ const resolvers = {
         if (args.inviteCode) {
           await GrowthInvite.makeReferralConnection(
             args.inviteCode,
-            args.accountId
+            context.walletAddress
           )
         }
 
