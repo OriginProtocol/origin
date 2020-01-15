@@ -150,7 +150,7 @@ async function deployIdentity(
   // it puts on our IPFS cluster. We still enable those writes in test since a
   // lot of tests rely on the identity data being present in IPFS.
   let ipfsHash
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test' || process.env.DOCKER) {
     ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   } else {
     ipfsHash = 'NOT_UPLOADED'
