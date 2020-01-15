@@ -4,6 +4,9 @@ const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
+const {
+  makeReferralConnection
+} = require('@origin/growth-shared/src/resources/referral')
 
 const DBToSchemaStatus = {
   Sent: 'Pending',
@@ -71,44 +74,7 @@ class GrowthInvite {
    */
   static async makeReferralConnection(code, walletAddress) {
     try {
-      const referralLink = await db.GrowthReferral.findOne({
-        where: {
-          refereeEthAddress: walletAddress.toLowerCase()
-        }
-      })
-      const referrer = await GrowthInvite._getReferrer(code)
-
-      if (referrer === walletAddress.toLowerCase()) {
-        logger.debug(`Referrer ${referrer} can't use own referral code`)
-        return
-      }
-
-      if (
-        referralLink &&
-        referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()
-      ) {
-        /* The referrer associated with the invite code does not match previously stored referrer.
-         * A corner case scenario this might happen is as follow:
-         *  - referee receives multiple invites.
-         *  - referee clicks on an invite and enrolls into growth campaing
-         *  - referee clicks on another invite link and enrolls again into
-         *  growth campaign.
-         *
-         * When this happens we ignore the subsequent invites and attribute all
-         * referees actions to the initial referrer.
-         *
-         */
-        logger.warn(
-          `Referee ${walletAddress} already referred by ${referralLink.referrerEthAddress}`
-        )
-        return
-      }
-
-      await db.GrowthReferral.create({
-        referrerEthAddress: referrer,
-        refereeEthAddress: walletAddress.toLowerCase()
-      })
-
+      const { referrer } = await makeReferralConnection(code, walletAddress)
       logger.info(
         `Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`
       )
