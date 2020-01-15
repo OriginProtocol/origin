@@ -59,6 +59,7 @@ services:
       - ./packages/validator:/app/packages/validator/
       - ./packages/token/:/app/packages/token/
       - ./packages/auth-client/:/app/packages/auth-client/
+      - ./packages/utils/:/app/packages/utils/
       # Infrastructure packages
       - ./infra/bridge/:/app/infra/bridge/
       - ./infra/discovery/:/app/infra/discovery/
@@ -66,7 +67,7 @@ services:
       - ./infra/messaging/:/app/infra/messaging/
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
-      - ./infra/growth-event/:/app/infra/growth-event/
+      - ./infra/growth-shared/:/app/infra/growth-shared/
       - ./infra/identity/:/app/infra/identity/
       - ./infra/auth-server/:/app/infra/auth-server/
       - ./packages/auth-utils/:/app/packages/auth-utils/
@@ -90,7 +91,7 @@ services:
       - /app/infra/messaging/node_modules/
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
-      - /app/infra/growth-event/node_modules/
+      - /app/infra/growth-shared/node_modules/
       - /app/infra/identity/node_modules/
       - /app/infra/auth-server/node_modules/
       - /app/packages/auth-utils/node_modules/
@@ -110,7 +111,7 @@ services:
       >
       /bin/bash -c "npm run migrate --prefix infra/discovery &&
       npm run migrate --prefix infra/growth &&
-      npm run migrate --prefix infra/growth-event &&
+      npm run migrate --prefix infra/growth-shared &&
       npm run migrate --prefix infra/identity &&
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&

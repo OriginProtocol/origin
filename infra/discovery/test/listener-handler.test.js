@@ -3,8 +3,8 @@ const sinon = require('sinon')
 const expect = chai.expect
 const esmImport = require('esm')(module)
 
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
-const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
 
 const graphqlClient = esmImport('@origin/graphql').default
 
