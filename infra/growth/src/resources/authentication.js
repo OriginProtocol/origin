@@ -201,11 +201,10 @@ async function createInviteCode(accountId) {
    * IMPORTANT: Frontend expects 11 letter invite code. Be mindful of that
    * if changing invite code creation logic
    */
-  const code = (
+  const code =
     `${accountId.substring(2, 5)}` +
     `${accountId.substring(accountId.length - 3, accountId.length)}` +
     `${Math.round(Math.random() * 1000000).toString(16)}`
-  ).padEnd('1')
 
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
