@@ -30,9 +30,7 @@ async function makeReferralConnection(code, walletAddress) {
   }
 
   if (referralLink) {
-    if (
-      referralLink.referrerEthAddress !== referrer
-    ) {
+    if (referralLink.referrerEthAddress !== referrer) {
       /* The referrer associated with the invite code does not match previously stored referrer.
        * A corner case scenario this might happen is as follow:
        *  - referee receives multiple invites.
