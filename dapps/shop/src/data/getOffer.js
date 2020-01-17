@@ -5,8 +5,7 @@ async function getOfferFromReceipt(tx, password, config) {
   let encryptedHash, fullOfferId, offer
 
   if (tx.indexOf('0x') === 0) {
-    const NetId = context.config.networkId
-    const ListingId = _get(config, `networks[${NetId}].listingId`)
+    const ListingId = _get(config, `listingId`)
     const MarketplaceId = ListingId.split('-')[1]
 
     const web3 = context.web3
