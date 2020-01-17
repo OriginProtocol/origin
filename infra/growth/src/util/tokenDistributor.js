@@ -116,19 +116,25 @@ class TokenDistributor {
     const approveTxHash = await this.token.approveMulti(total, { gasPrice })
     logger.info(`Sent approval tx to the network. txHash=${txHash}`)
     const { approveStatus, _ } = await this.token.waitForTxConfirmation(
-      approveTxHash, {
-      numBlocks: NumBlockConfirmation,
-      timeoutSec: ConfirmationTimeoutSec
-    })
+      approveTxHash,
+      {
+        numBlocks: NumBlockConfirmation,
+        timeoutSec: ConfirmationTimeoutSec
+      }
+    )
     if (approveStatus !== 'confirmed') {
-      throw new Error(`Approve failure. txStatus=${approveStatus} txHash=${approveTxHash}`)
+      throw new Error(
+        `Approve failure. txStatus=${approveStatus} txHash=${approveTxHash}`
+      )
     }
     logger.info('Approval success')
 
     //
     // Step 2: Send the multi-transfers tx and wait for its confirmation.
     ///
-    const txHash = await this.token.creditMulti(addresses, amounts, { gasPrice, })
+    const txHash = await this.token.creditMulti(addresses, amounts, {
+      gasPrice
+    })
     logger.info(`Sent creditMulti tx to the network. txHash=${txHash}`)
 
     const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
@@ -145,7 +151,10 @@ class TokenDistributor {
     logger.info('  GasMultiplier:         ', this.gasPriceMultiplier)
     logger.info('  GasPrice:              ', gasPrice.toFixed())
     logger.info('  Total Amount (natural):', total.toFixed())
-    logger.info('  Total Amount (token):  ' , this.token.toTokenUnit(total).toFixed())
+    logger.info(
+      '  Total Amount (token):  ',
+      this.token.toTokenUnit(total).toFixed()
+    )
     logger.info('  TxHash:                ', receipt.transactionHash)
     logger.info('  BlockNumber:           ', receipt.blockNumber)
     logger.info('  From:                  ', this.supplier)
