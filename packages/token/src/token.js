@@ -114,7 +114,6 @@ class Token {
     })
   }
 
-
   /**
    * Approves the TokenDistributor contract to send up to <value> OGN.
    * Must be called before calling creditMulti.
@@ -122,9 +121,12 @@ class Token {
    * @param {Object} opts - Options. For example gasPrice.
    * @returns {string} - Transaction hash
    */
-  async approveMulti(value, opts={}) {
+  async approveMulti(value, opts = {}) {
     const supplier = await this.defaultAccount()
-    const tx = this.contract.methods.approve(this.distributorContractAddress, value)
+    const tx = this.contract.methods.approve(
+      this.distributorContractAddress,
+      value
+    )
     return this.sendTx(tx, { from: supplier, ...opts })
   }
 
@@ -136,7 +138,7 @@ class Token {
    * @throws Throws an error if the operation failed.
    * @returns {string} - Transaction hash
    */
-  async creditMulti(addresses, values, opts={}) {
+  async creditMulti(addresses, values, opts = {}) {
     if (addresses.length !== values.length) {
       throw new Error('Addresses and values must have the same length')
     }
@@ -146,7 +148,9 @@ class Token {
     const total = values.map(v => BigNumber(v)).reduce((v1, v2) => v1.plus(v2))
     const balance = await this.contract.methods.balanceOf(supplier).call()
     if (BigNumber(total).gt(balance)) {
-      throw new Error(`Supplier ${supplier} balance is too low: ${balance} Need: ${total}`)
+      throw new Error(
+        `Supplier ${supplier} balance is too low: ${balance} Need: ${total}`
+      )
     }
 
     // Check the token contract is not paused.
@@ -156,7 +160,11 @@ class Token {
     }
 
     // Send the transaction to the network and return the tx hash.
-    const tx = this.distributorContract.methods.transfer(this.contractAddress, addresses, values)
+    const tx = this.distributorContract.methods.transfer(
+      this.contractAddress,
+      addresses,
+      values
+    )
     return this.sendTx(tx, { from: supplier, ...opts })
   }
 
@@ -181,18 +189,14 @@ class Token {
    * @returns {string} - Transaction hash.
    */
   async sendTx(transaction, opts = {}) {
-    console.log("IN SENDTX")
     if (!opts.from) {
       opts.from = await this.defaultAccount()
     }
 
     if (!opts.gas) {
-      console.log("ESTIMATING GAS")
       opts.gas = await transaction.estimateGas({ from: opts.from })
       logger.info('Estimated gas:', opts.gas)
-      console.log("ESTIMATED GAS:", opts.gas)
     }
-    console.log("GAS:", opts.gas)
 
     if (opts.gasPrice) {
       logger.info('Fixed gas price:', opts.gasPrice)
