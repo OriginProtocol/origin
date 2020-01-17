@@ -17,16 +17,16 @@ const loadedIVs = {}
 /**
  * Get already loaded initialization vector or create one
  *
- * @param {number} storeId
+ * @param {number} shopId
  * @returns {Buffer}
  */
-function getIV(storeId) {
+function getIV(shopId) {
   let iv
-  if (typeof loadedIVs[storeId] === 'undefined') {
+  if (typeof loadedIVs[shopId] === 'undefined') {
     iv = crypto.randomBytes(IV_LENGTH)
   }
-  // only store it if we've been given an ID
-  if (storeId) loadedIVs[storeId] = iv
+  // only shop it if we've been given an ID
+  if (shopId) loadedIVs[shopId] = iv
   return iv
 }
 
@@ -89,11 +89,11 @@ function decryptJSON(iv, enc) {
 }
 
 /**
- * Create a Store record in the DB with provided name and config
+ * Create a Shop record in the DB with provided name and config
  *
- * @param {string} name - store name
- * @param {Object} configObj - config object to store
- * @returns {Object} - Store model instance
+ * @param {string} name - shop name
+ * @param {Object} configObj - config object to shop
+ * @returns {Object} - Shop model instance
  */
 async function create(name, configObj) {
   const iv = getIV()
@@ -102,32 +102,60 @@ async function create(name, configObj) {
     name,
     config: [iv, encryptedConf].join(':')
   })
-  if (!record.id) throw new Error('Store does not have an id, something failed!')
+  if (!record.id) throw new Error('Shop does not have an id, something failed!')
 
-  const storeId = record.id
-  loadedConfigs[storeId] = configObj
-  loadedIVs[storeId] = iv
+  const shopId = record.id
+  loadedConfigs[shopId] = configObj
+  loadedIVs[shopId] = iv
 
   return record
 }
 
 /**
- * Save a Store record in the DB
+ * Create cnofig on a Shop record in the DB with provided config
  *
- * @param {number} storeId - store ID
- * @returns {Object} - Store model instance
+ * @param {number} shopId - shop ID
+ * @param {Object} configObj - config object to shop
+ * @returns {Object} - Shop model instance
  */
-async function save(storeId) {
-  const record = await Shop.findOne({ where: { store_id: storeId } })
-  if (!record) throw new Error('Store does not exist')
+async function createConfig(shopId, configObj) {
+  const iv = getIV()
+  const encryptedConf = encryptJSON(iv, configObj)
+  const record = await Shop.update({
+    config: [iv, encryptedConf].join(':')
+  }, {
+    where: {
+      id: shopId
+    }
+  })
+
+  if (!record || record[0] === 0) {
+    throw new Error('Shop does not have an id, something failed!')
+  }
+
+  loadedConfigs[shopId] = configObj
+  loadedIVs[shopId] = iv
+
+  return record
+}
+
+/**
+ * Save a Shop record in the DB
+ *
+ * @param {number} shopId - shop ID
+ * @returns {Object} - Shop model instance
+ */
+async function save(shopId) {
+  const record = await Shop.findOne({ where: { id: shopId } })
+  if (!record) throw new Error('Shop does not exist')
 
   // Skip if we don't have any config
-  if (typeof loadedConfigs[storeId] === 'undefined') return record
-  if (typeof loadedIVs[storeId] === 'undefined') throw new Error('Missing initialization vector?')
+  if (typeof loadedConfigs[shopId] === 'undefined') return record
+  if (typeof loadedIVs[shopId] === 'undefined') throw new Error('Missing initialization vector?')
 
   record.config = [
-    loadedIVs[storeId],
-    encryptJSON(loadedIVs[storeId], loadedConfigs[storeId])
+    loadedIVs[shopId].toString('hex'),
+    encryptJSON(loadedIVs[shopId], loadedConfigs[shopId])
   ].join(':')
 
   await record.save({ fields: ['config'] })
@@ -136,53 +164,56 @@ async function save(storeId) {
 }
 
 /**
- * Load a Store record from the DB
+ * Load a Shop record from the DB
  *
- * @param {number} storeId - store ID
- * @param {boolean} force - bypass cache if there's a cached Store
- * @returns {Object} - Store model instance
+ * @param {number} shopId - shop ID
+ * @param {boolean} force - bypass cache if there's a cached Shop
+ * @returns {Object} - Shop model instance
  */
-async function load(storeId, force = false) {
-  const record = await Shop.findOne({ where: { store_id: storeId } })
-  if (!force && typeof loadedConfigs[storeId] !== 'undefined') return record
+async function load(shopId, force = false) {
+  const record = await Shop.findOne({ where: { id: shopId } })
+  if (!force && typeof loadedConfigs[shopId] !== 'undefined') return record
   if (!record.config) {
-    loadedConfigs[storeId] = {}
+    await createConfig(shopId, {})
     return null
   }
   
   const [iv, encryptedConf] = record.config.split(':')
-  loadedIVs[storeId] = iv
-  loadedConfigs[storeId] = decryptJSON(storeId, encryptedConf)
+  loadedIVs[shopId] = Buffer.from(iv)
+  loadedConfigs[shopId] = decryptJSON(iv, encryptedConf)
+
+  console.log('iv: ', loadedIVs[shopId])
+  console.log('encryptedConf: ', encryptedConf)
   
   return record
 }
 
 /**
- * Load and save a Store config from a dotenv configuration
+ * Load and save a Shop config from a dotenv configuration
  *
- * @param {number} storeId - store ID
+ * @param {number} shopId - shop ID
  * @param {string} filename - full path to dotenv file
- * @returns {Object} - Store model instance
+ * @returns {Object} - Shop model instance
  */
-async function loadFromEnv(storeId, filename) {
+async function loadFromEnv(shopId, filename) {
   const rawConfig = dotenv.parse(await readFileAsync(filename))
 
   for (const k in rawConfig) {
     // TODO: toLowerCase right here?
-    loadedConfigs[storeId][k.toLowerCase()] = rawConfig[k]
+    loadedConfigs[shopId][k.toLowerCase()] = rawConfig[k]
   }
 
-  return await save(storeId)
+  return await save(shopId)
 }
 
 /**
- * Create a Store record and config from a dotenv configuration
+ * Create a Shop record and config from a dotenv configuration
  *
- * @param {number} storeId - store ID
+ * @param {number} shopId - shop ID
  * @param {string} filename - full path to dotenv file
- * @returns {Object} - Store model instance
+ * @returns {Object} - Shop model instance
  */
-async function createFromEnv(storeName, filename) {
+async function createFromEnv(shopName, filename) {
   const rawConfig = dotenv.parse(await readFileAsync(filename))
   const config = {}
 
@@ -191,7 +222,7 @@ async function createFromEnv(storeName, filename) {
     config[k.toLowerCase()] = rawConfig[k]
   }
 
-  const record = await create(storeName, config)
+  const record = await create(shopName, config)
 
   loadedConfigs[record.id] = config
 
@@ -199,40 +230,56 @@ async function createFromEnv(storeName, filename) {
 }
 
 /**
- * Set a config value for a store
+ * Set a config value for a shop
  *
- * @param {number} storeId - store ID
+ * @param {number} shopId - shop ID
  * @param {string} key - configuration key
  * @param {T} val - value to set the config key to
  * @param {boolean} autosave - whether or not to persist the config
  */
-async function set(storeId, key, val, autosave = true) {
-  await load(storeId)
-  loadedConfigs[storeId][key] = val
-  if (autosave) await save(storeId)
+async function set(shopId, key, val, autosave = true) {
+  await load(shopId)
+  loadedConfigs[shopId][key] = val
+  if (autosave) await save(shopId)
 }
 
 /**
- * Get a config value for a store
+ * Set many config keys with an object
  *
- * @param {number} storeId - store ID
+ * @param {number} shopId - shop ID
+ * @param {object} conf - configuration object
+ * @param {boolean} autosave - whether or not to persist the config
+ */
+async function assign(shopId, conf, autosave = true) {
+  await load(shopId)
+  loadedConfigs[shopId] = {
+    ...loadedConfigs[shopId],
+    ...conf
+  }
+  if (autosave) await save(shopId)
+}
+
+/**
+ * Get a config value for a shop
+ *
+ * @param {number} shopId - shop ID
  * @param {string} key - configuration key
  * @returns {T} value set to the configuration key
  */
-async function get(storeId, key) {
-  await load(storeId)
-  return loadedConfigs[storeId][key]
+async function get(shopId, key) {
+  await load(shopId)
+  return loadedConfigs[shopId][key]
 }
 
 /**
- * Dump an entire config for a store
+ * Dump an entire config for a shop
  *
- * @param {number} storeId - store ID
- * @returns {Object} store config
+ * @param {number} shopId - shop ID
+ * @returns {Object} shop config
  */
-async function dump(storeId) {
-  await load(storeId)
-  return loadedConfigs[storeId]
+async function dump(shopId) {
+  await load(shopId)
+  return loadedConfigs[shopId]
 }
 
 module.exports = {
@@ -244,7 +291,9 @@ module.exports = {
   load,
   loadFromEnv,
   createFromEnv,
+  createConfig,
   set,
+  assign,
   get,
   dump
 }
