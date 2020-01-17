@@ -1,6 +1,8 @@
 const BigNumber = require('bignumber.js')
 
 const TokenContract = require('@origin/contracts/releases/latest/build/contracts/OriginToken.json')
+const DistributorContract = require('@origin/contracts/releases/latest/build/contracts/TokenDistributor.json')
+
 const { createProvider } = require('./config')
 const logger = require('./logger')
 
@@ -42,10 +44,17 @@ class Token {
         `OGN contract address for network ${networkId} not found.`
       )
     }
+    // OGN contract.
     this.contractAddress = addresses.OGN
     this.contract = new this.web3.eth.Contract(
       TokenContract.abi,
       this.contractAddress
+    )
+    // TokenDistributor contract.
+    this.distributorContractAddress = addresses.TokenDistributor
+    this.distributorContract = new this.web3.eth.Contract(
+      DistributorContract.abi,
+      this.distributorContractAddress
     )
   }
 
@@ -105,6 +114,52 @@ class Token {
     })
   }
 
+
+  /**
+   * Approves the TokenDistributor contract to send up to <value> OGN.
+   * Must be called before calling creditMulti.
+   * @param {BigNumber|int} value - Value to approve
+   * @param {Object} opts - Options. For example gasPrice.
+   * @returns {string} - Transaction hash
+   */
+  async approveMulti(value, opts={}) {
+    const supplier = await this.defaultAccount()
+    const tx = this.contract.methods.approve(this.distributorContractAddress, value)
+    return this.sendTx(tx, { from: supplier, ...opts })
+  }
+
+  /**
+   * Sends tokens to multiple addresses.
+   * @params {Array<string>} addresses - Addresses of the recipients.
+   * @params {Array<BigNumber|int>} values - Value to credit to each recipient, in natural unit.
+   * @params {Object} opts - Options. For example gasPrice.
+   * @throws Throws an error if the operation failed.
+   * @returns {string} - Transaction hash
+   */
+  async creditMulti(addresses, values, opts={}) {
+    if (addresses.length !== values.length) {
+      throw new Error('Addresses and values must have the same length')
+    }
+
+    // Check the supplier's balance can cover the total of the transfers.
+    const supplier = await this.defaultAccount()
+    const total = values.map(v => BigNumber(v)).reduce((v1, v2) => v1.plus(v2))
+    const balance = await this.contract.methods.balanceOf(supplier).call()
+    if (BigNumber(total).gt(balance)) {
+      throw new Error(`Supplier ${supplier} balance is too low: ${balance} Need: ${total}`)
+    }
+
+    // Check the token contract is not paused.
+    const paused = await this.contract.methods.paused().call()
+    if (paused) {
+      throw new Error('Token transfers are paused')
+    }
+
+    // Send the transaction to the network and return the tx hash.
+    const tx = this.distributorContract.methods.transfer(this.contractAddress, addresses, values)
+    return this.sendTx(tx, { from: supplier, ...opts })
+  }
+
   /**
    * Computes gas price by getting the default price from web3
    * (which is the last few blocks median gas price) and applying a ratio.
@@ -126,14 +181,18 @@ class Token {
    * @returns {string} - Transaction hash.
    */
   async sendTx(transaction, opts = {}) {
+    console.log("IN SENDTX")
     if (!opts.from) {
       opts.from = await this.defaultAccount()
     }
 
     if (!opts.gas) {
+      console.log("ESTIMATING GAS")
       opts.gas = await transaction.estimateGas({ from: opts.from })
       logger.info('Estimated gas:', opts.gas)
+      console.log("ESTIMATED GAS:", opts.gas)
     }
+    console.log("GAS:", opts.gas)
 
     if (opts.gasPrice) {
       logger.info('Fixed gas price:', opts.gasPrice)
