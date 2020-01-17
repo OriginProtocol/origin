@@ -115,7 +115,7 @@ class TokenDistributor {
     //
     const approveTxHash = await this.token.approveMulti(total, { gasPrice })
     logger.info(`Sent approval tx to the network. txHash=${txHash}`)
-    const { approveStatus, _ } = await this.token.waitForTxConfirmation(
+    const { approveStatus } = await this.token.waitForTxConfirmation(
       approveTxHash,
       {
         numBlocks: NumBlockConfirmation,
