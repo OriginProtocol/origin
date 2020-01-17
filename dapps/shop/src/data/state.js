@@ -139,8 +139,7 @@ const reducer = (state, action) => {
   newState.cart.total = newState.cart.subTotal + shipping - discount
 
   localStorage.cart = JSON.stringify(pick(newState, 'cart'))
-  // console.log(newState)
-  console.log('reduce', { action, state, newState })
+  // console.log('reduce', { action, state, newState })
   return cloneDeep(newState)
 }
 

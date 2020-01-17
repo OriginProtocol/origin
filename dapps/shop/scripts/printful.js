@@ -111,6 +111,7 @@ async function createMockupTask(id, data) {
   const json = await res.json()
   console.log(JSON.stringify(json.result, null, 2))
 }
+
 async function getTask(id) {
   const res = await fetch(
     `${PrintfulURL}/mockup-generator/task?task_key=${id}`,
@@ -165,42 +166,40 @@ async function getMockTemplate(id) {
 // confirmOrder('25224837')
 // getSyncProducts()
 // getSyncProduct(116035497)
-getSyncVariant(1310137968)
+// getSyncVariant(1310137968)
 // getMockTemplate(71)
 // getPrintFiles(71)
-// createMockupTask(71, {
-//   variant_ids: [8466],
+// createMockupTask(248, {
+//   variant_ids: [8629],
 //   format: 'jpg',
-//   option_groups: ["Men's"],
+//   option_groups: ['Flat'],
 //   files: [
 //     {
 //       placement: 'front',
-//       image_url:
-//         'https://files.cdn.printful.com/files/cd3/cd3547ed568ff559f8071ba12fffe15e_preview.png',
+//       image_url: ''
 //       position: {
-//         area_width: 1800,
-//         area_height: 2400,
-//         width: 1768,
-//         height: 2015,
-//         top: 0,
-//         left: 0
+//         area_width: 294,
+//         area_height: 390,
+//         width: 194,
+//         height: 72,
+//         top: 37,
+//         left: 52
 //       }
 //     },
 //     {
 //       placement: 'back',
-//       image_url:
-//         'https://files.cdn.printful.com/files/0ac/0acbe8ff13b0429e4a951deb267512b3_preview.png',
+//       image_url: '',
 //       position: {
-//         area_width: 1800,
-//         area_height: 2400,
-//         width: 1800,
-//         height: 575,
+//         area_width: 295,
+//         area_height: 392,
+//         width: 87,
+//         height: 333,
 //         top: 0,
-//         left: 0
+//         left: 105
 //       }
 //     }
 //   ]
 // })
-// getTask('za5104e6c3414f18f3b912e154ebe1f1')
+getTask('z12e569d08f91ec9282162bf6e87e5f9')
 // getFiles()
 // getFile(153461378)

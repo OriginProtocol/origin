@@ -5,29 +5,21 @@ const WebSocket = require('ws')
 const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
-const abi = require('./utils/_abi')
-const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
 
 const { Network, Transactions, Orders } = require('./data/db')
+const abi = require('./utils/_abi')
+const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
 const sendMail = require('./utils/emailer')
 
-const web3 = new Web3()
-
-const Marketplace = new web3.eth.Contract(abi)
-const MarketplaceABI = Marketplace._jsonInterface
 const localContract = process.env.MARKETPLACE_CONTRACT
+const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
 const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
   ? process.env.PGP_PRIVATE_KEY
   : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
-const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
 
-const SubscribeToLogs = address =>
-  JSON.stringify({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'eth_subscribe',
-    params: ['logs', { address, topics: [] }]
-  })
+const web3 = new Web3()
+const Marketplace = new web3.eth.Contract(abi)
+const MarketplaceABI = Marketplace._jsonInterface
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -35,6 +27,17 @@ const SubscribeToNewHeads = JSON.stringify({
   method: 'eth_subscribe',
   params: ['newHeads']
 })
+
+const SubscribeToLogs = ({ address, listingId }) => {
+  const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+  console.log('SubscribeToLogs', { address, listingTopic })
+  return JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'eth_subscribe',
+    params: ['logs', { address, topics: [null, null, listingTopic] }]
+  })
+}
 
 const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
   const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
@@ -53,8 +56,10 @@ const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
   }
   return JSON.stringify(rpc)
 }
+
 const netId = config.network
 let ws
+
 async function connectWS() {
   let lastBlock
   const siteConfig = await config.getSiteConfig()
@@ -102,7 +107,12 @@ async function connectWS() {
   ws.on('open', function open() {
     console.log('Connection open')
     this.heartbeat()
-    ws.send(SubscribeToLogs(siteConfig.marketplaceContract || localContract))
+    ws.send(
+      SubscribeToLogs({
+        address: siteConfig.marketplaceContract || localContract,
+        listingId
+      })
+    )
     ws.send(SubscribeToNewHeads)
   })
 
