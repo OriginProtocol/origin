@@ -1,4 +1,7 @@
+/* eslint-disable */
+
 const fs = require('fs')
+const fetch = require('node-fetch')
 const get = require('lodash/get')
 const https = require('https')
 

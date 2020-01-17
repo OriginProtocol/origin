@@ -1,4 +1,5 @@
 const fs = require('fs')
+const fetch = require('node-fetch')
 
 async function getProduct({ PrintfulURL, apiAuth, OutputDir, id }) {
   const res = await fetch(`${PrintfulURL}/sync/products/${id}`, {

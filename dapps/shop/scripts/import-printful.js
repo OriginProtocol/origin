@@ -1,11 +1,17 @@
+/* eslint-disable */
+
 require('dotenv').config()
 const program = require('commander')
 const fs = require('fs')
+const https = require('https')
+const sharp = require('sharp')
 
 const getProducts = require('./printful/getProducts')
 const getProduct = require('./printful/getProduct')
 const getVariant = require('./printful/getVariant')
+const getMockups = require('./printful/getMockups')
 const writeProductData = require('./printful/writeProductData')
+const writeInternalData = require('./printful/writeInternalData')
 
 program.requiredOption('-s, --site <site>', 'Site name')
 
@@ -39,8 +45,8 @@ async function getProductSyncIds(id) {
 }
 
 async function downloadProductData() {
-  await getProducts({ PrintfulURL, apiAuth, OutputDir })
   fs.mkdirSync(`${OutputDir}/data-printful`, { recursive: true })
+  await getProducts({ PrintfulURL, apiAuth, OutputDir })
   const ids = await getProductIds()
   for (const id of ids) {
     await getProduct({ PrintfulURL, apiAuth, OutputDir, id })
@@ -94,14 +100,54 @@ async function writePrintfulIds() {
   )
 }
 
+async function downloadPrintfulMockups({ OutputDir }) {
+  console.log('Downloading mockups...')
+  const filesRaw = fs.readFileSync(`${OutputDir}/printful-images.json`)
+  const files = JSON.parse(filesRaw)
+
+  for (const file of files) {
+    const prefix = `${OutputDir}/data/${file.id}/orig`
+    fs.mkdirSync(prefix, { recursive: true })
+
+    const f = fs.createWriteStream(`${prefix}/${file.file}`)
+    https.get(file.url, response => response.pipe(f))
+  }
+}
+
+async function resizePrintfulMockups({ OutputDir }) {
+  console.log('Resizing mockups...')
+  const filesRaw = fs.readFileSync(`${OutputDir}/printful-images.json`)
+  const files = JSON.parse(filesRaw)
+
+  for (const file of files) {
+    const inputDir = `${OutputDir}/data/${file.id}/orig`
+    const outputFileDir = `${OutputDir}/data/${file.id}/520`
+
+    fs.mkdirSync(outputFileDir, { recursive: true })
+    const images = fs.readdirSync(inputDir)
+    console.log(images)
+    for (const image of images) {
+      if (!fs.existsSync(`${outputFileDir}/${image}`)) {
+        const resizedFile = await sharp(`${inputDir}/${image}`)
+          .resize(520)
+          .toBuffer()
+
+        fs.writeFileSync(`${outputFileDir}/${image}`, resizedFile)
+      }
+    }
+  }
+}
+
 async function start() {
   // await downloadProductData()
+  // await downloadVariantData()
+  // await writeProductData({ OutputDir })
+  // await downloadPrintfulMockups({ OutputDir })
+  // await resizePrintfulMockups({ OutputDir })
+  // await writeInternalData({ OutputDir })
+  // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })
   // await writeShopifyToPrintful()
   // await writePrintfulIds()
-  await writeProductData({ OutputDir })
-  // await writeInternalData()
-  // await getMockups('151902453')
-  // await downloadVariantData()
 }
 
 start()

@@ -15,11 +15,12 @@ async function writeProductData({ OutputDir }) {
       `${OutputDir}/data-printful/variant-${firstVariantId}.json`
     )
     const variant = JSON.parse(variantRaw)
-    console.log('var ', variant.product.description)
 
     let handle = product.sync_product.name
       .toLowerCase()
       .replace(/[^0-9a-z]/g, '-')
+      .replace(/^-+/, '')
+      .replace(/--+/g, '-')
     const origHandle = handle
 
     for (let n = 1; productsOut.find(p => p.id === handle); n++) {
@@ -29,9 +30,7 @@ async function writeProductData({ OutputDir }) {
     const img = product.sync_variants[0].files.find(f => f.type === 'preview')
       .preview_url
 
-    downloadImages.push(
-      `curl "${img}" --create-dirs -o data/${handle}/orig/img-0.png `
-    )
+    downloadImages.push({ id: `${handle}`, file: `img-0.png`, url: img })
 
     const out = {
       id: handle,
@@ -95,7 +94,10 @@ async function writeProductData({ OutputDir }) {
       JSON.stringify(collections, null, 2)
     )
   }
-  fs.writeFileSync(`${OutputDir}/download-images.sh`, downloadImages.join('\n'))
+  fs.writeFileSync(
+    `${OutputDir}/printful-images.json`,
+    JSON.stringify(downloadImages, null, 4)
+  )
 }
 
 module.exports = writeProductData

@@ -73,7 +73,7 @@ ensure this does not happen.
 
     # Switch to 'hobby' type dyno to prevent sleeping ($7/month)
 
-    heroku ps:type worker=hobby
+    heroku ps:type hobby
 
 ## PGP/GPG Key Export
 
