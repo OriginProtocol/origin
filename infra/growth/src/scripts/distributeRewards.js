@@ -4,6 +4,7 @@
 
 const BigNumber = require('bignumber.js')
 const Logger = require('logplease')
+const _chunk = require('lodash/chunk')
 const Sequelize = require('sequelize')
 
 const db = require('../models')
@@ -36,15 +37,7 @@ class DistributeRewards {
     }
   }
 
-  /**
-   * Pays out the sum of the rewards to the user.
-   *
-   * @param {string} ethAddress
-   * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<BigNumber>} Payout amount.
-   * @private
-   */
-  async _distributeRewards(ethAddress, rewards) {
+  async _preparePayout(ethAddress, rewards) {
     // Paranoia consistency checks
     if (!rewards || rewards.length < 1) {
       throw new Error(`Expected at least 1 reward for ${ethAddress}`)
@@ -70,7 +63,7 @@ class DistributeRewards {
     }
 
     // Sum up the reward amount.
-    let amount = rewards
+    const amount = rewards
       .map(reward => BigNumber(reward.amount))
       .reduce((a1, a2) => a1.plus(a2))
     const amountTokenUnit = this.distributor.token.toTokenUnit(amount)
@@ -126,8 +119,23 @@ class DistributeRewards {
       currency
     })
 
+    return { amount, payout }
+  }
+
+  /**
+   * Pays out the sum of the rewards to a user.
+   * Throws in case of an error.
+   *
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthReward>} rewards
+   * @returns {Promise<BigNumber>} Total payout amount.
+   * @private
+   */
+  async _distributeRewards(ethAddress, rewards) {
+    const { amount, payout } = await this._preparePayout(ethAddress, rewards)
+
     // Send a blockchain transaction to payout the reward to the participant.
-    let status, txnHash, txnReceipt
+    let txnReceipt, error
     try {
       if (this.config.doIt) {
         txnReceipt = await this.distributor.credit(ethAddress, amount)
@@ -141,29 +149,103 @@ class DistributeRewards {
     } catch (e) {
       logger.error('Credit failed: ', e)
     }
+    const updates = {}
     if (txnReceipt && txnReceipt.status) {
-      status = enums.GrowthPayoutStatuses.Paid
-      txnHash = txnReceipt.transactionHash
+      updates.status = enums.GrowthPayoutStatuses.Paid
+      updates.txnHash = txnReceipt.transactionHash
     } else {
+      error = true
       logger.error(
         `EVM reverted transaction - Marking payout id ${payout.id} as Failed`
       )
-      status = enums.GrowthPayoutStatuses.Failed
-      txnHash = null
-      amount = 0
+      updates.status = enums.GrowthPayoutStatuses.Failed
     }
 
-    // Update the status of the payout row.
+    // Update the status of the payout.
     try {
-      await payout.update({ status, txnHash })
+      await payout.update(updates)
     } catch (e) {
       logger.error(`IMPORTANT: failed updating payout id ${payout.id} status.`)
       logger.error(`Need manual intervention.`)
       throw e
     }
 
+    if (error) {
+      logger.error('Payout failure')
+      throw new Error(`Failure. Check payout ${payout.id}`)
+    }
+
     this.stats.numTxns++
     return amount
+  }
+
+  /**
+   * Distribute rewards to a batch of users
+   * @param {Array<{ethAddress: string, rewards: Array<models.GrowthReward>}>} chunk
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _distributeBatchRewards(chunk) {
+    // Prepare for the batch payout. This creates entries in the payout table.
+    let total = BigNumber(0)
+    const payouts = []
+    const addresses = []
+    const amounts = []
+    for (const [ethAddress, rewards] of Object.entries(chunk)) {
+      const { amount, payout } = await this._preparePayout(ethAddress, rewards)
+      payouts.push(payout)
+      addresses.push(ethAddress)
+      amounts.push(amount)
+      total = total.plus(amount)
+    }
+
+    // Send a blockchain transaction to payout the recipients.
+    let txnReceipt, error
+    try {
+      if (this.config.doIt) {
+        txnReceipt = await this.distributor.multiCredit(addresses, amounts)
+      } else {
+        txnReceipt = {
+          status: 'OK',
+          transactionHash: 'TESTING',
+          blockNumber: 123
+        }
+      }
+    } catch (e) {
+      logger.error('multiCredit failed: ', e)
+    }
+    const updates = {}
+    if (txnReceipt && txnReceipt.status) {
+      updates.status = enums.GrowthPayoutStatuses.Paid
+      updates.txnHash = txnReceipt.transactionHash
+    } else {
+      error = true
+      logger.error(
+        `EVM reverted transaction - Marking all payouts from the chunk as Failed`
+      )
+      updates.status = enums.GrowthPayoutStatuses.Failed
+    }
+
+    // Update the status of the payouts in the DB.
+    // Note that they all get the same txHash since all the addresses were paid as part
+    // of a single transaction.
+    try {
+      for (const payout of payouts) {
+        await payout.update(updates)
+      }
+    } catch (e) {
+      logger.error(`IMPORTANT: failed updating payout status.`)
+      logger.error(`Need manual intervention.`)
+      throw e
+    }
+
+    if (error) {
+      logger.error('Payout failure')
+      throw new Error(`Failure. Check payout data.`)
+    }
+
+    this.stats.numTxns++
+    return total
   }
 
   /**
@@ -295,6 +377,58 @@ class DistributeRewards {
     return allPaid
   }
 
+  /**
+   * Process each payout individually.
+   * @param ethAddressToRewards
+   * @returns {Promise<*>}
+   * @private
+   */
+  async _individualPayoutProcess(ethAddressToRewards) {
+    let total = BigNumber(0)
+    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+      const amount = await this._distributeRewards(ethAddress, rewards)
+      total = total.plus(amount)
+    }
+    return total
+  }
+
+  /**
+   * Process the payouts in batches.
+   * @param ethAddressToRewards
+   * @returns {Promise<*>}
+   * @private
+   */
+  async _batchPayoutProcess(ethAddressToRewards) {
+    // Sum up all the rewards to compute the total distribution, in natural unit.
+    let total = BigNumber(0)
+    for (const rewards of Object.values(ethAddressToRewards)) {
+      const amount = rewards
+        .map(reward => BigNumber(reward.amount))
+        .reduce((a1, a2) => a1.plus(a2))
+      total = total.plus(amount)
+    }
+    const totalTokenUnit = this.distributor.token.toTokenUnit(total)
+    logger.info(
+      `Approving distributor to send a max total of ${totalTokenUnit} OGN`
+    )
+
+    // Approve the total amount that the distributor contract
+    // will send to recipients.
+    await this.distributor.approveMulti(total)
+
+    // Process each chunk sequentially. Each chunk results in a single tx
+    // that handles the distribution to all the addresses in the batch.
+    const chunks = _chunk(ethAddressToRewards, this.config.batchSize)
+    for (const chunk of chunks) {
+      await this._distributeBatchRewards(chunk)
+    }
+    return total
+  }
+
+  /**
+   * Main loop.
+   * @returns {Promise<void>}
+   */
   async process() {
     const now = new Date()
 
@@ -326,7 +460,6 @@ class DistributeRewards {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.shortNameKey})`
       )
-      let campaignDistTotal = BigNumber(0)
 
       // Load rewards rows to process.
       const where = { campaignId: campaign.id }
@@ -350,9 +483,13 @@ class DistributeRewards {
 
       // Distribute the rewards to all accounts.
       // This will create payout rows.
-      for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-        const distAmount = await this._distributeRewards(ethAddress, rewards)
-        campaignDistTotal = campaignDistTotal.plus(distAmount)
+      let campaignDistTotal
+      if (this.config.batchSize > 1) {
+        // Process payouts in chunks.
+        campaignDistTotal = await this._batchPayoutProcess()
+      } else {
+        // Process each payout individually.
+        campaignDistTotal = await this._individualPayoutProcess()
       }
       this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
         campaignDistTotal
@@ -421,6 +558,8 @@ const config = {
   gasPriceMultiplier: args['--gasPriceMultiplier'] || null,
   // Specific campaign to process.
   campaignId: parseInt(args['--campaignId'] || 0),
+  // Batch vs individual payout processing.
+  batchSize: parseInt(args['--batchSize'] || 1),
   // Specific account to process.
   ethAddress: args['--ethAddress'] || null
 }

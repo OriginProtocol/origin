@@ -97,10 +97,38 @@ class TokenDistributor {
   }
 
   /**
+   * Approves the distribution of <amount> token by the TokenDistributor contract.
+   * Must be called prior to creditMulti.
+   * @param {BigNumber|int} amount: amount to approve in natural unit
+   * @returns {Promise<Object>} receipt
+   */
+  async approveMulti(amount) {
+    // Send the approval transaction.
+    const gasPrice = await this._calcGasPrice()
+    const txHash = await this.token.approveMulti(amount, { gasPrice })
+
+    // Wait for the transaction confirmation.
+    logger.info(`Sent approval tx to the network. txHash=${txHash}`)
+    const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeoutSec
+    })
+    if (status !== 'confirmed') {
+      throw new Error(`Approve failure. txStatus=${status} txHash=${txHash}`)
+    }
+    logger.info(
+      `Approval success for batch distribution of ${this.token
+        .toTokenUnit(amount)
+        .toFixed()}`
+    )
+    return receipt
+  }
+
+  /**
    * Send OGN to a list of addresses.
    * @param {Array<string>} addresses: list of recipient addresses.
    * @param {Array<BigNumber|int>>} amounts: amount of OGN to distribute to each recipient, in natural unit.
-   * @returns {Promise<Object>}
+   * @returns {Promise<Object>} receipt
    */
   async creditMulti(addresses, amounts) {
     if (addresses.length !== amounts.length) {
@@ -110,28 +138,6 @@ class TokenDistributor {
 
     const gasPrice = await this._calcGasPrice()
 
-    //
-    // Step 1: Send the approval tx and wait for its confirmation.
-    //
-    const approveTxHash = await this.token.approveMulti(total, { gasPrice })
-    logger.info(`Sent approval tx to the network. txHash=${txHash}`)
-    const { approveStatus } = await this.token.waitForTxConfirmation(
-      approveTxHash,
-      {
-        numBlocks: NumBlockConfirmation,
-        timeoutSec: ConfirmationTimeoutSec
-      }
-    )
-    if (approveStatus !== 'confirmed') {
-      throw new Error(
-        `Approve failure. txStatus=${approveStatus} txHash=${approveTxHash}`
-      )
-    }
-    logger.info('Approval success')
-
-    //
-    // Step 2: Send the multi-transfers tx and wait for its confirmation.
-    ///
     const txHash = await this.token.creditMulti(addresses, amounts, {
       gasPrice
     })
