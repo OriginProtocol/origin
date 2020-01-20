@@ -2,6 +2,7 @@
 
 require('./app')
 require('./listener')
+require('./tstEnc')
 
 // const stripeCli = cp.spawn(
 //   'stripe',

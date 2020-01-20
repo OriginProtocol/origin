@@ -64,6 +64,9 @@ const Main = () => {
   const { config } = useConfig()
   const isMobile = useIsMobile()
   const [menu, setMenu] = useState(false)
+  if (!config) {
+    return <div className="mt-5 text-center">Site configuration not found</div>
+  }
   if (isMobile) {
     return (
       <>

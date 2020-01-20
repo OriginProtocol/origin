@@ -48,7 +48,7 @@ const processMessage = async ({ message, onReplyMessage, onEndResponse }) => {
       await logChat(message)
       onReplyMessage(
         message.chat.id,
-        'Hey there, we have received your message. Our team will reach out to you as soon as possible.'
+        `Unfortunately, we won't be able to respond to your message here. Please check out https://help.originprotocol.com where you can find answers to many of your questions along with a contact form. Thanks!`
       )
     }
   } else if (onEndResponse) {

@@ -2,23 +2,23 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'e6bceb5'
+bridgeImageTag: 'd15dbc2'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '98687a7'
+dappImageTag: '7d4ea4d'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '98687a7'
+ipfsProxyImageTag: '53d5ce8'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '10f178d'
+faucetImageTag: 'd15dbc2'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '98687a7'
+eventlistenerImageTag: '188bd95'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,15 +26,15 @@ discoveryImageTag: 'b8cdfe7'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '0f46b35'
+growthImageTag: '53d5ce8'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '98687a7'
+messagingImageTag: '05d1052'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'e6bceb5'
+notificationsImageTag: 'd15dbc2'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -42,7 +42,7 @@ creatorClientImageTag: 'f2a9315'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'e6bceb5'
+creatorServerImageTag: '948b615'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -55,24 +55,24 @@ cronImageTag: 'd4da76a'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '98687a7'
+adminImageTag: '53d5ce8'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '98687a7'
+relayerImageTag: '05d1052'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '98687a7'
+graphqlImageTag: '188bd95'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '98687a7'
+t3ClientImageTag: '53d5ce8'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '98687a7'
+t3ServerImageTag: '05d1052'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '98687a7'
+authImageTag: '05d1052'

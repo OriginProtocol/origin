@@ -6,7 +6,19 @@ const CryptoWallet = ({ walletStatus }) => {
   } else if (walletStatus === 'no-wallet') {
     return <div className="alert alert-danger">No crypto wallet detected.</div>
   } else if (walletStatus === 'wallet-locked') {
-    return <div className="alert alert-danger">Wallet not unlocked</div>
+    return (
+      <div className="alert alert-danger">
+        Wallet not unlocked.
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            window.ethereum.enable()
+          }}
+        >
+          Unlock
+        </button>
+      </div>
+    )
   } else if (walletStatus === 'wallet-unapproved') {
     return (
       <div>

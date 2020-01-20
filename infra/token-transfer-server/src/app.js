@@ -101,10 +101,9 @@ app.use(require('./controllers'))
 
 // Catch all
 app.all('*', function(req, res) {
-  res.status(404)
-    .send({
-      errors: ['The page you are looking for does not exist']
-    })
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
 })
 
 const hasWallet =

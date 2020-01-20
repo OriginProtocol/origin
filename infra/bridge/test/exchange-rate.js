@@ -25,7 +25,7 @@ describe('exchange rate poller', () => {
       .get('/utils/exchange-rate?market=ETH-USD')
       .expect(200)
 
-    expect(response.body.price).to.equal(0.005515)
+    expect(response.body.price).to.equal(0.007072)
   })
 
   it('should throw if no market specified', async () => {
