@@ -162,7 +162,6 @@ module.exports = {
   momentizeLockup,
   momentizeGrant,
   otcRequestEnabled,
-  unlockDate,
   lockupHasExpired,
   lockupBonusRate,
   lockupDuration,
