@@ -8,7 +8,11 @@ import withEnrolmentStatus from './withEnrolmentStatus'
 
 function withGrowthCampaign(
   WrappedComponent,
-  { fetchPolicy = 'network-only', queryEvenIfNotEnrolled, suppressErrors } = {}
+  {
+    fetchPolicy = 'network-only',
+    queryEvenIfNotEnrolled,
+    suppressErrors = true
+  } = {}
 ) {
   const WithGrowthCampaign = props => {
     return (
