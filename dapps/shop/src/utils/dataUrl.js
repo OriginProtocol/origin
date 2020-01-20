@@ -12,8 +12,12 @@ export default function dataUrl() {
   const pathname = typeof window !== 'undefined' ? window.location.pathname : ''
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   let dir
-  if (pathname.indexOf('/ipfs/') === 0 && CONTENT_HASH) {
-    dir = `/ipfs/${CONTENT_HASH}/`
+  if (pathname.indexOf('/ipfs/') === 0) {
+    if (CONTENT_HASH) {
+      dir = `/ipfs/${CONTENT_HASH}/`
+    } else {
+      dir = `data/`
+    }
   } else {
     dir = `${CDN[origin] || ''}${DATA_DIR || ''}/`
   }
