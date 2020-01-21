@@ -35,6 +35,7 @@ class DistributeRewards {
       numTxns: 0,
       distGrandTotal: BigNumber(0)
     }
+    this.receiptCache = {}
   }
 
   async _preparePayout(ethAddress, rewards) {
@@ -181,11 +182,11 @@ class DistributeRewards {
 
   /**
    * Distribute rewards to a batch of users
-   * @param {Array<{ethAddress: string, rewards: Array<models.GrowthReward>}>} chunk
+   * @param {Array<{ethAddress: string, rewards: Array<models.GrowthReward>}>} Batch of payouts to process.
    * @returns {Promise<void>}
    * @private
    */
-  async _distributeBatchRewards(chunk) {
+  async _distributeRewardsBatch(chunk) {
     // Prepare for the batch payout. This creates entries in the payout table.
     let total = BigNumber(0)
     const payouts = []
@@ -203,7 +204,7 @@ class DistributeRewards {
     let txnReceipt, error
     try {
       if (this.config.doIt) {
-        txnReceipt = await this.distributor.multiCredit(addresses, amounts)
+        txnReceipt = await this.distributor.creditMulti(addresses, amounts)
       } else {
         txnReceipt = {
           status: 'OK',
@@ -228,7 +229,7 @@ class DistributeRewards {
 
     // Update the status of the payouts in the DB.
     // Note that they all get the same txHash since all the addresses were paid as part
-    // of a single transaction.
+    // of a single blockchain transaction.
     try {
       for (const payout of payouts) {
         await payout.update(updates)
@@ -277,17 +278,24 @@ class DistributeRewards {
       throw new Error(`Can't confirm payout id ${payout.id}, txnHash is empty`)
     }
 
-    // Load the transaction receipt form the blockchain.
+    // Check if the transaction receipt is in the cache, otherwise load it from the blockchain
+    // and add it to the cache. We expect cache hits in the case of batch payouts where
+    // multiple payouts are made under the same transaction and therefore same receipt.
     logger.info(`Verifying payout ${payout.id}`)
-    const txnReceipt = await this.web3.eth.getTransactionReceipt(payout.txnHash)
+    if (!this.receiptCache[payout.txnHash]) {
+      this.receiptCache[
+        payout.txnHash
+      ] = await this.web3.eth.getTransactionReceipt(payout.txnHash)
+    }
+    const txReceipt = this.receiptCache[payout.txnHash]
 
     // Make sure we've waited long enough to verify the confirmation.
-    const numConfirmations = currentBlockNumber - txnReceipt.blockNumber
+    const numConfirmations = currentBlockNumber - txReceipt.blockNumber
     if (numConfirmations < MinBlockConfirmation) {
       throw new Error('_confirmTransaction called too early.')
     }
 
-    if (!txnReceipt.status) {
+    if (!txReceipt.status) {
       // The transaction did not get confirmed.
       // Rollback the payout status from Paid to Failed so that the transaction
       // gets attempted again next time the job runs.
@@ -420,7 +428,7 @@ class DistributeRewards {
     // that handles the distribution to all the addresses in the batch.
     const chunks = _chunk(ethAddressToRewards, this.config.batchSize)
     for (const chunk of chunks) {
-      await this._distributeBatchRewards(chunk)
+      await this._distributeRewardsBatch(chunk)
     }
     return total
   }

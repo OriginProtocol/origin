@@ -29,7 +29,7 @@ contract TokenDistributor is Ownable {
     * @param _values The amount to be transferred to each address.
     */
     function transfer(address _tokenAddress, address[] memory _addresses, uint256[] memory _values) public returns (bool) {
-        require(allowedTransactors[msg.sender], "Caller not on the transactor list");
+        require(allowedTransactors[msg.sender], "Caller not on the transactor whitelist");
         require(_tokenAddress != 0x0, "Invalid _tokenAddress");
         require(_addresses.length == _values.length, "Different length for _addresses and _values");
 

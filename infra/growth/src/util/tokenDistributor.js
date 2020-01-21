@@ -151,6 +151,51 @@ class TokenDistributor {
       throw new Error(`Failure. txStatus=${status} txHash=${txHash}`)
     }
 
+    // Inspect the logs to check the transaction credited the expected
+    // amount to each address.
+    const logs = receipt.logs
+    if (logs.length !== addresses.length) {
+      logger.error('ERROR: unexpected receipt logs length.', receipt)
+      throw new Error(`Unexpected receipt logs length: ${logs.length}`)
+    }
+    for (let i = 0; i < addresses.length; i++) {
+      // Note: we expect addresses and logs to be in the same order since
+      // the contract processes addresses in the order they were passed in.
+      const address = addresses[i].toLowerCase()
+      const amount = BigNumber(amounts[i])
+      const log = logs[i]
+
+      // Check the event signature. It should be the one for a 'Transfer' event.
+      const eventSig = log.topic[0].toLowerCase()
+      if (
+        eventSig !==
+        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+      ) {
+        throw new Error(`Log ${i} - Unexpected event signature ${eventSig}`)
+      }
+
+      // Extract addresses and amount from the log.
+      const fromAddress = '0x' + log.topic[1].slice(26).toLowerCase()
+      const toAddress = '0x' + log.topic[2].toLowerCase()
+      const logAmount = BigNumber('0x' + log.data)
+
+      if (fromAddress !== this.supplier.toLowerCase()) {
+        throw new Error(
+          `Log ${i} - From address: expected ${this.supplier.toLowerCase()} got ${fromAddress}`
+        )
+      }
+      if (toAddress !== address) {
+        throw new Error(
+          `Log ${i} - To address: expected ${address} got ${toAddress}`
+        )
+      }
+      if (!logAmount.isEqualTo(amount)) {
+        throw new Error(
+          `Log ${i} - Amount: expected ${amount} got ${logAmount}`
+        )
+      }
+    }
+
     // All done!
     logger.info('Blockchain creditMulti transaction confirmed')
     logger.info('  NetworkId:             ', this.networkId)

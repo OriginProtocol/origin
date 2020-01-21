@@ -159,6 +159,13 @@ class Token {
       throw new Error('Token transfers are paused')
     }
 
+    // Web3 fails estimating properly the gas cost for this type of transaction
+    // so we compute it manually by using the empiric formula:
+    // gas = <fixed_overhead> + <transfer_cost> * <num_transfers>
+    if (!opts.gas) {
+      opts.gas = 50000 + 15000 * addresses.length
+    }
+
     // Send the transaction to the network and return the tx hash.
     const tx = this.distributorContract.methods.transfer(
       this.contractAddress,
@@ -196,6 +203,8 @@ class Token {
     if (!opts.gas) {
       opts.gas = await transaction.estimateGas({ from: opts.from })
       logger.info('Estimated gas:', opts.gas)
+    } else {
+      logger.info('Fixed gas:', opts.gas)
     }
 
     if (opts.gasPrice) {
@@ -241,10 +250,10 @@ class Token {
       logger.error(`getTransactionReceipt failure for txHash ${txHash}`, e)
     }
 
-    // Note: we check on presence of both receipt and receipt.blockNumber
-    // to account for difference between Geth and Parity:
-    //  - Geth does not return a receipt until transaction mined
-    //  - Parity returns a receipt with no blockNumber until transaction mined.
+    // Note: we check on the presence of both receipt and receipt.blockNumber
+    // to account for the difference between Geth and Parity:
+    //  - Geth does not return a receipt until the transaction is mined
+    //  - Parity returns a receipt with no blockNumber until the transaction is mined.
     if (receipt && receipt.blockNumber) {
       if (!receipt.status) {
         // Transaction was reverted by the EVM.
