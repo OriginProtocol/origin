@@ -38,6 +38,14 @@ class DistributeRewards {
     this.receiptCache = {}
   }
 
+  /**
+   * Utility method. Performs various checks on the data integrity and inserts
+   * a row in the growth_payout table. Throws in case of error.
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthReward>} rewards
+   * @returns {Promise<{amount: BigNumber, payout: ,models.GrowthPayout}>}
+   * @private
+   */
   async _preparePayout(ethAddress, rewards) {
     // Paranoia consistency checks
     if (!rewards || rewards.length < 1) {
@@ -280,7 +288,7 @@ class DistributeRewards {
 
     // Check if the transaction receipt is in the cache, otherwise load it from the blockchain
     // and add it to the cache. We expect cache hits in the case of batch payouts where
-    // multiple payouts are made under the same transaction and therefore same receipt.
+    // multiple payouts are made under the same transaction and therefore share the same receipt.
     logger.info(`Verifying payout ${payout.id}`)
     if (!this.receiptCache[payout.txnHash]) {
       this.receiptCache[
@@ -402,8 +410,9 @@ class DistributeRewards {
 
   /**
    * Process the payouts in batches.
-   * @param ethAddressToRewards
-   * @returns {Promise<*>}
+   * @param {Dict{BigNumber}} ethAddressToRewards: dict with eth adddress as key
+   *   and amount in natural units as value
+   * @returns {Promise<BigNumber>} total amount paid in natural units.
    * @private
    */
   async _batchPayoutProcess(ethAddressToRewards) {

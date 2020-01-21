@@ -159,9 +159,10 @@ class Token {
       throw new Error('Token transfers are paused')
     }
 
-    // Web3 fails estimating properly the gas cost for this type of transaction
-    // so we compute it manually by using the empiric formula:
-    // gas = <fixed_overhead> + <transfer_cost> * <num_transfers>
+    // Web3 fails estimating properly the gas cost for this type of transaction.
+    // We compute it manually by using this formula:
+    //   gas = <fixed_overhead> + <transfer_cost> * <num_transfers>
+    // Both <fixed_overhead> and <transfer_cost> were defined empirically.
     if (!opts.gas) {
       opts.gas = 50000 + 15000 * addresses.length
     }
