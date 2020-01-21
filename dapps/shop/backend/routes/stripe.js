@@ -1,11 +1,14 @@
 const config = require('../config')
 const get = require('lodash/get')
-const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 
 const Web3 = require('web3')
 const bodyParser = require('body-parser')
-const stripe = require('stripe')(process.env.STRIPE_BACKEND || '')
+const Stripe = require('stripe')
 
+const { authenticated } = require('./_combinedAuth')
+const { storeGate } = require('../utils/gates')
+const encConf = require('../utils/encryptedConfig')
+const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 const abi = require('../utils/_abi')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -22,16 +25,22 @@ if (PK) {
   throw new Error('WEB3_PK must be defined')
 }
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
 module.exports = function(app) {
-  app.post('/pay', bodyParser.json(), async (req, res) => {
+  app.post('/pay', authenticated, storeGate, async (req, res) => {
+    const { shopId } = req
+
+    // Get API Key from config, and init Stripe
+    const stripeBackend = await encConf.get(shopId, 'stripe_backend')
+    const stripe = Stripe(stripeBackend || '')
+
     console.log('Trying to make payment...')
     const paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: 'usd',
       metadata: {
+        shopId,
         encryptedData: req.body.data
       }
     })
@@ -47,7 +56,19 @@ module.exports = function(app) {
   //    stripe trigger payment_intent.succeeded
 
   app.post('/webhook', rawJson, async (req, res) => {
-    const siteConfig = await config.getSiteConfig()
+    const shopId = get(req.body, 'data.object.metadata.shopId')
+
+    if (!shopId) return res.sendStatus(400)
+
+    // Get API Key from config, and init Stripe
+    const stripeBackend = await encConf.get(shopId, 'stripe_backend')
+    const dataURL = await encConf.get(shopId, 'data_url')
+    const networkId = await encConf.get(shopId, 'network_id')
+
+    const stripe = Stripe(stripeBackend || '')
+
+    const webhookSecret = await encConf.get(shopId, 'stripe_webhook_secret')
+    const siteConfig = await config.getSiteConfig(dataURL, networkId)
     let event
     try {
       const signature = req.headers['stripe-signature']

@@ -2,12 +2,15 @@ const fs = require('fs')
 const crypto = require('crypto')
 const dotenv = require('dotenv')
 const { promisify } = require('bluebird')
-const { Shop } = require('../data/db')
+const { Shops } = require('../data/db')
 
 const readFileAsync = promisify(fs.readFile)
 
 const { ENCRYPTION_KEY } = process.env
-const ENCRYPTION_KEY_HASH = crypto.createHash('sha256').update(ENCRYPTION_KEY).digest()
+const ENCRYPTION_KEY_HASH = crypto
+  .createHash('sha256')
+  .update(ENCRYPTION_KEY)
+  .digest()
 const CYPHER_ALGO = 'aes256'
 const IV_LENGTH = 16
 
@@ -89,16 +92,16 @@ function decryptJSON(iv, enc) {
 }
 
 /**
- * Create a Shop record in the DB with provided name and config
+ * Create a Shops record in the DB with provided name and config
  *
  * @param {string} name - shop name
  * @param {Object} configObj - config object to shop
- * @returns {Object} - Shop model instance
+ * @returns {Object} - Shops model instance
  */
 async function create(name, configObj) {
   const iv = getIV()
   const encryptedConf = encryptJSON(iv, configObj)
-  const record = await Shop.create({
+  const record = await Shops.create({
     name,
     config: [iv, encryptedConf].join(':')
   })
@@ -112,22 +115,25 @@ async function create(name, configObj) {
 }
 
 /**
- * Create cnofig on a Shop record in the DB with provided config
+ * Create cnofig on a Shops record in the DB with provided config
  *
  * @param {number} shopId - shop ID
  * @param {Object} configObj - config object to shop
- * @returns {Object} - Shop model instance
+ * @returns {Object} - Shops model instance
  */
 async function createConfig(shopId, configObj) {
   const iv = getIV()
   const encryptedConf = encryptJSON(iv, configObj)
-  const record = await Shop.update({
-    config: [iv, encryptedConf].join(':')
-  }, {
-    where: {
-      id: shopId
+  const record = await Shops.update(
+    {
+      config: [iv, encryptedConf].join(':')
+    },
+    {
+      where: {
+        id: shopId
+      }
     }
-  })
+  )
 
   if (!record || record[0] === 0) {
     throw new Error('Shop does not have an id, something failed!')
@@ -146,12 +152,13 @@ async function createConfig(shopId, configObj) {
  * @returns {Object} - Shop model instance
  */
 async function save(shopId) {
-  const record = await Shop.findOne({ where: { id: shopId } })
+  const record = await Shops.findOne({ where: { id: shopId } })
   if (!record) throw new Error('Shop does not exist')
 
   // Skip if we don't have any config
   if (typeof loadedConfigs[shopId] === 'undefined') return record
-  if (typeof loadedIVs[shopId] === 'undefined') throw new Error('Missing initialization vector?')
+  if (typeof loadedIVs[shopId] === 'undefined')
+    throw new Error('Missing initialization vector?')
 
   record.config = [
     loadedIVs[shopId].toString('hex'),
@@ -171,29 +178,30 @@ async function save(shopId) {
  * @returns {Object} - Shop model instance
  */
 async function load(shopId, force = false) {
-  const record = await Shop.findOne({ where: { id: shopId } })
+  const record = await Shops.findOne({ where: { id: shopId } })
   if (!force && typeof loadedConfigs[shopId] !== 'undefined') return record
   if (!record.config) {
     await createConfig(shopId, {})
     return null
   }
-  
-  const [iv, encryptedConf] = record.config.split(':')
-  loadedIVs[shopId] = Buffer.from(iv)
-  loadedConfigs[shopId] = decryptJSON(iv, encryptedConf)
 
-  console.log('iv: ', loadedIVs[shopId])
-  console.log('encryptedConf: ', encryptedConf)
-  
+  const [iv, encryptedConf] = record.config.split(':')
+  loadedIVs[shopId] = Buffer.from(iv, 'hex')
+
+  //console.log('iv: ', loadedIVs[shopId])
+  //console.log('encryptedConf: ', encryptedConf)
+
+  loadedConfigs[shopId] = decryptJSON(loadedIVs[shopId], encryptedConf)
+
   return record
 }
 
 /**
- * Load and save a Shop config from a dotenv configuration
+ * Load and save a Shops config from a dotenv configuration
  *
  * @param {number} shopId - shop ID
  * @param {string} filename - full path to dotenv file
- * @returns {Object} - Shop model instance
+ * @returns {Object} - Shops model instance
  */
 async function loadFromEnv(shopId, filename) {
   const rawConfig = dotenv.parse(await readFileAsync(filename))
@@ -207,7 +215,7 @@ async function loadFromEnv(shopId, filename) {
 }
 
 /**
- * Create a Shop record and config from a dotenv configuration
+ * Create a Shops record and config from a dotenv configuration
  *
  * @param {number} shopId - shop ID
  * @param {string} filename - full path to dotenv file
