@@ -131,6 +131,11 @@ const PaymentMethods = ({
     t => t.id
   )
 
+  // fixes a bug where some listings don't have any accepted tokens specified
+  if (acceptedTokens.length === 0) {
+    acceptedTokens.push('token-ETH')
+  }
+
   const setTokenCallback = useCallback(token => setPaymentMethod(token))
 
   const title = <fbt desc="PaymentMethod.title">Payment Method</fbt>

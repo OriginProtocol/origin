@@ -16,15 +16,17 @@ function useConfig() {
       setLoading(true)
       try {
         const raw = await fetch(`${dataUrl()}config.json`)
-        config = await raw.json()
+        if (raw.ok) {
+          config = await raw.json()
 
-        let supportEmailPlain = config.supportEmail
-        if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
-          supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
+          let supportEmailPlain = config.supportEmail
+          if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
+            supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
+          }
+          config.supportEmailPlain = supportEmailPlain
+          const netConfig = config.networks[NetID] || {}
+          config = { ...config, ...netConfig, netId: NetID }
         }
-        config.supportEmailPlain = supportEmailPlain
-        const netConfig = config.networks[NetID] || {}
-        config = { ...config, ...netConfig }
 
         setLoading(false)
       } catch (e) {
