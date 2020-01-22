@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const Stripe = require('stripe')
 
 const { authenticated } = require('./_combinedAuth')
+const { ListingID } = require('../utils/id')
 const { storeGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
@@ -58,6 +59,7 @@ module.exports = function(app) {
   app.post('/webhook', rawJson, async (req, res) => {
     const shopId = get(req.body, 'data.object.metadata.shopId')
 
+    // TODO: use a validator instead
     if (!shopId) return res.sendStatus(400)
 
     // Get API Key from config, and init Stripe
@@ -69,6 +71,7 @@ module.exports = function(app) {
 
     const webhookSecret = await encConf.get(shopId, 'stripe_webhook_secret')
     const siteConfig = await config.getSiteConfig(dataURL, networkId)
+    const lid = ListingID.fromFQLID(siteConfig.listingId)
     let event
     try {
       const signature = req.headers['stripe-signature']
@@ -82,12 +85,11 @@ module.exports = function(app) {
 
     if (event.type === 'payment_intent.succeeded') {
       const encryptedData = get(event, 'data.object.metadata.encryptedData')
-      const contractAddr =
-        siteConfig.marketplaceContract || process.env.MARKETPLACE_CONTRACT
+      const contractAddr = lid.address()
 
       const offer = {
         schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
-        listingId: siteConfig.listingId,
+        listingId: lid.toString(),
         listingType: 'unit',
         unitsPurchased: 1,
         totalPrice: {
@@ -106,12 +108,11 @@ module.exports = function(app) {
         console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
         throw err
       }
-      const listingId = siteConfig.listingId.split('-')[2]
       const Marketplace = new web3.eth.Contract(abi, contractAddr)
 
       Marketplace.methods
         .makeOffer(
-          listingId,
+          lid.listingId,
           getBytes32FromIpfsHash(res),
           offer.finalizes,
           siteConfig.affiliate || ZeroAddress,
