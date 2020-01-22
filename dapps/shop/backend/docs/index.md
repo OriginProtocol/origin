@@ -6,11 +6,10 @@
 
 These are the available environment variables:
 
-- `DATA_URL` - single tennant only, otherwise use stored config
-- `SESSION_SECRET` - String used as salt to encrypt session data.  Defaults to random.
-- `NETWORK` ['mainnet', 'rinkeby', 'dev']
 - `PROVIDER` - Web3 (JSON-RPC) provider URL to use
-- `IPFS_GATEWAY` - IFPS gateway oerride
+- `NETWORK` ['mainnet', 'rinkeby', 'dev']
+- `IPFS_GATEWAY` - IFPS gateway override. Ignores shop configs if set.
+- `SESSION_SECRET` - String used as salt to encrypt session data.  Defaults to random.
 
 ## Manual Testing
 
