@@ -1,7 +1,7 @@
 const get = require('lodash/get')
 const fetch = require('node-fetch')
 
-const { authenticated, authenticatedAsSeller } = require('./_combinedAuth')
+const { authenticatedAsSeller } = require('./_combinedAuth')
 const { Shops, Orders } = require('../data/db')
 const { storeGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
@@ -10,20 +10,19 @@ const { PRINTFUL_URL } = require('../utils/const')
 const PrintfulURL = PRINTFUL_URL
 
 module.exports = function(app) {
-  // TODO: Do the following two endpoints get used by users?
-  app.get('/orders', authenticated, storeGate, async (req, res) => {
+  app.get('/orders', authenticatedAsSeller, storeGate, async (req, res) => {
     const orders = await Orders.findAll({
-      where: { store_id: req.stoerId },
+      where: { store_id: req.storeId },
       order: [['createdAt', 'desc']]
     })
     res.json(orders)
   })
 
-  app.get('/orders/:id', authenticated, storeGate, async (req, res) => {
+  app.get('/orders/:id', authenticatedAsSeller, storeGate, async (req, res) => {
     const order = await Orders.findOne({
       where: {
         order_id: req.params.id,
-        store_id: req.stoerId
+        store_id: req.storeId
       }
     })
     res.json(order)
