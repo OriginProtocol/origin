@@ -32,15 +32,18 @@ const NODE_ENV = process.env.NODE_ENV
 const IS_PROD = NODE_ENV === 'production'
 
 const {
-  DATA_URL, // single tennant only TODO nah brah
   SESSION_SECRET = randomstring.generate(),
-  SERVER_HOSTNAME = 'localhost',
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
   PROVIDER,
-  IPFS_GATEWAY, // IFPS gateway oerride
-  MARKETPLACE_CONTRACT // address override for multi-tenant
+  IPFS_GATEWAY // IFPS gateway oerride
 } = process.env
 
+/**
+ * This is a placeholder for possible future single-tennant override. Currently
+ * it does nothing, so don't bother setting it.  Instead create a single store
+ * config.
+ */
+const DATA_URL = null
 const PASSWORD_SALT_ROUNDS = 10
 
 module.exports = {
@@ -49,11 +52,9 @@ module.exports = {
   NODE_ENV,
   IS_PROD,
   SESSION_SECRET,
-  SERVER_HOSTNAME,
   PASSWORD_SALT_ROUNDS,
   PROVIDER,
   IPFS_GATEWAY,
   NETWORK,
-  NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,
-  MARKETPLACE_CONTRACT
+  NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999
 }

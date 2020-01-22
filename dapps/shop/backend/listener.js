@@ -279,7 +279,7 @@ const handleLog = async ({
       console.log('Saved to DB OK')
     })
 
-    sendMail(cart)
+    sendMail(shopId, cart)
   } catch (e) {
     console.error(e)
   }

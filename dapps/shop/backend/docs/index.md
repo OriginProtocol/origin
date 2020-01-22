@@ -2,6 +2,16 @@
 
 - [Web API Docs](api.md)
 
+## Environment Variables
+
+These are the available environment variables:
+
+- `DATA_URL` - single tennant only, otherwise use stored config
+- `SESSION_SECRET` - String used as salt to encrypt session data.  Defaults to random.
+- `NETWORK` ['mainnet', 'rinkeby', 'dev']
+- `PROVIDER` - Web3 (JSON-RPC) provider URL to use
+- `IPFS_GATEWAY` - IFPS gateway oerride
+
 ## Manual Testing
 
 ### Test Data

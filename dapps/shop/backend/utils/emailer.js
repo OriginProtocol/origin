@@ -1,10 +1,10 @@
 const config = require('../config')
 const mjml2html = require('mjml')
 const nodemailer = require('nodemailer')
-const cartData = require('./cartData')
 const aws = require('aws-sdk')
 
-const { DATA_URL, PUBLIC_URL } = process.env
+const cartData = require('./cartData')
+const encConf = require('../utils/encryptedConfig')
 
 let transporter
 if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
@@ -62,15 +62,17 @@ function optionsForItem(item) {
   return options
 }
 
-async function sendMail(cart, skip) {
-  const data = await config.getSiteConfig()
-  const items = await cartData(cart.items)
+async function sendMail(shopId, cart, skip) {
+  const dataURL = await encConf.get(shopId, 'data_url')
+  const publicURL = await encConf.get(shopId, 'public_url')
+  const data = await config.getSiteConfig(dataURL)
+  const items = await cartData(dataURL, cart.items)
 
   const orderItems = items.map(item => {
     const img = item.variant.image || item.product.image
     const options = optionsForItem(item)
     return orderItem({
-      img: `${DATA_URL}${item.product.id}/520/${img}`,
+      img: `${dataURL}${item.product.id}/520/${img}`,
       title: item.product.title,
       quantity: item.quantity,
       price: formatPrice(item.price),
@@ -101,14 +103,14 @@ async function sendMail(cart, skip) {
     supportEmail: data.supportEmail,
     supportEmailPlain,
     subject: data.emailSubject,
-    storeUrl: PUBLIC_URL,
+    storeUrl: publicURL,
 
     orderNumber: cart.offerId,
     firstName: cart.userInfo.firstName,
     lastName: cart.userInfo.lastName,
     email: cart.userInfo.email,
-    orderUrl: `${PUBLIC_URL}/#/order/${cart.tx}?auth=${cart.dataKey}`,
-    orderUrlAdmin: `${PUBLIC_URL}/#/admin/orders/${cart.offerId}`,
+    orderUrl: `${publicURL}/#/order/${cart.tx}?auth=${cart.dataKey}`,
+    orderUrlAdmin: `${publicURL}/#/admin/orders/${cart.offerId}`,
     orderItems,
     orderItemsTxt,
     subTotal: formatPrice(cart.subTotal),
