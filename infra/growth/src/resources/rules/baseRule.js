@@ -1,6 +1,6 @@
 const {
   GrowthEventTypes,
-  GrowthEventStatuses,
+  // GrowthEventStatuses,
   GrowthActionStatus
 } = require('../../enums')
 const { Reward } = require('./reward')
