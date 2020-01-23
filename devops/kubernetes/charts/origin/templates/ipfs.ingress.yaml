@@ -66,6 +66,10 @@ spec:
             backend: *api_service
           - path: /api/v0/object/patch/rm-link
             backend: *api_service
+          - path: /ipfs
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080
           - path: /ipns
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
