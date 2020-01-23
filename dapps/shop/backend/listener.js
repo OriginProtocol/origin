@@ -121,7 +121,7 @@ async function connectWS() {
     console.log('Connection open')
     this.heartbeat()
     // TODO: Why eth_subscribe (logs on address) AND eth_getLogs?
-    //ws.send(SubscribeToLogs(siteConfig.marketplaceContract || localContract))
+    //ws.send(SubscribeToLogs(siteConfig.marketplaceContract || localContract, listingId))
     ws.send(SubscribeToNewHeads)
   })
 

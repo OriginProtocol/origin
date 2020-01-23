@@ -63,6 +63,8 @@ ensure this does not happen.
     # If you're taking credit card orders, provide a private key. Offers on the
     # Origin Marketplace contract will be made with this account.
     heroku config:set WEB3_PK=0xprivatekey
+    heroku config:set STRIPE_BACKEND=<STRIPE_SECRET_KEY>
+    heroku config:set STRIPE_WEBHOOK_SECRET=<STRIPE_WEBHOOK>
 
     # Commit files
     git add .
@@ -74,7 +76,7 @@ ensure this does not happen.
 
     # Switch to 'hobby' type dyno to prevent sleeping ($7/month)
 
-    heroku ps:type worker=hobby
+    heroku ps:type hobby
 
 ## PGP/GPG Key Export
 

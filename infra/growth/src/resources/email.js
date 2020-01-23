@@ -102,11 +102,13 @@ function generateEmail(emailType, vars) {
         .replace(/\${ethAddress}/g, vars.ethAddress)
         .replace(/\${txLink}/g, vars.txLink)
         .replace(/\${campaignLink}/g, vars.campaignLink)
+        .replace(/\${email}/g, vars.email)
       html = payoutHtmlTemplate
         .replace(/\${amount}/g, vars.amount)
         .replace(/\${ethAddress}/g, vars.ethAddress)
         .replace(/\${txLink}/g, vars.txLink)
         .replace(/\${campaignLink}/g, vars.campaignLink)
+        .replace(/\${email}/g, vars.email)
       break
     default:
       throw new Error(`Invalid emailtType ${emailType}`)
@@ -287,7 +289,8 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
     ethAddress,
     amount,
     txLink: `https://etherscan.io/tx/${txHash}`,
-    campaignLink: 'https://shoporigin.com'
+    campaignLink: 'https://shoporigin.com',
+    email: encodeURIComponent(identity.email)
   }
   const { subject, text, html } = generateEmail('payout', vars)
 

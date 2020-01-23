@@ -22,13 +22,11 @@ const currencies = [
   'USDC',
   'GUSD',
   'OKB',
-  'USDT'
+  'USDT',
+  'OGN'
 ]
 
 let pollInterval
-
-// OGN price is constant for now
-const USD_PER_OGN = 0.21 // 1 OGN = 0.21 USD
 
 // To be used when API is down and there is nothing in cache
 // Kind of very rare edge case
@@ -44,7 +42,7 @@ const FALLBACK_EXCHANGE_RATES = {
   USDC: 0.9996,
   GUSD: 0.9863,
   OKB: 0.3467,
-  OGN: USD_PER_OGN,
+  OGN: 0.21,
   USDT: 1,
   USD: 1
 }
@@ -99,8 +97,6 @@ async function fetchExchangeRates() {
 
     // This is constant forever
     CACHED_EXCHANGE_RATES[baseCurrency] = 1
-    // This is constant for now
-    CACHED_EXCHANGE_RATES.OGN = USD_PER_OGN
 
     // Storing to redis since `@origin/discovery` uses it.
     batch.exec(err => {

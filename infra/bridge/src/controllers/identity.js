@@ -6,7 +6,7 @@ const get = require('lodash/get')
 const router = express.Router()
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth')
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 const {
   loadAttestationMetadata,
   loadIdentityAddresses,

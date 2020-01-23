@@ -81,58 +81,62 @@ module.exports = function(app) {
       return res.sendStatus(400)
     }
 
+    if (event.type !== 'payment_intent.succeeded') {
+      console.log(`Ignoring event ${event.type}`)
+      return res.sendStatus(200)
+    }
+
     console.log(JSON.stringify(event, null, 4))
 
-    if (event.type === 'payment_intent.succeeded') {
-      const encryptedData = get(event, 'data.object.metadata.encryptedData')
-      const contractAddr = lid.address()
 
-      const offer = {
-        schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
-        listingId: lid.toString(),
-        listingType: 'unit',
-        unitsPurchased: 1,
-        totalPrice: {
-          amount: get(event, 'data.object.amount') / 100,
-          currency: 'fiat-USD'
-        },
-        commission: { currency: 'OGN', amount: '0' },
-        finalizes: 1209600,
-        encryptedData
-      }
+    const encryptedData = get(event, 'data.object.metadata.encryptedData')
+    const contractAddr = lid.address()
 
-      let res
-      try {
-        res = await post(siteConfig.ipfsApi, offer, true)
-      } catch (err) {
-        console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
-        throw err
-      }
-      const Marketplace = new web3.eth.Contract(abi, contractAddr)
-
-      Marketplace.methods
-        .makeOffer(
-          lid.listingId,
-          getBytes32FromIpfsHash(res),
-          offer.finalizes,
-          siteConfig.affiliate || ZeroAddress,
-          '0',
-          '0',
-          ZeroAddress,
-          siteConfig.arbitrator || walletAddress
-        )
-        .send({
-          from: walletAddress,
-          gas: 350000
-        })
-        .then(tx => {
-          console.log('Make offer:')
-          console.log(tx)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    const offer = {
+      schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
+      listingId: lid.toString(),
+      listingType: 'unit',
+      unitsPurchased: 1,
+      totalPrice: {
+        amount: get(event, 'data.object.amount') / 100,
+        currency: 'fiat-USD'
+      },
+      commission: { currency: 'OGN', amount: '0' },
+      finalizes: 60 * 60 * 24 * 14, // 2 weeks after offer accepted,
+      encryptedData
     }
+
+    let ires
+    try {
+      ires = await post(siteConfig.ipfsApi, offer, true)
+    } catch (err) {
+      console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
+      throw err
+    }
+    const Marketplace = new web3.eth.Contract(abi, contractAddr)
+
+    Marketplace.methods
+      .makeOffer(
+        lid.listingId,
+        getBytes32FromIpfsHash(ires),
+        offer.finalizes,
+        siteConfig.affiliate || ZeroAddress,
+        '0',
+        '0',
+        ZeroAddress,
+        siteConfig.arbitrator || walletAddress
+      )
+      .send({
+        from: walletAddress,
+        gas: 350000
+      })
+      .then(tx => {
+        console.log('Make offer:')
+        console.log(tx)
+      })
+      .catch(err => {
+        console.log(err)
+      })
 
     res.sendStatus(200)
   })

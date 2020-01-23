@@ -30,7 +30,7 @@ COPY ./infra/notifications/package.json ./infra/notifications/
 COPY ./infra/growth/package.json ./infra/growth/
 COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
-COPY ./infra/growth-event/package.json ./infra/growth-event/
+COPY ./infra/growth-shared/package.json ./infra/growth-shared/
 COPY ./infra/auth-server/package.json ./infra/auth-server/
 COPY ./packages/auth-utils/package.json ./packages/auth-utils/
 

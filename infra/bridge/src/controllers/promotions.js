@@ -3,11 +3,11 @@
 const express = require('express')
 const router = express.Router()
 
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 const {
   GrowthEventTypes,
   GrowthEventStatuses
-} = require('@origin/growth-event/src/enums')
+} = require('@origin/growth-shared/src/enums')
 
 const {
   hashContent,

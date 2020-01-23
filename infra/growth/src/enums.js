@@ -7,7 +7,7 @@ const {
   Enum,
   GrowthEventStatuses,
   GrowthEventTypes
-} = require('@origin/growth-event/src/enums')
+} = require('@origin/growth-shared/src/enums')
 
 const GrowthCampaignRewardStatuses = new Enum(
   'NotReady',
