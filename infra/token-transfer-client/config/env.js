@@ -85,7 +85,8 @@ function getClientEnvironment(publicUrl) {
         'LOCKUP_BONUS_RATE',
         'NODE_ENV',
         'OTC_REQUEST_ENABLED',
-        'UNLOCK_DATE'
+        'INVESTOR_UNLOCK_DATE',
+        'TEAM_UNLOCK_DATE'
       ]
       if (whitelist.includes(key)) {
         env[key] = JSON.stringify(raw[key])
