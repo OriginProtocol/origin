@@ -7,6 +7,10 @@ const { Shops } = require('../data/db')
 
 const readFileAsync = promisify(fs.readFile)
 
+if (typeof process.env.ENCRYPTION_KEY === 'undefined') {
+  throw new TypeError('ENCRYPTION_KEY undefined')
+}
+
 const ENCRYPTION_KEY_HASH = crypto
   .createHash('sha256')
   .update(ENCRYPTION_KEY)
@@ -205,6 +209,10 @@ async function load(shopId, force = false) {
  */
 async function loadFromEnv(shopId, filename) {
   const rawConfig = dotenv.parse(await readFileAsync(filename))
+
+  if (!loadedConfigs[shopId]) {
+    loadedConfigs[shopId] = {}
+  }
 
   for (const k in rawConfig) {
     // TODO: toLowerCase right here?

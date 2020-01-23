@@ -12,6 +12,16 @@ These are the available environment variables:
 - `IPFS_GATEWAY` - IFPS gateway override. Ignores shop configs if set.
 - `SESSION_SECRET` - String used as salt to encrypt session data.  Defaults to random.
 
+## Single Tenant Configuration
+
+First, create a seller and shop for the single-tenant:
+
+    bash backend/data/create_single_tenant.sh Mike mike@originprotocol.com asdf1234 "My Store" "1-001-1"
+
+Then, make create its configuration from an existing .env file:
+
+    ENCRYPTION_KEY="asdf" node backend/data/configFromEnv.js -e .env
+
 ## Manual Testing
 
 ### Test Data
