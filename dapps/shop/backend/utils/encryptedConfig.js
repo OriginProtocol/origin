@@ -2,11 +2,11 @@ const fs = require('fs')
 const crypto = require('crypto')
 const dotenv = require('dotenv')
 const { promisify } = require('bluebird')
+const { ENCRYPTION_KEY } = require('./const')
 const { Shops } = require('../data/db')
 
 const readFileAsync = promisify(fs.readFile)
 
-const { ENCRYPTION_KEY } = process.env
 const ENCRYPTION_KEY_HASH = crypto
   .createHash('sha256')
   .update(ENCRYPTION_KEY)

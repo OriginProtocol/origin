@@ -6,6 +6,7 @@
 
 These are the available environment variables:
 
+- `ENCRYPTION_KEY` - A randomish string used to encrypt config in the DB. This is required.
 - `PROVIDER` - Web3 (JSON-RPC) provider URL to use
 - `NETWORK` ['mainnet', 'rinkeby', 'dev']
 - `IPFS_GATEWAY` - IFPS gateway override. Ignores shop configs if set.

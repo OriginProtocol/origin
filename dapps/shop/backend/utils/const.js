@@ -33,6 +33,7 @@ const IS_PROD = NODE_ENV === 'production'
 
 const {
   SESSION_SECRET = randomstring.generate(),
+  ENCRYPTION_KEY,
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
   PROVIDER,
   IPFS_GATEWAY // IFPS gateway oerride
@@ -48,6 +49,7 @@ const PASSWORD_SALT_ROUNDS = 10
 
 module.exports = {
   CONTRACTS,
+  ENCRYPTION_KEY,
   DATA_URL,
   NODE_ENV,
   IS_PROD,
