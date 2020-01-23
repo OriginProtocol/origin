@@ -16,7 +16,7 @@ These are the available environment variables:
 
 First, create a seller and shop for the single-tenant:
 
-    bash backend/data/create_single_tenant.sh Mike mike@originprotocol.com asdf1234 "My Store" "1-001-1"
+    bash backend/data/create_single_tenant.sh Mike mike@example.com asdf1234 "My Store" "1-001-1"
 
 Then, make create its configuration from an existing .env file:
 
