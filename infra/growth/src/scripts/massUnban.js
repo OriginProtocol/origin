@@ -15,6 +15,7 @@ const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const enums = require('../enums')
 const { GrowthCampaign } = require('../resources/campaign')
+const { sendUnbannedEmail } = require('../resources/email')
 
 const Logger = require('logplease')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
@@ -33,10 +34,10 @@ class MassUnban {
     }
     this.entries = []
     this.payouts = []
-    this._loadInpu(config.input)
+    this._loadInput(config.input)
   }
 
-  _loadInpu(filename) {
+  _loadInput(filename) {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
@@ -306,6 +307,13 @@ class MassUnban {
       this.payouts.push({ address: account, amount })
       this.stats.totalPayout += amount
       this.stats.numPayouts++
+    }
+
+    // 4. Send an email to notify the user their account was unbanned.
+    if (this.config.doIt) {
+      await sendUnbannedEmail(account)
+    } else {
+      logger.info(`Would send unbanned email to ${account}`)
     }
   }
 

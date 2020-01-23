@@ -1,0 +1,2 @@
+Your Origin Rewards account ${ethAddress} has been unbanned.
+We apologize for the inconvenience.
