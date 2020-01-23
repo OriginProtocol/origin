@@ -150,6 +150,10 @@ async function banAccount(account, type, reason, doIt) {
       status: enums.GrowthParticipantStatuses.Banned,
       ban
     })
+    await db.GrowthAdminActivity.create({
+      ethAddress: account,
+      action: enums.GrowthAdminActivityActions.Ban
+    })
     logger.info(`Banned account ${account}`)
   } else {
     logger.info(`Would ban account ${account}`)
@@ -181,6 +185,10 @@ async function closeAccount(account, type, reason, doIt) {
       status: enums.GrowthParticipantStatuses.Closed,
       ban
     })
+    await db.GrowthAdminActivity.create({
+      ethAddress: account,
+      action: enums.GrowthAdminActivityActions.Close
+    })
     logger.info(`Closed account ${account}`)
   } else {
     logger.info(`Would close account ${account}`)
@@ -210,8 +218,13 @@ async function unbanAccount(account, doIt) {
       status: enums.GrowthParticipantStatuses.Active,
       ban: null
     })
-    // Change status of all growth_events from Fraud to Verified.
+    await db.GrowthAdminActivity.create({
+      ethAddress: account,
+      action: enums.GrowthAdminActivityActions.Unban,
+      data: { info: 'manageUser script' }
+    })
 
+    // Change status of all growth_events from Fraud to Verified.
     for (const event of events) {
       await event.update({ status: enums.GrowthEventStatuses.Verified })
     }

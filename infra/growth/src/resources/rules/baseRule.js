@@ -153,9 +153,7 @@ class BaseRule {
       .filter(event => {
         return (
           eventTypes.includes(event.type) &&
-          (!customIdFn || customIdFn(event.customId)) &&
-          (event.status === GrowthEventStatuses.Logged ||
-            event.status === GrowthEventStatuses.Verified)
+          (!customIdFn || customIdFn(event.customId))
         )
       })
       .forEach(event => {

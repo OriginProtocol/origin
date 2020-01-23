@@ -6,10 +6,6 @@
 // Outputs a payout file that can be fed to the adjustPayout.js script.
 //
 
-// TODO:
-//  - in admin activity, link unbanned and closed account
-//  - figure how to get payout estimate in dry-run mode
-
 const BigNumber = require('bignumber.js')
 const fs = require('fs')
 const Sequelize = require('sequelize')
@@ -30,7 +26,7 @@ class MassUnban {
   constructor(config) {
     this.config = config
     this.stats = {
-      numBanned: 0,
+      numUnbanned: 0,
       numClosed: 0,
       numPayouts: 0,
       totalPayout: 0
@@ -85,7 +81,6 @@ class MassUnban {
       addresses.push(proxy.address)
       logger.info('Proxy: ', proxy.address)
     }
-    logger.info('\n')
 
     // Load identity
     const i = await db.Identity.findOne({ where: { ethAddress } })
@@ -101,7 +96,17 @@ class MassUnban {
     } else {
       logger.info('NO Identity!')
     }
-    logger.info('\n')
+
+    // Load admin activity.
+    const activities = await db.GrowthAdminActivity.findAll({
+      where: { ethAddress }
+    })
+    logger.info('Admin activity')
+    logger.info('Action\tData\tCreatedAd')
+    logger.info('------------------------------------')
+    for (const a of activities) {
+      logger.info(`${a.action}\t${a.data}\t${a.createdAt}`)
+    }
 
     // Load events
     logger.info('Events:')
@@ -121,7 +126,6 @@ class MassUnban {
         )}\t${e.createdAt.toLocaleString()}`
       )
     }
-    logger.info('\n')
 
     // Load referrals
     logger.info('Referrals')
@@ -139,7 +143,6 @@ class MassUnban {
         }\t${referee.createdAt.toLocaleString()}`
       )
     }
-    logger.info('\n')
 
     // Load rewards
     logger.info('Rewards')
@@ -156,7 +159,6 @@ class MassUnban {
         )} OGN`
       )
     }
-    logger.info('\n')
 
     // Load payouts
     logger.info('Payouts')
@@ -173,7 +175,6 @@ class MassUnban {
         )} OGN\t${p.createdAt.toLocaleString()}`
       )
     }
-    logger.info('\n')
 
     return addresses
   }
@@ -203,7 +204,9 @@ class MassUnban {
     for (const campaign of campaigns.filter(
       c => c.campaign.id >= startCampaignId
     )) {
-      const rewards = await campaign.getEarnedRewards(account, false)
+      const rewards = await campaign.getEarnedRewards(account, {
+        allEvents: true
+      })
       const amount =
         rewards.length === 0
           ? BigNumber(0)
@@ -220,11 +223,7 @@ class MassUnban {
     return total.toNumber()
   }
 
-  async _closeAccount(account, type, reason) {
-    if (!reason) {
-      throw new Error(`Can't close account ${account} without a reason`)
-    }
-
+  async _closeAccount(account, unbannedAccount) {
     const participant = await this._loadAccount(account)
     // Check account's current status.
     if (participant.status !== 'Active') {
@@ -237,8 +236,8 @@ class MassUnban {
 
     const ban = {
       date: Date.now(),
-      type,
-      reasons: [reason]
+      type: 'Manual Review',
+      reasons: ['Customer request (duplicate account)']
     }
     if (this.config.doIt) {
       await participant.update({
@@ -248,12 +247,13 @@ class MassUnban {
       await db.GrowthAdminActivity.create({
         ethAddress: account,
         action: enums.GrowthAdminActivityActions.Close,
-        data: { info: 'massUnban script' }
+        data: { info: `Closed and unbanned ${unbannedAccount}` }
       })
       logger.info(`Closed account ${account}`)
     } else {
       logger.info(`Would close account ${account}`)
     }
+    this.stats.numClosed++
   }
 
   async _unbanAccount(account) {
@@ -282,12 +282,12 @@ class MassUnban {
       // Record the admin activity.
       await db.GrowthAdminActivity.create({
         ethAddress: account,
-        action: enums.GrowthAdminActivityActions.Unban,
-        data: { info: 'massUnban script' }
+        action: enums.GrowthAdminActivityActions.Unban
       })
     } else {
       logger.info(`Would unban account ${account}`)
     }
+    this.stats.numUnbanned++
 
     // 2. Change status of all growth_events from Fraud to Verified.
     if (this.config.doIt) {
@@ -330,13 +330,16 @@ class MassUnban {
   async process() {
     // Process each entry.
     for (const entry of this.entries) {
+      logger.info('\n\n\n')
+      logger.info(`########################################################`)
+      logger.info('#    Address to unban:', entry.addressToUnban)
+      logger.info(`########################################################`)
       await this._unbanAccount(entry.addressToUnban)
       if (entry.addressToClose) {
-        await this._closeAccount(
-          entry.addressToClose,
-          'ManualReview',
-          'Incorrectly banned'
-        )
+        logger.info(`########################################################`)
+        logger.info('#    Address to close:', entry.addressToClose)
+        logger.info(`########################################################`)
+        await this._closeAccount(entry.addressToClose, entry.addressToUnban)
       }
     }
     // Output a payout file.
@@ -372,7 +375,7 @@ job
   .process()
   .then(() => {
     logger.info('MassUnban stats:')
-    logger.info('  Num acct unbanned:', job.stats.numBanned)
+    logger.info('  Num acct unbanned:', job.stats.numUnbanned)
     logger.info('  Num acct closed:  ', job.stats.numClosed)
     logger.info('  Num acct to pay:  ', job.stats.numPayouts)
     logger.info('  Total to pay:     ', job.stats.totalPayout, 'OGN')
