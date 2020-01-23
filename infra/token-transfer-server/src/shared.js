@@ -135,12 +135,6 @@ function lockupHasExpired(lockup) {
   )
 }
 
-// Unlock date, if undefined assume tokens are locked with an unknown unlock
-// date
-const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
-  ? moment.utc(process.env.UNLOCK_DATE)
-  : undefined
-
 // Lockup bonus rate as a percentage
 const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
 
@@ -168,7 +162,6 @@ module.exports = {
   momentizeLockup,
   momentizeGrant,
   otcRequestEnabled,
-  unlockDate,
   lockupHasExpired,
   lockupBonusRate,
   lockupDuration,
