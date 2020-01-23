@@ -96,6 +96,7 @@ class CampaignRules {
       if (opts.onlyVerifiedEvents) {
         whereClause.status = GrowthEventStatuses.Verified
       } else {
+        // If no option specified, only load events with status Logged or Verified.
         whereClause.status = {
           [Sequelize.Op.in]: [
             GrowthEventStatuses.Logged,
