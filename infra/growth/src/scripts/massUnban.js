@@ -6,6 +6,10 @@
 // Outputs a payout file that can be fed to the adjustPayout.js script.
 //
 
+// TODO:
+//  - in admin activity, link unbanned and closed account
+//  - figure how to get payout estimate in dry-run mode
+
 const BigNumber = require('bignumber.js')
 const fs = require('fs')
 const Sequelize = require('sequelize')
@@ -14,10 +18,11 @@ const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const enums = require('../enums')
+const { GrowthCampaign } = require('../resources/campaign')
 
 const Logger = require('logplease')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
-const logger = Logger.create('manageUser', { showTimestamp: false })
+const logger = Logger.create('massUnban', { showTimestamp: false })
 
 const scaling = BigNumber(10).pow(18)
 
@@ -32,10 +37,10 @@ class MassUnban {
     }
     this.entries = []
     this.payouts = []
-    this._load(config.adjustmentFilename)
+    this._loadInpu(config.input)
   }
 
-  _load(filename) {
+  _loadInpu(filename) {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
@@ -174,11 +179,45 @@ class MassUnban {
   }
 
   // Calculate owed payout for an account that was banned.
-  // Returns amount owed in token units or zero if nothing owed.
+  // Returns amount owed in token units or zero if nothing is owed.
   async _calcPayout(account) {
-    // TODO: IMPLEMENT ME
-    logger.info(account)
-    return 0
+    // Load all past campaigns that have already been distributed.
+    const campaigns = await GrowthCampaign.getDistributed()
+    if (!campaigns) {
+      logger.info('Did not find any campaign already distributed')
+      return BigNumber(0)
+    }
+
+    let startCampaignId = campaigns[0].campaign.id
+
+    // Look for the most recent payout date, if any.
+    const payout = await db.GrowthPayout.findOne({
+      where: { toAddress: account },
+      order: [['id', 'DESC']]
+    })
+    if (payout) {
+      startCampaignId = payout.campaignId + 1
+    }
+    // Calculate the due rewards for each campaign starting at startCampaignId.
+    let total = BigNumber(0)
+    for (const campaign of campaigns.filter(
+      c => c.campaign.id >= startCampaignId
+    )) {
+      const rewards = await campaign.getEarnedRewards(account, false)
+      const amount =
+        rewards.length === 0
+          ? BigNumber(0)
+          : rewards
+              .map(reward => BigNumber(reward.value.amount))
+              .reduce((v1, v2) => v1.plus(v2))
+              .dividedBy(scaling) // convert to token unit.
+      logger.info(
+        `Campaign ${campaign.campaign.nameKey}: Found unpaid earnings of ${amount} OGN`
+      )
+      total = total.plus(amount)
+    }
+    logger.info(`Found total unpaid earnings of ${total} OGN`)
+    return total.toNumber()
   }
 
   async _closeAccount(account, type, reason) {
@@ -205,6 +244,11 @@ class MassUnban {
       await participant.update({
         status: enums.GrowthParticipantStatuses.Closed,
         ban
+      })
+      await db.GrowthAdminActivity.create({
+        ethAddress: account,
+        action: enums.GrowthAdminActivityActions.Close,
+        data: { info: 'massUnban script' }
       })
       logger.info(`Closed account ${account}`)
     } else {
@@ -235,6 +279,12 @@ class MassUnban {
         status: enums.GrowthParticipantStatuses.Active,
         ban: null
       })
+      // Record the admin activity.
+      await db.GrowthAdminActivity.create({
+        ethAddress: account,
+        action: enums.GrowthAdminActivityActions.Unban,
+        data: { info: 'massUnban script' }
+      })
     } else {
       logger.info(`Would unban account ${account}`)
     }
@@ -251,7 +301,7 @@ class MassUnban {
     }
 
     // 3. Calculate the reward payout. If it's non-zero, add it to our list of payouts.
-    const amount = this._calcPayout(account)
+    const amount = await this._calcPayout(account)
     if (amount > 0) {
       this.payouts.push({ address: account, amount })
       this.stats.totalPayout += amount
@@ -272,7 +322,7 @@ class MassUnban {
   // Write all the payouts in token units to an output file.
   async _writePayouts() {
     for (const payout of this.payouts) {
-      const line = `${payout.address}|${payout.amount}|Incorrectly banned`
+      const line = `${payout.address}|${payout.amount}|Incorrectly banned\n`
       await fs.appendFileSync(this.config.output, line)
     }
   }
@@ -304,14 +354,14 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-const filename = args['--filename']
-if (!filename) {
-  logger.error('Missing --filename argument')
+const input = args['--input']
+if (!input) {
+  logger.error('Missing --input argument')
   process.exit()
 }
 
 const config = {
-  filename,
+  input,
   output: args['--output'] || 'payout.txt',
   doIt: args['--doIt'] === 'true' || false
 }
@@ -322,8 +372,10 @@ job
   .process()
   .then(() => {
     logger.info('MassUnban stats:')
-    logger.info('  Num acct unbanned: ', job.stats.numBanned)
-    logger.info('  Num acct closed: ', job.stats.numClosed)
+    logger.info('  Num acct unbanned:', job.stats.numBanned)
+    logger.info('  Num acct closed:  ', job.stats.numClosed)
+    logger.info('  Num acct to pay:  ', job.stats.numPayouts)
+    logger.info('  Total to pay:     ', job.stats.totalPayout, 'OGN')
     logger.info('Finished')
     process.exit()
   })
