@@ -119,7 +119,7 @@ async function create(name, configObj) {
 }
 
 /**
- * Create cnofig on a Shops record in the DB with provided config
+ * Create config on a Shops record in the DB with provided config
  *
  * @param {number} shopId - shop ID
  * @param {Object} configObj - config object to shop
