@@ -2,7 +2,7 @@ require('dotenv').config()
 const randomstring = require('randomstring')
 
 const NETWORK_NAME_TO_ID = {
-  dev: 999,
+  localhost: 999,
   rinkeby: 4,
   mainnet: 1
 }

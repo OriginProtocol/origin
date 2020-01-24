@@ -16,7 +16,11 @@ app.use(
     secret: SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: IS_PROD },
+    cookie: {
+      httpOnly: false, // TODO: testing
+      sameSite: 'none', // TODO: Lax for prod?
+      secure: IS_PROD
+    },
     store: new MemoryStore({
       checkPeriod: 3600000 // 1 hr
     })

@@ -1,10 +1,10 @@
 const { Sequelize, Discounts } = require('../data/db')
 
 const { authenticated } = require('./_combinedAuth')
-const { storeGate } = require('../utils/gates')
+const { shopGate } = require('../utils/gates')
 
 module.exports = function(app) {
-  app.post('/check-discount', authenticated, storeGate, async (req, res) => {
+  app.post('/check-discount', authenticated, shopGate, async (req, res) => {
     const discounts = await Discounts.findAll({
       where: {
         [Sequelize.Op.and]: [
@@ -14,7 +14,7 @@ module.exports = function(app) {
             Sequelize.fn('lower', req.body.code)
           )
         ],
-        store_id: req.storeId
+        shop_id: req.shopId
       }
     })
 
@@ -31,15 +31,15 @@ module.exports = function(app) {
     res.json({})
   })
 
-  app.get('/discounts', authenticated, storeGate, async (req, res) => {
+  app.get('/discounts', authenticated, shopGate, async (req, res) => {
     const discounts = await Discounts.findAll({
-      where: { store_id: req.storeId },
+      where: { shop_id: req.shopId },
       order: [['createdAt', 'desc']]
     })
     res.json(discounts)
   })
 
-  app.get('/discounts/:id', authenticated, storeGate, async (req, res) => {
+  app.get('/discounts/:id', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.findOne({
       where: {
         id: req.params.id,
@@ -49,30 +49,30 @@ module.exports = function(app) {
     res.json(discount)
   })
 
-  app.post('/discounts', authenticated, storeGate, async (req, res) => {
+  app.post('/discounts', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.create({
-      store_id: req.storeId,
+      shop_id: req.shopId,
       ...req.body
     })
     res.json({ success: true, discount })
   })
 
-  app.put('/discounts/:id', authenticated, storeGate, async (req, res) => {
+  app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.update(req.body, {
       where: {
         id: req.params.id,
-        store_id: req.storeId
+        shop_id: req.shopId
       }
     })
 
     res.json({ success: true, discount })
   })
 
-  app.delete('/discounts/:id', authenticated, storeGate, async (req, res) => {
+  app.delete('/discounts/:id', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.destroy({
       where: {
         id: req.params.id,
-        store_id: req.storeId
+        shop_id: req.shopId
       }
     })
     res.json({ success: true, discount })

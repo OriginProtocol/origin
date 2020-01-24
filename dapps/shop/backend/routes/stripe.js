@@ -7,7 +7,7 @@ const Stripe = require('stripe')
 
 const { authenticated } = require('./_combinedAuth')
 const { ListingID } = require('../utils/id')
-const { storeGate } = require('../utils/gates')
+const { shopGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 const abi = require('../utils/_abi')
@@ -29,7 +29,7 @@ if (PK) {
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
 module.exports = function(app) {
-  app.post('/pay', authenticated, storeGate, async (req, res) => {
+  app.post('/pay', authenticated, shopGate, async (req, res) => {
     const { shopId } = req
 
     // Get API Key from config, and init Stripe
@@ -65,12 +65,11 @@ module.exports = function(app) {
     // Get API Key from config, and init Stripe
     const stripeBackend = await encConf.get(shopId, 'stripe_backend')
     const dataURL = await encConf.get(shopId, 'data_url')
-    const networkId = await encConf.get(shopId, 'network_id')
 
     const stripe = Stripe(stripeBackend || '')
 
     const webhookSecret = await encConf.get(shopId, 'stripe_webhook_secret')
-    const siteConfig = await config.getSiteConfig(dataURL, networkId)
+    const siteConfig = await config.getSiteConfig(dataURL)
     const lid = ListingID.fromFQLID(siteConfig.listingId)
     let event
     try {

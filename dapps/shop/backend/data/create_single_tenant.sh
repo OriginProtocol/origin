@@ -46,7 +46,7 @@ echo    "Creating single shop with the following:"
 echo    "----------------------------------------"
 echo -e "Seller Name:$TAB$1"
 echo -e "E-mail:$TAB$2"
-echo -e "Store Name:$TAB$4"
+echo -e "Shop Name:$TAB$4"
 echo -e "Lisintg ID:$TAB$5"
 echo    "----------------------------------------"
 read -r -p "Are You Sure? [Y/n] " input
@@ -60,10 +60,11 @@ case $input in
   SHOP_NAME="$4"
   SHOP_LISTING_ID="$5"
 
-  shop_create_user $USER_NAME $USER_EMAIL $USER_PASS
-  shop_login $USER_EMAIL $USER_PASS
-  shop_create_shop $SHOP_NAME $SHOP_LISTING_ID $RANDOM_TOKEN
+  shop_create_user "$USER_NAME" "$USER_EMAIL" "$USER_PASS"
+  shop_login "$USER_EMAIL" "$USER_PASS"
+  shop_create_shop "$SHOP_NAME" "$SHOP_LISTING_ID" "$RANDOM_TOKEN"
   rm $COOKIE_STORAGE 2> /dev/null
+  echo "Complete.  Your API auth token is $RANDOM_TOKEN"
   ;;
 
     [nN][oO]|[nN])

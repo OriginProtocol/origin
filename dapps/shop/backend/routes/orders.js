@@ -3,26 +3,27 @@ const fetch = require('node-fetch')
 
 const { authenticatedAsSeller } = require('./_combinedAuth')
 const { Shops, Orders } = require('../data/db')
-const { storeGate } = require('../utils/gates')
+const { shopGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
 const { PRINTFUL_URL } = require('../utils/const')
 
 const PrintfulURL = PRINTFUL_URL
 
 module.exports = function(app) {
-  app.get('/orders', authenticatedAsSeller, storeGate, async (req, res) => {
+  app.get('/orders', authenticatedAsSeller, shopGate, async (req, res) => {
+    console.log('req.shopId: ', req.shopId)
     const orders = await Orders.findAll({
-      where: { store_id: req.storeId },
+      where: { shop_id: req.shopId },
       order: [['createdAt', 'desc']]
     })
     res.json(orders)
   })
 
-  app.get('/orders/:id', authenticatedAsSeller, storeGate, async (req, res) => {
+  app.get('/orders/:id', authenticatedAsSeller, shopGate, async (req, res) => {
     const order = await Orders.findOne({
       where: {
         order_id: req.params.id,
-        store_id: req.storeId
+        shop_id: req.shopId
       }
     })
     res.json(order)
