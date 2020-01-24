@@ -61,8 +61,9 @@ class CampaignRules {
    *  the campaign. By default all events since user signed up are returned.
    *   - beforeCampaign - Restricts query to events that occurred prior to the
    *   campaign start. By default all events since user signed up are returned.
-   *   - onlyVerified - Only returns events with status Verified.
-   *   By default returns events with status Verified or Logged.
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
   async getEvents(ethAddress, opts = {}) {
@@ -138,9 +139,10 @@ class CampaignRules {
    * Returns the user level.
    *
    * @param {string} ethAddress - User's account.
-   * @param {boolean} onlyVerifiedEvents - If true, only uses events with
-   *  status Verified for the calculation. By default uses events with
-   *  status Verified or Logged.
+   * @param {Object} opts:
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<number>}
    */
   async getCurrentLevel(ethAddress, opts) {
@@ -164,9 +166,9 @@ class CampaignRules {
    *
    * @param {string} ethAddress - User's account.
    * @param {Object} opts:
-   *   - onlyVerifiedEvents - Only use events with status Verified for the calculation.
-   *     By default uses events with status Verified or Logged.
-   *   - allEvents - Use all events, including ones marked as Fraud for the calculation.
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
   async getEarnedRewards(ethAddress, opts) {

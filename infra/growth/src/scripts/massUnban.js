@@ -180,8 +180,8 @@ class MassUnban {
     return addresses
   }
 
-  // Calculate owed payout for an account that was banned.
-  // Returns amount owed in token units or zero if nothing is owed.
+  // Calculates the owed payout for an account that was banned.
+  // Returns the amount owed in token units or zero if nothing is owed.
   async _calcPayout(account) {
     // Load all past campaigns that have already been distributed.
     const campaigns = await GrowthCampaign.getDistributed()
@@ -192,7 +192,7 @@ class MassUnban {
 
     let startCampaignId = campaigns[0].campaign.id
 
-    // Look for the most recent payout date, if any.
+    // Look for the most recent payout to the account, if any.
     const payout = await db.GrowthPayout.findOne({
       where: { toAddress: account },
       order: [['id', 'DESC']]
@@ -200,6 +200,7 @@ class MassUnban {
     if (payout) {
       startCampaignId = payout.campaignId + 1
     }
+
     // Calculate the due rewards for each campaign starting at startCampaignId.
     let total = BigNumber(0)
     for (const campaign of campaigns.filter(
@@ -238,7 +239,7 @@ class MassUnban {
     const ban = {
       date: Date.now(),
       type: 'Manual Review',
-      reasons: ['Customer request (duplicate account)']
+      reasons: [`Customer request (dupe of ${unbannedAccount})`]
     }
     if (this.config.doIt) {
       await participant.update({
@@ -248,7 +249,7 @@ class MassUnban {
       await db.GrowthAdminActivity.create({
         ethAddress: account,
         action: enums.GrowthAdminActivityActions.Close,
-        data: { info: `Closed and unbanned ${unbannedAccount}` }
+        data: { info: `Dupe of ${unbannedAccount}` }
       })
       logger.info(`Closed account ${account}`)
     } else {
@@ -262,7 +263,7 @@ class MassUnban {
     // Check account's current status.
     if (participant.status !== 'Banned') {
       throw new Error(
-        `Can't unban account ${account} status is not Banned but ${participant.status}`
+        `Can't unban account ${account}: status is not Banned but ${participant.status}`
       )
     }
 

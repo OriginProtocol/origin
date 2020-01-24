@@ -111,13 +111,11 @@ function generateEmail(emailType, vars) {
       break
     case 'unbanned':
       subject = `Your Origin Rewards account has been unbanned`
-      text = unbannedTextTemplate
-        .replace(/\${ethAddress}/g, vars.ethAddress)
-        .replace(/\${email}/g, vars.email)
+      text = unbannedTextTemplate.replace(/\${ethAddress}/g, vars.ethAddress)
       // Note: no HTML content for unbanned emails.
       break
     default:
-      throw new Error(`Invalid emailtType ${emailType}`)
+      throw new Error(`Invalid email type ${emailType}`)
   }
 
   return { subject, text, html }
@@ -330,10 +328,7 @@ async function sendUnbannedEmail(ethAddress) {
   )
 
   // Generate the content of the email.
-  const vars = {
-    ethAddress,
-    email: encodeURIComponent(identity.email)
-  }
+  const vars = { ethAddress }
   const { subject, text } = generateEmail('unbanned', vars)
 
   // Note: no HTML content for banned email. Only text.

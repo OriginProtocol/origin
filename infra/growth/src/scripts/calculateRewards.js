@@ -183,7 +183,7 @@ class CalculateRewards {
         }
 
         // Calculate rewards for this user.
-        // Note that we set the onlyVerifiedEvents param of getEarnedRewards to true.
+        // Note that we specifically only include events that have been verified.
         const rewards = await rules.getEarnedRewards(ethAddress, {
           onlyVerifiedEvents: true
         })

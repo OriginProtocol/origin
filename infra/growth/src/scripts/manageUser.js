@@ -220,15 +220,14 @@ async function unbanAccount(account, doIt) {
     })
     await db.GrowthAdminActivity.create({
       ethAddress: account,
-      action: enums.GrowthAdminActivityActions.Unban,
-      data: { info: 'manageUser script' }
+      action: enums.GrowthAdminActivityActions.Unban
     })
 
-    // Change status of all growth_events from Fraud to Verified.
+    // Change the status of all growth_events from Fraud to Verified.
     for (const event of events) {
       await event.update({ status: enums.GrowthEventStatuses.Verified })
     }
-    logger.info(`Changed status of ${events.length} events to Verified`)
+    logger.info(`Changed the status of ${events.length} events to Verified`)
     logger.info(`Unbanned account ${account}`)
   } else {
     logger.info(
