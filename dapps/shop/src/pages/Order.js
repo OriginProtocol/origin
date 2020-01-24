@@ -129,6 +129,7 @@ const Order = () => {
   }, [])
 
   if (error) {
+    console.error(error)
     return (
       <div className="checkout">
         <h3 className="d-md-none my-4 ml-4">{config.title}</h3>

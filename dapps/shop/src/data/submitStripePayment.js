@@ -1,3 +1,5 @@
+const { BACKEND_AUTH_TOKEN } = process.env
+
 async function submitStripePayment({
   backend,
   stripe,
@@ -6,7 +8,10 @@ async function submitStripePayment({
   listingId
 }) {
   const res = await fetch(`${backend}/pay`, {
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+    },
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify({
