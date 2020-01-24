@@ -90,6 +90,15 @@ const walletScreen = props => {
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
           <Currency
+            abbreviation={'OGN'}
+            balance={balances.ogn || 0}
+            labelColor={currencies['ogn'].color}
+            name={currencies['ogn'].name}
+            imageSource={currencies['ogn'].icon}
+            precision={0}
+            onPress={() => handleFunding('OGN')}
+          />
+          <Currency
             abbreviation={'ETH'}
             balance={balances.eth}
             labelColor={currencies['eth'].color}
@@ -107,13 +116,13 @@ const walletScreen = props => {
             onPress={() => handleFunding('DAI')}
           />
           <Currency
-            abbreviation={'OGN'}
-            balance={balances.ogn || 0}
-            labelColor={currencies['ogn'].color}
-            name={currencies['ogn'].name}
-            imageSource={currencies['ogn'].icon}
-            precision={0}
-            onPress={() => handleFunding('OGN')}
+            abbreviation={'USDT'}
+            balance={balances.usdt || 0}
+            labelColor={currencies['usdt'].color}
+            name={currencies['usdt'].name}
+            imageSource={currencies['usdt'].icon}
+            precision={2}
+            onPress={() => handleFunding('USDT')}
           />
         </ScrollView>
       </>
