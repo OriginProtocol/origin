@@ -56,7 +56,12 @@ module.exports = function(app) {
     }
 
     const apiKey = await encConf.get(order.shop_id, 'printful')
-    if (!apiKey) throw new Error('Missing printful API configuration')
+    if (!apiKey) {
+      return res.status(500).json({
+        success: false,
+        message: 'Missing printful API configuration'
+      })
+    }
     const apiAuth = Buffer.from(apiKey).toString('base64')
 
     const result = await fetch(`${PrintfulURL}/orders/@${id}`, {
@@ -91,7 +96,12 @@ module.exports = function(app) {
       }
 
       const apiKey = await encConf.get(order.shop_id, 'printful')
-      if (!apiKey) throw new Error('Missing printful API configuration')
+      if (!apiKey) {
+        return res.status(500).json({
+          success: false,
+          message: 'Missing printful API configuration'
+        })
+      }
       const apiAuth = Buffer.from(apiKey).toString('base64')
 
       const newOrderResponse = await fetch(`${PrintfulURL}/orders`, {
@@ -132,7 +142,12 @@ module.exports = function(app) {
       }
 
       const apiKey = await encConf.get(order.shop_id, 'printful')
-      if (!apiKey) throw new Error('Missing printful API configuration')
+      if (!apiKey) {
+        return res.status(500).json({
+          success: false,
+          message: 'Missing printful API configuration'
+        })
+      }
       const apiAuth = Buffer.from(apiKey).toString('base64')
 
       const url = `${PrintfulURL}/orders/@${req.params.id}/confirm`

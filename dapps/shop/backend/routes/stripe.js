@@ -100,7 +100,7 @@ module.exports = function(app) {
         currency: 'fiat-USD'
       },
       commission: { currency: 'OGN', amount: '0' },
-      finalizes: 60 * 60 * 24 * 14, // 2 weeks after offer accepted,
+      finalizes: 60 * 60 * 24 * 14, // 2 weeks after offer accepted
       encryptedData
     }
 
@@ -109,7 +109,8 @@ module.exports = function(app) {
       ires = await post(siteConfig.ipfsApi, offer, true)
     } catch (err) {
       console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
-      throw err
+      console.error(err)
+      return res.status(500)
     }
     const Marketplace = new web3.eth.Contract(abi, contractAddr)
 
