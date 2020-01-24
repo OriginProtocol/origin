@@ -61,8 +61,9 @@ class CampaignRules {
    *  the campaign. By default all events since user signed up are returned.
    *   - beforeCampaign - Restricts query to events that occurred prior to the
    *   campaign start. By default all events since user signed up are returned.
-   *   - onlyVerified - Only returns events with status Verified.
-   *   By default returns events with status Verified or Logged.
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
   async getEvents(ethAddress, opts = {}) {
@@ -92,14 +93,17 @@ class CampaignRules {
       }
     }
 
-    if (opts.onlyVerified) {
-      whereClause.status = GrowthEventStatuses.Verified
-    } else {
-      whereClause.status = {
-        [Sequelize.Op.in]: [
-          GrowthEventStatuses.Logged,
-          GrowthEventStatuses.Verified
-        ]
+    if (!opts.allEvents) {
+      if (opts.onlyVerifiedEvents) {
+        whereClause.status = GrowthEventStatuses.Verified
+      } else {
+        // If no option specified, only load events with status Logged or Verified.
+        whereClause.status = {
+          [Sequelize.Op.in]: [
+            GrowthEventStatuses.Logged,
+            GrowthEventStatuses.Verified
+          ]
+        }
       }
     }
 
@@ -135,13 +139,14 @@ class CampaignRules {
    * Returns the user level.
    *
    * @param {string} ethAddress - User's account.
-   * @param {boolean} onlyVerifiedEvents - If true, only uses events with
-   *  status Verified for the calculation. By default uses events with
-   *  status Verified or Logged.
+   * @param {Object} opts:
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<number>}
    */
-  async getCurrentLevel(ethAddress, onlyVerifiedEvents = false) {
-    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
+  async getCurrentLevel(ethAddress, opts) {
+    const events = await this.getEvents(ethAddress, opts)
     return await this._calculateLevel(ethAddress, events)
   }
 
@@ -160,17 +165,16 @@ class CampaignRules {
    * Calculates rewards earned by the user.
    *
    * @param {string} ethAddress - User's account.
-   * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
-   *   for the calculation. By default uses events with status Verified or Logged.
+   * @param {Object} opts:
+   *   - onlyVerifiedEvents: Only use events with status Verified for the calculation.
+   *   - allEvents: Use all events, for the calculation, including the ones marked as Fraud.
+   *   If neither onlyVerifiedEvents nor allEvents is specified, uses Verified and Logged events.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
-  async getEarnedRewards(ethAddress, onlyVerifiedEvents = false) {
+  async getEarnedRewards(ethAddress, opts) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
-    const currentLevel = await this.getCurrentLevel(
-      ethAddress,
-      onlyVerifiedEvents
-    )
+    const events = await this.getEvents(ethAddress, opts)
+    const currentLevel = await this.getCurrentLevel(ethAddress, opts)
     for (let i = 0; i <= currentLevel; i++) {
       const levelRewards = await this.levels[i].getEarnedRewards(
         ethAddress,
