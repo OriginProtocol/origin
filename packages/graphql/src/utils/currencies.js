@@ -125,7 +125,7 @@ class Currencies {
         name: 'Tether',
         code: 'USDT',
         priceInUSD: 1,
-        decimals: 18
+        decimals: 6
       }
     }
 

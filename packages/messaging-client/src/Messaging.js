@@ -1282,6 +1282,8 @@ class Messaging {
       throw new Error('Failed to add message to conversation')
     }
 
+    this._sending_message = false
+
     this.markConversationRead(remoteEthAddress)
 
     return roomId
