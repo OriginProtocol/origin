@@ -98,18 +98,12 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should return no reward if events are invalid`, async () => {
+    it(`Should not return any reward if events are invalid`, async () => {
       this.events = [
         {
           id: 1,
           type: GrowthEventTypes.ListingCreated,
           status: GrowthEventStatuses.Verified,
-          ethAddress: this.ethAddress
-        },
-        {
-          id: 2,
-          type: GrowthEventTypes.ProfilePublished,
-          status: GrowthEventStatuses.Fraud,
           ethAddress: this.ethAddress
         },
         {
