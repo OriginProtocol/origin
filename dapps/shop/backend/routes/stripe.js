@@ -87,7 +87,6 @@ module.exports = function(app) {
 
     console.log(JSON.stringify(event, null, 4))
 
-
     const encryptedData = get(event, 'data.object.metadata.encryptedData')
     const contractAddr = lid.address()
 
