@@ -2,11 +2,13 @@ const Sequelize = require('sequelize')
 
 const db = require('../models')
 const { CampaignRules } = require('./rules')
+const enums = require('../enums')
 
 class GrowthCampaign {
   /**
    * Loads a campaign.
    * @param id
+   *
    * @returns {Promise<CampaignRules>}
    */
   static async get(id) {
@@ -27,6 +29,21 @@ class GrowthCampaign {
     // If that happens, add some filtering here by ethAddress.
     const campaigns = await db.GrowthCampaign.findAll({
       where: { endDate: { [Sequelize.Op.lt]: now } }
+    })
+    return campaigns.map(
+      campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
+    )
+  }
+
+  /**
+   * Helper function that returns all past campaign rules that have already been distributed.
+   * Campaigns are return in least to most recent order.
+   * @returns {Promise<Array<CampaignRules>>}
+   */
+  static async getDistributed() {
+    const campaigns = await db.GrowthCampaign.findAll({
+      where: { rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed },
+      order: [['id', 'ASC']]
     })
     return campaigns.map(
       campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))

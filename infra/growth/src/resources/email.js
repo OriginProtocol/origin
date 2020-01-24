@@ -32,6 +32,9 @@ const payoutTextTemplate = fs
 const payoutHtmlTemplate = fs
   .readFileSync(`${templateDir}/emailPayout.html`)
   .toString()
+const unbannedTextTemplate = fs
+  .readFileSync(`${templateDir}/emailUnbanned.txt`)
+  .toString()
 
 /**
  * Returns the content for invite email.
@@ -63,10 +66,6 @@ const payoutHtmlTemplate = fs
  * @returns {{subject: string, html: *, text: *}}
  */
 function generateEmail(emailType, vars) {
-  /*
-
-  }
-   */
   let subject, text, html
   switch (emailType) {
     case 'invite':
@@ -110,8 +109,13 @@ function generateEmail(emailType, vars) {
         .replace(/\${campaignLink}/g, vars.campaignLink)
         .replace(/\${email}/g, vars.email)
       break
+    case 'unbanned':
+      subject = `Origin Rewards account restored`
+      text = unbannedTextTemplate.replace(/\${ethAddress}/g, vars.ethAddress)
+      // Note: no HTML content for unbanned emails.
+      break
     default:
-      throw new Error(`Invalid emailtType ${emailType}`)
+      throw new Error(`Invalid email type ${emailType}`)
   }
 
   return { subject, text, html }
@@ -309,9 +313,43 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
   }
 }
 
+async function sendUnbannedEmail(ethAddress) {
+  // Load identity of the user to get their email address.
+  const identity = await db.Identity.findOne({ where: { ethAddress } })
+  if (!identity || !identity.email) {
+    logger.info(
+      'No email on record for account ${ethAddress}. Skipping sending unbanned email.'
+    )
+    return
+  }
+  const recipient = identity.email
+  logger.info(
+    `Sending unbanned email to ${recipient} for account ${ethAddress}`
+  )
+
+  // Generate the content of the email.
+  const vars = { ethAddress }
+  const { subject, text } = generateEmail('unbanned', vars)
+
+  // Note: no HTML content for banned email. Only text.
+  const email = {
+    to: recipient,
+    from: process.env.SENDGRID_FROM_EMAIL,
+    subject,
+    text
+  }
+  try {
+    await sendgridMail.send(email)
+  } catch (error) {
+    logger.error(`Failed sending unbanned email: ${error}`)
+    throw new Error(`Failed sending unbanned email: ${error}`)
+  }
+}
+
 module.exports = {
   generateEmail,
   sendInvites,
   sendInviteReminder,
-  sendPayoutEmail
+  sendPayoutEmail,
+  sendUnbannedEmail
 }

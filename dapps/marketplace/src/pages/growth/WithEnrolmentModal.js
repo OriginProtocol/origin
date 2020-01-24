@@ -655,7 +655,8 @@ function withEnrolmentModal(WrappedComponent) {
                           'walletLoading',
                           'walletProxy',
                           'walletPredictedProxy',
-                          'location'
+                          'location',
+                          'isOriginWallet'
                         ])}
                         onClick={e =>
                           this.handleClick(e, data.enrollmentStatus)
