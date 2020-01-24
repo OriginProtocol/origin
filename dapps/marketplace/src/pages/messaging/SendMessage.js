@@ -42,6 +42,9 @@ class SendMessage extends Component {
   }
 
   handleClick() {
+    if (this.state.sending) {
+      return
+    }
     this.fileInput.current.click()
   }
 
@@ -68,7 +71,13 @@ class SendMessage extends Component {
   }
 
   async sendContent(sendMessage, to) {
-    const { message, images } = this.state
+    const { message, images, sending } = this.state
+
+    if (sending) {
+      return
+    }
+
+    this.setState({ sending: true })
 
     const variables = { to }
 
@@ -87,11 +96,12 @@ class SendMessage extends Component {
         )
       }
 
-      this.setState({ message: '', images: [] })
+      this.setState({ message: '', images: [], sending: false })
     } catch (err) {
-      console.error(err)
+      console.debug('Failed to send message', err)
       this.setState({
-        error: err.message
+        error: err.message,
+        sending: false
       })
     }
   }
@@ -144,6 +154,7 @@ class SendMessage extends Component {
                   )}
                   innerRef={this.input}
                   value={this.state.message}
+                  disabled={this.state.sending}
                   onChange={e => this.setState({ message: e.target.value })}
                   onKeyPress={e => this.handleKeyPress(e, sendMessage)}
                 />
@@ -160,6 +171,7 @@ class SendMessage extends Component {
                 accept="image/jpeg,image/gif,image/png"
                 ref={this.fileInput}
                 className="d-none"
+                disabled={this.state.sending}
                 onChange={async e => {
                   const newImages = await getImages(
                     config,
@@ -173,7 +185,12 @@ class SendMessage extends Component {
               <button
                 className="btn btn-sm btn-primary btn-rounded"
                 type="submit"
-                children={fbt('Send', 'SendMessage.send')}
+                disabled={this.state.sending}
+                children={
+                  this.state.sending
+                    ? fbt('Sending...', 'SendMessage.sending')
+                    : fbt('Send', 'SendMessage.send')
+                }
               />
             </form>
           )}
@@ -198,6 +215,7 @@ require('react-styl')(`
     button
       margin: auto 0
       width: auto
+      min-width: 150px
     img.add-photo
       padding: 0 10px
     .images-preview
