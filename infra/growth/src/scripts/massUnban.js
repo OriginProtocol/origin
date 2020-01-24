@@ -1,7 +1,7 @@
 // Script to mass unban accounts.
 //
 // Takes as input a csv file with entries having the following format:
-//   <eth_address_to_unban>,<optional_eth_address_to_close>
+//   <unique_id>,<eth_address_to_unban>,<optional_eth_address_to_close>
 //
 // Outputs a payout file that can be fed to the adjustPayout.js script.
 //
@@ -38,6 +38,7 @@ class MassUnban {
   }
 
   _loadInput(filename) {
+    const seen = {}
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
@@ -45,16 +46,20 @@ class MassUnban {
         continue
       }
       const parts = line.split(',')
-      if (parts.length > 2) {
+      if (parts.length > 3) {
         throw new Error(`Invalid line: ${line}`)
       }
-      const addressToUnban = parts[0].trim().toLowerCase()
+      const addressToUnban = parts[1].trim().toLowerCase()
       const addressToClose =
-        parts.length === 2 ? parts[1].trim().toLowerCase() : null
+        parts.length === 3 ? parts[2].trim().toLowerCase() : null
 
       if (!addressToUnban) {
         throw new Error(`Invalid ETH address at line: ${line}`)
       }
+      if (seen[addressToUnban]) {
+        logger.warn(`Skipping dupe line for ${addressToUnban}`)
+      }
+      seen[addressToUnban] = true
 
       this.entries.push({ addressToUnban, addressToClose })
     }
@@ -137,12 +142,18 @@ class MassUnban {
       order: [['createdAt', 'ASC']]
     })
     for (const r of referrals) {
-      const referee = await this._loadAccount(r.refereeEthAddress)
-      logger.info(
-        `${referee.ethAddress}\t${
-          referee.status
-        }\t${referee.createdAt.toLocaleString()}`
-      )
+      try {
+        const referee = await this._loadAccount(r.refereeEthAddress)
+        logger.info(
+          `${referee.ethAddress}\t${
+            referee.status
+          }\t${referee.createdAt.toLocaleString()}`
+        )
+      } catch (err) {
+        // For a reason yet TBD (bug?) a few referees have a row in the growth_referral
+        // but not in growth_participant.
+        logger.warn(`Failed loading referee account ${r.refereeEthAddress}`)
+      }
     }
 
     // Load rewards
@@ -221,7 +232,11 @@ class MassUnban {
       )
       total = total.plus(amount)
     }
-    logger.info(`Found total unpaid earnings of ${total} OGN`)
+    if (total.isGreaterThan(0)) {
+      logger.info(`Found total unpaid earnings of ${total} OGN for ${account}`)
+    } else {
+      logger.info(`No unpaid earnings for %{account}`)
+    }
     return total.toNumber()
   }
 

@@ -110,7 +110,7 @@ function generateEmail(emailType, vars) {
         .replace(/\${email}/g, vars.email)
       break
     case 'unbanned':
-      subject = `Your Origin Rewards account has been unbanned`
+      subject = `Origin Rewards account restored`
       text = unbannedTextTemplate.replace(/\${ethAddress}/g, vars.ethAddress)
       // Note: no HTML content for unbanned emails.
       break
