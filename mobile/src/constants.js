@@ -46,18 +46,18 @@ export const NETWORKS = [
     dappUrl: 'https://dapp.staging.originprotocol.com/#/',
     provider:
       'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
+  },
+  {
+    id: 2222,
+    name: 'Origin',
+    dappUrl: 'https://dapp.dev.originprotocol.com/#/',
+    provider: 'https://testnet.originprotocol.com/rpc'
   }
 ]
 
 // Push additional networks if in development
 // eslint-disable-next-line no-undef
 if (__DEV__) {
-  NETWORKS.push({
-    id: 2222,
-    name: 'Origin',
-    dappUrl: 'https://dapp.dev.originprotocol.com/#/',
-    provider: 'https://testnet.originprotocol.com/rpc'
-  })
   NETWORKS.push({
     id: 999,
     name: 'Localhost',
