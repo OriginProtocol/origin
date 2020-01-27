@@ -6,7 +6,7 @@ const ImageUpload = ({ images, setImages }) => {
   const handleImageChange = e => {
     e.preventDefault()
 
-    let reader = new FileReader()
+    const reader = new FileReader()
     reader.onloadend = () => {
       setImages([...images, reader.result])
     }
