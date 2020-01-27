@@ -12,4 +12,10 @@ IPFS_GATEWAY_URL - URL of IPFS gateway
 
 2. `yarn run build`
 
-3. Upload 
+3. Upload somewhere, e.g. IPFS
+
+```sh
+   export IPFS_DEPLOY_PINATA__API_KEY=<YOUR PINATA API KEY>
+   export IPFS_DEPLOY_PINATA__SECRET_API_KEY=<YOUR PINATA SECRET KEY>
+   npx ipfs-deploy -p pinata
+```
