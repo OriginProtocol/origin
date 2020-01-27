@@ -17,7 +17,8 @@
     "postinstall": "per-env",
     "postinstall:development": "",
     "postinstall:production": "yarn run build",
-    "clean": "git clean -fd ."
+    "clean": "git clean -fd .",
+    "deployt": "node scripts/deploy.js"
   },
   "repository": {
     "type": "git",

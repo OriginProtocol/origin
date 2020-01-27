@@ -8,8 +8,8 @@ IPFS_GATEWAY_URL - URL of IPFS gateway
 
 ## Deployment
 
-Setup Heroku remotes
+1. Set all the configuration values listed under `Environment Variables`.
 
-`heroku git:remote -a <frontend_app> -r heroku-dshop-control-client`
+2. `yarn run build`
 
-Run `./deploy.sh` to push to Heroku
+3. Upload 
