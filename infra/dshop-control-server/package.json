@@ -26,5 +26,9 @@
     "slugify": "^1.3.6",
     "tmp": "^0.1.0",
     "x-ray": "^2.3.4"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
