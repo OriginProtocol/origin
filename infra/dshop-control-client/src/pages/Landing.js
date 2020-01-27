@@ -116,7 +116,7 @@ require('react-styl')(`
       h4
         font-weight: normal
     .hero-graphic
-      background-image: url('/creator-hero-graphic-clipped.png');
+      background-image: url('images/creator-hero-graphic-clipped.png');
       background-position: bottom right;
       min-height: 640px;
       background-size: contain;

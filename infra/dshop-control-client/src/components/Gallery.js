@@ -189,7 +189,7 @@ require('react-styl')(`
         display: block
         width: 100px
         height: 100%
-        background: url(/left-arrow-large.svg) no-repeat center
+        background: url(images/left-arrow-large.svg) no-repeat center
         opacity: 0.5
         &:hover
           opacity: 1
@@ -219,7 +219,7 @@ require('react-styl')(`
         transform: translateY(-50%)
         width: 80px
         height: 80px
-        background: url(/left-arrow-large.svg) no-repeat center
+        background: url(images/left-arrow-large.svg) no-repeat center
         background-size: 30px
         opacity: 0
         transition: opacity 0.25s ease
