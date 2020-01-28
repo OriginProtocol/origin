@@ -41,7 +41,7 @@ const PaymentAmountRaw = ({
     }
   }, [paymentMethod, token])
 
-  if (tokenStatus.loading) {
+  if (tokenStatus.loading || !tokenObj) {
     return (
       <div className="actions">
         <button className="btn btn-primary btn-rounded" disabled={true}>
