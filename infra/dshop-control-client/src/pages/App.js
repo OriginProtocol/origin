@@ -10,8 +10,6 @@ import ProcessShopify from './ProcessShopify'
 const App = ({ location }) => {
   const [loading, setLoading] = useState(true)
 
-  console.debug('Origin DShop Control loading...')
-
   useEffect(() => {
     const href = window.location.href
     if (
@@ -29,7 +27,6 @@ const App = ({ location }) => {
   }, [location.pathname])
 
   useEffect(() => {
-    console.debug('Use effect')
     let state = localStorage.getItem('state')
     if (state) {
       try {
@@ -46,7 +43,7 @@ const App = ({ location }) => {
   store.subscribe(
     s => s,
     (watched, allState) => {
-      console.debug('Setting state in localStorage')
+      // console.debug('Setting state in localStorage')
       localStorage.setItem('state', JSON.stringify(allState))
     }
   )
