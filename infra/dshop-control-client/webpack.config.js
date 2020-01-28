@@ -16,6 +16,19 @@ if (isProduction) {
   devtool = false
 }
 
+const API_URL =
+  process.env.API_URL || isProduction
+    ? 'https://origin-dshop-control-server.herokuapp.com/'
+    : 'http://localhost:3000'
+const IPFS_API_URL =
+  process.env.IPFS_API_URL || isProduction
+    ? 'https://ipfs.ogn.app'
+    : 'http://localhost:5001'
+const IPFS_GATEWAY_URL =
+  process.env.IPFS_GATEWAY_URL || isProduction
+    ? 'https://ipfs.ogn.app'
+    : 'http://localhost:8080'
+
 const webpackConfig = {
   entry: {
     app: './src/index.js'
@@ -112,9 +125,9 @@ const webpackConfig = {
     new webpack.EnvironmentPlugin({
       WEBPACK_BUILD: true,
       NODE_ENV: process.env.NODE_ENV || 'development',
-      API_URL: process.env.API_URL || 'http://localhost:3000',
-      IPFS_API_URL: process.env.IPFS_API_URL || 'http://localhost:5001',
-      IPFS_GATEWAY_URL: process.env.IPFS_GATEWAY_URL || 'http://localhost:8080'
+      API_URL,
+      IPFS_API_URL,
+      IPFS_GATEWAY_URL
     })
   ],
 
