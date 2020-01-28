@@ -18,7 +18,7 @@ if (isProduction) {
 
 const API_URL =
   process.env.API_URL || isProduction
-    ? 'https://origin-dshop-control-server.herokuapp.com/'
+    ? 'https://origin-dshop-control-server.herokuapp.com'
     : 'http://localhost:3000'
 const IPFS_API_URL =
   process.env.IPFS_API_URL || isProduction
