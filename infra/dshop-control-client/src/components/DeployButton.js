@@ -72,7 +72,9 @@ const DeployButton = () => {
       return
     }
 
-    const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+    if (!window.ethereum) return
+    await window.ethereum.enable()
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
 
     const ipfs = ipfsClient(process.env.IPFS_API_URL)
 
