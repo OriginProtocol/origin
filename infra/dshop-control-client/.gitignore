@@ -7,6 +7,12 @@ scripts/flow/*/.flowconfig
 _SpecRunner.html
 __benchmarks__
 build/
+public/dist/
+public/fonts/
+public/index.html
+public/localhost.html
+public/*.js
+public/*.css
 remote-repo/
 coverage/
 .module-cache
