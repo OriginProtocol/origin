@@ -21,14 +21,11 @@ const { linkDir } = require('./lib')
 
 const app = express()
 
-if (app.get('env') !== 'production') {
-  app.use(
-    cors({
-      origin: '*',
-      credentials: true
-    })
-  )
-}
+app.use(
+  cors({
+    origin: '*'
+  })
+)
 
 // Parse request bodies
 app.use(bodyParser.json({ limit: '100mb' }))
