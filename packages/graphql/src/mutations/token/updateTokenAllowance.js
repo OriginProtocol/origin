@@ -1,5 +1,8 @@
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+
+import getUnitTokenValue from '../../utils/unitTokenValue'
+
 import createDebug from 'debug'
 const debug = createDebug('origin:updateTokenAllowance:')
 
@@ -17,7 +20,7 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
   }
 
   await checkMetaMask(from)
-  value = contracts.web3.utils.toWei(value, 'ether')
+  value = getUnitTokenValue(value, token) 
   const tx = tokenContract.contractExec.methods.approve(to, value)
   const gas = await tx.estimateGas({ from })
   debug({ token, from, to, value })

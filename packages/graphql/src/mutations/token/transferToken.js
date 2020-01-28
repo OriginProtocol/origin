@@ -1,5 +1,6 @@
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import getUnitTokenValue from '../../utils/unitTokenValue'
 
 async function transferToken(_, { token, from, to, value }) {
   const contract = contracts.tokens.find(
@@ -10,7 +11,7 @@ async function transferToken(_, { token, from, to, value }) {
     console.log(token, 'not found')
     return
   }
-  value = contracts.web3.utils.toWei(value, 'ether')
+  value = getUnitTokenValue(value, token)
   const tx = contract.methods.transfer(to, value)
   return txHelper({ tx, from, mutation: 'transferToken', gas: 4612388 })
 }

@@ -85,7 +85,7 @@ export default {
       type: 'Standard',
       name: 'Tether',
       symbol: 'USDT',
-      decimals: '18'
+      decimals: '6'
     }
   ],
   DaiExchange: addresses.UniswapDaiExchange,

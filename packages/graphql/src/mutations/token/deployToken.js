@@ -2,11 +2,12 @@ import OriginToken from '@origin/contracts/build/contracts/OriginToken'
 import StandardToken from '@origin/contracts/build/contracts/TestToken'
 import contracts from '../../contracts'
 import txHelper, { checkMetaMask } from '../_txHelper'
+import getUnitTokenValue from '../../utils/unitTokenValue'
 
 async function deployToken(_, { type, name, decimals, supply, symbol, from }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
-  const supplyWei = web3.utils.toWei(supply, 'ether')
+  const supplyWei = getUnitTokenValue(supply, parseInt(decimals))
   let tx, Contract
 
   if (type === 'Standard') {

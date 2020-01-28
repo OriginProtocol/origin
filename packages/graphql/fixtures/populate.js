@@ -337,7 +337,7 @@ export default async function populate(gqlClient, log, done) {
     type: 'Standard',
     name: 'Tether',
     symbol: 'USDT',
-    decimals: '18',
+    decimals: '6',
     supply: '3000000000'
   })
   log(`Deployed Tether to ${USDT.contractAddress}`)

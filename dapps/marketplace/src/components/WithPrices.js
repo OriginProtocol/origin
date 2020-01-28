@@ -4,10 +4,7 @@ import floor from 'lodash/floor'
 
 import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
 
-// web3.utils.toWei only accepts up to 18 decimal places
-function removeExtraDecimals(numStr) {
-  return numStr.replace(/^([0-9]+\.[0-9]{18}).*/, '$1')
-}
+import getUnitTokenValue from '@origin/graphql/src/utils/unitTokenValue'
 
 /**
  * Given a list of tokens and a price, returns an object with information on
@@ -131,12 +128,16 @@ const WithPrices = ({
     }
   }
 
+  if (!suggestedToken) {
+    // Let's default to something
+    suggestedToken = listing.acceptedTokens[0].id
+  }
+
   return children({ prices: wallet, tokenStatus, suggestedToken })
 }
 
 function tokenStatusFor(target, wallet, proxy) {
-  const targetWei = removeExtraDecimals(get(wallet, `${target}.amount`) || '0')
-  const targetValue = web3.utils.toBN(web3.utils.toWei(targetWei, 'ether'))
+  const targetValue = getUnitTokenValue(get(wallet, `${target}.amount`) || '0', target)
 
   const walletBalance = get(wallet, `${target}.currency.balance`) || '0'
   const availableBalance = web3.utils.toBN(walletBalance)
