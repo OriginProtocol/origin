@@ -1,6 +1,3 @@
-const { tokenToNaturalUnits } = require('../src/util/token')
-
-
 const feb2020Config = {
   numLevels: 2,
   levels: {
