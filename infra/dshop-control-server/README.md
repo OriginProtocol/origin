@@ -9,8 +9,4 @@ IPFS_API_URL - URL of an IPFS API. It should allow uploads via /api/v0/add and l
 
 ## Deployment
 
-Setup Heroku remotes
-
-`heroku git:remote -a <backend_app> -r heroku-dshop-control-server`
-
-Run `./deploy.sh` to push to Heroku
+Modify .env with the necessary variables and run `./deploy_beroku.sh`
