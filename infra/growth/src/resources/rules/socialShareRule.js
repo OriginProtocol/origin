@@ -140,7 +140,7 @@ class SocialShareRule extends SingleEventRule {
    * @returns {Promise<Reward|null>}
    */
   async getReward(ethAddress, identityForTest = null) {
-    if (this.config.reward === null || !ethAddress) {
+    if (this.config.reward === null) {
       return null
     }
     // Create a reward object with amount set to zero.
@@ -148,6 +148,10 @@ class SocialShareRule extends SingleEventRule {
       amount: '0',
       currency: this.config.reward.currency
     })
+    if (!ethAddress) {
+      // No user passed. Return zero.
+      return reward
+    }
 
     // Load any proxy associated with the wallet address.
     const ownerAddress = ethAddress.toLowerCase()
