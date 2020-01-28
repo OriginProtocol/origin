@@ -74,21 +74,21 @@ const App = ({ location }) => {
 export default withRouter(App)
 
 require('react-styl')(`
-  html
-    height: 100%
-  body
-    font-size: 1.125rem
-    line-height: 1.5
-    background-color: white
-    font-family: 'Lato'
-    height: 100%
-    color: #333
-  a
+html
+  height: 100%
+body
+  font-size: 1.125rem
+  line-height: 1.5
+  background-color: white
+  font-family: 'Lato'
+  height: 100%
+  color: #333
+a
+  color: #007cff
+  &:hover,&:focus
     color: #007cff
-    &:hover,&:focus
-      color: #007cff
-      opacity: 0.7
-      text-decoration: none
-  #app
-    height: 100%
+    opacity: 0.7
+    text-decoration: none
+#app
+  height: 100%
 `)

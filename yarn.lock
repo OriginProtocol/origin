@@ -8120,7 +8120,7 @@ byte-size@^5.0.1:
   resolved "https://registry.yarnpkg.com/byte-size/-/byte-size-5.0.1.tgz#4b651039a5ecd96767e71a3d7ed380e48bed4191"
   integrity sha512-/XuKeqWocKsYa/cBY1YbSJSWWqTi4cFgr9S6OyM7PBaPbr9zvNGwWP33vt0uqGhwDdN+y3yhbXVILEUpnwEWGw==
 
-byte-size@^6.0.0:
+byte-size@^6.0.0, byte-size@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/byte-size/-/byte-size-6.2.0.tgz#39fd52adedbbf7e8c3b3f7dea05e441549375c28"
   integrity sha512-6EspYUCAPMc7E2rltBgKwhG+Cmk0pDm9zDtF1Awe2dczNUL3YpZ8mTs/dueOTS1hqGWBOatqef4jYMGjln7WmA==
@@ -10780,6 +10780,14 @@ dnslink-cloudflare@^2.0.3:
   dependencies:
     cloudflare "^2.7.0"
     yargs "^14.2.0"
+
+dnslink-cloudflare@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/dnslink-cloudflare/-/dnslink-cloudflare-2.0.4.tgz#43d2def7b47ada28705054a7d509730fcadf8019"
+  integrity sha512-w6cn5SSzevjzR59YLOWfrvXHtqAXuIFDWaoWCKrOPRjvAK8Q6mjTgPr+HunPGG5oUI0OKpMzPgvIiLLY9YTWag==
+  dependencies:
+    cloudflare "^2.7.0"
+    yargs "^15.0.1"
 
 dnslink-dnsimple@^1.0.1:
   version "1.0.1"
@@ -15739,6 +15747,33 @@ ipfs-deploy@7.13.0:
     trammel "^3.0.1"
     update-notifier "^3.0.1"
     yargs "^14.2.0"
+
+ipfs-deploy@^7.14.0:
+  version "7.14.0"
+  resolved "https://registry.yarnpkg.com/ipfs-deploy/-/ipfs-deploy-7.14.0.tgz#e1ec972e62c5da6304b537988557a2f1b3ca06d2"
+  integrity sha512-PUXbpuIYpBD4bp4oUgr3Is7fnqLN310ZPxgoPv/V7WRV0G0ulxvPmLQ/5vqsgx9L/NmJoLleldgKXIjfHFeLXA==
+  dependencies:
+    axios "^0.19.2"
+    byte-size "^6.2.0"
+    clipboardy "^2.1.0"
+    colors "^1.4.0"
+    common-tags "^2.0.0-alpha.1"
+    dnslink-cloudflare "^2.0.4"
+    dnslink-dnsimple "^1.0.1"
+    dotenv "^8.2.0"
+    form-data "^3.0.0"
+    ipfs-cluster-api "0.0.9"
+    ipfs-http-client "^41.0.1"
+    lodash "^4.17.15"
+    multiaddr "^7.2.1"
+    neat-frame "https://github.com/agentofuser/neat-frame#wrap-ansi-options"
+    open "^7.0.0"
+    ora "^4.0.3"
+    recursive-fs "^1.1.2"
+    terminal-link "^2.1.1"
+    trammel "^3.0.1"
+    update-notifier "^3.0.1"
+    yargs "^15.1.0"
 
 ipfs-http-client@^33.1.0:
   version "33.1.1"
@@ -21463,7 +21498,7 @@ multiaddr@^6.0.3, multiaddr@^6.0.4, multiaddr@^6.0.6, multiaddr@^6.1.0, multiadd
     is-ip "^2.0.0"
     varint "^5.0.0"
 
-multiaddr@^7.1.0:
+multiaddr@^7.1.0, multiaddr@^7.2.1:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/multiaddr/-/multiaddr-7.2.1.tgz#f660e346dc6db1995c01aad87d6be43bf3c13ca6"
   integrity sha512-iJ372ZXoyw1xmRh3Cawej5l17TTs72jGHDjUHCDl16s3UFkkPQkWj90BDF8hw8xnBIG/JB3RAyHhkWKiuNfM5g==
@@ -21741,6 +21776,17 @@ ndjson@^1.5.0:
     minimist "^1.2.0"
     split2 "^3.1.0"
     through2 "^3.0.0"
+
+"neat-frame@git+https://github.com/agentofuser/neat-frame.git#wrap-ansi-options":
+  version "1.0.2"
+  uid b244ca11078bd35f63b2d7cb22d5e4b5c12ae2aa
+  resolved "git+https://github.com/agentofuser/neat-frame.git#b244ca11078bd35f63b2d7cb22d5e4b5c12ae2aa"
+  dependencies:
+    inspect-with-kind "^1.0.5"
+    merge-options "^1.0.1"
+    string-width "^2.1.1"
+    term-size "^1.2.0"
+    wrap-ansi "^4.0.0"
 
 "neat-frame@https://github.com/agentofuser/neat-frame#wrap-ansi-options":
   version "1.0.2"
@@ -22630,7 +22676,7 @@ options@>=0.0.5:
   resolved "https://registry.yarnpkg.com/options/-/options-0.0.6.tgz#ec22d312806bb53e731773e7cdaefcf1c643128f"
   integrity sha1-7CLTEoBrtT5zF3Pnza788cZDEo8=
 
-ora@^4.0.2:
+ora@^4.0.2, ora@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/ora/-/ora-4.0.3.tgz#752a1b7b4be4825546a7a3d59256fa523b6b6d05"
   integrity sha512-fnDebVFyz309A73cqCipVL1fBZewq4vwgSHfxh43vVy31mbyoQ8sCH3Oeaog/owYOs/lLlGVPCISQonTneg6Pg==
@@ -28907,7 +28953,7 @@ term-size@^1.2.0:
   dependencies:
     execa "^0.7.0"
 
-terminal-link@^2.0.0:
+terminal-link@^2.0.0, terminal-link@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/terminal-link/-/terminal-link-2.1.1.tgz#14a64a27ab3c0df933ea546fba55f2d078edc994"
   integrity sha512-un0FmiRUQNr5PJqy9kP7c40F5BOfpGlYTrxonDChEZB7pzZxRNp/bt+ymiy9/npwXya9KH99nJ/GXFIiUkYGFQ==
@@ -32606,7 +32652,7 @@ yargs@^14.0.0, yargs@^14.2.0, yargs@^14.2.2:
     y18n "^4.0.0"
     yargs-parser "^15.0.0"
 
-yargs@^15.0.0:
+yargs@^15.0.0, yargs@^15.0.1, yargs@^15.1.0:
   version "15.1.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.1.0.tgz#e111381f5830e863a89550bd4b136bb6a5f37219"
   integrity sha512-T39FNN1b6hCW4SOIk1XyTOWxtXdcen0t+XYrysQmChzSipvhBO8Bj0nK1ozAasdk24dNWuMZvr4k24nz+8HHLg==

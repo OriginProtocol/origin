@@ -104,21 +104,21 @@ const LandingPage = () => {
 export default LandingPage
 
 require('react-styl')(`
-  .landing-page
+.landing-page
+  color: white
+  .header
     color: white
-    .header
+    background-color: #111d28
+    h1
+      margin-bottom: 5rem
+    h1, h4
       color: white
-      background-color: #111d28
-      h1
-        margin-bottom: 5rem
-      h1, h4
-        color: white
-      h4
-        font-weight: normal
-    .hero-graphic
-      background-image: url('images/creator-hero-graphic-clipped.png');
-      background-position: bottom right;
-      min-height: 640px;
-      background-size: contain;
-      background-repeat: no-repeat;
+    h4
+      font-weight: normal
+  .hero-graphic
+    background-image: url('images/creator-hero-graphic-clipped.png')
+    background-position: bottom right
+    min-height: 640px
+    background-size: contain
+    background-repeat: no-repeat
 `)

@@ -95,14 +95,14 @@ const Products = () => {
 export default Products
 
 require('react-styl')(`
-  .products
-    tr
-      td:first-child
-        width: 80px
-    .pic
-      width: 60px
-      height: 50px
-      background-size: contain
-      background-repeat: no-repeat
-      background-position: center
+.products
+  tr
+    td:first-child
+      width: 80px
+  .pic
+    width: 60px
+    height: 50px
+    background-size: contain
+    background-repeat: no-repeat
+    background-position: center
 `)

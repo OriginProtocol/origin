@@ -131,43 +131,43 @@ const ImagePicker = props => {
 }
 
 require('react-styl')(`
-  .image-picker-wrapper .invalid-feedback
-    display: block
+.image-picker-wrapper .invalid-feedback
+  display: block
 
-  .upload-wrapper
-    position: relative
-    background-color: var(--pale-grey-four)
+.upload-wrapper
+  position: relative
+  background-color: var(--pale-grey-four)
 
-  .image-picker, .preview
-    text-align: center;
+.image-picker, .preview
+  text-align: center;
 
-  .image-picker
-    padding: 2rem
-    border: 1px dashed var(--light)
-    border-radius: var(--default-radius)
-    background-color: var(--pale-grey-four)
+.image-picker
+  padding: 2rem
+  border: 1px dashed var(--light)
+  border-radius: var(--default-radius)
+  background-color: var(--pale-grey-four)
 
-  .image-picker img
-    margin-bottom: 0.25rem
+.image-picker img
+  margin-bottom: 0.25rem
 
-  .preview
-    label
-      margin-top: 2rem
-    img
-      max-width: 100%
-      margin: auto
+.preview
+  label
+    margin-top: 2rem
+  img
+    max-width: 100%
+    margin: auto
 
-  .title
-    color: var(--dark)
-    font-size: 1.125rem
+.title
+  color: var(--dark)
+  font-size: 1.125rem
 
-  .form-control-file
-    width: 1px
-    height: 1px
-    opacity: 0
-    position: absolute
-    overflow: hidden
-    z-index: -1
+.form-control-file
+  width: 1px
+  height: 1px
+  opacity: 0
+  position: absolute
+  overflow: hidden
+  z-index: -1
 `)
 
 export default ImagePicker
