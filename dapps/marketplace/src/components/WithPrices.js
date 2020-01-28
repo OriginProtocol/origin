@@ -137,7 +137,10 @@ const WithPrices = ({
 }
 
 function tokenStatusFor(target, wallet, proxy) {
-  const targetValue = getUnitTokenValue(get(wallet, `${target}.amount`) || '0', target)
+  const targetValue = getUnitTokenValue(
+    get(wallet, `${target}.amount`) || '0',
+    target
+  )
 
   const walletBalance = get(wallet, `${target}.currency.balance`) || '0'
   const availableBalance = web3.utils.toBN(walletBalance)
