@@ -8,7 +8,7 @@ const config = require('../config')
 const { DATA_URL, IPFS_GATEWAY } = require('./const')
 
 /**
- * Resolve an IPFS gateway from whatever's avilible.  Either a provided config
+ * Resolve an IPFS gateway from whatever's available.  Either a provided config
  * or env vars.
  *
  * @param dataURL {string} - optional URL to load config JSON from

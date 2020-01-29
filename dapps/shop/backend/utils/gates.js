@@ -2,7 +2,7 @@ const { Shops } = require('../data/db')
 
 /**
  * Pull the shop ID from either the authentication (when API key) or from the
- * body of the reqeust, if available.
+ * body of the request, if available.
  */
 async function getShopId(req) {
   if (!req.user.auth_token) {
