@@ -192,6 +192,15 @@ function Campaign(props) {
         progress={tokenEarnProgress}
         showIndicators={false}
       />
+      {nameKey === 'growth.feb2020.name' && <a
+        className="swag align-self-center"
+        href="http://www.originprotocol/en/reward/swag/fabruary_2020"
+        target="_blank"
+        >
+          {isMobile && <img src="/images/growth/rewardsSwag@2x.png"/>}
+          {!isMobile && <img src="/images/growth/rewardsSwagDesktop@2x.png"/>}
+      </a>}
+
       <MobileDownloadAction
         action={mobileAction}
         decimalDivision={decimalDivision}
@@ -417,7 +426,7 @@ class GrowthCampaigns extends Component {
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         <div
-          className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}
+          className={`container growth-campaigns ${isMobile ? 'mobile' : ''} d-flex flex-column`}
         >
           <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus, loading }) => {
@@ -605,6 +614,11 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .swag
+      img
+        width: 100%
+        max-width: 350px
+        margin-top: 10px
     .campaign-list
       .select-bar
         background-color: var(--clear-blue)
@@ -688,5 +702,10 @@ require('react-styl')(`
         .total-earned img
           width: 1rem
           height: 1rem
-
+  @media (min-width: 768px)
+    .growth-campaigns
+      .swag
+        img
+          max-width: 450px
+          margin-top: 20px
 `)
