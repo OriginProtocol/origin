@@ -1,6 +1,15 @@
 require('dotenv').config()
 const randomstring = require('randomstring')
 
+try {
+  require('envkey')
+} catch (err) {
+  if (process.env.NODE_ENV === 'production') {
+    console.error(err)
+    process.exit(1)
+  }
+}
+
 const NETWORK_NAME_TO_ID = {
   localhost: 999,
   rinkeby: 4,
@@ -35,6 +44,7 @@ const {
   SESSION_SECRET = randomstring.generate(),
   ENCRYPTION_KEY,
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
+  WEB3_PK,
   PROVIDER,
   IPFS_GATEWAY // IFPS gateway oerride
 } = process.env
@@ -55,6 +65,7 @@ module.exports = {
   IS_PROD,
   SESSION_SECRET,
   PASSWORD_SALT_ROUNDS,
+  WEB3_PK,
   PROVIDER,
   IPFS_GATEWAY,
   NETWORK,

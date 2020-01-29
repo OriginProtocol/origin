@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const fetch = require('node-fetch')
 const memoize = require('lodash/memoize')
 const { PROVIDER, NETWORK_ID } = require('./utils/const')

@@ -5,6 +5,8 @@ const WebSocket = require('ws')
 const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
+
+const { Network, Shops, Transactions, Orders } = require('./data/db')
 const abi = require('./utils/_abi')
 const {
   getIpfsHashFromBytes32,
@@ -16,7 +18,6 @@ const { NETWORK_ID } = require('./utils/const')
 const { ListingID, OfferID } = require('./utils/id')
 const { addressToVersion } = require('./utils/address')
 
-const { Network, Shops, Transactions, Orders } = require('./data/db')
 const sendMail = require('./utils/emailer')
 
 const web3 = new Web3()
@@ -80,12 +81,17 @@ async function connectWS() {
 
   console.log(`Connecting to ${config.provider} (netId ${netId})`)
 
-  const res = await Network.findOne({ where: { network_id: netId } })
-  if (res) {
-    lastBlock = res.last_block
-    console.log(`Last recorded block: ${lastBlock}`)
-  } else {
-    console.log('No recorded block found')
+  try {
+    const res = await Network.findOne({ where: { network_id: netId } })
+    if (res) {
+      lastBlock = res.last_block
+      console.log(`Last recorded block: ${lastBlock}`)
+    } else {
+      console.log('No recorded block found')
+    }
+  } catch (err) {
+    console.error('Error looking up network')
+    console.error(err)
   }
 
   if (ws) {

@@ -55,7 +55,7 @@ const Shops = sequelize.define(
 )
 
 const Network = sequelize.define(
-  'network',
+  'networks',
   {
     // attributes
     network_id: {
@@ -176,14 +176,22 @@ Shops.hasMany(Transactions, { as: 'transactions' })
 Discounts.belongsTo(Shops, { as: 'shops', foreignKey: 'shop_id' })
 Shops.hasMany(Discounts, { as: 'discounts' })
 
-sequelize.sync()
+try {
+  // This is a race basically.  We'll disable it and run in explicitly in Docker
+  if (typeof process.env.DISABLE_SYNC !== 'undefined') sequelize.sync()
+} catch (err) {
+  console.error('Error occurred while doing a Sequelize sync')
+  console.error(err)
+  process.exit(1)
+}
 
 module.exports = {
+  Sequelize,
+  sequelize,
   Sellers,
   Shops,
   Network,
   Transactions,
   Orders,
-  Discounts,
-  Sequelize
+  Discounts
 }

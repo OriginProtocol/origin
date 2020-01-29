@@ -7,6 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "sequelize:sync": "node -e \"const { sequelize } = require('./data/db'); sequelize.sync().then(() => console.log('success')).catch(err => console.error(err))\"",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
@@ -20,8 +21,10 @@
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "envkey": "^1.2.7",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
+    "express-session": "^1.17.0",
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
@@ -30,6 +33,7 @@
     "node-fetch": "^2.6.0",
     "nodemailer": "^6.3.1",
     "openpgp": "^4.6.2",
+    "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

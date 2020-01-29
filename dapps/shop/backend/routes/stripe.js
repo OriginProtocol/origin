@@ -11,15 +11,15 @@ const { shopGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 const abi = require('../utils/_abi')
+const { WEB3_PK, PROVIDER } = require('../utils/const')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 // TODO: This needs to be cleaner, all of this conf does
-const web3 = new Web3(process.env.PROVIDER)
-const PK = process.env.WEB3_PK
+const web3 = new Web3(PROVIDER)
 let walletAddress
-if (PK) {
-  const account = web3.eth.accounts.wallet.add(PK)
+if (WEB3_PK) {
+  const account = web3.eth.accounts.wallet.add(WEB3_PK)
   walletAddress = account.address
   console.log(`using walletAddress ${walletAddress}`)
 } else {
