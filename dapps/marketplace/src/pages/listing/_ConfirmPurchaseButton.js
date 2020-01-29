@@ -55,6 +55,7 @@ const ConfirmPurchaseButton = ({
       <UserActivationLink
         className={className}
         children={children}
+        listing={listing}
         location={{
           pathname: `/listing/${listing.id}/payment`
         }}
