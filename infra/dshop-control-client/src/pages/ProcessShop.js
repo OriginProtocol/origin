@@ -6,16 +6,23 @@ import store from '@/store'
 
 const API_URL = process.env.API_URL || 'http://localhost:3000'
 
-const ProcessShopify = () => {
+const ProcessShop = () => {
   const [redirectTo, setRedirectTo] = useState(false)
-  const { url } = useParams()
+  const { url, datadir } = useParams()
+
+  console.log(url)
 
   useEffect(() => {
     const fetchData = async () => {
-      const shopifyData = await axios.get(`${API_URL}/ingest/${url}`)
+      let shopUrl = `${API_URL}/ingest/${url}`
+      if (datadir) {
+        shopUrl += `/${datadir}`
+      }
+      const response = await axios.get(shopUrl)
       store.update(s => {
-        s.products = shopifyData.data.products
-        s.collections = shopifyData.data.collections
+        s.products = response.data.products
+        s.collections = response.data.collections
+        s.settings = response.data.config
       })
       setRedirectTo('/dashboard')
     }
@@ -33,9 +40,11 @@ const ProcessShopify = () => {
           <span className="sr-only">Loading...</span>
         </div>
       </div>
-      Grabbing your Shopify data...
+      {datadir
+        ? 'Grabbing your DShop data...'
+        : 'Grabbing your Shopify data...'}
     </div>
   )
 }
 
-export default withRouter(ProcessShopify)
+export default withRouter(ProcessShop)

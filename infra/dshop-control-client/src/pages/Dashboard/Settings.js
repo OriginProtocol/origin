@@ -14,18 +14,20 @@ const Settings = () => {
   const [fullTitle, setFullTitle] = useState(settings.fullTitle || '')
   const [byline, setByline] = useState(settings.byline || '')
   const [footer, setFooter] = useState(settings.footer || '')
-  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '')
+  const [logoUrl, setLogoUrl] = useState(
+    settings.logoUrl || 'https://shoporigin.com/images/origin-logo-black.svg'
+  )
 
-  const [email, setEmail] = useState(settings.email || '')
+  const [supportEmail, setSupportEmail] = useState(settings.supportEmail || '')
   const [emailSubject, setEmailSubject] = useState(settings.emailSubject || '')
   const [twitter, setTwitter] = useState(settings.twitter || '')
-  const [medium, setMedium] = useState(settings.twitter || '')
-  const [instagram, setInstagram] = useState(settings.twitter || '')
-  const [facebook, setFacebook] = useState(settings.twitter || '')
+  const [medium, setMedium] = useState(settings.medium || '')
+  const [instagram, setInstagram] = useState(settings.instagram || '')
+  const [facebook, setFacebook] = useState(settings.facebook || '')
 
   const [pgpPublicKey, setPgpPublicKey] = useState(settings.pgpPublicKey || '')
 
-  const [backend, setBackend] = useState('')
+  const [backend, setBackend] = useState('https://backend.ogn.app')
   const [discountCodesEnabled, setDiscountCodesEnabled] = useState(false)
   const [stripeEnabled, setStripeEnabled] = useState(false)
   const [stripeKey, setStripeKey] = useState(settings.stripeKey || '')
@@ -41,7 +43,7 @@ const Settings = () => {
           footer,
           logoUrl,
 
-          email,
+          supportEmail,
           emailSubject,
           twitter,
           medium,
@@ -116,6 +118,7 @@ const Settings = () => {
                 />
               </div>
               <div className="form-group">
+                <label>Logo</label>
                 <ImagePicker
                   title="Logo"
                   name="logoUrl"
@@ -192,8 +195,8 @@ const Settings = () => {
                 <label>Support Email</label>
                 <input
                   className="form-control"
-                  onChange={e => setEmail(e.target.value)}
-                  value={email}
+                  onChange={e => setSupportEmail(e.target.value)}
+                  value={supportEmail}
                 />
               </div>
               <div className="form-group">

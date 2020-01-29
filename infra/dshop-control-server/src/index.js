@@ -4,7 +4,6 @@ const cors = require('cors')
 const tmp = require('tmp')
 const bodyParser = require('body-parser')
 const sharp = require('sharp')
-const slugify = require('slugify')
 const fs = require('fs')
 
 const {
@@ -13,11 +12,13 @@ const {
   convertCollectionUrlsToIds: convertShopifyCollectionUrlsToIds
 } = require('./lib/shopify')
 const {
-  getDshopCollections,
-  getDshopProducts,
-  getDshopConfig
+  getCollections: getDshopCollections,
+  getProducts: getDshopProducts,
+  getConfig: getDshopConfig,
+  convertCollectionIdsToIndices
 } = require('./lib/dshop')
 const { linkDir } = require('./lib')
+const { titleToId } = require('./util')
 
 const app = express()
 
@@ -31,8 +32,8 @@ app.use(
 app.use(bodyParser.json({ limit: '100mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/ingest/:url', async (req, res) => {
-  const isShopify = req.query.datadir === undefined
+app.get('/ingest/:url/:datadir?', async (req, res) => {
+  const isShopify = req.params.datadir === undefined
   if (isShopify) {
     console.log('Fetching Shopify data for', req.params.url)
 
@@ -53,16 +54,18 @@ app.get('/ingest/:url', async (req, res) => {
       products
     })
   } else {
-    console.log(
-      'Fetching dShop data for',
-      `${req.params.url}/${req.query.datadir}`
-    )
+    console.log('Fetching dShop data for', `${req.params.url}`)
 
-    const [collections, products, config] = await Promise.all([
-      getDshopCollections(req.params.url, req.query.datadir),
-      getDshopProducts(req.params.url, req.query.datadir),
-      getDshopConfig(req.params.url, req.query.datadir)
+    // eslint-disable-next-line
+    let [collections, products, config] = await Promise.all([
+      getDshopCollections(req.params.url + '/' + req.params.datadir),
+      getDshopProducts(req.params.url + '/' + req.params.datadir),
+      getDshopConfig(req.params.url + '/' + req.params.datadir)
     ])
+
+    collections = collections.map(c =>
+      convertCollectionIdsToIndices(c, products)
+    )
 
     return res.json({
       collections,
@@ -81,9 +84,7 @@ app.post('/deploy', async (req, res) => {
   // Parse each product in the request, writing out images to the file system
   // and the JSON data
   for (const product of req.body.products) {
-    product.id = slugify(product.title, '-')
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9-_]/g, '')
+    product.id = titleToId(product.title)
 
     const productPath = `${tmpDir.name}/${product.id}`
     const imgPath = `${productPath}/orig`
@@ -167,7 +168,7 @@ app.post('/deploy', async (req, res) => {
   }
 
   req.body.collections.map(collection => {
-    collection.id = slugify(collection.title).toLowerCase()
+    collection.id = titleToId(collection.title)
     collection.products = collection.products.map(
       // Convert from a bare index to the id of the product
       productIndex => req.body.products[productIndex].id

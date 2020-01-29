@@ -15,7 +15,7 @@ const LandingPage = () => {
   }
 
   const handleUrlSubmit = () => {
-    setRedirectTo(`/process/shopify/${encodeURIComponent(url)}`)
+    setRedirectTo(`/process/${encodeURIComponent(url)}`)
   }
 
   if (redirectTo) {

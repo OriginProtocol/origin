@@ -224,7 +224,7 @@ require('react-styl')(`
       opacity: 0
       transition: opacity 0.25s ease
       &.next
-        background-image: url(/right-arrow-large.svg)
+        background-image: url(images/right-arrow-large.svg)
         left: auto
         right: 0
     &:hover

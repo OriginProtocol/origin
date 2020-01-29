@@ -5,7 +5,7 @@ import { ToastProvider } from 'react-toast-notifications'
 
 import Dashboard from './Dashboard'
 import Landing from './Landing'
-import ProcessShopify from './ProcessShopify'
+import ProcessShop from './ProcessShop'
 
 const App = ({ location }) => {
   const [loading, setLoading] = useState(true)
@@ -55,8 +55,8 @@ const App = ({ location }) => {
           <Switch>
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route
-              path="/process/shopify/:url"
-              component={ProcessShopify}
+              path="/process/:url/:datadir?"
+              component={ProcessShop}
             ></Route>
             <Route component={Landing}></Route>
           </Switch>
