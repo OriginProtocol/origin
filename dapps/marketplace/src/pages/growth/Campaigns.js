@@ -195,7 +195,7 @@ function Campaign(props) {
       {nameKey === 'growth.feb2020.name' && (
         <a
           className="swag align-self-center"
-          href="http://www.originprotocol/en/reward/swag/fabruary_2020"
+          href="http://www.originprotocol.com/en/reward/swag/fabruary_2020"
           target="_blank"
           rel="noopener noreferrer"
         >
