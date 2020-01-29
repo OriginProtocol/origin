@@ -192,14 +192,17 @@ function Campaign(props) {
         progress={tokenEarnProgress}
         showIndicators={false}
       />
-      {nameKey === 'growth.feb2020.name' && <a
-        className="swag align-self-center"
-        href="http://www.originprotocol/en/reward/swag/fabruary_2020"
-        target="_blank"
+      {nameKey === 'growth.feb2020.name' && (
+        <a
+          className="swag align-self-center"
+          href="http://www.originprotocol/en/reward/swag/fabruary_2020"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          {isMobile && <img src="/images/growth/rewardsSwag@2x.png"/>}
-          {!isMobile && <img src="/images/growth/rewardsSwagDesktop@2x.png"/>}
-      </a>}
+          {isMobile && <img src="/images/growth/rewardsSwag@2x.png" />}
+          {!isMobile && <img src="/images/growth/rewardsSwagDesktop@2x.png" />}
+        </a>
+      )}
 
       <MobileDownloadAction
         action={mobileAction}
@@ -426,7 +429,9 @@ class GrowthCampaigns extends Component {
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         <div
-          className={`container growth-campaigns ${isMobile ? 'mobile' : ''} d-flex flex-column`}
+          className={`container growth-campaigns ${
+            isMobile ? 'mobile' : ''
+          } d-flex flex-column`}
         >
           <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus, loading }) => {

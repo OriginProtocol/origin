@@ -173,18 +173,17 @@ class GrowthWelcome extends Component {
         <main className="growth-welcome">
           <div className="header d-none d-md-flex align-items-center justify-content-center">
             <Link to="/" className="custom-brand">
-              <img
-                src="images/origin-logo-black.svg"
-                alt="Origin"
-              />
+              <img src="images/origin-logo-black.svg" alt="Origin" />
             </Link>
           </div>
           <div className="wide-container">
             <div className="row">
               <div className="container-half d-flex flex-colum">
-                <div class="ml-auto left-strip">
-                  <div className="d-none d-md-flex" id="referral-campaign-header">
-                  </div>
+                <div className="ml-auto left-strip">
+                  <div
+                    className="d-none d-md-flex"
+                    id="referral-campaign-header"
+                  ></div>
                   <section
                     id="tagline"
                     className={`${personalised ? 'personalised' : ''}`}
@@ -193,7 +192,8 @@ class GrowthWelcome extends Component {
                       {!personalised && (
                         <p className="avatar-text">
                           <fbt desc="GrowthWelcome.joinToEarnChance">
-                            Join Origin Rewards and make a purchase for a chance to win OGN prizes.
+                            Join Origin Rewards and make a purchase for a chance
+                            to win OGN prizes.
                           </fbt>
                         </p>
                       )}
@@ -235,7 +235,8 @@ class GrowthWelcome extends Component {
                       <section id="intro">
                         <p>
                           <fbt desc="GrowthWelcome.OgnIsCryptoCurrency">
-                            OGN is a cryptocurrency that can be used to buy and sell anything in the Origin Marketplace.
+                            OGN is a cryptocurrency that can be used to buy and
+                            sell anything in the Origin Marketplace.
                           </fbt>
                         </p>
                       </section>
@@ -246,7 +247,10 @@ class GrowthWelcome extends Component {
                           onClick={onStoreButtonClick}
                         >
                           {isIOS && (
-                            <img src="images/growth/app-store.svg" alt="Origin" />
+                            <img
+                              src="images/growth/app-store.svg"
+                              alt="Origin"
+                            />
                           )}
                           {!isIOS && (
                             <img
