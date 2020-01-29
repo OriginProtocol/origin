@@ -5,7 +5,8 @@ export const defaultState = {
   products: [],
   settings: {
     siteTitle: 'Origin'
-  }
+  },
+  needsDeploy: false
 }
 
 const store = new Store(defaultState)

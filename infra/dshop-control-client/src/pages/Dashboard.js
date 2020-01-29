@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useStoreState } from 'pullstate'
 import { Redirect, Switch, Route, withRouter } from 'react-router-dom'
+import { useToasts } from 'react-toast-notifications'
 
 import Collections from 'pages/Dashboard/Collections'
 import CollectionAdd from 'pages/Dashboard/CollectionAdd'
@@ -11,7 +13,12 @@ import Settings from 'pages/Dashboard/Settings'
 import DeployButton from 'components/DeployButton'
 import Navigation from 'components/Navigation'
 
+import store from '@/store'
+
 const Dashboard = props => {
+  const { addToast } = useToasts()
+  const needsDeploy = useStoreState(store, s => s.needsDeploy)
+
   const [expandSidebar, setExpandSidebar] = useState(false)
 
   useEffect(
@@ -20,6 +27,25 @@ const Dashboard = props => {
         setExpandSidebar(false)
       }),
     []
+  )
+
+  // Subscribe to pullstate changes and store in local storage
+  store.subscribe(
+    s => s,
+    () => {
+      if (!needsDeploy) {
+        store.update(s => {
+          s.needsDeploy = true
+        })
+        addToast(
+          'Your Dshop needs to be redeployed for the changes to take effect',
+          {
+            appearance: 'success',
+            autoDismiss: true
+          }
+        )
+      }
+    }
   )
 
   const toggleSidebar = () => {
@@ -59,12 +85,19 @@ const Dashboard = props => {
           </Switch>
         </div>
       </div>
-      <div
-        className="fixed-bottom"
-        style={{ right: 'auto', bottom: '70px', left: '40px', width: '200px' }}
-      >
-        <DeployButton />
-      </div>
+      {needsDeploy && (
+        <div
+          className="fixed-bottom"
+          style={{
+            right: 'auto',
+            bottom: '70px',
+            left: '40px',
+            width: '200px'
+          }}
+        >
+          <DeployButton />
+        </div>
+      )}
     </div>
   )
 }

@@ -214,8 +214,10 @@ const ProductForm = ({ product = {}, onSave }) => {
         className="btn btn-sm btn-secondary mt-3"
         onClick={e => {
           e.preventDefault()
-          if (options.length > 0 && confirmVariantOverride()) {
-            setOptions([...options, null])
+          if (options.length > 0) {
+            if (confirmVariantOverride()) {
+              setOptions([...options, null])
+            }
           } else {
             setOptions([...options, null])
           }

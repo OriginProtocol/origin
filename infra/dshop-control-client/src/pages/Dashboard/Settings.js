@@ -28,8 +28,10 @@ const Settings = () => {
   const [pgpPublicKey, setPgpPublicKey] = useState(settings.pgpPublicKey || '')
 
   const [backend, setBackend] = useState('https://backend.ogn.app')
-  const [discountCodesEnabled, setDiscountCodesEnabled] = useState(false)
-  const [stripeEnabled, setStripeEnabled] = useState(false)
+  const [discountCodes, setDiscountCodesEnabled] = useState(
+    settings.discountCodes
+  )
+  const [stripeEnabled, setStripeEnabled] = useState(!!settings.stripeKey)
   const [stripeKey, setStripeKey] = useState(settings.stripeKey || '')
 
   const handleSave = () => {
@@ -53,7 +55,7 @@ const Settings = () => {
           pgpPublicKey,
 
           backend,
-          discountCodesEnabled,
+          discountCodes,
           stripeKey
         }
       }
@@ -233,7 +235,7 @@ const Settings = () => {
                     onChange={e => {
                       setDiscountCodesEnabled(e.target.checked)
                     }}
-                    checked={discountCodesEnabled}
+                    checked={discountCodes}
                   />
                   <label
                     className="custom-control-label"
