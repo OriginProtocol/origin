@@ -8,8 +8,10 @@ import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
 import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
 import { swapToTokenTx } from '../uniswap/swapToToken'
-import createDebug from 'debug'
 import { checkForMessagingOverride } from '../../resolvers/messaging/Messaging'
+import getUnitTokenValue from '../../utils/unitTokenValue'
+
+import createDebug from 'debug'
 const debug = createDebug('origin:makeOffer:')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -77,7 +79,7 @@ async function makeOffer(_, data) {
     ipfsData.commission.amount,
     'ether'
   )
-  const value = contracts.web3.utils.toWei(data.value, 'ether')
+
   const arbitrator = data.arbitrator || contracts.config.arbitrator
   const currency = await currencies.get(data.currency)
 
@@ -91,6 +93,8 @@ async function makeOffer(_, data) {
   if (!currencyAddress) {
     throw new Error(`Could not find token address for ${data.currency}`)
   }
+
+  const value = getUnitTokenValue(data.value, currency.decimals)
 
   const args = [
     listingId,
