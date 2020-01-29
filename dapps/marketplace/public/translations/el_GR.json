@@ -104,7 +104,7 @@
   "2idJzM": "Το εικονίδιο Metamask βρίσκεται στο επάνω δεξιό μέρος της γραμμής εργαλείων του προγράμματος περιήγησης.",
   "32hLtQ": "Συγχαρητήρια! Τώρα μπορείτε να ενημερώσετε άλλους χρήστες για την Προέλευση και να είστε ενήμεροι με όλες τις αγορές και τις πωλήσεις σας.",
   "AACIs": "Έχετε τελειώσει και μπορείτε να συνεχίσετε πιέζοντας το παρακάτω κουμπί.",
-  "4rLaB4": {
+  "4n4VIE": {
     "growth.jan2019.name": "Ιανουάριος 2019 Εκστρατεία",
     "growth.jan2019.short_name": "Ιαν 2019",
     "growth.feb2019.name": "Φεβρουάριος 2019 Εκστρατεία",
@@ -131,6 +131,7 @@
     "growth.dec2019.short_name": "December 2019",
     "growth.jan2020.name": "January 2020 Campaign",
     "growth.jan2020.short_name": "January 2020",
+    "growth.feb2020.short_name": "February 2020",
     "growth.profile.and.email.requirement": "Επαληθευμένο προφίλ email και προέλευσης",
     "growth.two.attestations.requirement": "Τρεις επαληθεύσεις προφίλ",
     "growth.three.attestations.requirement": "Four profile verifications",

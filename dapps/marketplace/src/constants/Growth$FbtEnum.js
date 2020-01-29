@@ -25,6 +25,7 @@ const Growth$FbtEnum = {
   'growth.dec2019.short_name': 'December 2019',
   'growth.jan2020.name': 'January 2020 Campaign',
   'growth.jan2020.short_name': 'January 2020',
+  'growth.feb2020.short_name': 'February 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
@@ -354,6 +355,9 @@ const Growth$FbtEnum = {
   'growth.share.content34.title': 'Creating the New Sharing Economy',
   'growth.share.content34.details': `Origin has built a decentralized marketplace protocol on the ethereum mainnet that replaces middlemen & connects buyers and sellers with a smart contract.`,
   'growth.share.content34.link': 'Follow Origin'
+
+  // Feb 2020 campaign
+  // TODO
 }
 
 module.exports = Growth$FbtEnum

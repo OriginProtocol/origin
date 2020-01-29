@@ -104,7 +104,7 @@
   "2idJzM": "Значок Metamask розташований у верхньому правому куті панелі інструментів веб-переглядача.",
   "32hLtQ": "Вітаємо! Тепер ви можете надсилати повідомлення іншим користувачам про Origin і залишатися в курсі всіх ваших покупок і продажів.",
   "AACIs": "Ви закінчили і можете продовжити, натиснувши кнопку нижче.",
-  "4rLaB4": {
+  "4n4VIE": {
     "growth.jan2019.name": "Кампанія в січні 2019 року",
     "growth.jan2019.short_name": "Січня 2019",
     "growth.feb2019.name": "Акція лютого 2019 року",
@@ -131,6 +131,7 @@
     "growth.dec2019.short_name": "December 2019",
     "growth.jan2020.name": "January 2020 Campaign",
     "growth.jan2020.short_name": "January 2020",
+    "growth.feb2020.short_name": "February 2020",
     "growth.profile.and.email.requirement": "Підтверджена електронна пошта й профіль Origin",
     "growth.two.attestations.requirement": "Три перевірки профілю",
     "growth.three.attestations.requirement": "Four profile verifications",
