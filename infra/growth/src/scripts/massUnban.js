@@ -29,6 +29,7 @@ class MassUnban {
     this.stats = {
       numUnbanned: 0,
       numClosed: 0,
+      numSkipped: 0,
       numPayouts: 0,
       totalPayout: 0
     }
@@ -235,7 +236,7 @@ class MassUnban {
     if (total.isGreaterThan(0)) {
       logger.info(`Found total unpaid earnings of ${total} OGN for ${account}`)
     } else {
-      logger.info(`No unpaid earnings for %{account}`)
+      logger.info(`No unpaid earnings for ${account}`)
     }
     return total.toNumber()
   }
@@ -277,9 +278,11 @@ class MassUnban {
     const participant = await this._loadAccount(account)
     // Check account's current status.
     if (participant.status !== 'Banned') {
-      throw new Error(
-        `Can't unban account ${account}: status is not Banned but ${participant.status}`
+      this.stats.numSkipped++
+      logger.warn(
+        `Can't unban account ${account}: status is not Banned but ${participant.status}. Skipping`
       )
+      return
     }
 
     const addresses = await this._loadAccountDetails(account)
@@ -401,6 +404,7 @@ job
     logger.info('MassUnban stats:')
     logger.info('  Num acct unbanned:', job.stats.numUnbanned)
     logger.info('  Num acct closed:  ', job.stats.numClosed)
+    logger.info('  Num acct skipped: ', job.stats.numSkipped)
     logger.info('  Num acct to pay:  ', job.stats.numPayouts)
     logger.info('  Total to pay:     ', job.stats.totalPayout, 'OGN')
     logger.info('Finished')
