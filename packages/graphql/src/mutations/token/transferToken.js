@@ -3,15 +3,18 @@ import contracts from '../../contracts'
 import getUnitTokenValue from '../../utils/unitTokenValue'
 
 async function transferToken(_, { token, from, to, value }) {
-  const contract = contracts.tokens.find(
+  const tokenObj = contracts.tokens.find(
     t => t.id.toLowerCase() === token.toLowerCase() || t.symbol === token
-  ).contractExec
+  )
+  const contract = tokenObj.contractExec
   await checkMetaMask(from)
   if (!contract || !contract.options.address) {
     console.log(token, 'not found')
     return
   }
-  value = getUnitTokenValue(value, token)
+
+  
+  value = getUnitTokenValue(value, parseInt(tokenObj.decimals)).toString()
   const tx = contract.methods.transfer(to, value)
   return txHelper({ tx, from, mutation: 'transferToken', gas: 4612388 })
 }
