@@ -37,7 +37,7 @@ const UserActivationLink = props => {
 
   return (
     <Link
-      to="/onboard"
+      to={props.listing ? `/listing/${props.listing.id}/onboard` : '/onboard'}
       className={props.className}
       onClick={() => {
         if (props.onClick) {
