@@ -13,7 +13,6 @@ async function transferToken(_, { token, from, to, value }) {
     return
   }
 
-  
   value = getUnitTokenValue(value, parseInt(tokenObj.decimals)).toString()
   const tx = contract.methods.transfer(to, value)
   return txHelper({ tx, from, mutation: 'transferToken', gas: 4612388 })
