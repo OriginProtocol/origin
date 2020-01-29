@@ -28,6 +28,18 @@ const Navigation = props => {
           props.expandSidebar ? '' : 'd-none d-md-block'
         }`}
       >
+        <ul className="navbar-nav mb-5">
+          <li className="nav-item mb-3">
+            <NavLink to="/dashboard/orders" className="nav-link text">
+              Orders
+            </NavLink>
+          </li>
+          <li className="nav-item mb-3">
+            <NavLink to="/dashboard/discounts" className="nav-link text">
+              Discounts
+            </NavLink>
+          </li>
+        </ul>
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
             <NavLink to="/dashboard/products" className="nav-link text">
