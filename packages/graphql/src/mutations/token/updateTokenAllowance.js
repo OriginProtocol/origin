@@ -20,7 +20,7 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
   }
 
   await checkMetaMask(from)
-  value = getUnitTokenValue(value, token)
+  value = getUnitTokenValue(value, parseInt(tokenContract.decimals))
   const tx = tokenContract.contractExec.methods.approve(to, value)
   const gas = await tx.estimateGas({ from })
   debug({ token, from, to, value })
