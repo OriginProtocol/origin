@@ -26,7 +26,7 @@ async function start() {
   console.log('Encrypted')
 
   const PGP_PRIVATE_KEY = process.env.PGP_PRIVATE_KEY.startsWith('--')
-  ? process.env.PGP_PRIVATE_KEY
+    ? process.env.PGP_PRIVATE_KEY
     : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
   const privateKey = await openpgp.key.readArmored(PGP_PRIVATE_KEY)
   const privateKeyObj = privateKey.keys[0]

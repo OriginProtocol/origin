@@ -116,7 +116,8 @@ const webpackConfig = {
       NETWORK: process.env.NETWORK || 'localhost',
       DATA_DIR: process.env.DATA_DIR || 'example',
       CONTENT_CDN: process.env.CONTENT_CDN || '',
-      CONTENT_HASH: process.env.CONTENT_HASH || ''
+      CONTENT_HASH: process.env.CONTENT_HASH || '',
+      BACKEND_AUTH_TOKEN: process.env.BACKEND_AUTH_TOKEN
     })
   ],
 

@@ -15,7 +15,10 @@ export default function dataUrl() {
   if (pathname.indexOf('/ipfs/') === 0 && CONTENT_HASH) {
     dir = `/ipfs/${CONTENT_HASH}/`
   } else {
-    dir = `${CDN[origin] || ''}${DATA_DIR || ''}/`
+    dir = `${CDN[origin] || ''}${DATA_DIR || ''}`
+    if (!dir.endsWith('/')) {
+      dir += '/'
+    }
   }
   return dir
 }

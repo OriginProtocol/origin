@@ -4,10 +4,11 @@ import get from 'lodash/get'
 
 import useOrder from 'utils/useOrder'
 import useConfig from 'utils/useConfig'
-import { useStateValue } from 'data/state'
 import usePrintfulIds from 'utils/usePrintfulIds'
 import usePrintful from 'utils/usePrintful'
 import { Countries } from 'data/Countries'
+
+const { BACKEND_AUTH_TOKEN } = process.env
 
 function generatePrintfulOrder(order, printfulIds) {
   const data = order.data
@@ -52,7 +53,6 @@ const Printful = () => {
   const { order, loading } = useOrder(orderId)
   const { printfulIds } = usePrintfulIds()
   const printfulOrder = usePrintful(orderId)
-  const [{ admin }] = useStateValue()
 
   if (loading) {
     return <div>Loading...</div>
@@ -75,12 +75,16 @@ const Printful = () => {
               }
               setConfirm(true)
               const headers = new Headers({
-                authorization: admin,
+                authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
                 'content-type': 'application/json'
               })
               const myRequest = new Request(
                 `${config.backend}/orders/${orderId}/printful/confirm`,
-                { headers, method: 'POST' }
+                {
+                  headers,
+                  credentials: 'include',
+                  method: 'POST'
+                }
               )
               const raw = await fetch(myRequest)
               const json = await raw.json()
@@ -106,12 +110,17 @@ const Printful = () => {
           }
           setCreate(true)
           const headers = new Headers({
-            authorization: admin,
+            authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
             'content-type': 'application/json'
           })
           const myRequest = new Request(
             `${config.backend}/orders/${orderId}/printful/create`,
-            { headers, method: 'POST', body: JSON.stringify(printfulData) }
+            {
+              headers,
+              credentials: 'include',
+              method: 'POST',
+              body: JSON.stringify(printfulData)
+            }
           )
           const raw = await fetch(myRequest)
           const json = await raw.json()

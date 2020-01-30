@@ -6,20 +6,38 @@ const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
 
-const { Network, Transactions, Orders } = require('./data/db')
+const { Network, Shops, Transactions, Orders } = require('./data/db')
 const abi = require('./utils/_abi')
-const { getIpfsHashFromBytes32, getText } = require('./utils/_ipfs')
+const {
+  getIpfsHashFromBytes32,
+  getText,
+  getIPFSGateway
+} = require('./utils/_ipfs')
+const encConf = require('./utils/encryptedConfig')
+const { NETWORK_ID } = require('./utils/const')
+const { ListingID, OfferID } = require('./utils/id')
+const { addressToVersion } = require('./utils/address')
+
 const sendMail = require('./utils/emailer')
 
-const localContract = process.env.MARKETPLACE_CONTRACT
-const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
+const web3 = new Web3()
+
+const Marketplace = new web3.eth.Contract(abi)
+const MarketplaceABI = Marketplace._jsonInterface
+/*const localContract = process.env.MARKETPLACE_CONTRACT
 const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
   ? process.env.PGP_PRIVATE_KEY
   : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
+const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS*/
 
-const web3 = new Web3()
-const Marketplace = new web3.eth.Contract(abi)
-const MarketplaceABI = Marketplace._jsonInterface
+/*
+const SubscribeToLogs = address =>
+  JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'eth_subscribe',
+    params: ['logs', { address, topics: [] }]
+  })*/
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -28,51 +46,52 @@ const SubscribeToNewHeads = JSON.stringify({
   params: ['newHeads']
 })
 
-const SubscribeToLogs = ({ address, listingId }) => {
-  const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
-  console.log('SubscribeToLogs', { address, listingTopic })
-  return JSON.stringify({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'eth_subscribe',
-    params: ['logs', { address, topics: [null, null, listingTopic] }]
-  })
-}
-
 const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
-  const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+  if (!listingId || !(listingId instanceof Array)) {
+    listingId = [listingId]
+  }
+
+  const params = listingId.map(lid => {
+    const listingTopic = web3.utils.padLeft(
+      web3.utils.numberToHex(lid.listingId),
+      64
+    )
+    return {
+      address: lid.address(),
+      topics: [null, null, listingTopic],
+      fromBlock: web3.utils.numberToHex(fromBlock),
+      toBlock: web3.utils.numberToHex(toBlock)
+    }
+  })
+
   const rpc = {
     jsonrpc: '2.0',
     id: 3,
     method: 'eth_getLogs',
-    params: [
-      {
-        address: config.marketplace,
-        topics: [null, null, listingTopic],
-        fromBlock: web3.utils.numberToHex(fromBlock),
-        toBlock: web3.utils.numberToHex(toBlock)
-      }
-    ]
+    params
   }
   return JSON.stringify(rpc)
 }
-
-const netId = config.network
+const netId = NETWORK_ID
 let ws
-
 async function connectWS() {
   let lastBlock
-  const siteConfig = await config.getSiteConfig()
-  web3.setProvider(siteConfig.provider)
-  const listingId = siteConfig.listingId.split('-')[2]
-  console.log(`Connecting to ${siteConfig.provider} (netId ${netId})`)
-  console.log(`Watching listing ${siteConfig.listingId}`)
-  const res = await Network.findOne({ where: { network_id: netId } })
-  if (res) {
-    lastBlock = res.last_block
-    console.log(`Last recorded block: ${lastBlock}`)
-  } else {
-    console.log('No recorded block found')
+
+  web3.setProvider(config.provider)
+
+  console.log(`Connecting to ${config.provider} (netId ${netId})`)
+
+  try {
+    const res = await Network.findOne({ where: { network_id: netId } })
+    if (res) {
+      lastBlock = res.last_block
+      console.log(`Last recorded block: ${lastBlock}`)
+    } else {
+      console.log('No recorded block found')
+    }
+  } catch (err) {
+    console.error('Error looking up network')
+    console.error(err)
   }
 
   if (ws) {
@@ -80,7 +99,7 @@ async function connectWS() {
   }
 
   console.log('Trying to connect...')
-  ws = new WebSocket(siteConfig.provider)
+  ws = new WebSocket(config.provider)
 
   function heartbeat() {
     console.log('Got ping...')
@@ -107,12 +126,8 @@ async function connectWS() {
   ws.on('open', function open() {
     console.log('Connection open')
     this.heartbeat()
-    ws.send(
-      SubscribeToLogs({
-        address: siteConfig.marketplaceContract || localContract,
-        listingId
-      })
-    )
+    // TODO: Why eth_subscribe (logs on address) AND eth_getLogs?
+    //ws.send(SubscribeToLogs(siteConfig.marketplaceContract || localContract, listingId))
     ws.send(SubscribeToNewHeads)
   })
 
@@ -141,10 +156,24 @@ async function connectWS() {
       if (blockDiff > 500) {
         console.log('Too many new blocks. Skip past log fetch.')
       } else if (blockDiff > 1 && config.fetchPastLogs) {
-        console.log(`Fetching ${blockDiff} past logs...`)
-        ws.send(
-          GetPastLogs({ fromBlock: lastBlock, toBlock: number, listingId })
-        )
+        Shops.findAll({
+          attributes: ['listing_id']
+        })
+          .on('success', rows => {
+            const listingId = rows.map(row => {
+              return ListingID.fromFQLID(row.listing_id)
+            })
+            console.log(
+              `Fetching ${blockDiff} past logs for ${listingId.length} listings...`
+            )
+            // TODO: At what point does the amount of params make this query difficult?
+            ws.send(
+              GetPastLogs({ fromBlock: lastBlock, toBlock: number, listingId })
+            )
+          })
+          .catch(err => {
+            console.error(err)
+          })
       }
       lastBlock = number
     } else {
@@ -163,8 +192,14 @@ const handleNewHead = head => {
   return number
 }
 
-const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
-  const siteConfig = await config.getSiteConfig()
+const handleLog = async ({
+  data,
+  topics,
+  transactionHash,
+  address,
+  blockNumber
+}) => {
+  const ipfsGateway = await getIPFSGateway()
   const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
   if (!eventAbi) {
     console.log('Unknown event')
@@ -190,13 +225,17 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
 
   const { name, inputs } = eventAbi
   const decoded = web3.eth.abi.decodeLog(inputs, data, topics.slice(1))
-  const { offerID, ipfsHash, party } = decoded
+  const { listingID, offerID, ipfsHash, party } = decoded
 
-  console.log(`${name} - ${siteConfig.listingId}-${offerID} by ${party}`)
+  const contractVersion = addressToVersion(address)
+  const lid = ListingID(listingID, NETWORK_ID, contractVersion)
+  const oid = OfferID(listingID, offerID, NETWORK_ID, contractVersion)
+
+  console.log(`${name} - ${oid.toString()} by ${party}`)
   console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
 
   try {
-    const offerData = await getText(siteConfig.ipfsGateway, ipfsHash, 10000)
+    const offerData = await getText(ipfsGateway, ipfsHash, 10000)
     const offer = JSON.parse(offerData)
     console.log('Offer:', offer)
 
@@ -205,13 +244,23 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
       return
     }
 
+    const record = await Shops.findOne({
+      where: {
+        listing_id: lid.toString()
+      }
+    })
+    const shopId = record.id
+
     const encryptedDataJson = await getText(
-      siteConfig.ipfsGateway,
+      ipfsGateway,
       offer.encryptedData,
       10000
     )
     const encryptedData = JSON.parse(encryptedDataJson)
     console.log('Encrypted Data:', encryptedData)
+
+    const PrivateKey = await encConf.get(shopId, 'pgp_private_key')
+    const PrivateKeyPass = await encConf.get(shopId, 'pgp_private_key_pass')
 
     const privateKey = await openpgp.key.readArmored(PrivateKey)
     const privateKeyObj = privateKey.keys[0]
@@ -222,20 +271,21 @@ const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
 
     const plaintext = await openpgp.decrypt(options)
     const cart = JSON.parse(plaintext.data)
-    cart.offerId = `${siteConfig.listingId}-${offerID}`
+    cart.offerId = oid.toString()
     cart.tx = transactionHash
 
     console.log(cart)
 
     Orders.create({
       order_id: cart.offerId,
+      shop_id: shopId,
       network_id: netId,
       data: JSON.stringify(cart)
     }).then(() => {
       console.log('Saved to DB OK')
     })
 
-    sendMail(cart)
+    sendMail(shopId, cart)
   } catch (e) {
     console.error(e)
   }

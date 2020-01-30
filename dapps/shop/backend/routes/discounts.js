@@ -1,10 +1,10 @@
 const { Sequelize, Discounts } = require('../data/db')
 
-const auth = require('./_basicAuth')
-const bodyParser = require('body-parser')
+const { authenticated } = require('./_combinedAuth')
+const { shopGate } = require('../utils/gates')
 
 module.exports = function(app) {
-  app.post('/check-discount', bodyParser.json(), async (req, res) => {
+  app.post('/check-discount', authenticated, shopGate, async (req, res) => {
     const discounts = await Discounts.findAll({
       where: {
         [Sequelize.Op.and]: [
@@ -13,7 +13,8 @@ module.exports = function(app) {
             Sequelize.fn('lower', Sequelize.col('code')),
             Sequelize.fn('lower', req.body.code)
           )
-        ]
+        ],
+        shop_id: req.shopId
       }
     })
 
@@ -30,35 +31,50 @@ module.exports = function(app) {
     res.json({})
   })
 
-  app.get('/discounts', auth, async (req, res) => {
+  app.get('/discounts', authenticated, shopGate, async (req, res) => {
     const discounts = await Discounts.findAll({
+      where: { shop_id: req.shopId },
       order: [['createdAt', 'desc']]
     })
     res.json(discounts)
   })
 
-  app.get('/discounts/:id', auth, async (req, res) => {
+  app.get('/discounts/:id', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.findOne({
-      where: { id: req.params.id }
+      where: {
+        id: req.params.id,
+        shop_id: req.shopId
+      }
     })
     res.json(discount)
   })
 
-  app.post('/discounts', auth, bodyParser.json(), async (req, res) => {
-    const discount = await Discounts.create(req.body)
+  app.post('/discounts', authenticated, shopGate, async (req, res) => {
+    const discount = await Discounts.create({
+      shop_id: req.shopId,
+      ...req.body
+    })
     res.json({ success: true, discount })
   })
 
-  app.put('/discounts/:id', auth, bodyParser.json(), async (req, res) => {
+  app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.update(req.body, {
-      where: { id: req.params.id }
+      where: {
+        id: req.params.id,
+        shop_id: req.shopId
+      }
     })
 
     res.json({ success: true, discount })
   })
 
-  app.delete('/discounts/:id', auth, bodyParser.json(), async (req, res) => {
-    const discount = await Discounts.destroy({ where: { id: req.params.id } })
+  app.delete('/discounts/:id', authenticated, shopGate, async (req, res) => {
+    const discount = await Discounts.destroy({
+      where: {
+        id: req.params.id,
+        shop_id: req.shopId
+      }
+    })
     res.json({ success: true, discount })
   })
 }
