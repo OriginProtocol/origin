@@ -12,20 +12,25 @@ function getUnitTokenValue(amount, tokenOrDecimals) {
   let tokenDecimals = tokenOrDecimals
 
   if (typeof tokenOrDecimals === 'string') {
+    if (tokenOrDecimals.startsWith('fiat-')) {
+      // Exclude FIAT
+      return amount
+    }
+
     const tokenObj = currencies.data[tokenOrDecimals]
 
-    if (!tokenObj) {
+    if (tokenObj && !Number.isNaN(tokenObj.decimals)) {
+      tokenDecimals = parseInt(tokenObj.decimals)
+    } else if (!tokenObj) {
       // Fallback
       tokenDecimals = 18
-    } else {
-      tokenDecimals = parseInt(tokenObj.decimals)
     }
   }
 
   const [whole, _frac] = amount.toString().split('.')
   const frac = (_frac || '').substr(0, tokenDecimals)
 
-  if (frac.length == tokenDecimals) {
+  if (frac.length === tokenDecimals) {
     return `${whole}${frac}`
   } else if (frac.length < tokenDecimals) {
     return `${whole}${frac.padEnd(tokenDecimals, '0')}`
