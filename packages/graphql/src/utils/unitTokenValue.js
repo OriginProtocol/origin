@@ -22,8 +22,8 @@ function getUnitTokenValue(amount, tokenOrDecimals) {
     }
   }
 
-  let [whole, frac] = amount.toString().split('.')
-  frac = (frac || '').substr(0, tokenDecimals)
+  const [whole, _frac] = amount.toString().split('.')
+  const frac = (_frac || '').substr(0, tokenDecimals)
 
   if (frac.length == tokenDecimals) {
     return `${whole}${frac}`
