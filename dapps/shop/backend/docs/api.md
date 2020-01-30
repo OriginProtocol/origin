@@ -17,6 +17,12 @@ Check if user is authenticated
 
     curl $DEFAULT_OPTIONS -b $COOKIE_STORAGE $API_ROOT/auth
 
+### `GET /auth/:email`
+
+Check for an existing seller account by E-mail address
+
+    curl $DEFAULT_OPTIONS $KEY_AUTH_HEADER $API_ROOT/auth/me@example.com
+
 ### `POST /auth/login`
 
 Authenticate a seller. Sessions tracked by cookies.
