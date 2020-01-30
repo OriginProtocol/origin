@@ -3,7 +3,7 @@ import TagsInput from 'react-tagsinput'
 
 import 'react-tagsinput/react-tagsinput.css'
 
-import ImageUpload from 'components/ImageUpload'
+import ImageUpload from 'components/Edit/ImageUpload'
 
 const ProductForm = ({ product = {}, onSave }) => {
   const didMountRef = useRef(false)

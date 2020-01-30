@@ -4,8 +4,10 @@ import store from '@/store'
 import { ToastProvider } from 'react-toast-notifications'
 
 import Edit from './Edit'
+import Manage from './Manage'
 import Landing from './Landing'
 import ProcessShop from './ProcessShop'
+import SignIn from './SignIn'
 
 const App = ({ location }) => {
   const [loading, setLoading] = useState(true)
@@ -54,10 +56,12 @@ const App = ({ location }) => {
         <ToastProvider>
           <Switch>
             <Route path="/edit" component={Edit}></Route>
+            <Route path="/manage" component={Manage}></Route>
             <Route
               path="/process/:url/:datadir?"
               component={ProcessShop}
             ></Route>
+            <Route path="/signin" component={SignIn}></Route>
             <Route component={Landing}></Route>
           </Switch>
         </ToastProvider>

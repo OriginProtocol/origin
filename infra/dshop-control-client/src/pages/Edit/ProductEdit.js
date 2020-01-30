@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import { useToasts } from 'react-toast-notifications'
 
-import ProductForm from 'components/ProductForm'
+import ProductForm from 'components/Edit/ProductForm'
 import store from '@/store'
 
 const ProductEdit = () => {

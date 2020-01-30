@@ -32,7 +32,10 @@ const LandingPage = () => {
                 <div className="col">
                   <Logo className="my-5" />
                   <div className="float-right my-5">
-                    <button className="btn btn-primary" onClick={() => setRedirectTo('/signin')}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setRedirectTo('/signin')}
+                    >
                       Sign In
                     </button>
                   </div>

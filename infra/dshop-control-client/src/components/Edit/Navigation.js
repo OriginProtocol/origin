@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-import Logo from 'react-svg-loader!../assets/origin-logo.svg'
+import Logo from 'react-svg-loader!../../assets/origin-logo.svg'
 
 const Navigation = props => {
   return (
@@ -21,7 +21,7 @@ const Navigation = props => {
       <div className="brand mt-3 text-center">
         <Logo />
         <br />
-        <p className="mt-2 mb-0">dShop</p>
+        <p className="mt-2 mb-0">dShop Edit</p>
       </div>
       <div
         className={`mt-4 ml-3 mb-auto ${

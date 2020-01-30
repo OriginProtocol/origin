@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import { ethers } from 'ethers'
 import { get } from 'lodash'
@@ -10,8 +9,6 @@ import bs58 from 'bs58'
 import { baseListing } from '@/constants'
 import contracts from '@/constants/contracts'
 import store from '@/store'
-
-const API_URL = process.env.API_URL || 'http://localhost:3000'
 
 const Deploy = () => {
   const [email, setEmail] = useState('')
@@ -38,7 +35,7 @@ const Deploy = () => {
    * a user does not have account one will be created and they will be logged in.
    */
   const handlePassword = () => {
-    const response = axios.post(backendUrl, { email, password} )
+    const response = axios.post(backendUrl, { email, password })
 
     const listingId = get(settings.networks, `${ethNetworkId}.listingId`)
     if (!listingId) {
@@ -109,9 +106,18 @@ const Deploy = () => {
     return (
       <>
         <div className="my-5">
-          <p>Great! You've elected to use Origin's hosted backend to deliver email notifications and manage orders and discounts (if you'd prefer to host it yourself, please refer to the documentation).</p>
+          <p>
+            Great! You&apos;ve elected to use Origin&apos;s hosted backend to
+            deliver email notifications and manage orders and discounts (if
+            you&apos;d prefer to host it yourself, please refer to the
+            documentation).
+          </p>
 
-          <p>Please enter the email address you'd like to use for DShop related notifications. If we find you've already got an account, we'll use that, otherwise we'll create one for you.</p>
+          <p>
+            Please enter the email address you&apos;d like to use for DShop
+            related notifications. If we find you&apos;ve already got an account,
+            we&apos;ll use that, otherwise we&apos;ll create one for you.
+          </p>
         </div>
 
         <form className="mt-3" onSubmit={handleEmail}>
@@ -164,7 +170,10 @@ const Deploy = () => {
   const renderListingForm = () => {
     return (
       <div className="my-5">
-        <p>Now we will create a listing on the Origin marketplace contract for your DShop. You'll be prompted to sign a transaction in MetaMask.</p>
+        <p>
+          Now we will create a listing on the Origin marketplace contract for
+          your DShop. You&apos;ll be prompted to sign a transaction in MetaMask.
+        </p>
         <div className="mt-5">
           <button onClick={createListing} className="btn btn-lg btn-primary">
             Continue

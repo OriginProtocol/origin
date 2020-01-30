@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useStoreState } from 'pullstate'
 import { useToasts } from 'react-toast-notifications'
 
-import ImagePicker from 'components/ImagePicker'
+import ImagePicker from 'components/Edit/ImagePicker'
 import store from '@/store'
 
 const Settings = () => {

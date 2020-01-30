@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 
-import CollectionForm from 'components/CollectionForm'
+import CollectionForm from 'components/Edit/CollectionForm'
 import store from '@/store'
 
 const CollectionAdd = () => {

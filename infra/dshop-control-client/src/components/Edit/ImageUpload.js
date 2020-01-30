@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Gallery from 'components/Gallery'
+import Gallery from 'components/Edit/Gallery'
 
 const ImageUpload = ({ images, setImages }) => {
   const handleImageChange = e => {

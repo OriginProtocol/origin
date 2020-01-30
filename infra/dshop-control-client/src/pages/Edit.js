@@ -11,7 +11,7 @@ import Products from 'pages/Edit/Products'
 import ProductAdd from 'pages/Edit/ProductAdd'
 import ProductEdit from 'pages/Edit/ProductEdit'
 import Settings from 'pages/Edit/Settings'
-import Navigation from 'components/Navigation'
+import Navigation from 'components/Edit/Navigation'
 
 import store from '@/store'
 
@@ -32,18 +32,20 @@ const Edit = props => {
   // Subscribe to pullstate changes and store in local storage
   store.subscribe(
     s => s,
-    () => {
+    (watched, allState, prevWatched) => {
       if (!needsDeploy) {
         store.update(s => {
           s.needsDeploy = true
         })
-        addToast(
-          'Your Dshop needs to be redeployed for the changes to take effect',
-          {
-            appearance: 'success',
-            autoDismiss: true
-          }
-        )
+        if (!watched.needsDeploy && !prevWatched.needsDeploy) {
+          addToast(
+            'Your Dshop needs to be redeployed for the changes to take effect',
+            {
+              appearance: 'success',
+              autoDismiss: true
+            }
+          )
+        }
       }
     }
   )
@@ -67,19 +69,12 @@ const Edit = props => {
               component={ProductEdit}
             />
             <Route exact path="/edit/products" component={Products} />
-            <Route
-              path="/edit/collections/add"
-              component={CollectionAdd}
-            />
+            <Route path="/edit/collections/add" component={CollectionAdd} />
             <Route
               path="/edit/collections/edit/:collectionId(\d+)"
               component={CollectionEdit}
             />
-            <Route
-              exact
-              path="/edit/collections"
-              component={Collections}
-            />
+            <Route exact path="/edit/collections" component={Collections} />
             <Route path="/edit/settings" component={Settings} />
             <Route path="/edit/deploy" component={Deploy} />
             <Redirect to="/edit/products" />

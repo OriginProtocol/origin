@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import { useToasts } from 'react-toast-notifications'
 
-import CollectionForm from 'components/CollectionForm'
+import CollectionForm from 'components/Edit/CollectionForm'
 import store from '@/store'
 
 const CollectionEdit = () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 
-import ProductForm from 'components/ProductForm'
+import ProductForm from 'components/Edit/ProductForm'
 import store from '@/store'
 
 const ProductAdd = () => {
