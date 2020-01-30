@@ -14,6 +14,7 @@ const API_URL = process.env.API_URL || 'http://localhost:3000'
 
 const DeployButton = () => {
   const [loading, setLoading] = useState(false)
+
   const settings = useStoreState(store, s => s.settings)
   const collections = useStoreState(store, s => s.collections)
   const products = useStoreState(store, s => s.products)

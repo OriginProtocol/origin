@@ -62,7 +62,7 @@ const CollectionForm = ({ collection = {}, onSave }) => {
               <tr key={productId}>
                 <td>{get(products[productId], 'title', productId)}</td>
                 <td>
-                  <Link to={`/dashboard/products/edit/${productId}`}>
+                  <Link to={`/edit/products/edit/${productId}`}>
                     Edit Product
                   </Link>
                 </td>

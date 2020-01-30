@@ -3,7 +3,7 @@ import { Switch, Route, withRouter } from 'react-router-dom'
 import store from '@/store'
 import { ToastProvider } from 'react-toast-notifications'
 
-import Dashboard from './Dashboard'
+import Edit from './Edit'
 import Landing from './Landing'
 import ProcessShop from './ProcessShop'
 
@@ -53,7 +53,7 @@ const App = ({ location }) => {
       {!loading ? (
         <ToastProvider>
           <Switch>
-            <Route path="/dashboard" component={Dashboard}></Route>
+            <Route path="/edit" component={Edit}></Route>
             <Route
               path="/process/:url/:datadir?"
               component={ProcessShop}

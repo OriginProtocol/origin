@@ -11,7 +11,7 @@ const LandingPage = () => {
 
   const handleStart = () => {
     store.update(() => defaultState)
-    setRedirectTo('/dashboard')
+    setRedirectTo('/edit')
   }
 
   const handleUrlSubmit = () => {
@@ -29,8 +29,17 @@ const LandingPage = () => {
           <div className="hero-graphic">
             <div className="container">
               <div className="row">
-                <div className="col-12 col-md-5">
+                <div className="col">
                   <Logo className="my-5" />
+                  <div className="float-right my-5">
+                    <button className="btn btn-primary" onClick={() => setRedirectTo('/signin')}>
+                      Sign In
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 col-md-5">
                   <h1>
                     Build your
                     <br /> decentralized

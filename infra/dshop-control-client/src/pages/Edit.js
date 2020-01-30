@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useStoreState } from 'pullstate'
-import { Redirect, Switch, Route, withRouter } from 'react-router-dom'
+import { NavLink, Redirect, Switch, Route, withRouter } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 
-import Collections from 'pages/Dashboard/Collections'
-import CollectionAdd from 'pages/Dashboard/CollectionAdd'
-import CollectionEdit from 'pages/Dashboard/CollectionEdit'
-import Products from 'pages/Dashboard/Products'
-import ProductAdd from 'pages/Dashboard/ProductAdd'
-import ProductEdit from 'pages/Dashboard/ProductEdit'
-import Settings from 'pages/Dashboard/Settings'
-import DeployButton from 'components/DeployButton'
+import Collections from 'pages/Edit/Collections'
+import CollectionAdd from 'pages/Edit/CollectionAdd'
+import CollectionEdit from 'pages/Edit/CollectionEdit'
+import Deploy from 'pages/Edit/Deploy'
+import Products from 'pages/Edit/Products'
+import ProductAdd from 'pages/Edit/ProductAdd'
+import ProductEdit from 'pages/Edit/ProductEdit'
+import Settings from 'pages/Edit/Settings'
 import Navigation from 'components/Navigation'
 
 import store from '@/store'
 
-const Dashboard = props => {
+const Edit = props => {
   const { addToast } = useToasts()
   const needsDeploy = useStoreState(store, s => s.needsDeploy)
 
@@ -61,27 +61,28 @@ const Dashboard = props => {
       <div id="main" className={expandSidebar ? 'd-none' : ''}>
         <div className="mt-4">
           <Switch>
-            <Route path="/dashboard/products/add" component={ProductAdd} />
+            <Route path="/edit/products/add" component={ProductAdd} />
             <Route
-              path="/dashboard/products/edit/:productId(\d+)"
+              path="/edit/products/edit/:productId(\d+)"
               component={ProductEdit}
             />
-            <Route exact path="/dashboard/products" component={Products} />
+            <Route exact path="/edit/products" component={Products} />
             <Route
-              path="/dashboard/collections/add"
+              path="/edit/collections/add"
               component={CollectionAdd}
             />
             <Route
-              path="/dashboard/collections/edit/:collectionId(\d+)"
+              path="/edit/collections/edit/:collectionId(\d+)"
               component={CollectionEdit}
             />
             <Route
               exact
-              path="/dashboard/collections"
+              path="/edit/collections"
               component={Collections}
             />
-            <Route path="/dashboard/settings" component={Settings} />
-            <Redirect to="/dashboard/products" />
+            <Route path="/edit/settings" component={Settings} />
+            <Route path="/edit/deploy" component={Deploy} />
+            <Redirect to="/edit/products" />
           </Switch>
         </div>
       </div>
@@ -95,11 +96,13 @@ const Dashboard = props => {
             width: '200px'
           }}
         >
-          <DeployButton />
+          <NavLink to="/edit/deploy" className="btn btn-lg btn-dark btn-block">
+            Deploy
+          </NavLink>
         </div>
       )}
     </div>
   )
 }
 
-export default withRouter(Dashboard)
+export default withRouter(Edit)

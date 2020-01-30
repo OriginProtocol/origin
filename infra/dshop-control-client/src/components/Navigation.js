@@ -30,29 +30,17 @@ const Navigation = props => {
       >
         <ul className="navbar-nav mb-5">
           <li className="nav-item mb-3">
-            <NavLink to="/dashboard/orders" className="nav-link text">
-              Orders
-            </NavLink>
-          </li>
-          <li className="nav-item mb-3">
-            <NavLink to="/dashboard/discounts" className="nav-link text">
-              Discounts
-            </NavLink>
-          </li>
-        </ul>
-        <ul className="navbar-nav">
-          <li className="nav-item mb-3">
-            <NavLink to="/dashboard/products" className="nav-link text">
+            <NavLink to="/edit/products" className="nav-link text">
               Products
             </NavLink>
           </li>
           <li className="nav-item mb-3">
-            <NavLink to="/dashboard/collections" className="nav-link text">
+            <NavLink to="/edit/collections" className="nav-link text">
               Collections
             </NavLink>
           </li>
           <li className="nav-item mb-3">
-            <NavLink to="/dashboard/settings" className="nav-link text">
+            <NavLink to="/edit/settings" className="nav-link text">
               Settings
             </NavLink>
           </li>

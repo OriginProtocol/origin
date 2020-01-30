@@ -33,7 +33,7 @@ const ProductEdit = () => {
     if (history.length > 1) {
       history.goBack()
     } else {
-      history.go('/dashboard/products')
+      history.go('/edit/products')
     }
   }
 

@@ -24,7 +24,7 @@ const ProcessShop = () => {
         s.collections = response.data.collections
         s.settings = response.data.config
       })
-      setRedirectTo('/dashboard')
+      setRedirectTo('/edit')
     }
     fetchData()
   }, [])

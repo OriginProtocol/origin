@@ -32,7 +32,7 @@ const CollectionEdit = () => {
     if (history.length > 1) {
       history.goBack()
     } else {
-      history.go('/dashboard/collections')
+      history.go('/edit/collections')
     }
   }
 

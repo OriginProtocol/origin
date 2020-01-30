@@ -25,7 +25,7 @@ const Collections = () => {
       <div className="d-flex justify-content-between">
         <h3>Collections</h3>
       </div>
-      <Link to="/dashboard/collections/add">
+      <Link to="/edit/collections/add">
         <button className="btn btn-lg btn-primary my-4">Add Collection</button>
       </Link>
       {collections.length > 0 ? (
@@ -44,7 +44,7 @@ const Collections = () => {
                 <td>{collection.title}</td>
                 <td>{collection.products && collection.products.length}</td>
                 <td>
-                  <Link to={`/dashboard/collections/edit/${i}`}>Edit</Link>
+                  <Link to={`/edit/collections/edit/${i}`}>Edit</Link>
                 </td>
                 <td>
                   <a href="#" onClick={e => handleDelete(e, i)}>

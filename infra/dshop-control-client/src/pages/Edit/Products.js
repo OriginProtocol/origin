@@ -51,7 +51,7 @@ const Products = () => {
         <SortBy />
         */}
       </div>
-      <Link to="/dashboard/products/add">
+      <Link to="/edit/products/add">
         <button className="btn btn-lg btn-primary my-4">Add Product</button>
       </Link>
       {pagedProducts.length > 0 ? (
@@ -70,7 +70,7 @@ const Products = () => {
                 <td>{product.title}</td>
                 <td>{formatPrice(product.price)}</td>
                 <td>
-                  <Link to={`/dashboard/products/edit/${start + i}`}>Edit</Link>
+                  <Link to={`/edit/products/edit/${start + i}`}>Edit</Link>
                 </td>
                 <td>
                   <a href="#" onClick={e => handleDelete(e, start + i)}>
