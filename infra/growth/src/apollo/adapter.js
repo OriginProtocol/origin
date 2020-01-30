@@ -81,7 +81,7 @@ class ApolloAdapter {
     return await GrowthInvite.getReferralsInfo(
       data.ethAddress,
       data.campaign.id,
-      data.reward.value,
+      data.reward ? data.reward.value : null,
       data.rewards
     )
   }
