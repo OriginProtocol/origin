@@ -3,6 +3,7 @@ const {
   createSalt,
   hashPassword,
   AuthSeller,
+  authenticated,
   authenticatedAsSeller
 } = require('./_combinedAuth')
 const { IS_PROD } = require('../utils/const')
@@ -12,6 +13,18 @@ const { validateConfig, validateShop } = require('../utils/validators')
 module.exports = function(app) {
   app.get('/auth', (req, res) => {
     res.json({ success: req.isAuthenticated() })
+  })
+
+  app.get('/auth/:email', authenticated, async (req, res) => {
+    const seller = await Sellers.findOne({
+      where: {
+        email: req.params.email
+      }
+    })
+    res.json({
+      success: true,
+      exists: seller !== null
+    })
   })
 
   app.post(
