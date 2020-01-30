@@ -202,6 +202,7 @@ const feb2020Config = {
           config: {
             levelRequired: 1,
             reward: null,
+            limit: -1,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign'
