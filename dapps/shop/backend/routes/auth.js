@@ -16,6 +16,7 @@ module.exports = function(app) {
   })
 
   app.get('/auth/:email', authenticated, async (req, res) => {
+    // TODO: Add some rate limiting here
     const seller = await Sellers.findOne({
       where: {
         email: req.params.email
