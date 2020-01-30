@@ -11,6 +11,9 @@ const app = express()
 const ORIGIN_WHITELIST_ENABLED = false
 const ORIGIN_WHITELIST = []
 
+// TODO: Restrict this more? See: https://expressjs.com/en/guide/behind-proxies.html
+app.set('trust proxy', true)
+
 app.use(
   session({
     secret: SESSION_SECRET,
