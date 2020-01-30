@@ -130,7 +130,7 @@ const WithPrices = ({
 
   if (!suggestedToken) {
     // Let's default to something
-    suggestedToken = listing.acceptedTokens[0].id
+    suggestedToken = get(listing, 'acceptedTokens[0].id')
   }
 
   return children({ prices: wallet, tokenStatus, suggestedToken })
