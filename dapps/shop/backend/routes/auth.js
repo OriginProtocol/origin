@@ -15,7 +15,7 @@ module.exports = function(app) {
     res.json({ success: req.isAuthenticated() })
   })
 
-  app.get('/auth/:email', authenticated, async (req, res) => {
+  app.get('/auth/:email', async (req, res) => {
     // TODO: Add some rate limiting here
     const seller = await Sellers.findOne({
       where: {
@@ -42,7 +42,6 @@ module.exports = function(app) {
   // TODO: Should this at least use API key auth?
   app.post('/auth/registration', async (req, res) => {
     const { name, email, password } = req.body
-
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -152,7 +151,7 @@ module.exports = function(app) {
     const { id: shopId } = req.params
 
     // Testing only
-    if (IS_PROD) return res.status(404)
+    if (IS_PROD) return res.sendStatus(404)
 
     const shop = await Shops.findOne({
       where: {
