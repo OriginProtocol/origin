@@ -1,9 +1,17 @@
 /* eslint-disable */
 
 require('dotenv').config()
-const fetch = require('node-fetch')
 const program = require('commander')
 const fs = require('fs')
+const https = require('https')
+const sharp = require('sharp')
+
+const getProducts = require('./printful/getProducts')
+const getProduct = require('./printful/getProduct')
+const getVariant = require('./printful/getVariant')
+const getMockups = require('./printful/getMockups')
+const writeProductData = require('./printful/writeProductData')
+const writeInternalData = require('./printful/writeInternalData')
 
 program.requiredOption('-s, --site <site>', 'Site name')
 
@@ -19,52 +27,12 @@ const OutputDir = `${__dirname}/output/${program.site}`
 const apiAuth = Buffer.from(process.env.PRINTFUL).toString('base64')
 const PrintfulURL = 'https://api.printful.com'
 
-async function getProducts() {
-  const res = await fetch(`${PrintfulURL}/sync/products?limit=100`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: `Basic ${apiAuth}`
-    },
-    method: 'GET'
-  })
-  const json = await res.json()
-  console.log(`${OutputDir}/printful-products.json`)
-
-  fs.writeFileSync(
-    `${OutputDir}/printful-products.json`,
-    JSON.stringify(json.result, null, 2)
-  )
-
-  console.log(`Synced ${json.result.length} products from Printful`)
-
-  return json.result.map(d => d.id)
-}
-
-async function getProduct(id) {
-  const res = await fetch(`${PrintfulURL}/sync/products/${id}`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: `Basic ${apiAuth}`
-    },
-    method: 'GET'
-  })
-  const json = await res.json()
-  const data = json.result
-
-  fs.writeFileSync(
-    `${OutputDir}/data-printful/product-${id}.json`,
-    JSON.stringify(data, null, 2)
-  )
-  console.log(`Wrote product ${id}`)
-
-  return
-}
-
 async function getProductIds() {
   const productsRaw = fs.readFileSync(`${OutputDir}/printful-products.json`)
   const products = JSON.parse(productsRaw)
   return products.map(p => p.id)
 }
+
 async function getProductSyncIds(id) {
   const productRaw = fs.readFileSync(
     `${OutputDir}/data-printful/product-${id}.json`
@@ -77,11 +45,24 @@ async function getProductSyncIds(id) {
 }
 
 async function downloadProductData() {
-  await getProducts()
   fs.mkdirSync(`${OutputDir}/data-printful`, { recursive: true })
+  await getProducts({ PrintfulURL, apiAuth, OutputDir })
   const ids = await getProductIds()
   for (const id of ids) {
-    await getProduct(id)
+    await getProduct({ PrintfulURL, apiAuth, OutputDir, id })
+  }
+}
+
+async function downloadVariantData() {
+  const ids = await getProductIds()
+  for (const id of ids) {
+    const productDataRaw = fs.readFileSync(
+      `${OutputDir}/data-printful/product-${id}.json`
+    )
+    const productData = JSON.parse(productDataRaw)
+    console.log(productData.sync_variants[0].product.variant_id)
+    const firstVariantId = productData.sync_variants[0].product.variant_id
+    await getVariant({ PrintfulURL, apiAuth, OutputDir, id: firstVariantId })
   }
 }
 
@@ -119,8 +100,52 @@ async function writePrintfulIds() {
   )
 }
 
+async function downloadPrintfulMockups({ OutputDir }) {
+  console.log('Downloading mockups...')
+  const filesRaw = fs.readFileSync(`${OutputDir}/printful-images.json`)
+  const files = JSON.parse(filesRaw)
+
+  for (const file of files) {
+    const prefix = `${OutputDir}/data/${file.id}/orig`
+    fs.mkdirSync(prefix, { recursive: true })
+
+    const f = fs.createWriteStream(`${prefix}/${file.file}`)
+    https.get(file.url, response => response.pipe(f))
+  }
+}
+
+async function resizePrintfulMockups({ OutputDir }) {
+  console.log('Resizing mockups...')
+  const filesRaw = fs.readFileSync(`${OutputDir}/printful-images.json`)
+  const files = JSON.parse(filesRaw)
+
+  for (const file of files) {
+    const inputDir = `${OutputDir}/data/${file.id}/orig`
+    const outputFileDir = `${OutputDir}/data/${file.id}/520`
+
+    fs.mkdirSync(outputFileDir, { recursive: true })
+    const images = fs.readdirSync(inputDir)
+    console.log(images)
+    for (const image of images) {
+      if (!fs.existsSync(`${outputFileDir}/${image}`)) {
+        const resizedFile = await sharp(`${inputDir}/${image}`)
+          .resize(520)
+          .toBuffer()
+
+        fs.writeFileSync(`${outputFileDir}/${image}`, resizedFile)
+      }
+    }
+  }
+}
+
 async function start() {
-  await downloadProductData()
+  // await downloadProductData()
+  // await downloadVariantData()
+  // await writeProductData({ OutputDir })
+  // await downloadPrintfulMockups({ OutputDir })
+  // await resizePrintfulMockups({ OutputDir })
+  // await writeInternalData({ OutputDir })
+  // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })
   // await writeShopifyToPrintful()
   // await writePrintfulIds()
 }

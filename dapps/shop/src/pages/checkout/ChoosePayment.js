@@ -57,6 +57,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   )
 
   const walletStatus = getWalletStatus(walletStatusData, walletLoading)
+  const listingID = get(config, `listingId`)
 
   const [makeOffer] = useMutation(MakeOffer, {
     onCompleted: arg => {
@@ -142,7 +143,13 @@ const CreditCardForm = injectStripe(({ stripe }) => {
 
         if (paymentMethod === 'stripe') {
           const { backend } = config
-          submitStripePayment({ backend, stripe, cart, encryptedData })
+          submitStripePayment({
+            backend,
+            stripe,
+            cart,
+            encryptedData,
+            listingId: listingID
+          })
             .then(result => {
               if (result.error) {
                 setFormData({ ...formData, cardError: result.error.message })
@@ -160,9 +167,8 @@ const CreditCardForm = injectStripe(({ stripe }) => {
               setLoading(false)
             })
         } else if (paymentMethod === 'crypto') {
-          const netId = get(walletStatusData, 'web3.networkId')
           const variables = {
-            listingID: get(config, `networks[${netId}].listingId`),
+            listingID,
             value: tokenStatus.tokenValue,
             currency: token,
             from: get(walletStatusData, 'web3.metaMaskAccount.id'),
@@ -291,6 +297,12 @@ const Execute = ({ exec, children }) => {
   return children
 }
 
+const DefaultTokens = [
+  { id: 'token-OGN', name: 'OGN' },
+  { id: 'token-DAI', name: 'DAI' },
+  { id: 'token-ETH', name: 'ETH' }
+]
+
 const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
   const { config } = useConfig()
   const [approveUnlockTx, setApproveUnlockTx] = useState()
@@ -304,11 +316,15 @@ const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
       setApproveUnlockTx(false)
     }
   })
+  const acceptedTokens = config.acceptedTokens || DefaultTokens
+  const selectedToken =
+    acceptedTokens.find(t => t.id === value) || acceptedTokens[0]
+  const acceptedTokenIds = acceptedTokens.map(t => t.id)
 
   return (
     <WithPrices
       price={price}
-      targets={['token-ETH', 'token-DAI', 'fiat-USD']}
+      targets={[...acceptedTokenIds, 'fiat-USD']}
       allowanceTarget={config.marketplaceContract || MarketplaceContract}
     >
       {({ tokenStatus, refetchBalances }) => {
@@ -323,31 +339,25 @@ const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
         return (
           <div className="crypto-chooser">
             <div className="tokens">
-              <div
-                className={value === 'token-ETH' ? 'active' : ''}
-                onClick={() => onChange('token-ETH')}
-              >
-                <div>Pay with ETH </div>
-                <div>
-                  <Price price={price} target="token-ETH" />
+              {acceptedTokens.map(token => (
+                <div
+                  key={token.id}
+                  className={value === token.id ? 'active' : ''}
+                  onClick={() => onChange(token.id)}
+                >
+                  <div>{`Pay with ${token.name}`}</div>
+                  <div>
+                    <Price price={price} target={token.id} />
+                  </div>
+                  <div className="sm">
+                    <Price
+                      prefix={`1 ${token.name} = `}
+                      price={{ currency: token.id, amount: '1' }}
+                      target="fiat-USD"
+                    />
+                  </div>
                 </div>
-                <div className="sm">
-                  <Price
-                    prefix="1 ETH = "
-                    price={{ currency: 'token-ETH', amount: '1' }}
-                    target="fiat-USD"
-                  />
-                </div>
-              </div>
-              <div
-                className={value === 'token-DAI' ? 'active' : ''}
-                onClick={() => onChange('token-DAI')}
-              >
-                <div>Pay with DAI</div>
-                <div>
-                  <Price price={price} target="token-DAI" />
-                </div>
-              </div>
+              ))}
             </div>
             {!token ? null : !token.hasBalance ? (
               <div className="alert alert-danger mt-3 mb-0">
@@ -355,7 +365,7 @@ const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
               </div>
             ) : !token.hasAllowance ? (
               <div className="alert alert-info mt-3 mb-0 d-flex align-items-center">
-                Please unlock your DAI to continue
+                {`Please unlock your ${selectedToken.name} to continue`}
                 <button
                   className={`btn btn-primary btn-sm ml-3${
                     approveUnlockTx ? ' disabled' : ''
