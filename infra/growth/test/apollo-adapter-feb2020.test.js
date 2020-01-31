@@ -11,7 +11,7 @@ let eventId = 0
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(13) // Note: adjust based on number of rules.
+  expect(state.actions.length).to.equal(23) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -100,7 +100,7 @@ describe('Apollo adapter - Feb 2020 campaign', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(11) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(21) // Note: adjust based on number of rules.
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -507,7 +507,7 @@ describe('Apollo adapter - Feb 2020 campaign', () => {
       {
         id: eventId++,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: 'd5ccf3d5334d8c78095af435192c0d42', // use bridge/src/utils/webhook-helpers.js:hashContent to get this hash
+        customId: '4c253f061648a01c0c1f3a94757b6b8f', // use bridge/src/utils/webhook-helpers.js:hashContent to get this hash
         data: {
           twitterProfile: {
             verified: false,
@@ -542,7 +542,7 @@ describe('Apollo adapter - Feb 2020 campaign', () => {
       {
         id: eventId++,
         type: GrowthEventTypes.SharedOnFacebook,
-        customId: 'investors',
+        customId: 'hkb',
         data: null,
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
