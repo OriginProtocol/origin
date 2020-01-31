@@ -7,7 +7,7 @@ import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol
  * */
 
 contract ERC20 {
-  function transferFrom(address _from, address _to, uint256 _value) public returns (bool);
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool);
 }
 
 contract TokenDistributor is Ownable {
