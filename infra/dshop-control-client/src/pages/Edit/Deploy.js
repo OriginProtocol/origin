@@ -14,6 +14,7 @@ const Deploy = () => {
   const [email, setEmail] = useState('')
   const [step, setStep] = useState('Email')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
 
   const settings = useStoreState(store, s => s.settings)
   const backendUrl = settings.backend
@@ -22,20 +23,39 @@ const Deploy = () => {
 
   /* Check if a user has an account on the backend,
    */
-  const handleEmail = () => {
-    const response = axios.get(backendUrl, { email })
-    if (response.status === 204) {
-      setStep('Password')
-    } else {
-      setStep('Password')
+  const handleEmail = async () => {
+    try {
+      await axios.get(`${backendUrl}/auth/${email}`)
+    } catch (error) {
+      if (error.response.status === 404) {
+        setStep('Password.Create')
+      }
+      return
     }
+    setStep('Password.Login')
   }
 
   /* If a user already has an account on the backend, they will be logged in. If
    * a user does not have account one will be created and they will be logged in.
    */
-  const handlePassword = () => {
-    const response = axios.post(backendUrl, { email, password })
+  const handlePassword = async () => {
+    try {
+      if (step === 'Password.Create') {
+        await axios.post(`${backendUrl}/auth/registration`, {
+          email,
+          password,
+          name
+        })
+      } else if (step === 'Password.Login') {
+        await axios.post(`${backendUrl}/auth/login`, {
+          email,
+          password
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      return
+    }
 
     const listingId = get(settings.networks, `${ethNetworkId}.listingId`)
     if (!listingId) {
@@ -115,8 +135,9 @@ const Deploy = () => {
 
           <p>
             Please enter the email address you&apos;d like to use for DShop
-            related notifications. If we find you&apos;ve already got an account,
-            we&apos;ll use that, otherwise we&apos;ll create one for you.
+            related notifications. If we find you&apos;ve already got an
+            account, we&apos;ll use that, otherwise we&apos;ll create one for
+            you.
           </p>
         </div>
 
@@ -144,16 +165,37 @@ const Deploy = () => {
     return (
       <>
         <div className="my-5">
-          <p>Please enter your password</p>
+          {step === 'Password.Create' && (
+            <p>
+              You don&apos;t have an account. We&apos;ll create one now for you.
+              Please enter a password.
+            </p>
+          )}
+          {step === 'Password.Login' && (
+            <p>
+              It looks like you have an account, please enter your password.
+            </p>
+          )}
         </div>
 
         <form className="mt-3" onSubmit={handlePassword}>
+          {step === 'Password.Create' && (
+            <div className="form-group">
+              <label>Name</label>
+              <input
+                className="form-control input-lg"
+                onChange={e => setName(e.target.value)}
+                value={name}
+                placeholder="Name"
+              />
+            </div>
+          )}
           <div className="form-group">
             <label>Password</label>
             <input
               className="form-control input-lg"
               onChange={e => setPassword(e.target.value)}
-              value={email}
+              value={password}
               placeholder="Password"
             />
           </div>
@@ -190,7 +232,8 @@ const Deploy = () => {
       </div>
 
       {step === 'Email' && renderEmailForm()}
-      {step === 'Password' && renderPasswordForm()}
+      {(step === 'Password.Create' || step === 'Password.Login') &&
+        renderPasswordForm()}
       {step === 'Listing' && renderListingForm()}
     </>
   )
