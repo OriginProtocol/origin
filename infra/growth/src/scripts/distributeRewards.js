@@ -200,20 +200,25 @@ class DistributeRewards {
     const payouts = []
     const addresses = []
     const amounts = []
-    for (const [ethAddress, rewards] of Object.entries(chunk)) {
+    for (const item of chunk) {
+      const ethAddress = item.ethAddress
+      const rewards = item.rewards
       const { amount, payout } = await this._preparePayout(ethAddress, rewards)
       payouts.push(payout)
       addresses.push(ethAddress)
       amounts.push(amount)
       total = total.plus(amount)
     }
+    const totalTokenUnit = this.distributor.token.toTokenUnit(total)
 
     // Send a blockchain transaction to payout the recipients.
     let txnReceipt, error
     try {
       if (this.config.doIt) {
+        logger.info(`Distributing ${totalTokenUnit} OGN as a batch`)
         txnReceipt = await this.distributor.creditMulti(addresses, amounts)
       } else {
+        logger.info(`Would distribute ${totalTokenUnit} OGN as a batch`)
         txnReceipt = {
           status: 'OK',
           transactionHash: 'TESTING',
@@ -227,10 +232,11 @@ class DistributeRewards {
     if (txnReceipt && txnReceipt.status) {
       updates.status = enums.GrowthPayoutStatuses.Paid
       updates.txnHash = txnReceipt.transactionHash
+      logger.info('Batch payout success')
     } else {
       error = true
       logger.error(
-        `EVM reverted transaction - Marking all payouts from the chunk as Failed`
+        `EVM reverted transaction - Marking all payouts from the batch as Failed`
       )
       updates.status = enums.GrowthPayoutStatuses.Failed
     }
@@ -410,34 +416,49 @@ class DistributeRewards {
 
   /**
    * Process the payouts in batches.
-   * @param {Dict{BigNumber}} ethAddressToRewards: dict with eth adddress as key
-   *   and amount in natural units as value
+   * @param {Dict{string}} ethAddressToRewards: dict with eth address as key
+   *   and list of reward amounts in natural units as value
    * @returns {Promise<BigNumber>} total amount paid in natural units.
    * @private
    */
   async _batchPayoutProcess(ethAddressToRewards) {
-    // Sum up all the rewards to compute the total distribution, in natural unit.
+    logger.info(`Batch processing payout for ${ethAddressToRewards.length} accounts`)
+
     let total = BigNumber(0)
-    for (const rewards of Object.values(ethAddressToRewards)) {
+    const payoutList = []
+    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+      if (rewards.length === 0) {
+        throw new Error(`Invalid payout data. Expected at least 1 reward for ${ethAddress}`)
+      }
+      payoutList.push({ethAddress, rewards})
       const amount = rewards
         .map(reward => BigNumber(reward.amount))
         .reduce((a1, a2) => a1.plus(a2))
       total = total.plus(amount)
     }
+
     const totalTokenUnit = this.distributor.token.toTokenUnit(total)
     logger.info(
       `Approving distributor to send a max total of ${totalTokenUnit} OGN`
     )
 
-    // Approve the total amount that the distributor contract
-    // will send to recipients.
-    await this.distributor.approveMulti(total)
+    // Call the OGN contract to approve the total amount that the
+    // distributor contract will send to recipients.
+    if (this.config.doIt) {
+      await this.distributor.approveMulti(total)
+    } else {
+      logger.info(`Would call TokenDistributor contract to approve ${totalTokenUnit} OGN`)
+    }
 
     // Process each chunk sequentially. Each chunk results in a single tx
     // that handles the distribution to all the addresses in the batch.
-    const chunks = _chunk(ethAddressToRewards, this.config.batchSize)
+    const chunks = _chunk(payoutList, this.config.batchSize)
+    logger.info(`${chunks.length} batches to process`)
+    let chunkNum = 1
     for (const chunk of chunks) {
+      logger.info(`Processing batch ${chunkNum}/${chunks.length}`)
       await this._distributeRewardsBatch(chunk)
+      chunkNum++
     }
     return total
   }
@@ -503,10 +524,10 @@ class DistributeRewards {
       let campaignDistTotal
       if (this.config.batchSize > 1) {
         // Process payouts in chunks.
-        campaignDistTotal = await this._batchPayoutProcess()
+        campaignDistTotal = await this._batchPayoutProcess(ethAddressToRewards)
       } else {
         // Process each payout individually.
-        campaignDistTotal = await this._individualPayoutProcess()
+        campaignDistTotal = await this._individualPayoutProcess(ethAddressToRewards)
       }
       this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
         campaignDistTotal
@@ -606,7 +627,7 @@ distributor.init(config.networkId, config.gasPriceMultiplier).then(() => {
       )
       logger.info(
         '  Grand total distributed (tokens):  ',
-        job.distributor.token.toTokenUnit(job.stats.distGrandTotal)
+        job.distributor.token.toTokenUnit(job.stats.distGrandTotal).toFixed()
       )
       logger.info('Finished')
       process.exit()

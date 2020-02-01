@@ -15,6 +15,10 @@ const NumBlockConfirmation = 3
 // Wait up to 10 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 10 * 60
 
+// Signature for the "Transfer" event emitted by the OGN contract when a transfer occurs.
+const transferEventSig = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+
+
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
   async init(networkId, gasPriceMultiplier) {
@@ -165,18 +169,15 @@ class TokenDistributor {
       const amount = BigNumber(amounts[i])
       const log = logs[i]
 
-      // Check the event signature. It should be the one for a 'Transfer' event.
-      const eventSig = log.topic[0].toLowerCase()
-      if (
-        eventSig !==
-        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
-      ) {
+      // Check the event signature is for a 'Transfer' event.
+      const eventSig = log.topics[0].toLowerCase()
+      if (eventSig !== transferEventSig) {
         throw new Error(`Log ${i} - Unexpected event signature ${eventSig}`)
       }
 
-      // Extract addresses and amount from the log.
-      const fromAddress = '0x' + log.topic[1].slice(26).toLowerCase()
-      const toAddress = '0x' + log.topic[2].toLowerCase()
+      // Extract address and amount from the log.
+      const fromAddress = '0x' + log.topics[1].slice(26).toLowerCase()
+      const toAddress = '0x' + log.topics[2].slice(26).toLowerCase()
       const logAmount = BigNumber('0x' + log.data)
 
       if (fromAddress !== this.supplier.toLowerCase()) {

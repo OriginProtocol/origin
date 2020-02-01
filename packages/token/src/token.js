@@ -164,7 +164,7 @@ class Token {
     //   gas = <fixed_overhead> + <transfer_cost> * <num_transfers>
     // Both <fixed_overhead> and <transfer_cost> were defined empirically.
     if (!opts.gas) {
-      opts.gas = 50000 + 15000 * addresses.length
+      opts.gas = 150000 + 33000 * addresses.length
     }
 
     // Send the transaction to the network and return the tx hash.
