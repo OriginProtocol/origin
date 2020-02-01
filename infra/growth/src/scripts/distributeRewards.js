@@ -422,15 +422,19 @@ class DistributeRewards {
    * @private
    */
   async _batchPayoutProcess(ethAddressToRewards) {
-    logger.info(`Batch processing payout for ${ethAddressToRewards.length} accounts`)
+    logger.info(
+      `Batch processing payout for ${ethAddressToRewards.length} accounts`
+    )
 
     let total = BigNumber(0)
     const payoutList = []
     for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
       if (rewards.length === 0) {
-        throw new Error(`Invalid payout data. Expected at least 1 reward for ${ethAddress}`)
+        throw new Error(
+          `Invalid payout data. Expected at least 1 reward for ${ethAddress}`
+        )
       }
-      payoutList.push({ethAddress, rewards})
+      payoutList.push({ ethAddress, rewards })
       const amount = rewards
         .map(reward => BigNumber(reward.amount))
         .reduce((a1, a2) => a1.plus(a2))
@@ -447,7 +451,9 @@ class DistributeRewards {
     if (this.config.doIt) {
       await this.distributor.approveMulti(total)
     } else {
-      logger.info(`Would call TokenDistributor contract to approve ${totalTokenUnit} OGN`)
+      logger.info(
+        `Would call TokenDistributor contract to approve ${totalTokenUnit} OGN`
+      )
     }
 
     // Process each chunk sequentially. Each chunk results in a single tx
@@ -527,7 +533,9 @@ class DistributeRewards {
         campaignDistTotal = await this._batchPayoutProcess(ethAddressToRewards)
       } else {
         // Process each payout individually.
-        campaignDistTotal = await this._individualPayoutProcess(ethAddressToRewards)
+        campaignDistTotal = await this._individualPayoutProcess(
+          ethAddressToRewards
+        )
       }
       this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
         campaignDistTotal

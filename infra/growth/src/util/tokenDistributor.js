@@ -16,8 +16,8 @@ const NumBlockConfirmation = 3
 const ConfirmationTimeoutSec = 10 * 60
 
 // Signature for the "Transfer" event emitted by the OGN contract when a transfer occurs.
-const transferEventSig = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
-
+const transferEventSig =
+  '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
