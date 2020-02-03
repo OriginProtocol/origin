@@ -41,6 +41,12 @@ Delete a seller account.
 
     curl -v -X DELETE -b $COOKIE_STORAGE $API_ROOT/auth/registration
 
+### `GET /shop`
+
+List the shops for a seller.
+
+    curl "${DEFAULT_OPTIONS[@]}" -b $COOKIE_STORAGE $API_ROOT/shop
+
 ### `POST /shop`
 
 Create a shop with provided configuration.
