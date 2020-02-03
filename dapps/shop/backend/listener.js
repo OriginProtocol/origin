@@ -146,8 +146,12 @@ async function connectWS() {
     } else if (data.id === 2) {
       heads = data.result
     } else if (data.id === 3) {
-      console.log(`Got ${data.result.length} unhandled logs`)
-      data.result.map(handleLog)
+      if (data.result) {
+        console.log(`Got ${data.result.length} unhandled logs`)
+        data.result.map(handleLog)
+      } else {
+        console.error('Unknown response format for eth_getLogs: ', data)
+      }
     } else if (get(data, 'params.subscription') === logs) {
       handleLog(data.params.result)
     } else if (get(data, 'params.subscription') === heads) {
@@ -155,16 +159,17 @@ async function connectWS() {
       const blockDiff = number - lastBlock
       if (blockDiff > 500) {
         console.log('Too many new blocks. Skip past log fetch.')
-      } else if (blockDiff > 1 && config.fetchPastLogs) {
+      } else if (blockDiff >= 1) {
+        // Removed config.fetchPastLogs because that's not a thing
         Shops.findAll({
           attributes: ['listing_id']
         })
-          .on('success', rows => {
+          .then(rows => {
             const listingId = rows.map(row => {
               return ListingID.fromFQLID(row.listing_id)
             })
             console.log(
-              `Fetching ${blockDiff} past logs for ${listingId.length} listings...`
+              `Fetching ${blockDiff} past blocks of logs for ${listingId.length} listings...`
             )
             // TODO: At what point does the amount of params make this query difficult?
             ws.send(
@@ -228,8 +233,8 @@ const handleLog = async ({
   const { listingID, offerID, ipfsHash, party } = decoded
 
   const contractVersion = addressToVersion(address)
-  const lid = ListingID(listingID, NETWORK_ID, contractVersion)
-  const oid = OfferID(listingID, offerID, NETWORK_ID, contractVersion)
+  const lid = new ListingID(listingID, NETWORK_ID, contractVersion)
+  const oid = new OfferID(listingID, offerID, NETWORK_ID, contractVersion)
 
   console.log(`${name} - ${oid.toString()} by ${party}`)
   console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
@@ -262,7 +267,26 @@ const handleLog = async ({
     const PrivateKey = await encConf.get(shopId, 'pgp_private_key')
     const PrivateKeyPass = await encConf.get(shopId, 'pgp_private_key_pass')
 
+    if (!PrivateKey) {
+      console.error(`Missing private key for shop ${shopId}. Unable to process event!`)
+      return
+    }
+    if (!PrivateKeyPass) {
+      console.warn(`Missing private key decryption passphrase for shop ${shopId}. This will probably fail!`)
+    }
+
     const privateKey = await openpgp.key.readArmored(PrivateKey)
+
+    if (!privateKey || !privateKey.keys || privateKey.keys.length < 1) {
+      if (privateKey.err) {
+        for (const err of privateKey.err) {
+          console.error(err)
+        }
+      }
+      console.error(`Unable to load private key for shop ${shopId}. Unable to process event!`)
+      return
+    }
+
     const privateKeyObj = privateKey.keys[0]
     await privateKeyObj.decrypt(PrivateKeyPass)
 
