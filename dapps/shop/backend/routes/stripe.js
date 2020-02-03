@@ -57,10 +57,22 @@ module.exports = function(app) {
   //    stripe trigger payment_intent.succeeded
 
   app.post('/webhook', rawJson, async (req, res) => {
-    const shopId = get(req.body, 'data.object.metadata.shopId')
+    // Need to get the shopId before the stripe library processes the incoming
+    // buffer
+    let jasonBody, shopId
+    try {
+      jasonBody = JSON.parse(req.body.toString())
+      shopId = get(jasonBody, 'data.object.metadata.shopId')
+    } catch (err) {
+      console.error('Error parsing body: ', err)
+      return res.sendStatus(400)
+    }
 
     // TODO: use a validator instead
-    if (!shopId) return res.sendStatus(400)
+    if (!shopId) {
+      console.debug('Missing shopId from /webhook request')
+      return res.sendStatus(400)
+    }
 
     // Get API Key from config, and init Stripe
     const stripeBackend = await encConf.get(shopId, 'stripe_backend')
@@ -72,11 +84,12 @@ module.exports = function(app) {
     const siteConfig = await config.getSiteConfig(dataURL)
     const lid = ListingID.fromFQLID(siteConfig.listingId)
     let event
+    const signature = req.headers['stripe-signature']
     try {
-      const signature = req.headers['stripe-signature']
       event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret)
     } catch (err) {
       console.log(`⚠️  Webhook signature verification failed.`)
+      console.error(err)
       return res.sendStatus(400)
     }
 
@@ -89,6 +102,11 @@ module.exports = function(app) {
 
     const encryptedData = get(event, 'data.object.metadata.encryptedData')
     const contractAddr = lid.address()
+
+    if (!contractAddr) {
+      console.error('Contract missing address.  Will be unable to send transaction.')
+      return res.status(500)
+    }
 
     const offer = {
       schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
