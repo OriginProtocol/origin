@@ -104,7 +104,9 @@ module.exports = function(app) {
     const contractAddr = lid.address()
 
     if (!contractAddr) {
-      console.error('Contract missing address.  Will be unable to send transaction.')
+      console.error(
+        'Contract missing address.  Will be unable to send transaction.'
+      )
       return res.status(500)
     }
 

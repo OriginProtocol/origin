@@ -268,11 +268,15 @@ const handleLog = async ({
     const PrivateKeyPass = await encConf.get(shopId, 'pgp_private_key_pass')
 
     if (!PrivateKey) {
-      console.error(`Missing private key for shop ${shopId}. Unable to process event!`)
+      console.error(
+        `Missing private key for shop ${shopId}. Unable to process event!`
+      )
       return
     }
     if (!PrivateKeyPass) {
-      console.warn(`Missing private key decryption passphrase for shop ${shopId}. This will probably fail!`)
+      console.warn(
+        `Missing private key decryption passphrase for shop ${shopId}. This will probably fail!`
+      )
     }
 
     const privateKey = await openpgp.key.readArmored(PrivateKey)
@@ -283,7 +287,9 @@ const handleLog = async ({
           console.error(err)
         }
       }
-      console.error(`Unable to load private key for shop ${shopId}. Unable to process event!`)
+      console.error(
+        `Unable to load private key for shop ${shopId}. Unable to process event!`
+      )
       return
     }
 

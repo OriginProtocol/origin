@@ -3,7 +3,6 @@ const {
   createSalt,
   hashPassword,
   AuthSeller,
-  authenticated,
   authenticatedAsSeller
 } = require('./_combinedAuth')
 const { IS_PROD } = require('../utils/const')
