@@ -10,6 +10,7 @@ const app = express()
 
 const ORIGIN_WHITELIST_ENABLED = false
 const ORIGIN_WHITELIST = []
+const BODYPARSER_EXCLUDES = ['/webhook']
 
 // TODO: Restrict this more? See: https://expressjs.com/en/guide/behind-proxies.html
 app.set('trust proxy', true)
@@ -29,7 +30,14 @@ app.use(
     })
   })
 )
-app.use(bodyParser.json())
+
+// Custom middleware to exclude some specific endpoints from the JSON bodyParser
+const jsonBodyParser = bodyParser.json()
+app.use((req, res, next) => {
+  if (BODYPARSER_EXCLUDES.includes(req.originalUrl)) return next()
+  return jsonBodyParser(req, res, next)
+})
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(
