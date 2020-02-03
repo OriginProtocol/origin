@@ -48,7 +48,7 @@
     "sequelize": "^5.21.2",
     "serve-static": "^1.14.1",
     "sqlite3": "^4.1.1",
-    "stripe": "^7.10.0",
+    "stripe": "^8.0.0",
     "typeface-lato": "^0.0.75",
     "typeface-roboto": "^0.0.75",
     "webpack-subresource-integrity": "^1.3.4",
