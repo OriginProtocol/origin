@@ -46,7 +46,8 @@ const {
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
   WEB3_PK,
   PROVIDER,
-  IPFS_GATEWAY // IFPS gateway oerride
+  IPFS_GATEWAY, // IFPS gateway oerride
+  SUPPORT_EMAIL_OVERRIDE
 } = process.env
 
 /**
@@ -69,5 +70,6 @@ module.exports = {
   PROVIDER,
   IPFS_GATEWAY,
   NETWORK,
-  NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999
+  NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,
+  SUPPORT_EMAIL_OVERRIDE
 }

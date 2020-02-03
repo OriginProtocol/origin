@@ -4,20 +4,31 @@ const nodemailer = require('nodemailer')
 const aws = require('aws-sdk')
 
 const cartData = require('./cartData')
-const encConf = require('../utils/encryptedConfig')
+const encConf = require('./encryptedConfig')
+const {
+  SUPPORT_EMAIL_OVERRIDE,
+  SENDGRID_API_KEY,
+  SENDGRID_USERNAME,
+  SENDGRID_PASSWORD,
+  MAILGUN_SMTP_SERVER,
+  MAILGUN_SMTP_PORT,
+  MAILGUN_SMTP_LOGIN,
+  MAILGUN_SMTP_PASSWORD,
+  AWS_ACCESS_KEY_ID
+} = require('./const')
 
 let transporter
-if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
+if (SENDGRID_API_KEY || SENDGRID_USERNAME) {
   let auth
-  if (process.env.SENDGRID_API_KEY) {
+  if (SENDGRID_API_KEY) {
     auth = {
       user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY
+      pass: SENDGRID_API_KEY
     }
   } else {
     auth = {
-      user: process.env.SENDGRID_USERNAME,
-      pass: process.env.SENDGRID_PASSWORD
+      user: SENDGRID_USERNAME,
+      pass: SENDGRID_PASSWORD
     }
   }
   transporter = nodemailer.createTransport({
@@ -25,16 +36,16 @@ if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
     port: 587,
     auth
   })
-} else if (process.env.MAILGUN_SMTP_SERVER) {
+} else if (MAILGUN_SMTP_SERVER) {
   transporter = nodemailer.createTransport({
-    host: process.env.MAILGUN_SMTP_SERVER,
-    port: process.env.MAILGUN_SMTP_PORT,
+    host: MAILGUN_SMTP_SERVER,
+    port: MAILGUN_SMTP_PORT,
     auth: {
-      user: process.env.MAILGUN_SMTP_LOGIN,
-      pass: process.env.MAILGUN_SMTP_PASSWORD
+      user: MAILGUN_SMTP_LOGIN,
+      pass: MAILGUN_SMTP_PASSWORD
     }
   })
-} else if (process.env.AWS_ACCESS_KEY_ID) {
+} else if (AWS_ACCESS_KEY_ID) {
   const SES = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1' })
   transporter = nodemailer.createTransport({ SES })
 } else {
@@ -92,7 +103,7 @@ async function sendMail(shopId, cart, skip) {
     })
   })
 
-  let supportEmailPlain = data.supportEmail
+  let supportEmailPlain = SUPPORT_EMAIL_OVERRIDE || data.supportEmail
   if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
     supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
   }
@@ -100,7 +111,7 @@ async function sendMail(shopId, cart, skip) {
   const vars = {
     head,
     siteName: data.fullTitle || data.title,
-    supportEmail: data.supportEmail,
+    supportEmail: SUPPORT_EMAIL_OVERRIDE || data.supportEmail,
     supportEmailPlain,
     subject: data.emailSubject,
     storeUrl: publicURL,
