@@ -28,7 +28,7 @@ module.exports = function(app) {
       return
     }
 
-    res.json({})
+    res.status(204)
   })
 
   app.get('/discounts', authenticated, shopGate, async (req, res) => {
@@ -36,6 +36,7 @@ module.exports = function(app) {
       where: { shop_id: req.shopId },
       order: [['createdAt', 'desc']]
     })
+
     res.json(discounts)
   })
 
@@ -46,6 +47,7 @@ module.exports = function(app) {
         shop_id: req.shopId
       }
     })
+
     res.json(discount)
   })
 
@@ -54,7 +56,8 @@ module.exports = function(app) {
       shop_id: req.shopId,
       ...req.body
     })
-    res.json({ success: true, discount })
+
+    res.status(201).json(discount)
   })
 
   app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
@@ -65,7 +68,7 @@ module.exports = function(app) {
       }
     })
 
-    res.json({ success: true, discount })
+    res.json(discount)
   })
 
   app.delete('/discounts/:id', authenticated, shopGate, async (req, res) => {
@@ -75,6 +78,6 @@ module.exports = function(app) {
         shop_id: req.shopId
       }
     })
-    res.json({ success: true, discount })
+    res.status(204)
   })
 }

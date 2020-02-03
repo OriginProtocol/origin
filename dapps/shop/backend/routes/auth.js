@@ -15,17 +15,15 @@ module.exports = function(app) {
     res.json({ success: req.isAuthenticated() })
   })
 
-  app.get('/auth/:email', authenticated, async (req, res) => {
+  app.get('/auth/:email', async (req, res) => {
     // TODO: Add some rate limiting here
     const seller = await Sellers.findOne({
       where: {
         email: req.params.email
       }
     })
-    res.json({
-      success: true,
-      exists: seller !== null
-    })
+    const statusCode = seller !== null ? 204 : 404
+    res.status(statusCode)
   })
 
   app.post(
@@ -35,14 +33,13 @@ module.exports = function(app) {
     },
     AuthSeller,
     (req, res) => {
-      res.json({ success: req.isAuthenticated() })
+      res.status(204)
     }
   )
 
   // TODO: Should this at least use API key auth?
   app.post('/auth/registration', async (req, res) => {
     const { name, email, password } = req.body
-
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -57,10 +54,7 @@ module.exports = function(app) {
     })
 
     if (sellerCheck) {
-      return res.status(409).json({
-        success: false,
-        message: 'Registration exists'
-      })
+      return res.status(409).json({ message: 'Registration exists' })
     }
 
     const salt = await createSalt()
@@ -72,18 +66,14 @@ module.exports = function(app) {
       password: passwordHash
     })
 
-    if (!seller) {
-      return res.json({ success: false })
-    }
-
-    return res.json({ success: true })
+    return res.status(204)
   })
 
   app.delete('/auth/registration', authenticatedAsSeller, async (req, res) => {
     const { id } = req.user
 
     if (!id) {
-      return res.status(400).json({ success: false })
+      return res.status(400)
     }
 
     const destroy = await Sellers.destroy({
@@ -92,7 +82,7 @@ module.exports = function(app) {
       }
     })
 
-    res.json({ success: false, destroy })
+    res.status(204)
   })
 
   app.post('/shop', authenticatedAsSeller, async (req, res) => {
@@ -101,7 +91,7 @@ module.exports = function(app) {
     if (!validateShop(shopObj)) {
       return res
         .status(400)
-        .json({ success: false, message: 'Invalid shop data' })
+        .json({ message: 'Invalid shop data' })
     }
 
     const shop = await Shops.create({
@@ -109,7 +99,7 @@ module.exports = function(app) {
       seller_id: req.user.id
     })
 
-    res.json({ success: true, shop })
+    res.json(shop)
   })
 
   app.delete('/shop', authenticatedAsSeller, async (req, res) => {
@@ -133,26 +123,28 @@ module.exports = function(app) {
     })
 
     if (!shop) {
-      return res.status(400).json({ success: false, message: 'Shop not found' })
+      return res.status(400).json({ message: 'Shop not found' })
     }
 
     if (!validateConfig(config)) {
+      // TODO add error return describing why invalid
       return res
         .status(400)
-        .json({ success: false, message: 'Invalid config data' })
+        .json({ message: 'Invalid config data' })
     }
 
     console.log('config to update: ', config)
 
     await encConf.assign(shopId, config)
-    return res.json({ success: true })
+
+    return res.status(204)
   })
 
   app.get('/config/dump/:id', authenticatedAsSeller, async (req, res) => {
     const { id: shopId } = req.params
 
     // Testing only
-    if (IS_PROD) return res.status(404)
+    if (IS_PROD) return res.sendStatus(404)
 
     const shop = await Shops.findOne({
       where: {
@@ -166,6 +158,6 @@ module.exports = function(app) {
     }
 
     const config = await encConf.dump(shopId)
-    return res.json({ success: true, config })
+    res.json(config)
   })
 }
