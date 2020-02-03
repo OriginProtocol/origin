@@ -23,7 +23,7 @@
     "express-prom-bundle": "5.1.5",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
-    "pg": "7.17.1",
+    "pg": "7.18.1",
     "prom-client": "11.5.3",
     "redis": "2.8.0",
     "sequelize": "5.21.3",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "chalk": "3.0.0",
-    "mocha": "7.0.0",
+    "mocha": "7.0.1",
     "nodemon": "2.0.2",
     "prettier": "1.19.1"
   },
