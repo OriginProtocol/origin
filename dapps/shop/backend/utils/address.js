@@ -16,8 +16,7 @@ function addressToVersion(addr) {
 }
 
 function versionToAddress(vers) {
-  const normVers = parseInt(vers)
-  return VERSION_TO_ADDRESS[normVers]
+  return VERSION_TO_ADDRESS[vers]
 }
 
 function normalizeAddress(addr) {
