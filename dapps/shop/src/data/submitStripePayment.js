@@ -10,7 +10,7 @@ async function submitStripePayment({
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify({
-      amount: cart.total,
+      amount: Math.round(cart.total),
       data: encryptedData.hash,
       listingId
     })
