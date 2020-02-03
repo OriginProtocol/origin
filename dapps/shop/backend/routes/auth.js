@@ -21,10 +21,7 @@ module.exports = function(app) {
         email: req.params.email
       }
     })
-    res.json({
-      success: true,
-      exists: seller !== null
-    })
+    return res.sendStatus(seller === null ? 404 : 204)
   })
 
   app.post(
