@@ -1,3 +1,4 @@
+const omit = require('lodash/omit')
 const { Sellers, Shops } = require('../data/db')
 const {
   createSalt,
@@ -88,6 +89,29 @@ module.exports = function(app) {
     })
 
     res.json({ success: false, destroy })
+  })
+
+  app.get('/shop', authenticatedAsSeller, async (req, res) => {
+    const { id } = req.user
+
+    if (!id) {
+      return res.status(400).json({ success: false })
+    }
+
+    const rows = await Shops.findAll({
+      where: {
+        seller_id: id
+      }
+    })
+
+    const shops = rows.map(row => {
+      return omit(row.dataValues, ['config', 'seller_id'])
+    })
+
+    res.json({
+      success: true,
+      shops
+    })
   })
 
   app.post('/shop', authenticatedAsSeller, async (req, res) => {
