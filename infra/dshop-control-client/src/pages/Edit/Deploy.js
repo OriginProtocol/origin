@@ -141,22 +141,28 @@ const Deploy = () => {
           </p>
         </div>
 
-        <form className="mt-3" onSubmit={handleEmail}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              className="form-control input-lg"
-              onChange={e => setEmail(e.target.value)}
-              value={email}
-              placeholder="Email address"
-            />
+        <div className="row">
+          <div className="col-12 col-md-6">
+            <div className="card p-5">
+              <form className="mt-3" onSubmit={handleEmail}>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    className="form-control input-lg"
+                    onChange={e => setEmail(e.target.value)}
+                    value={email}
+                    placeholder="Email address"
+                  />
+                </div>
+                <div className="mt-5">
+                  <button type="submit" className="btn btn-lg btn-primary">
+                    Continue
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div className="mt-5">
-            <button type="submit" className="btn btn-lg btn-primary">
-              Continue
-            </button>
-          </div>
-        </form>
+        </div>
       </>
     )
   }
@@ -178,33 +184,39 @@ const Deploy = () => {
           )}
         </div>
 
-        <form className="mt-3" onSubmit={handlePassword}>
-          {step === 'Password.Create' && (
-            <div className="form-group">
-              <label>Name</label>
-              <input
-                className="form-control input-lg"
-                onChange={e => setName(e.target.value)}
-                value={name}
-                placeholder="Name"
-              />
+        <div className="row">
+          <div className="col-12 col-md-6">
+            <div className="card p-5">
+              <form className="mt-3" onSubmit={handlePassword}>
+                {step === 'Password.Create' && (
+                  <div className="form-group">
+                    <label>Name</label>
+                    <input
+                      className="form-control input-lg"
+                      onChange={e => setName(e.target.value)}
+                      value={name}
+                      placeholder="Name"
+                    />
+                  </div>
+                )}
+                <div className="form-group">
+                  <label>Password</label>
+                  <input
+                    className="form-control input-lg"
+                    onChange={e => setPassword(e.target.value)}
+                    value={password}
+                    placeholder="Password"
+                  />
+                </div>
+                <div className="mt-5">
+                  <button type="submit" className="btn btn-lg btn-primary">
+                    Continue
+                  </button>
+                </div>
+              </form>
             </div>
-          )}
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              className="form-control input-lg"
-              onChange={e => setPassword(e.target.value)}
-              value={password}
-              placeholder="Password"
-            />
           </div>
-          <div className="mt-5">
-            <button type="submit" className="btn btn-lg btn-primary">
-              Continue
-            </button>
-          </div>
-        </form>
+        </div>
       </>
     )
   }
