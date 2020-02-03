@@ -70,7 +70,7 @@
     "eth-ecies": "1.0.3",
     "nodemon": "2.0.2",
     "prettier": "1.19.1",
-    "secp256k1": "3.8.0",
+    "secp256k1": "4.0.0",
     "supertest": "4.0.2"
   },
   "prettier": {
