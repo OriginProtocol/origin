@@ -20,7 +20,7 @@ class ListingID {
       throw new TypeError('fqid not provided')
     }
     const [netId, vers, listingID] = fqid.split('-')
-    return new ListingID(netId, vers, listingID)
+    return new ListingID(listingID, netId, vers)
   }
 
   address() {
