@@ -67,7 +67,7 @@
     "bootstrap": "4.4.1",
     "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
-    "webpack-dev-server": "3.10.1"
+    "webpack-dev-server": "3.10.2"
   },
   "babel": {
     "presets": [
