@@ -4,6 +4,7 @@ import { useStoreState } from 'pullstate'
 import { get } from 'lodash'
 import axios from 'axios'
 
+import Loading from 'components/Loading'
 import store from '@/store'
 
 const Complete = ({ ethNetworkId }) => {
@@ -93,13 +94,7 @@ const Complete = ({ ethNetworkId }) => {
   }
 
   if (loading) {
-    return (
-      <span
-        className="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-    )
+    return <Loading />
   }
 
   return (

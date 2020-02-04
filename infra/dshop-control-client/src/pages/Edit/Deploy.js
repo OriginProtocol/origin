@@ -6,6 +6,7 @@ import Email from 'components/Edit/DeployWizard/Email'
 import Password from 'components/Edit/DeployWizard/Password'
 import Listing from 'components/Edit/DeployWizard/Listing'
 import Complete from 'components/Edit/DeployWizard/Complete'
+import Loading from 'components/Loading'
 import store from '@/store'
 
 const Deploy = () => {
@@ -34,7 +35,7 @@ const Deploy = () => {
   }
 
   if (loading) {
-    return 'Loading...'
+    return <Loading />
   }
 
   return (

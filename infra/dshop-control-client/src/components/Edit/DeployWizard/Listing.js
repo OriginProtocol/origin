@@ -5,6 +5,7 @@ import bs58 from 'bs58'
 import ipfsClient from 'ipfs-http-client'
 
 import { baseListing } from '@/constants'
+import Loading from 'components/Loading'
 import contracts from '@/constants/contracts'
 import MetaMaskCallToAction from './MetaMaskCallToAction'
 import store from '@/store'
@@ -97,13 +98,7 @@ const Listing = ({ ethNetworkId }) => {
   }
 
   if (loading) {
-    return (
-      <span
-        className="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-    )
+    return <Loading />
   }
 
   return (
