@@ -69,7 +69,7 @@ Dump a config.  **NOTE:** Local testing only.
 
 Update a shop config.
 
-    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "networkId": 4, "stripe_backend": "sk_test_MySecretKeyIsCool", "data_url": "http://ipfs.originprotocol.com/ipfs/Qmc8Esc5eTGi7BP7V6DNa8rDPnRfGh642FAfbvrKkqCVNp/" } }' $API_ROOT/config
+    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "stripe_backend": "sk_test_stRIPESECRETkey", "data_url": "http://ipfs.originprotocol.com/ipfs/QmNP2AXi1oaPkyLnjArNtcq5SGCGDBUiiNkCh5sxY122cr/", "printful": "PrintfulAPIKeY", "stripe_webhook_secret": "whsec_stipeWebhookSecret", "pgp_private_key": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nArmoredPrivateKeyHERE\n-----END PGP PRIVATE KEY BLOCK-----", "pgp_private_key_pass": "decryptPassphrase" }' $API_ROOT/config
 
 ## Discounts
 
@@ -80,6 +80,11 @@ Get a discount code's value and type
 ### `GET /discounts`
 ### `GET /discounts/:id`
 ### `POST /discounts`
+
+Add a discount code
+
+    curl "${JSON_POST_OPTIONS[@]}" "${KEY_AUTH_HEADER[@]}" -b $COOKIE_STORAGE -d '{"network_id": 4, "status": "active", "code": "asdf1234", "discountType": "percentage", "value": 15, "maxUses": 200, "onePerCustomer": false}' $API_ROOT/discounts
+
 ### `PUT /discounts/:id`
 ### `DELETE /discounts/:id`
 
