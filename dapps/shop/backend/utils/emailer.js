@@ -75,7 +75,7 @@ function optionsForItem(item) {
 
 async function sendMail(shopId, cart, skip) {
   const dataURL = await encConf.get(shopId, 'data_url')
-  const publicURL = await encConf.get(shopId, 'public_url')
+  let publicURL = await encConf.get(shopId, 'public_url')
   const data = await config.getSiteConfig(dataURL)
   const items = await cartData(dataURL, cart.items)
 
