@@ -1,5 +1,5 @@
-const fetch = require('node-fetch')
-const fs = require('fs')
+/*const fetch = require('node-fetch')
+const fs = require('fs')*/
 const express = require('express')
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
@@ -9,7 +9,7 @@ const serveStatic = require('serve-static')
 const { passport } = require('./routes/_combinedAuth')
 const { IS_PROD, SESSION_SECRET } = require('./utils/const')
 const app = express()
-const html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
+//const html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
 
 const ORIGIN_WHITELIST_ENABLED = false
 const ORIGIN_WHITELIST = []
@@ -73,6 +73,12 @@ require('./routes/orders')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
 
+app.get('/', (req, res) => {
+  res.send('')
+})
+
+/**
+ TODO: Not sure what to do with these
 app.get('(/collections/:collection)?/products/:product', async (req, res) => {
   const url = `${process.env.DATA_URL}${req.params.product}/data.json`
   const dataRaw = await fetch(url)
@@ -98,7 +104,7 @@ app.get('(/collections/:collection)?/products/:product', async (req, res) => {
 
 app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`)
-})
+})*/
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
