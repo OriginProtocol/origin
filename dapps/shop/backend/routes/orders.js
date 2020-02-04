@@ -34,7 +34,7 @@ module.exports = function(app) {
 
     const order = await Orders.findOne({
       where: {
-        id
+        order_id: id
       },
       include: [
         {
@@ -82,10 +82,16 @@ module.exports = function(app) {
 
       const order = await Orders.findOne({
         where: {
-          id,
-          'Shops.seller_id': req.user.id
+          order_id: id
         },
-        include: [{ model: Shops, as: Shops.tableName }]
+        include: [{
+          model: Shops,
+          as: Shops.tableName,
+          where: {
+            seller_id: req.user.id
+          },
+          required: true
+        }]
       })
 
       if (!order) {
@@ -128,10 +134,16 @@ module.exports = function(app) {
 
       const order = await Orders.findOne({
         where: {
-          id,
-          'Shops.seller_id': req.user.id
+          order_id: id
         },
-        include: [{ model: Shops, as: Shops.tableName }]
+        include: [{
+          model: Shops,
+          as: Shops.tableName,
+          where: {
+            seller_id: req.user.id
+          },
+          required: true
+        }]
       })
 
       if (!order) {
