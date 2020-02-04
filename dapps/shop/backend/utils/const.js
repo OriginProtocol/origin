@@ -65,7 +65,7 @@ const {
  */
 const DATA_URL = null
 const PASSWORD_SALT_ROUNDS = 10
-const PRINTFUL_URL = 'https://api.printful.com/'
+const PRINTFUL_URL = 'https://api.printful.com'
 
 module.exports = {
   CONTRACTS,
