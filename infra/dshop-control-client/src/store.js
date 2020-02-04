@@ -3,9 +3,10 @@ import { Store } from 'pullstate'
 export const defaultState = {
   collections: [],
   products: [],
-  settings: {
-    siteTitle: 'Origin'
-  },
+  settings: {},
+  backend: {},
+  orders: [],
+  discounts: [],
   needsDeploy: false
 }
 

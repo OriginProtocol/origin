@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStoreState } from 'pullstate'
 import { ethers } from 'ethers'
 import { get } from 'lodash'
+import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 import ipfsClient from 'ipfs-http-client'
 import bs58 from 'bs58'
@@ -14,24 +15,34 @@ const Deploy = () => {
   const [email, setEmail] = useState('')
   const [step, setStep] = useState('Email')
   const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState(null)
   const [name, setName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [shopId, setShopId] = useState(null)
+  const [redirectTo, setRedirectTo] = useState(null)
 
   const settings = useStoreState(store, s => s.settings)
-  const backendUrl = settings.backend
+  const collections = useStoreState(store, s => s.collections)
+  const products = useStoreState(store, s => s.products)
   const ethNetworkId = Number(web3.currentProvider.chainId)
   const config = contracts[ethNetworkId]
 
   /* Check if a user has an account on the backend,
    */
   const handleEmail = async () => {
+    setLoading(true)
+
     try {
-      await axios.get(`${backendUrl}/auth/${email}`)
+      await checkSellerExists(email)
     } catch (error) {
+      console.error(error)
       if (error.response.status === 404) {
+        setLoading(false)
         setStep('Password.Create')
       }
       return
     }
+    setLoading(false)
     setStep('Password.Login')
   }
 
@@ -39,23 +50,37 @@ const Deploy = () => {
    * a user does not have account one will be created and they will be logged in.
    */
   const handlePassword = async () => {
-    try {
-      if (step === 'Password.Create') {
-        await axios.post(`${backendUrl}/auth/registration`, {
-          email,
-          password,
-          name
-        })
-      } else if (step === 'Password.Login') {
-        await axios.post(`${backendUrl}/auth/login`, {
-          email,
-          password
-        })
+    setLoading(true)
+
+    if (step === 'Password.Create') {
+      try {
+        await createSeller()
+      } catch (error) {
+        console.error(error)
+        return
       }
+    }
+
+    try {
+      await loginSeller()
     } catch (error) {
-      console.error(error)
+      if (error.response.status === 401) {
+        setPasswordError('Invalid password')
+      } else {
+        console.error(error)
+      }
       return
     }
+
+    store.update(s => {
+      s.backend = {
+        url: settings.backend,
+        email,
+        password
+      }
+    })
+
+    setLoading(false)
 
     const listingId = get(settings.networks, `${ethNetworkId}.listingId`)
     if (!listingId) {
@@ -63,6 +88,97 @@ const Deploy = () => {
     } else {
       setStep('Summary')
     }
+  }
+
+  /* Check if a seller is already registered
+   *
+   */
+  const checkSellerExists = async email => {
+    return await axios.get(`${settings.backend}/auth/${email}`)
+  }
+
+  /* Create a seller on the DShop backend
+   *
+   */
+  const createSeller = async () => {
+    return await axios.post(`${settings.backend}/auth/registration`, {
+      email,
+      password,
+      name
+    })
+  }
+
+  /* Log a seller in to the DShop backend
+   *
+   */
+  const loginSeller = async () => {
+    return await axios.post(`${settings.backend}/auth/login`, {
+      email,
+      password
+    })
+  }
+
+  /* Create a shop on the DShop backend
+   *
+   */
+  const createShop = async () => {
+    const authToken = [...Array(30)]
+      .map(() => Math.random().toString(36)[2])
+      .join('')
+    const response = await axios.post(`${settings.backend}/shop`, {
+      name: settings.title,
+      listingId: settings[ethNetworkId].listingId,
+      authToken
+    })
+
+    store.update(s => {
+      s.settings = {
+        ...s.settings,
+        networks: {
+          ...s.settings.networks[ethNetworkId],
+          [ethNetworkId]: {
+            ...s.settings.networks[ethNetworkId],
+            shopId: response.data.s
+          }
+        }
+      }
+    })
+  }
+
+  /* Update the configuration for a shop on the DShop backend
+   *
+   */
+  const updateShopConfig = async dataUrl => {
+    return await axios.post(`${settings.backend}/shop`, {
+      shopId,
+      config: {
+        data_url: dataUrl
+      }
+    })
+  }
+
+  const deploy = async () => {
+    setLoading(true)
+
+    if (!settings[ethNetworkId].shopId) {
+      await createShop()
+    }
+
+    await uploadToIpfs()
+    await updateShopConfig()
+
+    setLoading(false)
+  }
+
+  const uploadToIpfs = async () => {
+    // Put the shop on IPFS
+    const response = await axios.post(`${API_URL}/deploy`, {
+      settings,
+      collections,
+      products
+    })
+
+    return `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.data}`
   }
 
   /* Create a listing on the Origin Marketplace contract
@@ -75,6 +191,9 @@ const Deploy = () => {
     }
 
     if (!window.ethereum) return
+
+    setLoading(true)
+
     await window.ethereum.enable()
     const provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -112,14 +231,31 @@ const Deploy = () => {
       null
     )
 
-    const eventPromise = new Promise(resolve => {
+    const listingId = await new Promise(resolve => {
       marketplaceContract.on(eventFilter, (party, listingId, ipfsHash) => {
         console.debug(`Created listing ${listingId} ${ipfsHash}`)
         resolve(`${ethNetworkId}-001-${Number(listingId)}`)
       })
     })
 
-    return eventPromise
+    store.update(s => {
+      s.settings = {
+        ...s.settings,
+        networks: {
+          ...s.settings.networks,
+          [ethNetworkId]: {
+            marketplaceContract: config['Marketplace_V01'],
+            listingId,
+            affiliate: '',
+            arbitrator: config.arbitrator,
+            ipfsGateway: config.ipfsGateway,
+            ipfsApi: config.ipfsApi
+          }
+        }
+      }
+    })
+
+    setLoading(false)
   }
 
   const renderEmailForm = () => {
@@ -155,8 +291,20 @@ const Deploy = () => {
                   />
                 </div>
                 <div className="mt-5">
-                  <button type="submit" className="btn btn-lg btn-primary">
-                    Continue
+                  <button
+                    type="submit"
+                    className="btn btn-lg btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                    ) : (
+                      'Continue'
+                    )}
                   </button>
                 </div>
               </form>
@@ -202,15 +350,31 @@ const Deploy = () => {
                 <div className="form-group">
                   <label>Password</label>
                   <input
+                    type="password"
                     className="form-control input-lg"
                     onChange={e => setPassword(e.target.value)}
                     value={password}
                     placeholder="Password"
                   />
                 </div>
+                {passwordError && (
+                  <div className="invalid-feedback">{passwordError}</div>
+                )}
                 <div className="mt-5">
-                  <button type="submit" className="btn btn-lg btn-primary">
-                    Continue
+                  <button
+                    type="submit"
+                    className="btn btn-lg btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                    ) : (
+                      'Continue'
+                    )}
                   </button>
                 </div>
               </form>
@@ -230,11 +394,49 @@ const Deploy = () => {
         </p>
         <div className="mt-5">
           <button onClick={createListing} className="btn btn-lg btn-primary">
-            Continue
+            {loading ? (
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+                disabled={loading}
+              ></span>
+            ) : (
+              'Continue'
+            )}
           </button>
         </div>
       </div>
     )
+  }
+
+  const renderSummary = () => {
+    return (
+      <div className="my-5">
+        <p>Great, you are done. Your DSHop has been deployed at...</p>
+        <div className="mt-5">
+          <button
+            onClick={() => setRedirectTo('/manage')}
+            className="btn btn-lg btn-primary"
+            disabled={loading}
+          >
+            {loading ? (
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            ) : (
+              'Open Management Dashboard'
+            )}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
   }
 
   return (
@@ -247,11 +449,9 @@ const Deploy = () => {
       {(step === 'Password.Create' || step === 'Password.Login') &&
         renderPasswordForm()}
       {step === 'Listing' && renderListingForm()}
+      {step === 'Summary' && renderSummary()}
     </>
   )
 }
 
 export default Deploy
-
-require('react-styl')(`
-`)

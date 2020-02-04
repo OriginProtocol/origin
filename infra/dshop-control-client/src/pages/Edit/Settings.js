@@ -27,7 +27,9 @@ const Settings = () => {
 
   const [pgpPublicKey, setPgpPublicKey] = useState(settings.pgpPublicKey || '')
 
-  const [backend, setBackend] = useState('https://backend.ogn.app')
+  const [backend, setBackend] = useState(
+    settings.backend || 'https://backend.ogn.app'
+  )
   const [discountCodes, setDiscountCodesEnabled] = useState(
     settings.discountCodes
   )

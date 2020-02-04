@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
+import store from '@/store'
+
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,6 +26,14 @@ const SignIn = () => {
       return
     }
 
+    store.update(s => {
+      s.backend = {
+        email,
+        password,
+        url: backend
+      }
+    })
+
     setRedirectTo('/manage')
   }
 
@@ -38,6 +48,7 @@ const SignIn = () => {
           <div className="form-group">
             <label>Email</label>
             <input
+              type="email"
               className="form-control input-lg"
               onChange={e => setEmail(e.target.value)}
               value={email}
@@ -47,6 +58,7 @@ const SignIn = () => {
           <div className="form-group">
             <label>Password</label>
             <input
+              type="password"
               className="form-control input-lg"
               onChange={e => setPassword(e.target.value)}
               value={password}
