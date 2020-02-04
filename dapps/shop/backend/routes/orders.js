@@ -84,14 +84,16 @@ module.exports = function(app) {
         where: {
           order_id: id
         },
-        include: [{
-          model: Shops,
-          as: Shops.tableName,
-          where: {
-            seller_id: req.user.id
-          },
-          required: true
-        }]
+        include: [
+          {
+            model: Shops,
+            as: Shops.tableName,
+            where: {
+              seller_id: req.user.id
+            },
+            required: true
+          }
+        ]
       })
 
       if (!order) {
@@ -136,14 +138,16 @@ module.exports = function(app) {
         where: {
           order_id: id
         },
-        include: [{
-          model: Shops,
-          as: Shops.tableName,
-          where: {
-            seller_id: req.user.id
-          },
-          required: true
-        }]
+        include: [
+          {
+            model: Shops,
+            as: Shops.tableName,
+            where: {
+              seller_id: req.user.id
+            },
+            required: true
+          }
+        ]
       })
 
       if (!order) {
