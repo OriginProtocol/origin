@@ -69,7 +69,7 @@ Dump a config.  **NOTE:** Local testing only.
 
 Update a shop config.
 
-    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "stripe_backend": "sk_test_stRIPESECRETkey", "data_url": "http://ipfs.originprotocol.com/ipfs/QmNP2AXi1oaPkyLnjArNtcq5SGCGDBUiiNkCh5sxY122cr/", "printful": "PrintfulAPIKeY", "stripe_webhook_secret": "whsec_stipeWebhookSecret", "pgp_private_key": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nArmoredPrivateKeyHERE\n-----END PGP PRIVATE KEY BLOCK-----", "pgp_private_key_pass": "decryptPassphrase" }' $API_ROOT/config
+    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "stripeBackend": "sk_test_stRIPESECRETkey", "dataIrl": "http://ipfs.originprotocol.com/ipfs/QmNP2AXi1oaPkyLnjArNtcq5SGCGDBUiiNkCh5sxY122cr/", "printful": "PrintfulAPIKeY", "stripeWebhookSecret": "whsec_stipeWebhookSecret", "pgpPrivateKey": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nArmoredPrivateKeyHERE\n-----END PGP PRIVATE KEY BLOCK-----", "pgpPrivateKeyPass": "decryptPassphrase" }' $API_ROOT/config
 
 ## Discounts
 

@@ -33,7 +33,7 @@ module.exports = function(app) {
     const { shopId } = req
 
     // Get API Key from config, and init Stripe
-    const stripeBackend = await encConf.get(shopId, 'stripe_backend')
+    const stripeBackend = await encConf.get(shopId, 'stripeBackend')
     const stripe = Stripe(stripeBackend || '')
 
     console.log('Trying to make payment...')
@@ -75,12 +75,12 @@ module.exports = function(app) {
     }
 
     // Get API Key from config, and init Stripe
-    const stripeBackend = await encConf.get(shopId, 'stripe_backend')
-    const dataURL = await encConf.get(shopId, 'data_url')
+    const stripeBackend = await encConf.get(shopId, 'stripeBackend')
+    const dataURL = await encConf.get(shopId, 'dataUrl')
 
     const stripe = Stripe(stripeBackend || '')
 
-    const webhookSecret = await encConf.get(shopId, 'stripe_webhook_secret')
+    const webhookSecret = await encConf.get(shopId, 'stripeWebhookSecret')
     const siteConfig = await config.getSiteConfig(dataURL)
     const lid = ListingID.fromFQLID(siteConfig.listingId)
     let event

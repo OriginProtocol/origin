@@ -264,8 +264,8 @@ const handleLog = async ({
     const encryptedData = JSON.parse(encryptedDataJson)
     console.log('Encrypted Data:', encryptedData)
 
-    const PrivateKey = await encConf.get(shopId, 'pgp_private_key')
-    const PrivateKeyPass = await encConf.get(shopId, 'pgp_private_key_pass')
+    const PrivateKey = await encConf.get(shopId, 'pgpPrivateKey')
+    const PrivateKeyPass = await encConf.get(shopId, 'pgpPrivateKeyPass')
 
     if (!PrivateKey) {
       console.error(
