@@ -3,6 +3,7 @@ import { useStoreState } from 'pullstate'
 import axios from 'axios'
 
 import store from '@/store'
+import Loading from 'components/loading'
 
 const Password = () => {
   const [sellerExists, setSellerExists] = useState(null)
@@ -87,13 +88,7 @@ const Password = () => {
   }
 
   if (fetching) {
-    return (
-      <span
-        className="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-    )
+    return <Loading />
   }
 
   return (

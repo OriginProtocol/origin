@@ -28,13 +28,22 @@ const Complete = ({ ethNetworkId }) => {
       .map(() => Math.random().toString(36)[2])
       .join('')
 
-    const response = await axios.post(`${settings.backend}/shop`, {
-      name: settings.fullTitle,
-      listingId: settings.networks[ethNetworkId].listingId,
-      authToken
-    })
-
-    console.log(response)
+    let response
+    try {
+      response = await axios.post(`${settings.backend}/shop`, {
+        name: settings.fullTitle,
+        listingId: settings.networks[ethNetworkId].listingId,
+        authToken
+      })
+    } catch (error) {
+      if (error.response.status === 401) {
+        // Unauthorized error, start the wizard again so user logs in
+        store.update(s => {
+          s.backend = {}
+        })
+      }
+      return
+    }
 
     store.update(s => {
       s.settings = {

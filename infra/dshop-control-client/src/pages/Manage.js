@@ -13,7 +13,7 @@ const Manage = props => {
   const [loading, setLoading] = useState(true)
 
   const backendConfig = useStoreState(store, s => s.backend)
-  const shops = useStoreState(store, s => s.shops.shops)
+  const shops = useStoreState(store, s => s.shops)
 
   useEffect(
     () =>
