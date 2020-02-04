@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import queryString from 'query-string'
 import pick from 'lodash/pick'
 import isEqual from 'lodash/isEqual'
@@ -23,12 +23,27 @@ function getOptions(product, offset) {
   return Array.from(options)
 }
 
+const reducer = (state, newState) => ({ ...state, ...newState })
+
+function getImageForVariant(productData, variant) {
+  if (productData && get(variant, 'image')) {
+    const variantImage = productData.images.findIndex(
+      i => variant.image.indexOf(i) >= 0
+    )
+    return variantImage > 0 ? variantImage : 0
+  }
+}
+
 const Product = ({ history, location, match }) => {
-  const [options, setOptions] = useState({})
-  const [activeImage, setActiveImage] = useState(0)
-  const [addedToCart, addToCartRaw] = useState(false)
+  const [state, setState] = useReducer(reducer, {
+    options: {},
+    activeImage: 0,
+    addedToCart: false,
+    productData: undefined
+  })
+  const { options, activeImage, addedToCart, productData } = state
+
   const [{ collections }, dispatch] = useStateValue()
-  const [productData, setProductData] = useState()
   const isMobile = useIsMobile()
   const { config } = useConfig()
   const opts = queryString.parse(location.search)
@@ -38,16 +53,22 @@ const Product = ({ history, location, match }) => {
       const variant =
         data.variants.find(v => String(v.id) === opts.variant) ||
         data.variants[0]
-      setProductData(data)
-      setActiveImage(0)
-      setOptions(pick(variant, 'option1', 'option2', 'option3'))
-      setImageForVariant(data, variant)
+      const newState = {
+        productData: data,
+        activeImage: 0,
+        options: pick(variant, 'option1', 'option2', 'option3')
+      }
+      const imageForVariant = getImageForVariant(data, variant)
+      if (imageForVariant !== undefined) {
+        newState.activeImage = imageForVariant
+      }
+      setState(newState)
     }
     fetchProduct(match.params.id).then(setData)
   }, [match.params.id])
 
   function addToCart(product, variant) {
-    addToCartRaw(true)
+    setState({ addedToCart: true })
     dispatch({
       type: 'addToCart',
       item: { product, quantity: 1, variant: variant.id, price: variant.price }
@@ -74,22 +95,17 @@ const Product = ({ history, location, match }) => {
     const variant = productData.variants.find(v =>
       isEqual(newOptions, pick(v, 'option1', 'option2', 'option3'))
     )
-    setOptions(newOptions)
-    setImageForVariant(productData, variant)
+    const newState = { options: newOptions }
+    const imageForVariant = getImageForVariant(productData, variant)
+    if (imageForVariant !== undefined) {
+      newState.activeImage = imageForVariant
+    }
+    setState(newState)
     history.replace(
       `${urlPrefix}/products/${match.params.id}${
         variant ? `?variant=${variant.id}` : ''
       }`
     )
-  }
-
-  function setImageForVariant(productData, variant) {
-    if (productData && get(variant, 'image')) {
-      const variantImage = productData.images.findIndex(
-        i => variant.image.indexOf(i) >= 0
-      )
-      setActiveImage(variantImage > 0 ? variantImage : 0)
-    }
   }
 
   const productOptions = productData.options || []
@@ -109,6 +125,19 @@ const Product = ({ history, location, match }) => {
     }
   }
 
+  const galleryProps = {
+    pics,
+    active: activeImage,
+    onChange: activeId => {
+      const variant = productData.variants.find(
+        variant => variant.image === productData.images[activeId]
+      )
+      if (variant !== undefined) {
+        setState({ options: pick(variant, 'option1', 'option2', 'option3') })
+      }
+    }
+  }
+
   return (
     <div className="product-detail">
       {!collection ? null : (
@@ -121,9 +150,9 @@ const Product = ({ history, location, match }) => {
       <div className="row">
         <div className="col-sm-7">
           {isMobile ? (
-            <GalleryScroll pics={pics} active={activeImage} />
+            <GalleryScroll {...galleryProps} />
           ) : (
-            <Gallery pics={pics} active={activeImage} />
+            <Gallery {...galleryProps} />
           )}
         </div>
         <div className="col-sm-5">
