@@ -72,12 +72,12 @@ const Zoom = ({ pics = [], onClose, initialActive }) => {
   )
 }
 
-const Gallery = ({ pics = [], active: activeImage }) => {
-  const [active, setActive] = useState(activeImage)
+const Gallery = ({ pics = [], active: activeImage, onChange }) => {
+  const [active, setActiveRaw] = useState(activeImage)
   const [zoom, setZoom] = useState(false)
   const thumbnails = useRef()
   useEffect(() => {
-    setActive(activeImage)
+    setActive(activeImage, true)
   }, [activeImage])
   useEffect(() => {
     if (!thumbnails || !thumbnails.current) return
@@ -90,6 +90,13 @@ const Gallery = ({ pics = [], active: activeImage }) => {
       behavior: 'smooth'
     })
   }, [thumbnails, active])
+
+  const setActive = (activeId, preventOnChange) => {
+    setActiveRaw(activeId)
+    if (onChange && !preventOnChange) {
+      onChange(activeId)
+    }
+  }
 
   const current = pics[active]
   if (!current) return null

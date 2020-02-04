@@ -108,6 +108,10 @@ async function sendMail(shopId, cart, skip) {
     supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
   }
 
+  if (!data.absolute) {
+    publicURL += '/#'
+  }
+
   const vars = {
     head,
     siteName: data.fullTitle || data.title,
