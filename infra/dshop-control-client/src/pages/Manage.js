@@ -51,7 +51,7 @@ const Manage = props => {
     return renderLoading()
   }
 
-  if (shops.length === 0 && false) {
+  if (shops.length === 0) {
     return renderNoShops()
   }
 
