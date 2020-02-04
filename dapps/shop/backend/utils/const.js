@@ -65,6 +65,7 @@ const {
  */
 const DATA_URL = null
 const PASSWORD_SALT_ROUNDS = 10
+const PRINTFUL_URL = 'https://api.printful.com/'
 
 module.exports = {
   CONTRACTS,
@@ -87,5 +88,6 @@ module.exports = {
   MAILGUN_SMTP_PORT,
   MAILGUN_SMTP_LOGIN,
   MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID
+  AWS_ACCESS_KEY_ID,
+  PRINTFUL_URL
 }
