@@ -100,12 +100,12 @@ module.exports = function(app) {
 
     const rows = await Shops.findAll({
       where: {
-        seller_id: id
+        sellerId: id
       }
     })
 
     const shops = rows.map(row => {
-      return omit(row.dataValues, ['config', 'seller_id'])
+      return omit(row.dataValues, ['config', 'sellerId'])
     })
 
     res.json({
@@ -125,7 +125,7 @@ module.exports = function(app) {
 
     const shop = await Shops.create({
       ...shopObj,
-      seller_id: req.user.id
+      sellerId: req.user.id
     })
 
     res.json({ success: true, shop })
@@ -135,7 +135,7 @@ module.exports = function(app) {
     await Shops.destroy({
       where: {
         id: req.body.id,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
     res.json({ success: true })
@@ -147,7 +147,7 @@ module.exports = function(app) {
     const shop = await Shops.findOne({
       where: {
         id: shopId,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
 
@@ -176,7 +176,7 @@ module.exports = function(app) {
     const shop = await Shops.findOne({
       where: {
         id: shopId,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
 

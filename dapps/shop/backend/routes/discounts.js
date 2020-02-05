@@ -14,7 +14,7 @@ module.exports = function(app) {
             Sequelize.fn('lower', req.body.code)
           )
         ],
-        shop_id: req.shopId
+        shopId: req.shopId
       }
     })
 
@@ -33,7 +33,7 @@ module.exports = function(app) {
 
   app.get('/discounts', authenticated, shopGate, async (req, res) => {
     const discounts = await Discounts.findAll({
-      where: { shop_id: req.shopId },
+      where: { shopId: req.shopId },
       order: [['createdAt', 'desc']]
     })
     res.json(discounts)
@@ -43,7 +43,7 @@ module.exports = function(app) {
     const discount = await Discounts.findOne({
       where: {
         id: req.params.id,
-        shop_id: req.shopId
+        shopId: req.shopId
       }
     })
     res.json(discount)
@@ -51,7 +51,7 @@ module.exports = function(app) {
 
   app.post('/discounts', authenticated, shopGate, async (req, res) => {
     const discount = await Discounts.create({
-      shop_id: req.shopId,
+      shopId: req.shopId,
       ...req.body
     })
     res.json({ success: true, discount })
@@ -61,7 +61,7 @@ module.exports = function(app) {
     const discount = await Discounts.update(req.body, {
       where: {
         id: req.params.id,
-        shop_id: req.shopId
+        shopId: req.shopId
       }
     })
 
@@ -72,7 +72,7 @@ module.exports = function(app) {
     const discount = await Discounts.destroy({
       where: {
         id: req.params.id,
-        shop_id: req.shopId
+        shopId: req.shopId
       }
     })
     res.json({ success: true, discount })

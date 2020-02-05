@@ -6,7 +6,7 @@ const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
 
-const { Network, Shops, Transactions, Orders } = require('./data/db')
+const { Op, Network, Shops, Transactions, Orders } = require('./data/db')
 const abi = require('./utils/_abi')
 const {
   getIpfsHashFromBytes32,
@@ -162,11 +162,16 @@ async function connectWS() {
       } else if (blockDiff >= 1) {
         // Removed config.fetchPastLogs because that's not a thing
         Shops.findAll({
-          attributes: ['listing_id']
+          attributes: ['listingId'],
+          where: {
+            listingId: {
+              [Op.ne]: null
+            }
+          }
         })
           .then(rows => {
             const listingId = rows.map(row => {
-              return ListingID.fromFQLID(row.listing_id)
+              return ListingID.fromFQLID(row.listingId)
             })
             console.log(
               `Fetching ${blockDiff} past blocks of logs for ${listingId.length} listings...`
@@ -192,7 +197,7 @@ const handleNewHead = head => {
   const timestamp = web3.utils.hexToNumber(head.timestamp)
   console.log(`New block ${number} timestamp: ${timestamp}`)
 
-  Network.upsert({ network_id: netId, last_block: number })
+  Network.upsert({ networkId: netId, lastBlock: number })
 
   return number
 }
@@ -212,7 +217,7 @@ const handleLog = async ({
   }
   console.log('fetch existing...', transactionHash)
   const existingTx = await Transactions.findOne({
-    where: { transaction_hash: transactionHash }
+    where: { transactionHash: transactionHash }
   })
   console.log('existing', existingTx)
   if (existingTx) {
@@ -220,9 +225,9 @@ const handleLog = async ({
     return
   } else {
     Transactions.create({
-      network_id: netId,
-      transaction_hash: transactionHash,
-      block_number: web3.utils.hexToNumber(blockNumber)
+      networkId: netId,
+      transactionHash: transactionHash,
+      blockNumber: web3.utils.hexToNumber(blockNumber)
     }).then(res => {
       console.log(`Created tx ${res.dataValues.id}`)
     })
@@ -251,7 +256,7 @@ const handleLog = async ({
 
     const record = await Shops.findOne({
       where: {
-        listing_id: lid.toString()
+        listingId: lid.toString()
       }
     })
     const shopId = record.id
@@ -307,9 +312,9 @@ const handleLog = async ({
     console.log(cart)
 
     Orders.create({
-      order_id: cart.offerId,
-      shop_id: shopId,
-      network_id: netId,
+      orderId: cart.offerId,
+      shopId: shopId,
+      networkId: netId,
       data: JSON.stringify(cart)
     }).then(() => {
       console.log('Saved to DB OK')
