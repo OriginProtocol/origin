@@ -51,7 +51,7 @@ List the shops for a seller.
 
 Create a shop with provided configuration.
 
-    curl "${JSON_POST_OPTIONS[@]}" -b $COOKIE_STORAGE -d '{"name": "Test Shop", "listing_id": "1-001-0001", "auth_token": "token123"}' $API_ROOT/shop
+    curl "${JSON_POST_OPTIONS[@]}" -b $COOKIE_STORAGE -d '{"name": "Test Shop", "listingId": "1-001-0001", "authToken": "token123"}' $API_ROOT/shop
 
 ### `DELETE /shop`
 
@@ -83,7 +83,7 @@ Get a discount code's value and type
 
 Add a discount code
 
-    curl "${JSON_POST_OPTIONS[@]}" "${KEY_AUTH_HEADER[@]}" -b $COOKIE_STORAGE -d '{"network_id": 4, "status": "active", "code": "asdf1234", "discountType": "percentage", "value": 15, "maxUses": 200, "onePerCustomer": false}' $API_ROOT/discounts
+    curl "${JSON_POST_OPTIONS[@]}" "${KEY_AUTH_HEADER[@]}" -b $COOKIE_STORAGE -d '{"networkId": 4, "status": "active", "code": "asdf1234", "discountType": "percentage", "value": 15, "maxUses": 200, "onePerCustomer": false}' $API_ROOT/discounts
 
 ### `PUT /discounts/:id`
 ### `DELETE /discounts/:id`
