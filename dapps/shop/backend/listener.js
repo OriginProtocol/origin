@@ -46,31 +46,40 @@ const SubscribeToNewHeads = JSON.stringify({
   params: ['newHeads']
 })
 
+function makeRPCCall({ method, params = [], id = 123 }) {
+  return JSON.stringify({
+    jsonrpc: '2.0',
+    id,
+    method,
+    params
+  })
+}
+
 const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
   if (!listingId || !(listingId instanceof Array)) {
     listingId = [listingId]
   }
 
-  const params = listingId.map(lid => {
+  const calls = listingId.map(lid => {
     const listingTopic = web3.utils.padLeft(
       web3.utils.numberToHex(lid.listingId),
       64
     )
-    return {
-      address: lid.address(),
-      topics: [null, null, listingTopic],
-      fromBlock: web3.utils.numberToHex(fromBlock),
-      toBlock: web3.utils.numberToHex(toBlock)
-    }
+    return makeRPCCall({
+      method: 'eth_getLogs',
+      params: [
+        {
+          address: lid.address(),
+          topics: [null, null, listingTopic],
+          fromBlock: web3.utils.numberToHex(fromBlock),
+          toBlock: web3.utils.numberToHex(toBlock)
+        }
+      ],
+      id: 3
+    })
   })
 
-  const rpc = {
-    jsonrpc: '2.0',
-    id: 3,
-    method: 'eth_getLogs',
-    params
-  }
-  return JSON.stringify(rpc)
+  return calls
 }
 const netId = NETWORK_ID
 let ws
@@ -170,16 +179,27 @@ async function connectWS() {
           }
         })
           .then(rows => {
-            const listingId = rows.map(row => {
-              return ListingID.fromFQLID(row.listingId)
-            })
+            // Unique ListingIDs
+            const listingId = rows
+              .reduce((acc, cur) => {
+                if (!acc.includes(cur.listingId)) acc.push(cur.listingId)
+                return acc
+              }, [])
+              .map(fqlid => ListingID.fromFQLID(fqlid))
+
             console.log(
               `Fetching ${blockDiff} past blocks of logs for ${listingId.length} listings...`
             )
+
             // TODO: At what point does the amount of params make this query difficult?
-            ws.send(
-              GetPastLogs({ fromBlock: lastBlock, toBlock: number, listingId })
-            )
+            const rpcCalls = GetPastLogs({
+              fromBlock: lastBlock,
+              toBlock: number,
+              listingId
+            })
+            for (const call of rpcCalls) {
+              ws.send(call)
+            }
           })
           .catch(err => {
             console.error(err)
