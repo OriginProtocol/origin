@@ -11,6 +11,7 @@ import store from '@/store'
 const Manage = props => {
   const [expandSidebar, setExpandSidebar] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [authToken, setAuthToken] = useState('')
 
   const backendConfig = useStoreState(store, s => s.backend)
   const shops = useStoreState(store, s => s.shops)
@@ -27,9 +28,14 @@ const Manage = props => {
     const fetchShops = async () => {
       console.debug('Fetching shops...')
       const response = await axios.get(`${backendConfig.url}/shop`)
-      store.update(s => {
-        s.shops = response.data
-      })
+      if (response.data.shops) {
+        store.update(s => {
+          s.shops = response.data.shops
+        })
+        if (response.data.shops.length > 0) {
+          setAuthToken(response.data.shops[0].authToken)
+        }
+      }
       setLoading(false)
     }
     fetchShops()
@@ -39,20 +45,8 @@ const Manage = props => {
     setExpandSidebar(!expandSidebar)
   }
 
-  const renderLoading = () => {
-    return 'Loading...'
-  }
-
-  const renderNoShops = () => {
-    return 'No shops found'
-  }
-
-  if (loading) {
-    return renderLoading()
-  }
-
-  if (shops.length === 0) {
-    return renderNoShops()
+  const handleShopChange = event => {
+    console.log(event.target.value)
   }
 
   return (
@@ -62,12 +56,31 @@ const Manage = props => {
         expandSidebar={expandSidebar}
       />
       <div id="main" className={expandSidebar ? 'd-none' : ''}>
+        {shops && shops.length > 1 && (
+          <div className="row">
+            <div className="col-6 col-md-4">
+              <select className="form-control" onChange={handleShopChange} value={authToken}>
+                {shops.map(s => (
+                  <option value={s.authToken}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
         <div className="mt-4">
-          <Switch>
-            <Route path="/manage/orders" component={Orders} />
-            <Route path="/manage/discounts" component={Discounts} />
-            <Redirect to="/manage/orders" />
-          </Switch>
+          {loading ? 'Loading' : (
+            <>
+              {shops && shops.length > 0 ? (
+                <Switch>
+                  <Route path="/manage/orders" component={Orders} />
+                  <Route path="/manage/discounts" component={Discounts} />
+                  <Redirect to="/manage/orders" />
+                </Switch>
+              ) : (
+                'No shops found'
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

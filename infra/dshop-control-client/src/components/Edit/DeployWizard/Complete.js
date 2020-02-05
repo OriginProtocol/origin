@@ -52,21 +52,21 @@ const Complete = ({ ethNetworkId }) => {
           ...s.settings.networks[ethNetworkId],
           [ethNetworkId]: {
             ...s.settings.networks[ethNetworkId],
-            shopId: response.data.shopId
+            shopId: response.data.shop.id
           }
         }
       }
     })
 
-    return response.data.shopId
+    return response.data.shop.id
   }
 
   /* Update the configuration for a shop on the DShop backend
    *
    */
-  const updateShopConfig = async (shopId, dataUrl) => {
-    return await axios.post(`${settings.backend}/shop`, {
-      shopId,
+  const updateShopConfig = async dataUrl => {
+    return await axios.post(`${settings.backend}/config`, {
+      shopId: settings.networks[ethNetworkId].shopId,
       config: {
         dataUrl
       }
@@ -80,6 +80,7 @@ const Complete = ({ ethNetworkId }) => {
     }
 
     const root = await uploadToIpfs()
+
     await updateShopConfig(`${root}/data`)
 
     setLoading(false)
@@ -87,11 +88,15 @@ const Complete = ({ ethNetworkId }) => {
 
   const uploadToIpfs = async () => {
     // Put the shop on IPFS
-    const response = await axios.post(`${process.env.API_URL}/deploy`, {
-      settings,
-      collections,
-      products
-    })
+    const response = await axios.post(
+      `${process.env.API_URL}/deploy`,
+      {
+        settings,
+        collections,
+        products
+      },
+      { withCredentials: false }
+    )
 
     const url = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.data}`
     setShopUrl(url)
