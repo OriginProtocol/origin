@@ -128,7 +128,9 @@ class BanParticipants {
         delete this.unbanned[row.ethAddress]
       }
     }
-    logger.info(`Loaded ${Object.keys(this.unbanned).length} manually unbanned accounts.`)
+    logger.info(
+      `Loaded ${Object.keys(this.unbanned).length} manually unbanned accounts.`
+    )
   }
 
   /**
@@ -276,7 +278,9 @@ class BanParticipants {
       if (fraud) {
         // TODO: also consider banning all referees of fraudulent referrer.
         if (this.unbanned[address]) {
-          logger.warn(`Banning referrer ${address} even though it won an unban appeal.`)
+          logger.warn(
+            `Banning referrer ${address} even though it won an unban appeal.`
+          )
         }
         await this._banParticipant(participant, fraud)
         this.stats.numBanned++
