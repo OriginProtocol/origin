@@ -14,7 +14,7 @@ function generatePrintfulOrder(order, printfulIds) {
   const data = order.data
 
   const printfulData = {
-    external_id: order.order_id,
+    external_id: order.orderId,
     recipient: {
       name: `${data.userInfo.firstName} ${data.userInfo.lastName}`,
       address1: data.userInfo.address1,
