@@ -150,6 +150,19 @@ async function createConfig(shopId, configObj) {
 }
 
 /**
+ * Clear the cache for a shop
+ *
+ * @param {number} shopId - shop ID
+ * @returns {boolean} - If it succeeded
+ */
+function clear(shopId) {
+  if (typeof loadedConfigs[shopId] === 'undefined') {
+    return false
+  }
+  return delete loadedConfigs[shopId] && delete loadedIVs[shopId]
+}
+
+/**
  * Save a Shop record in the DB
  *
  * @param {number} shopId - shop ID
@@ -303,6 +316,7 @@ module.exports = {
   encryptJSON,
   decrypt,
   decryptJSON,
+  clear,
   save,
   load,
   loadFromEnv,
