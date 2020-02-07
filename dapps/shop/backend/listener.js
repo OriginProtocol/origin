@@ -86,7 +86,20 @@ let ws
 async function connectWS() {
   let lastBlock
 
-  web3.setProvider(config.provider)
+  let wsProvider = new Web3.providers.WebsocketProvider(config.provider)
+  wsProvider.on('error', e => console.log('WS Error', e))
+  wsProvider.on('end', e => {
+    console.log('WS closed: ', e)
+    console.log('Attempting to reconnect...')
+    wsProvider = new Web3.providers.WebsocketProvider(config.provider)
+
+    wsProvider.on('connect', function () {
+        console.log('WSS Reconnected')
+    })
+
+    web3.setProvider(wsProvider)
+  })
+  web3.setProvider(wsProvider)
 
   console.log(`Connecting to ${config.provider} (netId ${netId})`)
 
@@ -127,8 +140,8 @@ async function connectWS() {
     setTimeout(() => connectWS(), 5000)
   })
   ws.on('ping', heartbeat)
-  ws.on('close', function clear() {
-    console.log('Websocket connection closed')
+  ws.on('close', function clear(num, reason) {
+    console.error(`Websocket connection closed: ${num}: ${reason}`)
     clearTimeout(this.pingTimeout)
   })
 
