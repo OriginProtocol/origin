@@ -91,9 +91,9 @@ async function connectWS() {
   console.log(`Connecting to ${config.provider} (netId ${netId})`)
 
   try {
-    const res = await Network.findOne({ where: { network_id: netId } })
+    const res = await Network.findOne({ where: { networkId: netId } })
     if (res) {
-      lastBlock = res.last_block
+      lastBlock = res.lastBlock
       console.log(`Last recorded block: ${lastBlock}`)
     } else {
       console.log('No recorded block found')
@@ -128,7 +128,7 @@ async function connectWS() {
   })
   ws.on('ping', heartbeat)
   ws.on('close', function clear() {
-    console.log('Connection closed')
+    console.log('Websocket connection closed')
     clearTimeout(this.pingTimeout)
   })
 
