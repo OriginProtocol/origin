@@ -52,7 +52,7 @@ app.use(
       if (!origin) console.debug('No Origin header provided')
       cb(null, origin || '*')
     },
-    credentials: !!origin
+    credentials: true
   })
 )
 app.use(serveStatic(`${__dirname}/public`))
