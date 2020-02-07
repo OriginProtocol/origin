@@ -103,7 +103,34 @@ class BanParticipants {
     this.employees = new OriginEmployees(employeesFilename)
     this.trusted = new TrustedAccounts(trustedFilename)
     this.sdnMatcher = new SdnMatcher()
+    this.unbanned = {} // Accounts manually unbanned after the users appeal were approved.
     this.fraudEngine = new FraudEngine()
+  }
+
+  async init() {
+    // Have the fraud engine load up its data.
+    await this.fraudEngine.init(this.config.campaignDate)
+
+    // Load appeals data in memory.
+    // It is small so faster than doing point lookups in the DB.
+    const rows = await db.GrowthAdminActivity.findAll({
+      order: [['id', 'ASC']]
+    })
+    for (const row of rows) {
+      if (row.action === enums.GrowthAdminActivityActions.Unban) {
+        // Appeal approved and account unbanned.
+        this.unbanned[row.ethAddress] = true
+      } else if (
+        row.action === enums.GrowthAdminActivityActions.Ban ||
+        row.action === enums.GrowthAdminActivityActions.Close
+      ) {
+        // After being unbanned, account got either banned again or closed.
+        delete this.unbanned[row.ethAddress]
+      }
+    }
+    logger.info(
+      `Loaded ${Object.keys(this.unbanned).length} manually unbanned accounts.`
+    )
   }
 
   /**
@@ -148,7 +175,7 @@ class BanParticipants {
   }
 
   async process() {
-    await this.fraudEngine.init(this.config.campaignDate)
+    await this.init()
 
     // Get list of all growth engine participants that are active and not whitelisted,
     // in account creation date asc order.
@@ -207,17 +234,23 @@ class BanParticipants {
         continue
       }
 
-      // Check if the participant is a duplicate account
-      const fraud = await this.fraudEngine.isDupeParticipantAccount(address)
-      if (fraud) {
-        await this._banParticipant(participant, fraud)
-        this.stats.numBanned++
-        this.stats.numBannedDupe++
-        continue
+      // Check if the participant is a duplicate account, unless it was manually unbanned.
+      if (!this.unbanned[address]) {
+        const fraud = await this.fraudEngine.isDupeParticipantAccount(address)
+        if (fraud) {
+          await this._banParticipant(participant, fraud)
+          this.stats.numBanned++
+          this.stats.numBannedDupe++
+          continue
+        }
+        logger.info(`Account ${address} passed dupe fraud checks.`)
+      } else {
+        logger.info(`Account ${address} unbanned. Skipping dupe checks.`)
       }
-      logger.debug(`Account ${address} passed dupe fraud checks.`)
 
       // Ban any participant flagged as part of the manual review process.
+      // Note: it does not matter if they were unbanned before since the
+      // manual review would have taken this into account.
       const manual = this.fraudEngine.isManuallyBannedParticipant(address)
       if (manual) {
         await this._banParticipant(participant, manual)
@@ -244,6 +277,11 @@ class BanParticipants {
       const fraud = await this.fraudEngine.isFraudReferrerAccount(address)
       if (fraud) {
         // TODO: also consider banning all referees of fraudulent referrer.
+        if (this.unbanned[address]) {
+          logger.warn(
+            `Banning referrer ${address} even though it won an unban appeal.`
+          )
+        }
         await this._banParticipant(participant, fraud)
         this.stats.numBanned++
         this.stats.numBannedReferrer++
