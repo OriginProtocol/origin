@@ -32,6 +32,13 @@ module.exports = function(app) {
   app.post('/pay', authenticated, shopGate, async (req, res) => {
     const { shopId } = req
 
+    if (req.body.amount < 50) {
+      return res.status(400).send({
+        success: false,
+        message: 'Amount too low for credit card payment'
+      })
+    }
+
     // Get API Key from config, and init Stripe
     const stripeBackend = await encConf.get(shopId, 'stripeBackend')
     const stripe = Stripe(stripeBackend || '')

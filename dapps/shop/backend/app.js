@@ -49,9 +49,10 @@ app.use(
       if (ORIGIN_WHITELIST_ENABLED && !ORIGIN_WHITELIST.includes(origin)) {
         cb(new Error('Not allowed by CORS'))
       }
+      if (!origin) console.debug('No Origin header provided')
       cb(null, origin || '*')
     },
-    credentials: true
+    credentials: !!origin
   })
 )
 app.use(serveStatic(`${__dirname}/public`))
