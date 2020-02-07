@@ -2,5 +2,8 @@ containerRegistry: gcr.io/origin-214503
 
 clusterIssuer: letsencrypt-prod
 
+dshopBackendMainnetImage: dshop-backend
+dshopBackendMainnetImageTag: mainnet
+
 dshopBackendRinkebyImage: dshop-backend
 dshopBackendRinkebyImageTag: latest
