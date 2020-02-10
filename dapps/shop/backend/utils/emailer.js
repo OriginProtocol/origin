@@ -95,6 +95,11 @@ async function sendMail(cart, skip) {
     supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
   }
 
+  let pubUrl = PUBLIC_URL
+  if (!data.absolute) {
+    pubUrl += '/#'
+  }
+
   const vars = {
     head,
     siteName: data.fullTitle || data.title,
@@ -107,8 +112,8 @@ async function sendMail(cart, skip) {
     firstName: cart.userInfo.firstName,
     lastName: cart.userInfo.lastName,
     email: cart.userInfo.email,
-    orderUrl: `${PUBLIC_URL}/#/order/${cart.tx}?auth=${cart.dataKey}`,
-    orderUrlAdmin: `${PUBLIC_URL}/#/admin/orders/${cart.offerId}`,
+    orderUrl: `${pubUrl}/order/${cart.tx}?auth=${cart.dataKey}`,
+    orderUrlAdmin: `${pubUrl}/admin/orders/${cart.offerId}`,
     orderItems,
     orderItemsTxt,
     subTotal: formatPrice(cart.subTotal),

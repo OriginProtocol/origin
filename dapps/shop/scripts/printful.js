@@ -167,39 +167,28 @@ async function getMockTemplate(id) {
 // getSyncProducts()
 // getSyncProduct(116035497)
 // getSyncVariant(1310137968)
-// getMockTemplate(71)
-// getPrintFiles(71)
-// createMockupTask(248, {
-//   variant_ids: [8629],
+// getMockTemplate(19)
+getPrintFiles(19)
+// createMockupTask(403, {
+//   variant_ids: [11051],
 //   format: 'jpg',
-//   option_groups: ['Flat'],
+//   option_groups: ['Flat'], // 'null'
+//   // options: ['Front'],
 //   files: [
 //     {
-//       placement: 'front',
-//       image_url: ''
+//       placement: 'default',
+//       image_url: 'https://00883451.ngrok.io/png/1217909231946477575',
 //       position: {
-//         area_width: 294,
-//         area_height: 390,
-//         width: 194,
-//         height: 72,
-//         top: 37,
-//         left: 52
-//       }
-//     },
-//     {
-//       placement: 'back',
-//       image_url: '',
-//       position: {
-//         area_width: 295,
-//         area_height: 392,
-//         width: 87,
-//         height: 333,
-//         top: 0,
-//         left: 105
+//         area_width: 671,
+//         area_height: 261,
+//         width: 250,
+//         height: 142,
+//         top: 60,
+//         left: 378
 //       }
 //     }
 //   ]
 // })
-getTask('z12e569d08f91ec9282162bf6e87e5f9')
+// getTask('z137d36154d20558c7bb119d7129cfba')
 // getFiles()
 // getFile(153461378)

@@ -1,11 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
 import debounce from 'lodash/debounce'
 
-const GalleryScroll = ({ pics = [] }) => {
-  const [offset, setOffset] = useState(0)
+const GalleryScroll = ({ pics = [], onChange }) => {
+  const [offset, setOffsetRaw] = useState(0)
   const [forceOffset, setForceOffset] = useState(0)
   const [scrollOffset, setScrollOffset] = useState(0)
   const [zoom, setZoomRaw] = useState(false)
+
+  const setOffset = active => {
+    setOffsetRaw(active)
+    if (onChange) {
+      onChange(active)
+    }
+  }
 
   function setZoom(zoom) {
     if (!zoom) {

@@ -46,18 +46,6 @@ const OrderSummary = ({ cart, discountForm = false }) => {
               <b>{formatPrice(cart.subTotal)}</b>
             </div>
           </div>
-          {!cart.discount ? null : (
-            <div>
-              <div>{`Discount: ${get(
-                cart,
-                'discountObj.code',
-                ''
-              ).toUpperCase()}`}</div>
-              <div>
-                <b>{formatPrice(cart.discount)}</b>
-              </div>
-            </div>
-          )}
           <div>
             <div>Shipping</div>
             {cart.shipping ? (
@@ -70,6 +58,18 @@ const OrderSummary = ({ cart, discountForm = false }) => {
               <div>Calculated at next step</div>
             )}
           </div>
+          {!cart.discount ? null : (
+            <div>
+              <div>{`Discount: ${get(
+                cart,
+                'discountObj.code',
+                ''
+              ).toUpperCase()}`}</div>
+              <div>
+                <b>{formatPrice(cart.discount)}</b>
+              </div>
+            </div>
+          )}
         </div>
         <div className="total">
           <div>

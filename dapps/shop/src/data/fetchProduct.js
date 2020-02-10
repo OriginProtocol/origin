@@ -3,7 +3,11 @@ import dataUrl from 'utils/dataUrl'
 
 async function fetchProduct(id) {
   const raw = await fetch(`${dataUrl()}${id}/data.json`)
-  return await raw.json()
+  if (raw.ok) {
+    return await raw.json()
+  } else {
+    return null
+  }
 }
 
 export default memoize(fetchProduct)
