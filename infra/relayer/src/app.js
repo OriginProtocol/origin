@@ -38,6 +38,13 @@ app.post('/relay', function(req, res) {
   }
 })
 
+// Catch all
+app.all('*', function(req, res) {
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
+})
+
 const port = process.env.PORT || 5100
 app.listen(port, () => {
   logger.info(`Relayer listening on port ${port}...`)

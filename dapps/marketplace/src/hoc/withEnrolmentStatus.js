@@ -8,7 +8,7 @@ import withWallet from './withWallet'
 
 function withEnrolmentStatus(
   WrappedComponent,
-  { fetchPolicy = 'network-only', suppressErrors } = {}
+  { fetchPolicy = 'network-only', suppressErrors = true } = {}
 ) {
   const WithEnrolmentStatus = props => {
     return (

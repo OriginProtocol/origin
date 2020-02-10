@@ -192,6 +192,18 @@ function Campaign(props) {
         progress={tokenEarnProgress}
         showIndicators={false}
       />
+      {nameKey === 'growth.feb2020.name' && (
+        <a
+          className="swag align-self-center"
+          href="http://www.originprotocol.com/en/reward/swag/fabruary_2020"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {isMobile && <img src="/images/growth/rewardsSwag@2x.png" />}
+          {!isMobile && <img src="/images/growth/rewardsSwagDesktop@2x.png" />}
+        </a>
+      )}
+
       <MobileDownloadAction
         action={mobileAction}
         decimalDivision={decimalDivision}
@@ -338,13 +350,48 @@ class GrowthCampaign extends Component {
           }}
           isMobile={isMobile}
         />
-        {navigation === 'currentCampaign' && (
+        {navigation === 'currentCampaign' && activeCampaign && (
           <Campaign
             campaign={activeCampaign}
             accountId={accountId}
             decimalDivision={decimalDivision}
             isMobile={isMobile}
           />
+        )}
+        {navigation === 'currentCampaign' && !activeCampaign && (
+          <div>
+            <h1 className="mb-2 infra/growth/src/apollo/app.jspt-4 mt-4">
+              <fbt desc="growth.campaigns.campaignEnded">Campaign Ended</fbt>
+            </h1>
+            <div className="mt-3">
+              <fbt desc="growth.campaigns.budgetReached">
+                The budget allocated for this campaign has been reached. No more
+                tokens are available to earn for this campaign.
+              </fbt>
+            </div>
+            <div className="mt-3">
+              <fbt desc="EventDescription.checkBlogPost">
+                Read our{' '}
+                <fbt:param name="blog post">
+                  <a href="https://medium.com/originprotocol/holiday-rewards-campaign-ending-soon-as-origins-community-grows-by-100k-members-358cd22da43d">
+                    blog post
+                  </a>
+                </fbt:param>
+                {'.'}
+              </fbt>
+            </div>
+            <div className="mt-3">
+              <fbt desc="EventDescription.forUpdates">
+                To get the latest updates about Origin Rewards,{' '}
+                <fbt:param name="joinTelegram">
+                  <a href="https://t.me/originprotocol">
+                    join our Telegram channel
+                  </a>
+                </fbt:param>
+                {'.'}
+              </fbt>
+            </div>
+          </div>
         )}
         {navigation === 'pastCampaigns' && (
           <PastCampaigns
@@ -382,7 +429,9 @@ class GrowthCampaigns extends Component {
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         <div
-          className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}
+          className={`container growth-campaigns ${
+            isMobile ? 'mobile' : ''
+          } d-flex flex-column`}
         >
           <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus, loading }) => {
@@ -420,16 +469,28 @@ class GrowthCampaigns extends Component {
                 campaign => campaign.status === 'Active'
               )
 
-              const {
-                completedPurchaseActions,
+              let completedPurchaseActions,
                 notCompletedPurchaseActions,
                 completedVerificationActions,
                 notCompletedVerificationActions,
                 completedPromotionActions,
                 notCompletedPromotionActions,
                 completedFollowActions,
-                notCompletedFollowActions
-              } = calculatePendingAndAvailableActions(activeCampaign)
+                notCompletedFollowActions = undefined
+
+              if (activeCampaign) {
+                /* eslint-disable-next-line no-extra-semi */
+                ;({
+                  completedPurchaseActions,
+                  notCompletedPurchaseActions,
+                  completedVerificationActions,
+                  notCompletedVerificationActions,
+                  completedPromotionActions,
+                  notCompletedPromotionActions,
+                  completedFollowActions,
+                  notCompletedFollowActions
+                } = calculatePendingAndAvailableActions(activeCampaign))
+              }
 
               return (
                 <Query
@@ -451,23 +512,13 @@ class GrowthCampaigns extends Component {
                     }
 
                     return (
-                      <Fragment>
+                      <>
                         {navigation === 'Campaigns' && (
                           <GrowthCampaign
                             campaigns={campaigns}
                             accountId={accountId}
                             decimalDivision={decimalDivision}
                             isMobile={isMobile}
-                            completedVerificationActions={
-                              completedVerificationActions
-                            }
-                            notCompletedVerificationActions={
-                              notCompletedVerificationActions
-                            }
-                            completedPurchaseActions={completedPurchaseActions}
-                            notCompletedPurchaseActions={
-                              notCompletedPurchaseActions
-                            }
                           />
                         )}
                         {navigation === 'invitations' && (
@@ -530,7 +581,7 @@ class GrowthCampaigns extends Component {
                             }
                           />
                         )}
-                      </Fragment>
+                      </>
                     )
                   }}
                 </Query>
@@ -568,6 +619,11 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .swag
+      img
+        width: 100%
+        max-width: 350px
+        margin-top: 10px
     .campaign-list
       .select-bar
         background-color: var(--clear-blue)
@@ -651,5 +707,10 @@ require('react-styl')(`
         .total-earned img
           width: 1rem
           height: 1rem
-
+  @media (min-width: 768px)
+    .growth-campaigns
+      .swag
+        img
+          max-width: 450px
+          margin-top: 20px
 `)

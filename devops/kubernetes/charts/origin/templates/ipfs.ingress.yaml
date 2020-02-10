@@ -20,6 +20,11 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-body-size: "3m"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
 spec:
   tls:
     - secretName: {{ template "ipfs.host" . }}
@@ -29,6 +34,9 @@ spec:
     - secretName: gateway.originprotocol.com
       hosts:
         - gateway.originprotocol.com
+    - secretName: ipfs.ogn.app
+      hosts:
+        - ipfs.ogn.app
     {{- end }}
   rules:
     - host: {{ template "ipfs.host" . }}
@@ -45,4 +53,25 @@ spec:
     {{- if eq .Release.Namespace "prod" }}
     - host: gateway.originprotocol.com
       http: *http_rules
+    - host: ipfs.ogn.app
+      http:
+        paths:
+          - path: /api/v0/add
+            backend: &api_service
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 5001
+          - path: /api/v0/object/links
+            backend: *api_service
+          - path: /api/v0/object/patch/add-link
+            backend: *api_service
+          - path: /api/v0/object/patch/rm-link
+            backend: *api_service
+          - path: /ipfs
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080
+          - path: /ipns
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080
     {{- end }}

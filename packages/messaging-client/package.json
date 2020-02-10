@@ -18,7 +18,7 @@
     "debug": "^4.1.1",
     "eth-ecies": "^1.0.3",
     "json-stable-stringify": "^1.0.1",
-    "secp256k1": "^3.5.2"
+    "secp256k1": "^4.0.0"
   },
   "prettier": {
     "semi": false,
@@ -39,19 +39,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.7.7",
-    "@babel/plugin-proposal-class-properties": "7.7.4",
-    "@babel/plugin-proposal-export-default-from": "7.7.4",
-    "@babel/plugin-proposal-object-rest-spread": "7.7.7",
-    "@babel/plugin-transform-destructuring": "7.7.4",
-    "@babel/plugin-transform-object-assign": "7.7.4",
-    "@babel/plugin-transform-runtime": "7.7.6",
-    "@babel/preset-env": "7.7.7",
-    "@babel/preset-react": "7.7.4",
-    "@babel/register": "7.7.7",
-    "@babel/runtime": "7.7.7",
+    "@babel/core": "7.8.4",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-export-default-from": "7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.8.3",
+    "@babel/plugin-transform-destructuring": "7.8.3",
+    "@babel/plugin-transform-object-assign": "7.8.3",
+    "@babel/plugin-transform-runtime": "7.8.3",
+    "@babel/preset-env": "7.8.4",
+    "@babel/preset-react": "7.8.3",
+    "@babel/register": "7.8.3",
+    "@babel/runtime": "7.8.4",
     "debug": "4.1.1",
-    "mocha": "7.0.0",
+    "mocha": "7.0.1",
     "eslint": "6.8.0",
     "prettier": "1.19.1"
   }

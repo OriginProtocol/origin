@@ -99,6 +99,13 @@ app.use(useragent.express())
 
 app.use(require('./controllers'))
 
+// Catch all
+app.all('*', function(req, res) {
+  res.status(404).send({
+    errors: ['The page you are looking for does not exist']
+  })
+})
+
 const hasWallet =
   (networkId === 2222 && process.env.ORIGIN_MNEMONIC) ||
   (networkId === 4 && process.env.RINKEBY_MNEMONIC) ||

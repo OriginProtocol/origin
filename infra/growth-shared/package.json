@@ -1,6 +1,6 @@
 {
-  "name": "@origin/growth-event",
-  "description": "Growth event migration files, models and resources",
+  "name": "@origin/growth-shared",
+  "description": "Shared growth functionality: growth event migration files, models and resources",
   "version": "0.1.0",
   "engines": {
     "node": "10.x"
@@ -11,8 +11,8 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "pg": "7.17.0",
-    "sequelize": "5.21.3",
+    "pg": "7.18.1",
+    "sequelize": "5.21.4",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },

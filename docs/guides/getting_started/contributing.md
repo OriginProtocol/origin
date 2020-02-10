@@ -27,19 +27,6 @@ Other repos of interest:
 
 We work in public and our company Discord is open to all. If you have questions or need help getting started, our [Discord #engineering channel](https://www.originprotocol.com/discord) is the absoulute best place to get assistance from our team of engineers and developers.
 
-## Weekly Engineering Call
-
-We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
-
-<div style="background-color: #061d2a; border: 30px solid #061d2a;"><img src="/source/images/1-st-sun-nov.svg" alt="Origin Engineering Call" /></div>
-
-Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
-
-Everyone is welcome to join, even if you're just lurking. All we ask is that you mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:
-
-- [Engineering Notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU)
-- [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
-
 ## Dive Right In
 
 If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our ["good first issues"](https://github.com/OriginProtocol/origin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and [let one of us know](https://www.originprotocol.com/discord) which one you plan to tackle.

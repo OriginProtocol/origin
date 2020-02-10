@@ -5,7 +5,7 @@ const pick = require('lodash/pick')
 const uniqWith = require('lodash/uniqWith')
 
 const db = {
-  ...require('@origin/growth-event/src/models'),
+  ...require('@origin/growth-shared/src/models'),
   ...require('./models')
 }
 const originIpfs = require('@origin/ipfs')
@@ -352,7 +352,7 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
  *
  * @param {Object} user: Origin js user model object.
  * @param {Date} date: Event date.
- * @param {Object} growthEvent: See infra/growth-event/src/resources/GrowthEvent
+ * @param {Object} growthEvent: See infra/growth-shared/src/resources/GrowthEvent
  * @returns {Promise<void>}
  * @private
  */
@@ -385,7 +385,7 @@ async function recordGrowthProfileEvent(
  * Records AttestationPublished events in the growth_event table.
  * @param {Object} attestations
  * @param {Date} date: Event date.
- * @param {Object} growthEvent: See infra/growth-event/src/resources/GrowthEvent
+ * @param {Object} growthEvent: See infra/growth-shared/src/resources/GrowthEvent
  * @returns {Promise<void>}
  * @private
  */
@@ -400,7 +400,7 @@ async function recordGrowthAttestationEvents(
   // multiple attestations of the same type. For example if a user verifies
   // their email more than once. This could then cause a race condition within
   // the growthEvent.insert() method where the checks for ensuring there is
-  // one growth-event row per attestation type can fail.
+  // one growth-shared row per attestation type can fail.
   for (const attestation of attestations) {
     const attestationService = _getAttestationService(attestation)
     const eventType =

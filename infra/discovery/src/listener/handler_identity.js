@@ -2,7 +2,7 @@ const get = require('lodash/get')
 const Web3 = require('web3')
 
 const originIpfs = require('@origin/ipfs')
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 const {
   convertLegacyAvatar,
   loadAttestationMetadata,

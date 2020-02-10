@@ -1,8 +1,13 @@
 You've received Origin Tokens (OGN)!
 
-Congratulations. You've received ${amount} Origin Tokens (OGN) from the November 2019 Campaign of Origin Rewards.
+Congratulations. You've received ${amount} Origin Tokens (OGN) from the December 2019 campaign of Origin Rewards.
 We've sent your tokens to ${ethAddress} in this transaction: ${txLink}.
 
-As a reminder, Origin Tokens (OGN) are currently locked for usage on the platform. They will be transferable at a later date.
+You can now make purchases on the Origin marketplace using your OGN at www.shoporigin.com.
 
-You can earn more Origin Tokens (OGN) in the December 2019 Campaign of Origin Rewards. Checkout the latest rewards today at ${campaignLink} !
+Learn more about OGN as a payment token in our announcement.
+https://medium.com/originprotocol/announcing-ogn-payments-buy-or-sell-using-origin-tokens-8b937daa66e8
+
+As an Origin Rewards user, you must comply with local laws, including any applicable securities laws. You have also agreed to hold OGN for 12 months before transferring them to another party
+
+You can earn more Origin Tokens (OGN) in the future Origin Rewards campaigns. Checkout the latest rewards today at ${campaignLink} !

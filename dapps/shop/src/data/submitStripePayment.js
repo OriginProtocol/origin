@@ -1,9 +1,19 @@
-async function submitStripePayment({ backend, stripe, cart, encryptedData }) {
+async function submitStripePayment({
+  backend,
+  stripe,
+  cart,
+  encryptedData,
+  listingId
+}) {
   const res = await fetch(`${backend}/pay`, {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'POST',
-    body: JSON.stringify({ amount: cart.total, data: encryptedData.hash })
+    body: JSON.stringify({
+      amount: Math.round(cart.total),
+      data: encryptedData.hash,
+      listingId
+    })
   })
   const json = await res.json()
 

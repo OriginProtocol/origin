@@ -44,6 +44,7 @@ async function checkTelegramStatus(_, { identity, maxTries }) {
           schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
         })
       } catch (e) {
+        console.error('Failed to verify attestation data', JSON.stringify(data))
         return { success: false, reason: 'Invalid attestation' }
       }
 

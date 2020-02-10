@@ -131,9 +131,16 @@ const PaymentMethods = ({
     t => t.id
   )
 
+  // fixes a bug where some listings don't have any accepted tokens specified
+  if (acceptedTokens.length === 0) {
+    acceptedTokens.push('token-ETH')
+  }
+
   const setTokenCallback = useCallback(token => setPaymentMethod(token))
 
   const title = <fbt desc="PaymentMethod.title">Payment Method</fbt>
+
+  const storedPaymentMethodAvailable = acceptedTokens.includes(paymentMethod)
 
   return (
     <div className="container payment-methods-page">
@@ -151,11 +158,15 @@ const PaymentMethods = ({
         <div className="my-4">
           <fbt desc="PaymentMethod.acceptedCurrencies">This seller accepts</fbt>
         </div>
-        {acceptedTokens.map(token => (
+        {acceptedTokens.map((token, index) => (
           <AcceptedTokenListItem
             key={token}
             token={token}
-            selected={paymentMethod === token}
+            selected={
+              storedPaymentMethodAvailable
+                ? paymentMethod === token
+                : index === 0
+            }
             onSelect={setTokenCallback}
             hideTooltip={true}
           />

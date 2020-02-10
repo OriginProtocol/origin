@@ -59,6 +59,7 @@ services:
       - ./packages/validator:/app/packages/validator/
       - ./packages/token/:/app/packages/token/
       - ./packages/auth-client/:/app/packages/auth-client/
+      - ./packages/utils/:/app/packages/utils/
       # Infrastructure packages
       - ./infra/bridge/:/app/infra/bridge/
       - ./infra/discovery/:/app/infra/discovery/
@@ -66,7 +67,7 @@ services:
       - ./infra/messaging/:/app/infra/messaging/
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
-      - ./infra/growth-event/:/app/infra/growth-event/
+      - ./infra/growth-shared/:/app/infra/growth-shared/
       - ./infra/identity/:/app/infra/identity/
       - ./infra/auth-server/:/app/infra/auth-server/
       - ./packages/auth-utils/:/app/packages/auth-utils/
@@ -90,7 +91,7 @@ services:
       - /app/infra/messaging/node_modules/
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
-      - /app/infra/growth-event/node_modules/
+      - /app/infra/growth-shared/node_modules/
       - /app/infra/identity/node_modules/
       - /app/infra/auth-server/node_modules/
       - /app/packages/auth-utils/node_modules/
@@ -110,7 +111,7 @@ services:
       >
       /bin/bash -c "npm run migrate --prefix infra/discovery &&
       npm run migrate --prefix infra/growth &&
-      npm run migrate --prefix infra/growth-event &&
+      npm run migrate --prefix infra/growth-shared &&
       npm run migrate --prefix infra/identity &&
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&
@@ -170,7 +171,7 @@ services:
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
-      - PROVIDER_URL=http://services:8545
+      - PROVIDER_URL=http://services:1111
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - REDIS_URL=redis://redis-master:6379
@@ -222,8 +223,8 @@ services:
       - DOCKER=true
       - NETWORK=docker
       - GRAPHQL_SERVER_PORT=4007
-      - PROVIDER_URL=http://services:8545
-      - PROVIDER_WS_URL=ws://services:8545
+      - PROVIDER_URL=http://services:1111
+      - PROVIDER_WS_URL=ws://services:1111
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
@@ -330,7 +331,7 @@ services:
       - SENDGRID_API_KEY=
       - EMAIL_ATTESTATION_AUTOPASS=true
       # Junk key for testing purposes
-      - ATTESTATION_ACCOUNT=0x59F5be04597ed96980B269B8EBdFe1033F201A89
+      - ATTESTATION_ACCOUNT=0x5be37555816d258f5e316e0f84d59335db2400b2
       - ATTESTATION_SIGNING_KEY=0x88e96d4537bea4d9c05d12549907b32561d3bf31f45aae734cdc119f13406cb6
       # Twilio verify API key for phone attestations
       # https://www.twilio.com/console/verify/applications

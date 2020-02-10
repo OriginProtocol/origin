@@ -1,6 +1,6 @@
 'use strict'
 
-const _growthEventModels = require('@origin/growth-event/src/models')
+const _growthEventModels = require('@origin/growth-shared/src/models')
 
 const fs = require('fs')
 const path = require('path')

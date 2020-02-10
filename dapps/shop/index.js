@@ -12,7 +12,7 @@ try {
 async function start() {
   let shuttingDown = false
 
-  process.on('SIGINT', async () => {
+  const shutdownAll = async () => {
     if (shuttingDown) return
     shuttingDown = true
 
@@ -26,7 +26,10 @@ async function start() {
       backend.kill()
     }
     console.log('Shut down ok.')
-  })
+  }
+
+  process.on('SIGINT', shutdownAll)
+  process.on('SIGTERM', shutdownAll)
 
   const shutdown = await services({
     ganache: true,

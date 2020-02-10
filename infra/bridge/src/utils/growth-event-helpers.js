@@ -2,8 +2,8 @@
 
 const logger = require('../logger')
 
-const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
-const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
+const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
 
 const db = require('@origin/identity/src/models')
 

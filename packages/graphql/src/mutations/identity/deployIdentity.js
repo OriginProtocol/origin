@@ -146,7 +146,14 @@ async function deployIdentity(
   const ipfsData = await _buildIdentity(owner, proxy, profile, attestations)
 
   // Write the identity data to IPFS.
-  const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
+  // [Franck] 1/9/2020 Disabled writing identity to IPFS in production due to the heavy load it
+  // puts on our IPFS cluster. We still enable those writes in development and test environments.
+  let ipfsHash
+  if (process.env.NODE_ENV === 'production') {
+    ipfsHash = 'NOT_UPLOADED'
+  } else {
+    ipfsHash = await post(contracts.ipfsRPC, ipfsData)
+  }
 
   if (contracts.config.centralizedIdentityEnabled) {
     // Write the identity data to centralized storage via the identity server.
