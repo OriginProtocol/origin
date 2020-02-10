@@ -141,8 +141,16 @@ async function connectWS() {
   })
   ws.on('ping', heartbeat)
   ws.on('close', function clear(num, reason) {
+    console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     console.error(`Websocket connection closed: ${num}: ${reason}`)
-    clearTimeout(this.pingTimeout)
+    console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+    if (num !== 1006) {
+      // 1006 may be a fault, allow reconnect
+      console.log('clearing reconnect timeout.  shutting down...')
+      clearTimeout(this.pingTimeout)
+      process.exit(1)
+    }
   })
 
   ws.on('open', function open() {
