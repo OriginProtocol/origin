@@ -104,9 +104,12 @@ module.exports = function(app) {
       }
     })
 
-    const shops = rows.map(row => {
-      return omit(row.dataValues, ['config', 'sellerId'])
-    })
+    const shops = []
+    for (const row of rows) {
+      const shopData = omit(row.dataValues, ['config', 'sellerId'])
+      shopData.dataUrl = await encConf.get(row.id, 'dataUrl')
+      shops.push(shopData)
+    }
 
     res.json({
       success: true,
