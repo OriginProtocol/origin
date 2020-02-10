@@ -61,7 +61,8 @@
       "truffle-hdwallet-provider",
       "truffle-privatekey-provider",
       "react-image-crop",
-      "solc"
+      "solc",
+      "file-type"
     ],
     "ignorePaths": [
       "mobile"
