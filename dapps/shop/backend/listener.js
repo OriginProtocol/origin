@@ -93,8 +93,8 @@ async function connectWS() {
     console.log('Attempting to reconnect...')
     wsProvider = new Web3.providers.WebsocketProvider(config.provider)
 
-    wsProvider.on('connect', function () {
-        console.log('WSS Reconnected')
+    wsProvider.on('connect', function() {
+      console.log('WSS Reconnected')
     })
 
     web3.setProvider(wsProvider)
