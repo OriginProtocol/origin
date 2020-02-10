@@ -63,7 +63,7 @@ relayerImageTag: '1268860'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'a4853bd'
+graphqlImageTag: '1268860'
 
 ipfsLoadBalancerIP: 35.233.189.126
 
