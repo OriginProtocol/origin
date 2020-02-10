@@ -43,7 +43,7 @@ const Manage = props => {
   }
 
   const handleShopChange = event => {
-    console.log(event.target.value)
+    setShopIndex(event.target.value)
   }
 
   return (
@@ -59,7 +59,7 @@ const Manage = props => {
               <select
                 className="form-control"
                 onChange={handleShopChange}
-                value={authToken}
+                value={shopIndex}
               >
                 {shops.map((s, index) => (
                   <option value={index} key={index}>

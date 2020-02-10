@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useStoreState } from 'pullstate'
 
 import usePaginate from 'utils/usePaginate'
-import formatPrice from 'utils/formatPrice'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
