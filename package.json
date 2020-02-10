@@ -62,7 +62,8 @@
       "truffle-privatekey-provider",
       "react-image-crop",
       "solc",
-      "file-type"
+      "file-type",
+      "secp256k1"
     ],
     "ignorePaths": [
       "mobile"
