@@ -1,26 +1,70 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
+import dayjs from 'dayjs'
 
 import usePaginate from 'utils/usePaginate'
+import Loading from 'components/Loading'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
-const Discounts = () => {
+function description(discount) {
+  let str = `$${discount.value} off entire order`
+  if (discount.discountType === 'percentage') {
+    str = `${discount.value}% off entire order`
+  }
+  if (discount.onePerCustomer) {
+    return <>{str} &bull; One per customer</>
+  }
+  return str
+}
+
+function active(discount) {
+  const start = dayjs(discount.startTime).format('MMM D')
+  if (discount.endTime) {
+    const end = dayjs(discount.endTime).format('MMM D')
+    return `${start} - ${end}`
+  }
+  return `From ${start}`
+}
+
+const Discounts = ({ shop }) => {
   const backendConfig = useStoreState(store, s => s.backend)
+  const discounts = useStoreState(store, s => s.discounts)
+
+  const [redirectTo, setRedirectTo] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchDiscounts = async () => {
       console.debug('Fetching discounts...')
-      const response = await axios.get(`${backendConfig.url}/discounts`)
-      store.update(s => (s.discounts = response.data))
+      const response = await axios.get(`${backendConfig.url}/discounts`, {
+        headers: {
+          Authorization: `Bearer ${shop.authToken}`
+        }
+      })
+
+      store.update(s => {
+        s.discounts = response.data
+      })
+
+      setLoading(false)
     }
     fetchDiscounts()
   }, [])
 
-  const discounts = useStoreState(store, s => s.discounts) || []
   const { start, end } = usePaginate()
   const pagedDiscounts = discounts.slice(start, end)
+
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
+  }
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <>
@@ -30,25 +74,48 @@ const Discounts = () => {
         <SortBy />
         */}
       </div>
+      <Link to="/manage/discounts/new">
+        <button className="btn btn-primary my-3">Create Discount</button>
+      </Link>
       {pagedDiscounts.length > 0 ? (
-        <table className="table table-condensed table-bordered table-striped">
+        <table className="table table-condensed table-bordered table-striped table-hover">
           <thead>
             <tr>
               <th>Code</th>
               <th>Status</th>
-              <th>Used</th>
+              <th>Uses</th>
               <th>Valid</th>
             </tr>
           </thead>
           <tbody>
-            {pagedDiscounts.map((order, i) => (
-              <tr key={i}>
-                <td>{order.code}</td>
-                <td>{order.status}</td>
-                <td>{order.used}</td>
-                <td>{order.start_date}</td>
-              </tr>
-            ))}
+            {pagedDiscounts.map((discount, i) => {
+              return (
+                <tr
+                  key={i}
+                  onClick={() =>
+                    setRedirectTo(`/manage/discounts/${discount.id}`)
+                  }
+                >
+                  <td>
+                    <div className="font-weight-bold">
+                      {discount.code.toUpperCase()}
+                    </div>
+                    <div className="text-muted">{description(discount)}</div>
+                  </td>
+                  <td>
+                    {discount.status === 'inactive' ? (
+                      <span className="badge badge-danger">Inactive</span>
+                    ) : (
+                      <span className="badge badge-success">Active</span>
+                    )}
+                  </td>
+                  <td>{`${discount.used || '0'}${
+                    discount.maxUses ? `/${discount.maxUses}` : ''
+                  } used`}</td>
+                  <td>{active(discount)}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       ) : (

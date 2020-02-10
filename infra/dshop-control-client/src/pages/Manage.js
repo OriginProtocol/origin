@@ -5,6 +5,7 @@ import axios from 'axios'
 
 import Orders from 'pages/Manage/Orders'
 import Discounts from 'pages/Manage/Discounts'
+import EditDiscount from 'pages/Manage/EditDiscount'
 import Navigation from 'components/Manage/Navigation'
 import store from '@/store'
 
@@ -84,9 +85,16 @@ const Manage = props => {
                     )}
                   />
                   <Route
+                    exact
                     path="/manage/discounts"
                     render={props => (
                       <Discounts {...props} shop={shops[shopIndex]} />
+                    )}
+                  />
+                  <Route
+                    path="/manage/discounts/:discountId"
+                    render={props => (
+                      <EditDiscount {...props} shop={shops[shopIndex]} />
                     )}
                   />
                   <Redirect to="/manage/orders" />
