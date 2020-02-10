@@ -5,6 +5,8 @@ const fetch = require('node-fetch')
 const get = require('lodash/get')
 const https = require('https')
 
+const downloadMockups = require('./downloadMockups')
+
 async function getMockups({ PrintfulURL, apiAuth, OutputDir, id }) {
   const dataRaw = fs.readFileSync(
     `${OutputDir}/data-printful/product-${id}-internal.json`
@@ -160,35 +162,6 @@ async function getMockups({ PrintfulURL, apiAuth, OutputDir, id }) {
   }
   console.log(JSON.stringify(taskJson, null, 2))
   // console.log(JSON.stringify(design.placements, null, 2))
-}
-
-async function downloadMockups({ OutputDir, id, taskJson }) {
-  const files = []
-  taskJson.result.mockups.forEach(mockup => {
-    files.push({
-      name: `${mockup.placement}.jpg`,
-      url: mockup.mockup_url
-    })
-    mockup.extra.forEach(extra => {
-      files.push({
-        name: `${mockup.placement}-${extra.option_group
-          .toLowerCase()
-          .replace(/ +/g, '-')
-          .replace(/[^0-9a-z-]/g, '')}-${extra.option
-          .toLowerCase()
-          .replace(/ +/g, '-')
-          .replace(/[^0-9a-z-]/g, '')}.jpg`,
-        url: extra.url
-      })
-    })
-  })
-  const prefix = `${OutputDir}/images-printful/product-${id}`
-  for (const file of files) {
-    fs.mkdirSync(prefix, { recursive: true })
-
-    const f = fs.createWriteStream(`${prefix}/${file.name}`)
-    https.get(file.url, response => response.pipe(f))
-  }
 }
 
 module.exports = getMockups

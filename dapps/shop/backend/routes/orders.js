@@ -11,9 +11,8 @@ const PrintfulURL = PRINTFUL_URL
 
 module.exports = function(app) {
   app.get('/orders', authenticatedAsSeller, shopGate, async (req, res) => {
-    console.log('req.shopId: ', req.shopId)
     const orders = await Orders.findAll({
-      where: { shop_id: req.shopId },
+      where: { shopId: req.shopId },
       order: [['createdAt', 'desc']]
     })
     res.json(orders)
@@ -22,8 +21,8 @@ module.exports = function(app) {
   app.get('/orders/:id', authenticatedAsSeller, shopGate, async (req, res) => {
     const order = await Orders.findOne({
       where: {
-        order_id: req.params.id,
-        shop_id: req.shopId
+        orderId: req.params.id,
+        shopId: req.shopId
       }
     })
     res.json(order)
@@ -34,14 +33,14 @@ module.exports = function(app) {
 
     const order = await Orders.findOne({
       where: {
-        id
+        orderId: id
       },
       include: [
         {
           model: Shops,
           as: Shops.tableName,
           where: {
-            seller_id: req.user.id
+            sellerId: req.user.id
           },
           required: true
         }
@@ -55,7 +54,7 @@ module.exports = function(app) {
       })
     }
 
-    const apiKey = await encConf.get(order.shop_id, 'printful')
+    const apiKey = await encConf.get(order.shopId, 'printful')
     if (!apiKey) {
       return res.status(500).json({
         success: false,
@@ -82,10 +81,18 @@ module.exports = function(app) {
 
       const order = await Orders.findOne({
         where: {
-          id,
-          'Shops.seller_id': req.user.id
+          orderId: id
         },
-        include: [{ model: Shops, as: Shops.tableName }]
+        include: [
+          {
+            model: Shops,
+            as: Shops.tableName,
+            where: {
+              sellerId: req.user.id
+            },
+            required: true
+          }
+        ]
       })
 
       if (!order) {
@@ -95,7 +102,7 @@ module.exports = function(app) {
         })
       }
 
-      const apiKey = await encConf.get(order.shop_id, 'printful')
+      const apiKey = await encConf.get(order.shopId, 'printful')
       if (!apiKey) {
         return res.status(500).json({
           success: false,
@@ -113,8 +120,19 @@ module.exports = function(app) {
         method: 'POST',
         body: JSON.stringify(req.body)
       })
+
       const json = await newOrderResponse.json()
+
       console.log(json)
+
+      if (!newOrderResponse.ok) {
+        console.error('Attempt to create Printful order failed!')
+        if (json && json.error) console.error(json.error.message)
+        return res.status(json.code).json({
+          success: false,
+          message: json.error.message
+        })
+      }
 
       res.json({ success: true })
     }
@@ -128,10 +146,18 @@ module.exports = function(app) {
 
       const order = await Orders.findOne({
         where: {
-          id,
-          'Shops.seller_id': req.user.id
+          orderId: id
         },
-        include: [{ model: Shops, as: Shops.tableName }]
+        include: [
+          {
+            model: Shops,
+            as: Shops.tableName,
+            where: {
+              sellerId: req.user.id
+            },
+            required: true
+          }
+        ]
       })
 
       if (!order) {
@@ -141,7 +167,7 @@ module.exports = function(app) {
         })
       }
 
-      const apiKey = await encConf.get(order.shop_id, 'printful')
+      const apiKey = await encConf.get(order.shopId, 'printful')
       if (!apiKey) {
         return res.status(500).json({
           success: false,

@@ -1,9 +1,9 @@
+const omit = require('lodash/omit')
 const { Sellers, Shops } = require('../data/db')
 const {
   createSalt,
   hashPassword,
   AuthSeller,
-  authenticated,
   authenticatedAsSeller
 } = require('./_combinedAuth')
 const { IS_PROD } = require('../utils/const')
@@ -22,8 +22,8 @@ module.exports = function(app) {
         email: req.params.email
       }
     })
-    const statusCode = seller !== null ? 204 : 404
     res.status(statusCode)
+    return res.sendStatus(seller === null ? 404 : 204)
   })
 
   app.post(
@@ -85,6 +85,29 @@ module.exports = function(app) {
     res.status(204)
   })
 
+  app.get('/shop', authenticatedAsSeller, async (req, res) => {
+    const { id } = req.user
+
+    if (!id) {
+      return res.status(400).json({ success: false })
+    }
+
+    const rows = await Shops.findAll({
+      where: {
+        sellerId: id
+      }
+    })
+
+    const shops = rows.map(row => {
+      return omit(row.dataValues, ['config', 'sellerId'])
+    })
+
+    res.json({
+      success: true,
+      shops
+    })
+  })
+
   app.post('/shop', authenticatedAsSeller, async (req, res) => {
     const shopObj = req.body
 
@@ -96,7 +119,7 @@ module.exports = function(app) {
 
     const shop = await Shops.create({
       ...shopObj,
-      seller_id: req.user.id
+      sellerId: req.user.id
     })
 
     res.json(shop)
@@ -106,7 +129,7 @@ module.exports = function(app) {
     await Shops.destroy({
       where: {
         id: req.body.id,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
     res.json({ success: true })
@@ -118,7 +141,7 @@ module.exports = function(app) {
     const shop = await Shops.findOne({
       where: {
         id: shopId,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
 
@@ -149,7 +172,7 @@ module.exports = function(app) {
     const shop = await Shops.findOne({
       where: {
         id: shopId,
-        seller_id: req.user.id
+        sellerId: req.user.id
       }
     })
 

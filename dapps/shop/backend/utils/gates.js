@@ -5,7 +5,7 @@ const { Shops } = require('../data/db')
  * body of the request, if available.
  */
 async function getShopId(req) {
-  if (!req.user.auth_token) {
+  if (!req.user.authToken) {
     if (req.body && req.body.shopId) {
       return req.body.shopId
     } else {
@@ -14,7 +14,7 @@ async function getShopId(req) {
           const token = req.headers.authorization.split(' ')[1]
           const shop = await Shops.findOne({
             where: {
-              auth_token: token
+              authToken: token
             }
           })
           return shop.id

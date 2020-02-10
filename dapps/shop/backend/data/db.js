@@ -5,6 +5,8 @@ const SqliteURI = `sqlite:${__dirname}/net_${config.network}.db`
 const URI = process.env.DATABASE_URL || SqliteURI
 const sequelize = new Sequelize(URI, { logging: false, underscored: true })
 
+console.debug(`Connecting to database @ ${URI}`)
+
 const baseModelOptions = {
   underscored: true
 }
@@ -35,14 +37,14 @@ const Shops = sequelize.define(
     name: {
       type: Sequelize.STRING
     },
-    seller_id: {
+    sellerId: {
       type: Sequelize.INTEGER
     },
     // e.g. 1-001-1212
-    listing_id: {
+    listingId: {
       type: Sequelize.STRING
     },
-    auth_token: {
+    authToken: {
       type: Sequelize.STRING
     },
     config: {
@@ -58,11 +60,11 @@ const Network = sequelize.define(
   'networks',
   {
     // attributes
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER,
       unique: true
     },
-    last_block: {
+    lastBlock: {
       type: Sequelize.INTEGER
     }
   },
@@ -75,18 +77,18 @@ const Transactions = sequelize.define(
   'transactions',
   {
     // attributes
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER,
       unique: 'compositeIndex'
     },
-    shop_id: {
+    shopId: {
       type: Sequelize.INTEGER
     },
-    transaction_hash: {
+    transactionHash: {
       type: Sequelize.STRING,
       unique: 'compositeIndex'
     },
-    block_number: {
+    blockNumber: {
       type: Sequelize.INTEGER
     }
   },
@@ -98,15 +100,15 @@ const Transactions = sequelize.define(
 const Orders = sequelize.define(
   'orders',
   {
-    order_id: {
+    orderId: {
       type: Sequelize.STRING,
       unique: true
     },
     // attributes
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER
     },
-    shop_id: {
+    shopId: {
       type: Sequelize.INTEGER
     },
     data: {
@@ -121,10 +123,10 @@ const Orders = sequelize.define(
 const Discounts = sequelize.define(
   'discounts',
   {
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER
     },
-    shop_id: {
+    shopId: {
       type: Sequelize.INTEGER
     },
     status: {
@@ -161,19 +163,19 @@ const Discounts = sequelize.define(
 )
 
 // Seller -> Shop
-Shops.belongsTo(Sellers, { as: 'sellers', foreignKey: 'seller_id' })
+Shops.belongsTo(Sellers, { as: 'sellers', foreignKey: 'sellerId' })
 Sellers.hasMany(Shops, { as: 'shops' })
 
 // Shop -> Orders
-Orders.belongsTo(Shops, { as: 'shops', foreignKey: 'shop_id' })
-Shops.hasMany(Orders, { as: 'orders', targetKey: 'shop_id' })
+Orders.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
+Shops.hasMany(Orders, { as: 'orders', targetKey: 'shopId' })
 
 // Shop -> Transactions
-Transactions.belongsTo(Shops, { as: 'shops', foreignKey: 'shop_id' })
+Transactions.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
 Shops.hasMany(Transactions, { as: 'transactions' })
 
 // Shop -> Discounts
-Discounts.belongsTo(Shops, { as: 'shops', foreignKey: 'shop_id' })
+Discounts.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
 Shops.hasMany(Discounts, { as: 'discounts' })
 
 try {
@@ -186,6 +188,7 @@ try {
 }
 
 module.exports = {
+  Op: Sequelize.Op,
   Sequelize,
   sequelize,
   Sellers,

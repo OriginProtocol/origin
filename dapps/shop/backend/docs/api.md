@@ -41,11 +41,17 @@ Delete a seller account.
 
     curl -v -X DELETE -b $COOKIE_STORAGE $API_ROOT/auth/registration
 
+### `GET /shop`
+
+List the shops for a seller.
+
+    curl "${DEFAULT_OPTIONS[@]}" -b $COOKIE_STORAGE $API_ROOT/shop
+
 ### `POST /shop`
 
 Create a shop with provided configuration.
 
-    curl "${JSON_POST_OPTIONS[@]}" -b $COOKIE_STORAGE -d '{"name": "Test Shop", "listing_id": "1-001-0001", "auth_token": "token123"}' $API_ROOT/shop
+    curl "${JSON_POST_OPTIONS[@]}" -b $COOKIE_STORAGE -d '{"name": "Test Shop", "listingId": "1-001-0001", "authToken": "token123"}' $API_ROOT/shop
 
 ### `DELETE /shop`
 
@@ -63,7 +69,7 @@ Dump a config.  **NOTE:** Local testing only.
 
 Update a shop config.
 
-    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "networkId": 4, "stripe_backend": "sk_test_MySecretKeyIsCool", "data_url": "http://ipfs.originprotocol.com/ipfs/Qmc8Esc5eTGi7BP7V6DNa8rDPnRfGh642FAfbvrKkqCVNp/" } }' $API_ROOT/config
+    curl $JSON_POST_OPTIONS -b $COOKIE_STORAGE -d '{ "shopId": 1, "config": { "stripeBackend": "sk_test_stRIPESECRETkey", "dataIrl": "http://ipfs.originprotocol.com/ipfs/QmNP2AXi1oaPkyLnjArNtcq5SGCGDBUiiNkCh5sxY122cr/", "printful": "PrintfulAPIKeY", "stripeWebhookSecret": "whsec_stipeWebhookSecret", "pgpPrivateKey": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nArmoredPrivateKeyHERE\n-----END PGP PRIVATE KEY BLOCK-----", "pgpPrivateKeyPass": "decryptPassphrase" }' $API_ROOT/config
 
 ## Discounts
 
@@ -74,6 +80,11 @@ Get a discount code's value and type
 ### `GET /discounts`
 ### `GET /discounts/:id`
 ### `POST /discounts`
+
+Add a discount code
+
+    curl "${JSON_POST_OPTIONS[@]}" "${KEY_AUTH_HEADER[@]}" -b $COOKIE_STORAGE -d '{"networkId": 4, "status": "active", "code": "asdf1234", "discountType": "percentage", "value": 15, "maxUses": 200, "onePerCustomer": false}' $API_ROOT/discounts
+
 ### `PUT /discounts/:id`
 ### `DELETE /discounts/:id`
 

@@ -11,7 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "pg": "7.17.1",
+    "pg": "7.18.1",
     "sequelize": "5.21.3",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
