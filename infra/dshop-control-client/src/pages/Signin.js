@@ -10,8 +10,13 @@ const SignIn = () => {
   const [backend, setBackend] = useState('https://rinkebyapi.ogn.app')
   const [redirectTo, setRedirectTo] = useState(false)
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async event => {
+    setLoading(true)
+
+    event.preventDefault()
+
     try {
       await axios.post(`${backend}/auth/login`, {
         email,
@@ -23,6 +28,7 @@ const SignIn = () => {
       } else {
         setError('An error occurred')
       }
+      setLoading(false)
       return
     }
 
@@ -81,7 +87,15 @@ const SignIn = () => {
               className="btn btn-lg btn-primary"
               disabled={email.length === 0 || password.length === 0}
             >
-              Sign In
+              {loading ? (
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </div>
         </form>

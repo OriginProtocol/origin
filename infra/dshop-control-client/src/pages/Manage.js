@@ -11,7 +11,7 @@ import store from '@/store'
 const Manage = props => {
   const [expandSidebar, setExpandSidebar] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [authToken, setAuthToken] = useState('')
+  const [shopIndex, setShopIndex] = useState(0)
 
   const backendConfig = useStoreState(store, s => s.backend)
   const shops = useStoreState(store, s => s.shops)
@@ -32,9 +32,6 @@ const Manage = props => {
         store.update(s => {
           s.shops = response.data.shops
         })
-        if (response.data.shops.length > 0) {
-          setAuthToken(response.data.shops[0].authToken)
-        }
       }
       setLoading(false)
     }
@@ -59,21 +56,39 @@ const Manage = props => {
         {shops && shops.length > 1 && (
           <div className="row">
             <div className="col-6 col-md-4">
-              <select className="form-control" onChange={handleShopChange} value={authToken}>
-                {shops.map(s => (
-                  <option value={s.authToken}>{s.name}</option>
+              <select
+                className="form-control"
+                onChange={handleShopChange}
+                value={authToken}
+              >
+                {shops.map((s, index) => (
+                  <option value={index} key={index}>
+                    {s.name}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
         )}
         <div className="mt-4">
-          {loading ? 'Loading' : (
+          {loading ? (
+            'Loading'
+          ) : (
             <>
               {shops && shops.length > 0 ? (
                 <Switch>
-                  <Route path="/manage/orders" component={Orders} />
-                  <Route path="/manage/discounts" component={Discounts} />
+                  <Route
+                    path="/manage/orders"
+                    render={props => (
+                      <Orders {...props} shop={shops[shopIndex]} />
+                    )}
+                  />
+                  <Route
+                    path="/manage/discounts"
+                    render={props => (
+                      <Discounts {...props} shop={shops[shopIndex]} />
+                    )}
+                  />
                   <Redirect to="/manage/orders" />
                 </Switch>
               ) : (

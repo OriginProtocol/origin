@@ -49,7 +49,7 @@ const Complete = ({ ethNetworkId }) => {
       s.settings = {
         ...s.settings,
         networks: {
-          ...s.settings.networks[ethNetworkId],
+          ...s.settings.networks,
           [ethNetworkId]: {
             ...s.settings.networks[ethNetworkId],
             shopId: response.data.shop.id

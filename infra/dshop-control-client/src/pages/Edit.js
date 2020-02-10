@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useStoreState } from 'pullstate'
-import { NavLink, Redirect, Switch, Route, withRouter } from 'react-router-dom'
+import {
+  NavLink,
+  Redirect,
+  Switch,
+  Route,
+  useLocation,
+  withRouter
+} from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 
 import Collections from 'pages/Edit/Collections'
@@ -54,6 +61,8 @@ const Edit = props => {
     setExpandSidebar(!expandSidebar)
   }
 
+  const location = useLocation()
+
   return (
     <div className="wrapper">
       <Navigation
@@ -81,7 +90,7 @@ const Edit = props => {
           </Switch>
         </div>
       </div>
-      {needsDeploy && (
+      {needsDeploy && location.pathname !== '/edit/deploy' && (
         <div
           className="fixed-bottom"
           style={{

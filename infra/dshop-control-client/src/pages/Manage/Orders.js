@@ -1,27 +1,40 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useStoreState } from 'pullstate'
+import moment from 'moment'
 
 import usePaginate from 'utils/usePaginate'
 import formatPrice from 'utils/formatPrice'
+import Loading from 'components/Loading'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
-const Orders = () => {
+const Orders = ({ shop }) => {
   const backendConfig = useStoreState(store, s => s.backend)
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchOrders = async () => {
       console.debug('Fetching orders...')
-      const response = await axios.get(`${backendConfig.url}/orders`)
-      store.update(s => (s.orders = response.data))
+      const response = await axios.get(`${backendConfig.url}/orders`, {
+        headers: {
+          Authorization: `Bearer ${shop.authToken}`
+        }
+      })
+
+      setOrders(response.data)
+      setLoading(false)
     }
     fetchOrders()
   }, [])
 
-  const orders = useStoreState(store, s => s.orders) || []
   const { start, end } = usePaginate()
   const pagedOrders = orders.slice(start, end)
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <>
@@ -43,15 +56,18 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {pagedOrders.map((order, i) => (
-              <tr key={i}>
-                <td>{order.title}</td>
-                <td>{order.created_at}</td>
-                <td>{order.payment}</td>
-                <td>{order.status}</td>
-                <td>{formatPrice(order.price)}</td>
-              </tr>
-            ))}
+            {pagedOrders.map((order, i) => {
+              const data = JSON.parse(order.data)
+              return (
+                <tr key={i}>
+                  <td>{order.orderId}</td>
+                  <td>{moment(order.createdAt).format('L')}</td>
+                  <td>{data.paymentMethod.label}</td>
+                  <td>Pending</td>
+                  <td>{formatPrice(data.total)}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       ) : (
@@ -66,5 +82,3 @@ const Orders = () => {
 }
 
 export default Orders
-
-require('react-styl')(``)
