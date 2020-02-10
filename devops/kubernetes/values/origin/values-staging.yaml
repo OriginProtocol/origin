@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '06a22a6'
+bridgeImageTag: 'fac458a'
 
 # origin-dapp
 dappImage: origin-dapp
