@@ -39,6 +39,11 @@ const Navigation = props => {
               Discounts
             </NavLink>
           </li>
+          <li className="nav-item mb-3">
+            <NavLink to="/signin" className="nav-link text">
+              Sign Out
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

@@ -85,7 +85,7 @@ const SignIn = () => {
             <button
               type="submit"
               className="btn btn-lg btn-primary"
-              disabled={email.length === 0 || password.length === 0}
+              disabled={email.length === 0 || password.length === 0 || loading}
             >
               {loading ? (
                 <span

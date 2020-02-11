@@ -30,40 +30,17 @@ function active(discount) {
   return `From ${start}`
 }
 
-const Discounts = ({ shop }) => {
+const Discounts = () => {
   const backendConfig = useStoreState(store, s => s.backend)
   const discounts = useStoreState(store, s => s.discounts)
 
   const [redirectTo, setRedirectTo] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchDiscounts = async () => {
-      console.debug('Fetching discounts...')
-      const response = await axios.get(`${backendConfig.url}/discounts`, {
-        headers: {
-          Authorization: `Bearer ${shop.authToken}`
-        }
-      })
-
-      store.update(s => {
-        s.discounts = response.data
-      })
-
-      setLoading(false)
-    }
-    fetchDiscounts()
-  }, [])
 
   const { start, end } = usePaginate()
   const pagedDiscounts = discounts.slice(start, end)
 
   if (redirectTo) {
     return <Redirect push to={redirectTo} />
-  }
-
-  if (loading) {
-    return <Loading />
   }
 
   return (

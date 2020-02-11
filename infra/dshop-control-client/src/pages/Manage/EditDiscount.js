@@ -96,11 +96,10 @@ const EditDiscount = ({ shop }) => {
           maxUses: newState.maxUses ? Number(newState.maxUses) : null,
           onePerCustomer: newState.onePerCustomer ? true : false,
           excludeShipping: newState.excludeShipping ? true : false
-        },
-        headers: {
-          Authorization: `Bearer ${shop.authToken}`
         }
       })
+
+      // TODO update store with new state of discount
 
       setRedirectTo('/manage/discounts')
     } else {
@@ -110,12 +109,7 @@ const EditDiscount = ({ shop }) => {
 
   const handleDelete = async () => {
     const url = `${backendConfig.url}/discounts/${discount.id}`
-    await axios.delete(url, {
-      headers: {
-        Authorization: `Bearer ${shop.authToken}`
-      }
-    })
-
+    await axios.delete(url)
     setRedirectTo('/manage/discounts')
   }
 

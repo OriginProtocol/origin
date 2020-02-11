@@ -1,39 +1,25 @@
 import React, { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 import { useStoreState } from 'pullstate'
 import moment from 'moment'
 
 import usePaginate from 'utils/usePaginate'
 import formatPrice from 'utils/formatPrice'
-import Loading from 'components/Loading'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
 const Orders = ({ shop }) => {
   const backendConfig = useStoreState(store, s => s.backend)
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
+  const orders = useStoreState(store, s => s.orders)
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      console.debug('Fetching orders...')
-      const response = await axios.get(`${backendConfig.url}/orders`, {
-        headers: {
-          Authorization: `Bearer ${shop.authToken}`
-        }
-      })
-
-      setOrders(response.data)
-      setLoading(false)
-    }
-    fetchOrders()
-  }, [])
+  const [redirectTo, setRedirectTo] = useState(null)
 
   const { start, end } = usePaginate()
   const pagedOrders = orders.slice(start, end)
 
-  if (loading) {
-    return <Loading />
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
   }
 
   return (
@@ -45,7 +31,7 @@ const Orders = ({ shop }) => {
         */}
       </div>
       {pagedOrders.length > 0 ? (
-        <table className="table table-condensed table-bordered table-striped">
+        <table className="table table-condensed table-bordered table-striped table-hover">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -59,7 +45,12 @@ const Orders = ({ shop }) => {
             {pagedOrders.map((order, i) => {
               const data = JSON.parse(order.data)
               return (
-                <tr key={i}>
+                <tr
+                  key={i}
+                  onClick={() =>
+                    setRedirectTo(`/manage/orders/${order.orderId}/details`)
+                  }
+                >
                   <td>{order.orderId}</td>
                   <td>{moment(order.createdAt).format('L')}</td>
                   <td>{data.paymentMethod.label}</td>
