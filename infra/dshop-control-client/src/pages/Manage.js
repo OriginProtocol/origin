@@ -33,9 +33,8 @@ const Manage = props => {
     const fetchShops = async () => {
       console.debug('Fetching shops...')
       const response = await axios.get(`${backendConfig.url}/shop`)
-      console.log(response)
       if (response.data.shops) {
-        store.update(s => {
+        await store.update(s => {
           s.shops = response.data.shops
         })
         handleShopChange(0)

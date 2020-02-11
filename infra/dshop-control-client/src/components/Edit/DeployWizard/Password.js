@@ -3,7 +3,7 @@ import { useStoreState } from 'pullstate'
 import axios from 'axios'
 
 import store from '@/store'
-import Loading from 'components/loading'
+import Loading from 'components/Loading'
 
 const Password = () => {
   const [sellerExists, setSellerExists] = useState(null)
