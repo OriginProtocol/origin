@@ -29,7 +29,7 @@
     "DApp"
   ],
   "dependencies": {
-    "@google-cloud/pubsub": "1.4.1",
+    "@google-cloud/pubsub": "1.5.0",
     "@origin/auth-utils": "^0.1.0",
     "@origin/growth-shared": "^0.1.0",
     "@origin/identity": "^0.1.0",

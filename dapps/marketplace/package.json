@@ -122,7 +122,7 @@
     "@babel/runtime": "7.8.4",
     "babel-eslint": "10.0.3",
     "babel-loader": "8.0.6",
-    "babel-plugin-fbt": "0.12.1",
+    "babel-plugin-fbt": "0.14.0",
     "babel-plugin-fbt-runtime": "0.9.9",
     "bip39": "2.6.0",
     "bootstrap": "4.4.1",
@@ -148,7 +148,7 @@
     "url-loader": "3.0.0",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
-    "webpack-dev-server": "3.10.2"
+    "webpack-dev-server": "3.10.3"
   },
   "eslintIgnore": [
     "node_modules",
