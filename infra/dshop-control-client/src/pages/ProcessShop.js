@@ -10,8 +10,6 @@ const ProcessShop = () => {
   const [redirectTo, setRedirectTo] = useState(false)
   const { url, datadir } = useParams()
 
-  console.log(url)
-
   useEffect(() => {
     const fetchData = async () => {
       let shopUrl = `${API_URL}/ingest/${url}`

@@ -88,15 +88,11 @@ const Complete = ({ ethNetworkId }) => {
 
   const uploadToIpfs = async () => {
     // Put the shop on IPFS
-    const response = await axios.post(
-      `${process.env.API_URL}/deploy`,
-      {
-        settings,
-        collections,
-        products
-      },
-      { withCredentials: false }
-    )
+    const response = await axios.post(`${process.env.API_URL}/deploy`, {
+      settings,
+      collections,
+      products
+    })
 
     const url = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.data}`
     setShopUrl(url)

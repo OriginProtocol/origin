@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
 import { useStoreState } from 'pullstate'
 import moment from 'moment'
 
+import axios from 'utils/axiosWithCredentials'
 import usePaginate from 'utils/usePaginate'
 import formatPrice from 'utils/formatPrice'
 import Paginate from 'components/Paginate'

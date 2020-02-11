@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import axios from 'axios'
 import get from 'lodash/get'
 import { useStoreState } from 'pullstate'
 
+import axios from 'utils/axiosWithCredentials'
 import { Countries } from 'utils/countries'
 import store from '@/store'
 

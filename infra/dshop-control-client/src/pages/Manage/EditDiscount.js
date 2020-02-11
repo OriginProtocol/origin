@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Redirect, useRouteMatch } from 'react-router-dom'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import { useStoreState } from 'pullstate'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
 const times = Array(48)

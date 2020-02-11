@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
 
+import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
 const SignIn = () => {

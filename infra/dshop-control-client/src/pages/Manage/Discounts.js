@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import dayjs from 'dayjs'
 
+import axios from 'utils/axiosWithCredentials'
 import usePaginate from 'utils/usePaginate'
 import Loading from 'components/Loading'
 import Paginate from 'components/Paginate'

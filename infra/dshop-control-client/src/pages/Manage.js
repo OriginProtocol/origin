@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect, Switch, Route, withRouter } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
-import axios from 'axios'
 
 import Orders from 'pages/Manage/Orders'
 import Order from 'pages/Manage/Order'
@@ -9,6 +8,7 @@ import Discounts from 'pages/Manage/Discounts'
 import EditDiscount from 'pages/Manage/EditDiscount'
 import Navigation from 'components/Manage/Navigation'
 import Loading from 'components/Loading'
+import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
 const Manage = props => {

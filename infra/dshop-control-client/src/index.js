@@ -15,8 +15,6 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-axios.defaults.withCredentials = true
-
 const Providers = () => {
   return (
     <HashRouter>
