@@ -15,6 +15,10 @@ const NumBlockConfirmation = 3
 // Wait up to 10 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 10 * 60
 
+// Signature for the "Transfer" event emitted by the OGN contract when a transfer occurs.
+const transferEventSig =
+  '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
   async init(networkId, gasPriceMultiplier) {
@@ -66,7 +70,7 @@ class TokenDistributor {
    * Sends OGN to a user. Throws an exception in case of error.
    *
    * @param {string} ethAddress
-   * @param {string} amount in natural units.
+   * @param {BigNumber|int>} amount in natural units.
    * @returns {Promise<Object>} The transaction receipt.
    */
   async credit(ethAddress, amount) {
@@ -88,11 +92,125 @@ class TokenDistributor {
     logger.info('  GasMultiplier:    ', this.gasPriceMultiplier)
     logger.info('  GasPrice:         ', gasPrice.toFixed())
     logger.info('  Amount (natural): ', amount)
-    logger.info('  Amount (tokens):  ', this.token.toTokenUnit(amount))
+    logger.info('  Amount (token):   ', this.token.toTokenUnit(amount))
     logger.info('  From:             ', this.supplier)
     logger.info('  To:               ', ethAddress)
     logger.info('  TxHash:           ', receipt.transactionHash)
     logger.info('  BlockNumber:      ', receipt.blockNumber)
+    return receipt
+  }
+
+  /**
+   * Approves the distribution of <amount> token by the TokenDistributor contract.
+   * Must be called prior to creditMulti.
+   * @param {BigNumber|int} amount: amount to approve in natural unit
+   * @returns {Promise<Object>} receipt
+   */
+  async approveMulti(amount) {
+    // Send the approval transaction.
+    const gasPrice = await this._calcGasPrice()
+    const txHash = await this.token.approveMulti(amount, { gasPrice })
+
+    // Wait for the transaction confirmation.
+    logger.info(`Sent approval tx to the network. txHash=${txHash}`)
+    const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeoutSec
+    })
+    if (status !== 'confirmed') {
+      throw new Error(`Approve failure. txStatus=${status} txHash=${txHash}`)
+    }
+    logger.info(
+      `Approval success for batch distribution of ${this.token
+        .toTokenUnit(amount)
+        .toFixed()}`
+    )
+    return receipt
+  }
+
+  /**
+   * Send OGN to a list of addresses.
+   * @param {Array<string>} addresses: list of recipient addresses.
+   * @param {Array<BigNumber|int>>} amounts: amount of OGN to distribute to each recipient, in natural unit.
+   * @returns {Promise<Object>} receipt
+   */
+  async creditMulti(addresses, amounts) {
+    if (addresses.length !== amounts.length) {
+      throw new Error('Addresses and amounts must have the same length')
+    }
+    const total = amounts.map(v => BigNumber(v)).reduce((v1, v2) => v1.plus(v2))
+
+    const gasPrice = await this._calcGasPrice()
+
+    const txHash = await this.token.creditMulti(addresses, amounts, {
+      gasPrice
+    })
+    logger.info(`Sent creditMulti tx to the network. txHash=${txHash}`)
+
+    const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeoutSec
+    })
+    if (status !== 'confirmed') {
+      throw new Error(`Failure. txStatus=${status} txHash=${txHash}`)
+    }
+
+    // Inspect the logs to check the transaction credited the expected
+    // amount to each address.
+    const logs = receipt.logs
+    if (logs.length !== addresses.length) {
+      logger.error('ERROR: unexpected receipt logs length.', receipt)
+      throw new Error(`Unexpected receipt logs length: ${logs.length}`)
+    }
+    for (let i = 0; i < addresses.length; i++) {
+      // Note: we expect addresses and logs to be in the same order since
+      // the contract processes addresses in the order they were passed in.
+      const address = addresses[i].toLowerCase()
+      const amount = BigNumber(amounts[i])
+      const log = logs[i]
+
+      // Check the event signature is for a 'Transfer' event.
+      const eventSig = log.topics[0].toLowerCase()
+      if (eventSig !== transferEventSig) {
+        throw new Error(`Log ${i} - Unexpected event signature ${eventSig}`)
+      }
+
+      // Extract address and amount from the log.
+      const fromAddress = '0x' + log.topics[1].slice(26).toLowerCase()
+      const toAddress = '0x' + log.topics[2].slice(26).toLowerCase()
+      const logAmount = BigNumber('0x' + log.data)
+
+      if (fromAddress !== this.supplier.toLowerCase()) {
+        throw new Error(
+          `Log ${i} - From address: expected ${this.supplier.toLowerCase()} got ${fromAddress}`
+        )
+      }
+      if (toAddress !== address) {
+        throw new Error(
+          `Log ${i} - To address: expected ${address} got ${toAddress}`
+        )
+      }
+      if (!logAmount.isEqualTo(amount)) {
+        throw new Error(
+          `Log ${i} - Amount: expected ${amount} got ${logAmount}`
+        )
+      }
+    }
+
+    // All done!
+    logger.info('Blockchain creditMulti transaction confirmed')
+    logger.info('  NetworkId:             ', this.networkId)
+    logger.info('  GasMultiplier:         ', this.gasPriceMultiplier)
+    logger.info('  GasPrice:              ', gasPrice.toFixed())
+    logger.info('  Total Amount (natural):', total.toFixed())
+    logger.info(
+      '  Total Amount (token):  ',
+      this.token.toTokenUnit(total).toFixed()
+    )
+    logger.info('  TxHash:                ', receipt.transactionHash)
+    logger.info('  BlockNumber:           ', receipt.blockNumber)
+    logger.info('  From:                  ', this.supplier)
+    logger.info('  To:                    ', addresses)
     return receipt
   }
 }
