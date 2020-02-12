@@ -9,6 +9,9 @@ const Token = require('@origin/token/src/token')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('tokenDistributor')
 
+// To avoid paying exorbitant gas fees, the script aborts if gas price is above this value.
+const MaxGasPriceWei = 20000000000 // 20 Gwei
+
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
 
@@ -51,19 +54,23 @@ class TokenDistributor {
    * optional gasPriceMultiplier against the current median gas price
    * fetched from the network.
    *
-   * @returns {Promise<{BigNumber}>} Gas price to use.
+   * @returns {Promise<{BigNumber}>} Gas price to use, in wei.
    */
   async _calcGasPrice() {
     // Get default gas price from web3 which is determined by the
     // last few blocks median gas price.
-    const medianGasPrice = await this.web3.eth.getGasPrice()
+    let price = BigNumber(await this.web3.eth.getGasPrice())
 
+    // Apply multiplier, if defined.
     if (this.gasPriceMultiplier) {
-      // Apply our ratio.
-      const gasPrice = BigNumber(medianGasPrice).times(this.gasPriceMultiplier)
-      return gasPrice.integerValue()
+      price = price.times(this.gasPriceMultiplier).integerValue()
     }
-    return BigNumber(medianGasPrice)
+
+    // Protection against gas price surges and paying high gas fees.
+    if (price.gt(MaxGasPriceWei)) {
+      throw new Error(`Aborting - Gas price too high ${price}`)
+    }
+    return price
   }
 
   /**
