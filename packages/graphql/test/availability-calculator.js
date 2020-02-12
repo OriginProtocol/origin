@@ -3,15 +3,24 @@ import dayjs from 'dayjs'
 
 import AvailabilityCalculator from '../src/utils/AvailabilityCalculator'
 
-describe('Availability Calculator', function() {
-  let year = dayjs().year()
+const getSequentialRangeOfDates = maxDays => {
+  const randomMonth = Math.floor(Math.random() * 3)
 
-  const currentMonth = dayjs().month()
+  const datesObjs = new Array(maxDays).fill(0).map((_, index) => {
+    return dayjs()
+      .add(randomMonth, 'month')
+      .add(index, 'day')
+  })
 
-  if (currentMonth >= 2) {
-    year = year + 1
+  const formattedDates = datesObjs.map(d => d.format('YYYY-MM-DD'))
+
+  return {
+    datesObjs,
+    formattedDates
   }
+}
 
+describe('Availability Calculator', function() {
   let instance
 
   beforeEach(() => {
@@ -23,224 +32,148 @@ describe('Availability Calculator', function() {
     })
   })
 
-  it('should allow a range of dates to be queried', function() {
-    const dates = instance.getAvailability(`${year}-02-16`, `${year}-02-19`)
+  it('should allow a range of dates to be queried', () => {
+    const { datesObjs, formattedDates } = getSequentialRangeOfDates(8)
 
-    assert.deepEqual(dates, [
-      {
-        date: `${year}-02-16`,
+    const dates = instance.getAvailability(formattedDates[0], formattedDates[7])
+
+    const resultantObj = datesObjs.slice(0, 7).map((dateObj, index) => {
+      return {
+        date: formattedDates[index],
         unavailable: false,
         booked: false,
-        price: dayjs(`${year}-02-16`).day() >= 5 ? '0.75' : '0.5',
-        customPrice: false
-      },
-      {
-        date: `${year}-02-17`,
-        unavailable: false,
-        booked: false,
-        price: dayjs(`${year}-02-17`).day() >= 5 ? '0.75' : '0.5',
-        customPrice: false
-      },
-      {
-        date: `${year}-02-18`,
-        unavailable: false,
-        booked: false,
-        price: dayjs(`${year}-02-18`).day() >= 5 ? '0.75' : '0.5',
+        price: dateObj.day() >= 5 ? '0.75' : '0.5',
         customPrice: false
       }
-    ])
+    })
+
+    assert.deepEqual(dates, resultantObj)
   })
 
-  it('should allow a range of dates to be made unavailable', function() {
-    const dates = instance.update(`${year}-02-01/${year}-02-02`, 'unavailable')
+  it('should allow a range of dates to be made unavailable', () => {
+    const { datesObjs, formattedDates } = getSequentialRangeOfDates(2)
+
+    const dates = instance.update(
+      `${formattedDates[0]}/${formattedDates[1]}`,
+      'unavailable'
+    )
     assert.deepEqual(dates, [
       {
-        date: `${year}-02-01`,
+        date: formattedDates[0],
         unavailable: true,
         booked: false,
-        price: dayjs(`${year}-02-01`).day() >= 5 ? '0.75' : '0.5',
+        price: datesObjs[0].day() >= 5 ? '0.75' : '0.5',
         customPrice: false
       },
       {
-        date: `${year}-02-02`,
+        date: formattedDates[1],
         unavailable: true,
         booked: false,
-        price: dayjs(`${year}-02-02`).day() >= 5 ? '0.75' : '0.5',
+        price: datesObjs[1].day() >= 5 ? '0.75' : '0.5',
         customPrice: false
       }
     ])
   })
 
   it('should allow a range of dates to be made available', function() {
-    const dates = instance.update(`${year}-02-01/${year}-02-02`, 'available')
+    const { datesObjs, formattedDates } = getSequentialRangeOfDates(2)
+
+    // Make them unavailable
+    instance.update(`${formattedDates[0]}/${formattedDates[1]}`, 'unavailable')
+
+    // Make them available again
+    const dates = instance.update(
+      `${formattedDates[0]}/${formattedDates[1]}`,
+      'available'
+    )
+
     assert.deepEqual(dates, [
       {
-        date: `${year}-02-01`,
+        date: formattedDates[0],
         unavailable: false,
         booked: false,
-        price: dayjs(`${year}-02-01`).day() >= 5 ? '0.75' : '0.5',
+        price: datesObjs[0].day() >= 5 ? '0.75' : '0.5',
         customPrice: false
       },
       {
-        date: `${year}-02-02`,
+        date: formattedDates[1],
         unavailable: false,
         booked: false,
-        price: dayjs(`${year}-02-02`).day() >= 5 ? '0.75' : '0.5',
+        price: datesObjs[1].day() >= 5 ? '0.75' : '0.5',
         customPrice: false
       }
     ])
   })
 
   it('should allow a custom price to be set to a range of dates', function() {
+    const { datesObjs, formattedDates } = getSequentialRangeOfDates(8)
+
     const dates = instance.update(
-      `${year}-02-01/${year}-02-04`,
+      `${formattedDates[0]}/${formattedDates[6]}`,
       'available',
       '1.5'
     )
-    assert.deepEqual(dates, [
-      {
-        date: `${year}-02-01`,
-        unavailable: false,
-        booked: false,
-        price: '1.5',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-02`,
-        unavailable: false,
-        booked: false,
-        price: '1.5',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-03`,
-        unavailable: false,
-        booked: false,
-        price: '1.5',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-04`,
+
+    const resultantObj = datesObjs.slice(0, 7).map((dateObj, index) => {
+      return {
+        date: formattedDates[index],
         unavailable: false,
         booked: false,
         price: '1.5',
         customPrice: true
       }
-    ])
+    })
+
+    assert.deepEqual(dates, resultantObj)
   })
 
   it('should allow different custom prices to be set over multiple range of dates', function() {
-    const customPriceRange1 = instance.update(
-      `${year}-02-02/${year}-02-04`,
-      'available',
-      '1'
-    )
-    assert.deepEqual(customPriceRange1, [
-      {
-        date: `${year}-02-02`,
-        unavailable: false,
-        booked: false,
-        price: '1',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-03`,
-        unavailable: false,
-        booked: false,
-        price: '1',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-04`,
-        unavailable: false,
-        booked: false,
-        price: '1',
-        customPrice: true
-      }
-    ])
+    const { datesObjs, formattedDates } = getSequentialRangeOfDates(8)
 
-    const customPriceRange2 = instance.update(
-      `${year}-02-01/${year}-02-02`,
+    instance.update(
+      `${formattedDates[1]}/${formattedDates[3]}`,
       'available',
-      '0.85'
+      '5'
     )
-    assert.deepEqual(customPriceRange2, [
-      {
-        date: `${year}-02-01`,
-        unavailable: false,
-        booked: false,
-        price: '0.85',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-02`,
-        unavailable: false,
-        booked: false,
-        price: '0.85',
-        customPrice: true
-      }
-    ])
-
-    const customPriceRange3 = instance.update(
-      `${year}-02-04/${year}-02-05`,
+    instance.update(
+      `${formattedDates[0]}/${formattedDates[2]}`,
       'available',
-      '1.25'
+      '2'
     )
-    assert.deepEqual(customPriceRange3, [
-      {
-        date: `${year}-02-04`,
-        unavailable: false,
-        booked: false,
-        price: '1.25',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-05`,
-        unavailable: false,
-        booked: false,
-        price: '1.25',
-        customPrice: true
-      }
-    ])
+    instance.update(
+      `${formattedDates[4]}/${formattedDates[6]}`,
+      'available',
+      '4'
+    )
+    instance.update(
+      `${formattedDates[2]}/${formattedDates[5]}`,
+      'available',
+      '3'
+    )
 
-    const dates = instance.getAvailability(`${year}-02-01`, `${year}-02-06`)
-    assert.deepEqual(dates, [
-      {
-        date: `${year}-02-01`,
+    const dates = instance.getAvailability(formattedDates[0], formattedDates[7])
+
+    const resultantObj = datesObjs.slice(0, 7).map((dateObj, index) => {
+      let price = 5
+
+      if (index === 0 || index === 1) {
+        price = 2
+      } else if (index === 6) {
+        price = 4
+      } else if (index >= 2 && index <= 5) {
+        price = 3
+      }
+
+      return {
+        date: formattedDates[index],
         unavailable: false,
         booked: false,
-        price: '0.85',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-02`,
-        unavailable: false,
-        booked: false,
-        price: '0.85',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-03`,
-        unavailable: false,
-        booked: false,
-        price: '1',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-04`,
-        unavailable: false,
-        booked: false,
-        price: '1.25',
-        customPrice: true
-      },
-      {
-        date: `${year}-02-05`,
-        unavailable: false,
-        booked: false,
-        price: '1.25',
+        price: String(price),
         customPrice: true
       }
-    ])
+    })
+
+    assert.deepEqual(dates, resultantObj)
   })
 
   it('should estimate prices correctly for a given range', function() {
@@ -251,13 +184,18 @@ describe('Availability Calculator', function() {
       bookingWindow: 180 // Book up to this many days in the future
     })
 
-    let price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-15`)
-      .price
+    const { formattedDates } = getSequentialRangeOfDates(10)
 
-    assert.equal(price, 2.5)
+    let price = instance.estimateNightlyPrice(
+      `${formattedDates[0]}/${formattedDates[4]}`
+    ).price
 
-    price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-11`).price
+    assert.equal(price, 2)
 
-    assert.equal(price, 0.5)
+    price = instance.estimateNightlyPrice(
+      `${formattedDates[0]}/${formattedDates[9]}`
+    ).price
+
+    assert.equal(price, 4.5)
   })
 })
