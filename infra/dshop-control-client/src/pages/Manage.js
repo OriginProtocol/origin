@@ -17,7 +17,7 @@ const Manage = props => {
 
   const [expandSidebar, setExpandSidebar] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [shopIndex, setShopIndex] = useState(undefined)
+  const [shopIndex, setShopIndex] = useState(0)
 
   useEffect(
     () =>
@@ -37,7 +37,6 @@ const Manage = props => {
         await store.update(s => {
           s.shops = response.data.shops
         })
-        handleShopChange(0)
       }
       setLoading(false)
     }
@@ -48,9 +47,11 @@ const Manage = props => {
    */
   useEffect(() => {
     const fetchData = async () => {
-      if (!shops[shopIndex]) return
+      if (!shops || !shops[shopIndex]) return
 
-      console.debug('Fetching data...')
+      axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${shops[shopIndex].authToken}`
 
       setLoading(true)
 
@@ -67,16 +68,13 @@ const Manage = props => {
       setLoading(false)
     }
     fetchData()
-  }, [shopIndex])
+  }, [shops, shopIndex])
 
   const toggleSidebar = () => {
     setExpandSidebar(!expandSidebar)
   }
 
   const handleShopChange = shopIndex => {
-    axios.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${shops[shopIndex].authToken}`
     setShopIndex(shopIndex)
   }
 
@@ -89,6 +87,7 @@ const Manage = props => {
       <Navigation
         onExpandSidebar={toggleSidebar}
         expandSidebar={expandSidebar}
+        shop={shops[shopIndex]}
       />
       <div id="main" className={expandSidebar ? 'd-none' : ''}>
         {shops && shops.length > 1 && (

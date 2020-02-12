@@ -4,6 +4,14 @@ import { NavLink } from 'react-router-dom'
 import Logo from 'react-svg-loader!../../assets/origin-logo.svg'
 
 const Navigation = props => {
+  let shopUrl
+  let dataDir
+  if (props.shop && props.shop.dataUrl) {
+    const parts = props.shop.dataUrl.split('/')
+    shopUrl = parts.splice(0, parts.length - 1).join('/')
+    dataDir = parts[parts.length - 1]
+  }
+
   return (
     <nav
       id="sidebar"
@@ -39,6 +47,16 @@ const Navigation = props => {
               Discounts
             </NavLink>
           </li>
+          {shopUrl && (
+            <li className="nav-item mb-3">
+              <NavLink
+                to={`/process/${encodeURIComponent(shopUrl)}/${dataDir}`}
+                className="nav-link text"
+              >
+                Edit Store
+              </NavLink>
+            </li>
+          )}
           <li className="nav-item mb-3">
             <NavLink to="/signin" className="nav-link text">
               Sign Out
