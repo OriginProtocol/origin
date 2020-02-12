@@ -30,7 +30,7 @@ spec:
           - containerPort: 80
         env:
           - name: SERVER_ENDPOINT
-            value: {{ template "ipfs.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+            value: "{{ template "ipfs.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8080"
         volumeMounts:
           - name: {{ template "ipfs-issuer.fullname" . }}-data
             mountPath: /etc/resty-auto-ssl
