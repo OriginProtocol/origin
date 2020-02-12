@@ -95,7 +95,7 @@ function generateEmail(emailType, vars) {
         )
       break
     case 'payout':
-      subject = `You've received Origin Tokens (OGN)!`
+      subject = `You've got OGN!`
       text = payoutTextTemplate
         .replace(/\${amount}/g, vars.amount)
         .replace(/\${ethAddress}/g, vars.ethAddress)
