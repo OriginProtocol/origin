@@ -36,6 +36,14 @@ module.exports = function(app) {
     }
   )
 
+  const logoutHandler = (req, res) => {
+    if (req.isAuthenticated()) req.logout()
+    res.json({ success: !req.isAuthenticated() })
+  }
+
+  app.get('/auth/logout', logoutHandler)
+  app.post('/auth/logout', logoutHandler)
+
   // TODO: Should this at least use API key auth?
   app.post('/auth/registration', async (req, res) => {
     const { name, email, password } = req.body

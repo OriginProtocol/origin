@@ -29,6 +29,12 @@ Authenticate a seller. Sessions tracked by cookies.
 
     curl "${JSON_POST_OPTIONS[@]}" -d '{ "email": "test@example.com", "password": "thisismypassword" }' -c $COOKIE_STORAGE $API_ROOT/auth/login
 
+### `POST /auth/logout`
+
+Destroy an authenticated session.
+
+    curl "${DEFAULT_OPTIONS[@]}" -b $COOKIE_STORAGE $API_ROOT/auth/logout
+
 ### `POST /auth/registration`
 
 Register a seller account.
