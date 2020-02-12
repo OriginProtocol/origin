@@ -28,34 +28,32 @@ const Edit = props => {
 
   const [expandSidebar, setExpandSidebar] = useState(false)
 
-  useEffect(
-    () =>
-      props.history.listen(() => {
-        setExpandSidebar(false)
-      }),
-    []
-  )
+  useEffect(() => {
+    props.history.listen(() => {
+      setExpandSidebar(false)
+    })
 
-  // Subscribe to pullstate changes and store in local storage
-  store.subscribe(
-    s => s,
-    (watched, allState, prevWatched) => {
-      if (!needsDeploy) {
-        store.update(s => {
-          s.needsDeploy = true
-        })
-        if (!watched.needsDeploy && !prevWatched.needsDeploy) {
-          addToast(
-            'Your Dshop needs to be redeployed for the changes to take effect',
-            {
-              appearance: 'success',
-              autoDismiss: true
-            }
-          )
+    // Subscribe to pullstate changes and store in local storage
+    store.subscribe(
+      s => s,
+      (watched, allState, prevWatched) => {
+        if (!needsDeploy) {
+          store.update(s => {
+            s.needsDeploy = true
+          })
+          if (!watched.needsDeploy && !prevWatched.needsDeploy) {
+            addToast(
+              'Your Dshop needs to be redeployed for the changes to take effect',
+              {
+                appearance: 'success',
+                autoDismiss: true
+              }
+            )
+          }
         }
       }
-    }
-  )
+    )
+  }, [])
 
   const toggleSidebar = () => {
     setExpandSidebar(!expandSidebar)

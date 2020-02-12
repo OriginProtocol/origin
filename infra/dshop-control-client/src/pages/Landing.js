@@ -14,7 +14,8 @@ const LandingPage = () => {
     setRedirectTo('/edit')
   }
 
-  const handleUrlSubmit = () => {
+  const handleUrlSubmit = e => {
+    e.preventDefault()
     setRedirectTo(`/process/${encodeURIComponent(url)}`)
   }
 
@@ -42,7 +43,7 @@ const LandingPage = () => {
                 </div>
               </div>
               <div className="row">
-                <div className="col-12 col-md-5">
+                <div className="col-12 col-lg-5">
                   <h1>
                     Build your
                     <br /> decentralized
@@ -78,22 +79,24 @@ const LandingPage = () => {
                         <p className="text-center">
                           Enter the URL of your Shopify shop
                         </p>
-                        <div className="input-group">
-                          <input
-                            type="existingUrl"
-                            className="form-control form-control-lg"
-                            onChange={e => setUrl(e.target.value)}
-                          />
-                          <div className="input-group-append">
-                            <button
-                              type="submit"
-                              className="btn btn-primary btn-block"
-                              onClick={handleUrlSubmit}
-                            >
-                              Go
-                            </button>
+                        <form onSubmit={handleUrlSubmit}>
+                          <div className="input-group">
+                            <input
+                              type="existingUrl"
+                              className="form-control form-control-lg"
+                              onChange={e => setUrl(e.target.value)}
+                            />
+                            <div className="input-group-append">
+                              <button
+                                type="submit"
+                                className="btn btn-primary btn-block"
+                                onClick={handleUrlSubmit}
+                              >
+                                Go
+                              </button>
+                            </div>
                           </div>
-                        </div>
+                        </form>
                         <div className="my-3 text-center">
                           or{' '}
                           <a href="#" onClick={() => setClone(false)}>
@@ -133,4 +136,9 @@ require('react-styl')(`
     min-height: 640px
     background-size: contain
     background-repeat: no-repeat
+
+@media (max-width: 992px)
+  .landing-page
+    .hero-graphic
+      background-image: none !important
 `)

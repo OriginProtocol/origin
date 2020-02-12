@@ -20,9 +20,11 @@ const ProcessShop = () => {
       store.update(s => {
         s.products = response.data.products
         s.collections = response.data.collections
-        s.settings = response.data.config
+        if (response.data.config) {
+          s.settings = response.data.config
+        }
+        setRedirectTo('/edit')
       })
-      setRedirectTo('/edit')
     }
     fetchData()
   }, [])
