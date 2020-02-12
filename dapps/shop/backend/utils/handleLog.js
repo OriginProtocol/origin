@@ -5,11 +5,7 @@ const netId = config.network
 const Web3 = require('web3')
 const openpgp = require('openpgp')
 
-const {
-  getIpfsHashFromBytes32,
-  getText,
-  getIPFSGateway
-} = require('./_ipfs')
+const { getIpfsHashFromBytes32, getText, getIPFSGateway } = require('./_ipfs')
 const encConf = require('./encryptedConfig')
 const abi = require('./_abi')
 const sendMail = require('./emailer')
