@@ -40,10 +40,11 @@ class DistributeRewards {
 
   /**
    * Utility method. Performs various checks on the data integrity and inserts
-   * a row in the growth_payout table. Throws in case of error.
+   * a row in the growth_payout table. Throws in case of error. Returns null if payout was
+   * already made.
    * @param {string} ethAddress
    * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<{amount: BigNumber, payout: ,models.GrowthPayout}>}
+   * @returns {Promise<{amount: BigNumber, payout: ,models.GrowthPayout}|null>}
    * @private
    */
   async _preparePayout(ethAddress, rewards) {
@@ -98,7 +99,7 @@ class DistributeRewards {
       logger.info(
         `Skipping distribution. Found existing payout ${payout.id} with status ${payout.status}`
       )
-      return BigNumber(0)
+      return null
     } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${payout.status} for account ${ethAddress}`
@@ -203,11 +204,22 @@ class DistributeRewards {
     for (const item of chunk) {
       const ethAddress = item.ethAddress
       const rewards = item.rewards
-      const { amount, payout } = await this._preparePayout(ethAddress, rewards)
+      const prepData = await this._preparePayout(ethAddress, rewards)
+      if (prepData === null) {
+        continue
+      }
+      const { amount, payout } = prepData
       payouts.push(payout)
       addresses.push(ethAddress)
       amounts.push(amount)
       total = total.plus(amount)
+    }
+    if (payouts.length === 0) {
+      logger.info('No payout in this batch')
+      return BigNumber(0)
+    }
+    if (total.eq(0)) {
+      throw new Exception('Total should not be zero')
     }
     const totalTokenUnit = this.distributor.token.toTokenUnit(total)
 
@@ -423,7 +435,9 @@ class DistributeRewards {
    */
   async _batchPayoutProcess(ethAddressToRewards) {
     logger.info(
-      `Batch processing payout for ${ethAddressToRewards.length} accounts`
+      `Batch processing payout for ${
+        Object.keys(ethAddressToRewards).length
+      } accounts`
     )
 
     let total = BigNumber(0)
