@@ -80,3 +80,6 @@ t3ServerImageTag: 'fac458a'
 # origin-auth
 authImage: origin-auth
 authImageTag: 'fac458a'
+
+# origin-ipfs-issuer
+ipfsIssuerIp: '35.230.9.58'
