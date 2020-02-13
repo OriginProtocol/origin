@@ -26,7 +26,7 @@ discoveryImageTag: '01c08a5'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '277da70'
+growthImageTag: 'd25b563'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -80,3 +80,6 @@ t3ServerImageTag: 'fac458a'
 # origin-auth
 authImage: origin-auth
 authImageTag: 'fac458a'
+
+# origin-ipfs-issuer
+ipfsIssuerIp: '35.230.9.58'
