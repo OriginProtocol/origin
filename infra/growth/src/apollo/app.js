@@ -12,6 +12,7 @@ try {
 }
 
 const { getUserAuthStatusAndToken } = require('../resources/authentication')
+const { logEvent } = require('../resources/eventLogger')
 
 const { ApolloServer } = require('apollo-server-express')
 const cors = require('cors')
@@ -103,8 +104,10 @@ const server = new ApolloServer({
     }
   }
 })
-
 server.applyMiddleware({ app })
+
+// Non-graphQL routes.
+app.post('/log_event', logEvent)
 
 const port = process.env.PORT || 4008
 
