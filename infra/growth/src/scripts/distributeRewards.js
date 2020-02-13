@@ -219,7 +219,7 @@ class DistributeRewards {
       return BigNumber(0)
     }
     if (total.eq(0)) {
-      throw new Exception('Total should not be zero')
+      throw new Error('Total should not be zero')
     }
     const totalTokenUnit = this.distributor.token.toTokenUnit(total)
 
