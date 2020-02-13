@@ -58,7 +58,18 @@ module.exports = function(app) {
   })
 
   app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
-    const discount = await Discounts.update(req.body, {
+    const result = await Discounts.update(req.body, {
+      where: {
+        id: req.params.id,
+        shopId: req.shopId
+      }
+    })
+
+    if (!result || result[0] < 1) {
+      return res.json({ success: false })
+    }
+
+    const discount = await Discounts.findOne({
       where: {
         id: req.params.id,
         shopId: req.shopId
