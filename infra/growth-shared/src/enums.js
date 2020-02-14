@@ -38,7 +38,8 @@ const GrowthEventTypes = new Enum(
   'TelegramAttestationPublished',
   'SharedOnFacebook',
   'LikedOnFacebook',
-  'PartnerReferral'
+  'PartnerReferral',
+  'BrowserExtensionInstalled'
 )
 
 module.exports = {
