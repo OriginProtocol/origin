@@ -1,5 +1,4 @@
 import React from 'react'
-import { fbt } from 'fbt-runtime'
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
