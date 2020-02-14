@@ -15,7 +15,7 @@ JSON_POST_OPTIONS=(-X POST -H 'Content-Type: application/json')
 
 JSON_REGISTRATION='{ "name": "%s", "email": "%s", "password": "%s" }'
 JSON_LOGIN='{ "email": "%s", "password": "%s" }'
-JSON_CREATE='{"name": "%s", "listing_id": "%s", "auth_token": "%s"}'
+JSON_CREATE='{"name": "%s", "listingId": "%s", "authToken": "%s"}'
 
 shop_create_user() {
   JSON=$(printf "$JSON_REGISTRATION" "$1" "$2" "$3")
