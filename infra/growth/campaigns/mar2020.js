@@ -1,7 +1,7 @@
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 const mar2020Config = {
-  numLevels: 2,
+  numLevels: 3,
   levels: {
     0: {
       rules: [
@@ -209,6 +209,30 @@ const mar2020Config = {
             nextLevelCondition: false,
             scope: 'campaign'
           }
+        },
+        {
+          id: 'ThreeAttestations',
+          class: 'MultiEvents',
+          config: {
+            eventTypes: [
+              'PhoneAttestationPublished',
+              'FacebookAttestationPublished',
+              'TwitterAttestationPublished',
+              'KakaoAttestationPublished',
+              'TelegramAttestationPublished'
+            ],
+            visible: false,
+            numEventsRequired: 3,
+            reward: null,
+            nextLevelCondition: true,
+            scope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.three.attestations.requirement',
+                conditionIcon: 'images/growth/attestation-icon.svg'
+              }
+            ]
+          }
         }
       ]
     },
@@ -223,6 +247,7 @@ const mar2020Config = {
               amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
+            limit: 1,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',

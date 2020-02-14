@@ -30,7 +30,7 @@ describe('mar2020 campaign rules', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(21) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(12) // Note: adjust based on number of rules.
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
@@ -101,7 +101,7 @@ describe('mar2020 campaign rules', () => {
     expect(level).to.equal(1)
   })
 
-  it(`Legacy user with profile, email and 3 attestations should start at level 1`, async () => {
+  it(`Legacy user with profile, email and 3 attestations should start at level 2`, async () => {
     this.events.push(
       {
         id: 'C3',
@@ -131,7 +131,7 @@ describe('mar2020 campaign rules', () => {
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userC)
-    expect(level).to.equal(1)
+    expect(level).to.equal(2)
   })
 
   it(`Should start at level 0`, async () => {
