@@ -11,7 +11,10 @@ const PrintfulURL = 'https://api.printful.com'
 
 module.exports = function(app) {
   app.get('/orders', auth, async (req, res) => {
-    const orders = await Orders.findAll({ order: [['createdAt', 'desc']] })
+    const orders = await Orders.findAll({
+      where: { network_id: process.env.NETWORK_ID },
+      order: [['createdAt', 'desc']]
+    })
     res.json(orders)
   })
 

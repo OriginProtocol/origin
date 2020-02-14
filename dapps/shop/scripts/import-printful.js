@@ -138,10 +138,59 @@ async function resizePrintfulMockups({ OutputDir }) {
   }
 }
 
+async function matchPrintfulToExisting({ OutputDir }) {
+  console.log('Matching Printful products...')
+  const printfulProductsRaw = fs.readFileSync(
+    `${OutputDir}/printful-products.json`
+  )
+  const printfulProducts = JSON.parse(printfulProductsRaw)
+  const productsRaw = fs.readFileSync(`${OutputDir}/data/products.json`)
+  const products = JSON.parse(productsRaw)
+  const printfulIds = {}
+  for (const printfulProduct of printfulProducts) {
+    console.log(`Printful product: ${printfulProduct.name}`)
+    const product = products.find(p => p.title === printfulProduct.name)
+    if (product) {
+      console.log(`✅ Found product ${product.title}`)
+      const ppRaw = fs.readFileSync(
+        `${OutputDir}/data-printful/product-${printfulProduct.id}.json`
+      )
+      const pp = JSON.parse(ppRaw)
+      const dRaw = fs.readFileSync(`${OutputDir}/data/${product.id}/data.json`)
+      const d = JSON.parse(dRaw)
+      if (pp.sync_variants.length !== d.variants.length) {
+        console.log(
+          `❌ Sync variants don't match. (Printful: ${pp.sync_variants.length}, Local: ${d.variants.length})`
+        )
+      } else {
+        for (var i = 0; i < d.variants.length; i++) {
+          const opts = d.variants[i].options.filter(o => o)
+          const pVariant = pp.sync_variants[i]
+          console.log(
+            `${opts.join(', ')} - ${pVariant.name.replace(
+              `${printfulProduct.name} - `,
+              ''
+            )}`
+          )
+        }
+        printfulIds[d.id] = pp.sync_variants.map(s => s.id)
+      }
+    } else {
+      console.log('❌ No corresponding product found.')
+    }
+    console.log('')
+  }
+  fs.writeFileSync(
+    `${OutputDir}/data/printful-ids.json`,
+    JSON.stringify(printfulIds, null, 2)
+  )
+}
+
 async function start() {
-  // await downloadProductData()
+  await downloadProductData()
   // await downloadVariantData()
-  // await writeProductData({ OutputDir })
+  // NOT // await writeProductData({ OutputDir })
+  await matchPrintfulToExisting({ OutputDir })
   // await downloadPrintfulMockups({ OutputDir })
   // await resizePrintfulMockups({ OutputDir })
   // await writeInternalData({ OutputDir })
