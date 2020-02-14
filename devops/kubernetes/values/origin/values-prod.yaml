@@ -75,3 +75,6 @@ t3ServerImageTag: 'latest'
 # origin-auth
 authImage: origin-auth
 authImageTag: latest
+
+# origin-ipfs-issuer
+ipfsIssuerIp: '35.247.86.209'

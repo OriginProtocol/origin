@@ -33,7 +33,7 @@ describe('Emails', () => {
     expect(text).to.include(vars.amount)
     expect(text).to.include(vars.ethAddress)
     expect(text).to.include(vars.txLink)
-    expect(text).to.include(vars.campaignLink)
+    //expect(text).to.include(vars.campaignLink)
     expect(html).to.include(vars.amount)
     expect(html).to.include(vars.ethAddress)
     expect(html).to.include(vars.txLink)

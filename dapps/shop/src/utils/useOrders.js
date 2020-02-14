@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
+import sortBy from 'lodash/sortBy'
 
 const { BACKEND_AUTH_TOKEN } = process.env
 
@@ -27,9 +28,13 @@ function useOrders() {
           data: JSON.parse(order.data)
         }
       })
+      const sortedOrders = sortBy(orders, order => {
+        return -Number(order.order_id.split('-')[3])
+      })
+
       setLoading(false)
 
-      dispatch({ type: 'setOrders', orders })
+      dispatch({ type: 'setOrders', orders: sortedOrders })
     }
     if (!orders.length) {
       fetchOrders()
