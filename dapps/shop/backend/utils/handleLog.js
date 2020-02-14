@@ -1,6 +1,4 @@
 require('dotenv').config()
-const config = require('../config')
-const netId = config.network
 
 const Web3 = require('web3')
 const openpgp = require('openpgp')
@@ -17,6 +15,7 @@ const { Transactions, Shops, Orders } = require('../data/db')
 const web3 = new Web3()
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
+const netId = NETWORK_ID
 
 const handleLog = async ({
   data,
