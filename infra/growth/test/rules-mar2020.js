@@ -3,6 +3,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('mar2020 campaign rules', () => {

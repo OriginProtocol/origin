@@ -1,3 +1,5 @@
+const { tokenToNaturalUnits } = require('../src/util/token')
+
 const mar2020Config = {
   numLevels: 2,
   levels: {
