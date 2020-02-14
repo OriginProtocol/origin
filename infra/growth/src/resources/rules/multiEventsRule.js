@@ -63,7 +63,6 @@ class MultiEventsRule extends BaseRule {
    */
   async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    console.log("++++++++++++ IN EVALUATE.", this.id, "TALLY=", tally)
     return Object.keys(tally).length >= this.numEventsRequired
   }
 }

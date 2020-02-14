@@ -11,7 +11,7 @@ let eventId = 0
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(23) // Note: adjust based on number of rules.
+  expect(state.actions.length).to.equal(14) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -96,11 +96,13 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
     createCampaignRules(mar2020Config, this)
 
     expect(this.crules).to.be.an('object')
-    expect(this.crules.numLevels).to.equal(2)
+    expect(this.crules.numLevels).to.equal(3)
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(21) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(12) // Note: adjust based on number of rules.
+    expect(this.crules.levels[2]).to.be.an('object')
+    expect(this.crules.levels[2].rules.length).to.equal(1) // Note: adjust based on number of rules.
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -169,7 +171,7 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: null
       },
-      TwitterShare35: {
+      TwitterShare41: {
         type: 'TwitterShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -187,7 +189,7 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: null
       },
-      FacebookShare35: {
+      FacebookShare41: {
         type: 'FacebookShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -267,13 +269,13 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
     this.expectedState.FacebookAttestation.status = 'Active'
     this.expectedState.TwitterAttestation.status = 'Active'
     this.expectedState.KakaoAttestation.status = 'Active'
-    this.expectedState.FacebookShare35.status = 'Active'
+    this.expectedState.FacebookShare41.status = 'Active'
     this.expectedState.FacebookLike.status = 'Active'
     this.expectedState.TelegramAttestation.status = 'Active'
     this.expectedState.Referral.status = 'Active'
     // These should still be inactive since they depend on attestation to be completed.
     this.expectedState.TwitterFollow.status = 'Inactive'
-    this.expectedState.TwitterShare35.status = 'Inactive'
+    this.expectedState.TwitterShare41.status = 'Inactive'
     this.expectedState.TelegramFollow.status = 'Inactive'
 
     checkExpectedState(state, this.expectedState)
@@ -413,7 +415,7 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
         .levels['1']
         .rules
         .map(rule => {
-          if (rule.id === 'TwitterShare35') {
+          if (rule.id === 'TwitterShare41') {
             modificationCallback(rule)
           }
           return rule
@@ -469,7 +471,7 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
     this.expectedState.TwitterAttestation.rewardEarned = { amount: '0', currency: 'OGN' }
 
     // Check Twitter Share/Follow got unlocked.
-    this.expectedState.TwitterShare35.status = 'Active'
+    this.expectedState.TwitterShare41.status = 'Active'
     this.expectedState.TwitterFollow.status = 'Active'
 
     // Find the TwitterShare and Facebook actions and check they include all expected fields.
@@ -531,8 +533,8 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.TwitterShare35.status = 'Completed'
-    this.expectedState.TwitterShare35.rewardEarned = { amount: '0', currency: 'OGN' }
+    this.expectedState.TwitterShare41.status = 'Completed'
+    this.expectedState.TwitterShare41.rewardEarned = { amount: '0', currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })
@@ -557,8 +559,8 @@ describe('Apollo adapter - Mar 2020 campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.FacebookShare35.status = 'Completed'
-    this.expectedState.FacebookShare35.rewardEarned = { amount: '0', currency: 'OGN' }
+    this.expectedState.FacebookShare41.status = 'Completed'
+    this.expectedState.FacebookShare41.rewardEarned = { amount: '0', currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })

@@ -26,11 +26,13 @@ describe('mar2020 campaign rules', () => {
     }
     this.crules = new CampaignRules(row, mar2020Config)
     expect(this.crules).to.be.an('object')
-    expect(this.crules.numLevels).to.equal(2)
+    expect(this.crules.numLevels).to.equal(3)
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(12) // Note: adjust based on number of rules.
+    expect(this.crules.levels[2]).to.be.an('object')
+    expect(this.crules.levels[2].rules.length).to.equal(1) // Note: adjust based on number of rules.
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
