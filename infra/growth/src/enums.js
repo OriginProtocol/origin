@@ -46,7 +46,8 @@ const GrowthActionType = new Enum(
   'FacebookLike',
   'FacebookShare',
   'TelegramFollow',
-  'PartnerReferral'
+  'PartnerReferral',
+  'BrowserExtensionInstall'
 )
 
 // Active: account is active.
