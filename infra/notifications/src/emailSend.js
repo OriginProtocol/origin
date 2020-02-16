@@ -2,7 +2,6 @@ const fs = require('fs')
 const _ = require('lodash')
 const sendgridMail = require('@sendgrid/mail')
 const Sequelize = require('sequelize')
-const web3Utils = require('web3-utils')
 
 const Identity = require('@origin/identity/src/models').Identity
 const { messageTemplates } = require('../templates/messageTemplates')
