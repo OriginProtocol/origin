@@ -131,8 +131,8 @@ class EmailSender {
       senderIdentity.firstName &&
       senderIdentity.lastName
         ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-            ''} (${web3Utils.toChecksumAddress(sender)})`
-        : web3Utils.toChecksumAddress(sender)
+            ''}`
+        : null
 
     // Dynamic variables used when evaluating the template.
     const templateVars = {

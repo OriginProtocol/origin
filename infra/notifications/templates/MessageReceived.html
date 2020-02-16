@@ -1,5 +1,9 @@
 <div>
-  You have received a message from <%- senderName %>
+  <% if (senderName) { %>
+    You have received a new message from <%- senderName %>
+  <% } else { %>
+    You have received a new message on Origin
+  <% } %>
 </div>
 
 <br/>
