@@ -129,8 +129,7 @@ class EmailSender {
       senderIdentity !== null &&
       senderIdentity.firstName &&
       senderIdentity.lastName
-        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-            ''}`
+        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName || ''}`
         : null
 
     // Dynamic variables used when evaluating the template.
