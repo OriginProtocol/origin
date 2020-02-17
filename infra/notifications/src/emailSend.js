@@ -2,6 +2,7 @@ const fs = require('fs')
 const template = require('lodash/template')
 const sendgridMail = require('@sendgrid/mail')
 const Sequelize = require('sequelize')
+const mjml2html = require('mjml')
 
 const Identity = require('@origin/identity/src/models').Identity
 const { messageTemplates } = require('../templates/messageTemplates')
@@ -109,9 +110,9 @@ class EmailSender {
     // Load email template
     const templateDir = `${__dirname}/../templates`
 
-    // Standard template for HTML emails
-    const emailTemplateHtml = template(
-      fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+    // Standard template for MJML emails
+    const emailTemplateMjml = template(
+      fs.readFileSync(`${templateDir}/emailTemplate.mjml`).toString()
     )
     // Standard template for text emails
     const emailTemplateTxt = template(
@@ -164,16 +165,18 @@ class EmailSender {
             message: message.text(templateVars),
             messageHash
           }),
-          html: emailTemplateHtml({
-            message: message.html(templateVars),
-            messageHash
-          }),
+          html: mjml2html(
+            emailTemplateMjml({
+              message: message.mjml(templateVars),
+              messageHash
+            })
+          ).html,
           asm: {
             groupId: this.config.asmGroupId
           },
           __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
         }
-
+        
         await this._send(identity.ethAddress, email)
       } catch (error) {
         logger.error(
@@ -222,9 +225,9 @@ class EmailSender {
     // Load email template
     const templateDir = `${__dirname}/../templates`
 
-    // Standard template for HTML emails
-    const emailTemplateHtml = template(
-      fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+    // Standard template for MJML emails
+    const emailTemplateMjml = template(
+      fs.readFileSync(`${templateDir}/emailTemplate.mjml`).toString()
     )
     // Standard template for text emails
     const emailTemplateTxt = template(
@@ -282,14 +285,16 @@ class EmailSender {
           text: emailTemplateTxt({
             message: message.text(templateVars)
           }),
-          html: emailTemplateHtml({
-            message: message.html(templateVars)
-          }),
+          html: mjml2html(
+            emailTemplateMjml({
+              message: message.mjml(templateVars)
+            })
+          ).html,
           asm: {
             groupId: this.config.asmGroupId
           }
         }
-        logger.info(email)
+
         await this._send(identity.ethAddress, email)
       } catch (error) {
         logger.error(`Could not email via Sendgrid: ${error}`)
