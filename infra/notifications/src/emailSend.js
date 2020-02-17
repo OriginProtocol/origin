@@ -176,7 +176,7 @@ class EmailSender {
           },
           __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
         }
-        
+
         await this._send(identity.ethAddress, email)
       } catch (error) {
         logger.error(
