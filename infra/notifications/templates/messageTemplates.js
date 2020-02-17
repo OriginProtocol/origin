@@ -36,8 +36,8 @@ const messageTemplates = {
             on Origin\
           <% } %>'
         ),
-        html: template(
-          fs.readFileSync(`${templateDir}/MessageReceived.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/MessageReceived.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/MessageReceived.txt`).toString()
@@ -81,8 +81,8 @@ const messageTemplates = {
     email: {
       OfferCreated: {
         subject: template('New Offer for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/seller-OfferCreated.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/seller-OfferCreated.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/seller-OfferCreated.txt`).toString()
@@ -90,9 +90,9 @@ const messageTemplates = {
       },
       OfferWithdrawn: {
         subject: template('Offer Withdrawn for <%= listing.title %>'),
-        html: template(
+        mjml: template(
           fs
-            .readFileSync(`${templateDir}/seller-OfferWithdrawn.html`)
+            .readFileSync(`${templateDir}/seller-OfferWithdrawn.mjml`)
             .toString()
         ),
         text: template(
@@ -101,8 +101,8 @@ const messageTemplates = {
       },
       OfferDisputed: {
         subject: template('Dispute Initiated for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/seller-OfferDisputed.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/seller-OfferDisputed.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/seller-OfferDisputed.txt`).toString()
@@ -110,8 +110,8 @@ const messageTemplates = {
       },
       OfferRuling: {
         subject: template('Dispute Resolved for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/seller-OfferRuling.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/seller-OfferRuling.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/seller-OfferRuling.txt`).toString()
@@ -119,9 +119,9 @@ const messageTemplates = {
       },
       OfferFinalized: {
         subject: template('Sale Completed for <%= listing.title %>'),
-        html: template(
+        mjml: template(
           fs
-            .readFileSync(`${templateDir}/seller-OfferFinalized.html`)
+            .readFileSync(`${templateDir}/seller-OfferFinalized.mjml`)
             .toString()
         ),
         text: template(
@@ -166,8 +166,8 @@ const messageTemplates = {
     email: {
       OfferWithdrawn: {
         subject: template('Offer Rejected for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.txt`).toString()
@@ -175,8 +175,8 @@ const messageTemplates = {
       },
       OfferAccepted: {
         subject: template('Offer Accepted for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferAccepted.txt`).toString()
@@ -184,8 +184,8 @@ const messageTemplates = {
       },
       OfferDisputed: {
         subject: template('Dispute Initiated for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferDisputed.txt`).toString()
@@ -193,8 +193,8 @@ const messageTemplates = {
       },
       OfferRuling: {
         subject: template('Dispute Resolved for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
@@ -202,8 +202,8 @@ const messageTemplates = {
       },
       OfferData: {
         subject: template('New Review for <%= listing.title %>'),
-        html: template(
-          fs.readFileSync(`${templateDir}/buyer-OfferReview.html`).toString()
+        mjml: template(
+          fs.readFileSync(`${templateDir}/buyer-OfferReview.mjml`).toString()
         ),
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferReview.txt`).toString()
