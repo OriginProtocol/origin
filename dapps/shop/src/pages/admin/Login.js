@@ -6,7 +6,7 @@ import useConfig from 'utils/useConfig'
 const Login = () => {
   const { config } = useConfig()
   const inputEl = useRef(null)
-  const [state, setState] = useState({ username: '', password: '', error: '' })
+  const [state, setState] = useState({ email: '', password: '', error: '' })
   const [, dispatch] = useStateValue()
   useEffect(() => {
     if (inputEl.current) {
@@ -19,26 +19,41 @@ const Login = () => {
       className="admin login"
       onSubmit={e => {
         e.preventDefault()
-        const auth = `Basic ${btoa(`${state.username}:${state.password}`)}`
-        const headers = new Headers({ authorization: auth })
-        const myRequest = new Request(`${config.backend}/auth`, { headers })
-        fetch(myRequest).then(res => {
-          if (res.ok) {
-            setState({ ...state, error: '' })
-            dispatch({ type: 'setAuth', auth })
-          } else {
-            setState({ ...state, error: 'Unauthorized' })
-          }
+        const body = JSON.stringify({
+          email: state.email,
+          password: state.password
         })
+        console.log('Performing login...', `${config.backend}/auth/login`)
+        const myRequest = new Request(`${config.backend}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          credentials: 'include',
+          body
+        })
+        fetch(myRequest)
+          .then(res => {
+            if (res.ok) {
+              setState({ ...state, error: '' })
+              dispatch({ type: 'setAuth', auth: state.email })
+            } else {
+              setState({ ...state, error: 'Unauthorized' })
+            }
+          })
+          .catch(err => {
+            console.error('Error signing in', err)
+            setState({ ...state, error: 'Unauthorized' })
+          })
       }}
     >
       <div className="form-group">
         <input
           ref={inputEl}
           className="form-control"
-          placeholder="Username"
-          value={state.username}
-          onChange={e => setState({ ...state, username: e.target.value })}
+          placeholder="E-mail"
+          value={state.email}
+          onChange={e => setState({ ...state, email: e.target.value })}
         />
       </div>
       <div className="form-group">

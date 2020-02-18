@@ -46,3 +46,13 @@ releases:
     chart: stable/prometheus-operator
     values:
       - ../values/origin-monitoring/values.yaml
+
+  - name: origin-experimental
+    namespace: experimental
+    chart: ../charts/origin-experimental
+
+  - name: experimental-ingress
+    namespace: experimental
+    chart: stable/nginx-ingress
+    values:
+      - ../values/origin-experimental/nginx-ingress/values.yaml

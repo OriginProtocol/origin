@@ -1,23 +1,34 @@
 const config = require('../config')
 const mjml2html = require('mjml')
 const nodemailer = require('nodemailer')
-const cartData = require('./cartData')
 const aws = require('aws-sdk')
 
-const { DATA_URL, PUBLIC_URL } = process.env
+const cartData = require('./cartData')
+const encConf = require('./encryptedConfig')
+const {
+  SUPPORT_EMAIL_OVERRIDE,
+  SENDGRID_API_KEY,
+  SENDGRID_USERNAME,
+  SENDGRID_PASSWORD,
+  MAILGUN_SMTP_SERVER,
+  MAILGUN_SMTP_PORT,
+  MAILGUN_SMTP_LOGIN,
+  MAILGUN_SMTP_PASSWORD,
+  AWS_ACCESS_KEY_ID
+} = require('./const')
 
 let transporter
-if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
+if (SENDGRID_API_KEY || SENDGRID_USERNAME) {
   let auth
-  if (process.env.SENDGRID_API_KEY) {
+  if (SENDGRID_API_KEY) {
     auth = {
       user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY
+      pass: SENDGRID_API_KEY
     }
   } else {
     auth = {
-      user: process.env.SENDGRID_USERNAME,
-      pass: process.env.SENDGRID_PASSWORD
+      user: SENDGRID_USERNAME,
+      pass: SENDGRID_PASSWORD
     }
   }
   transporter = nodemailer.createTransport({
@@ -25,16 +36,16 @@ if (process.env.SENDGRID_API_KEY || process.env.SENDGRID_USERNAME) {
     port: 587,
     auth
   })
-} else if (process.env.MAILGUN_SMTP_SERVER) {
+} else if (MAILGUN_SMTP_SERVER) {
   transporter = nodemailer.createTransport({
-    host: process.env.MAILGUN_SMTP_SERVER,
-    port: process.env.MAILGUN_SMTP_PORT,
+    host: MAILGUN_SMTP_SERVER,
+    port: MAILGUN_SMTP_PORT,
     auth: {
-      user: process.env.MAILGUN_SMTP_LOGIN,
-      pass: process.env.MAILGUN_SMTP_PASSWORD
+      user: MAILGUN_SMTP_LOGIN,
+      pass: MAILGUN_SMTP_PASSWORD
     }
   })
-} else if (process.env.AWS_ACCESS_KEY_ID) {
+} else if (AWS_ACCESS_KEY_ID) {
   const SES = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1' })
   transporter = nodemailer.createTransport({ SES })
 } else {
@@ -62,15 +73,17 @@ function optionsForItem(item) {
   return options
 }
 
-async function sendMail(cart, skip) {
-  const data = await config.getSiteConfig()
-  const items = await cartData(cart.items)
+async function sendMail(shopId, cart, skip) {
+  const dataURL = await encConf.get(shopId, 'dataUrl')
+  let publicURL = await encConf.get(shopId, 'publicUrl')
+  const data = await config.getSiteConfig(dataURL)
+  const items = await cartData(dataURL, cart.items)
 
   const orderItems = items.map(item => {
     const img = item.variant.image || item.product.image
     const options = optionsForItem(item)
     return orderItem({
-      img: `${DATA_URL}${item.product.id}/520/${img}`,
+      img: `${dataURL}${item.product.id}/520/${img}`,
       title: item.product.title,
       quantity: item.quantity,
       price: formatPrice(item.price),
@@ -90,30 +103,29 @@ async function sendMail(cart, skip) {
     })
   })
 
-  let supportEmailPlain = data.supportEmail
+  let supportEmailPlain = SUPPORT_EMAIL_OVERRIDE || data.supportEmail
   if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
     supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
   }
 
-  let pubUrl = PUBLIC_URL
   if (!data.absolute) {
-    pubUrl += '/#'
+    publicURL += '/#'
   }
 
   const vars = {
     head,
     siteName: data.fullTitle || data.title,
-    supportEmail: data.supportEmail,
+    supportEmail: SUPPORT_EMAIL_OVERRIDE || data.supportEmail,
     supportEmailPlain,
     subject: data.emailSubject,
-    storeUrl: PUBLIC_URL,
+    storeUrl: publicURL,
 
     orderNumber: cart.offerId,
     firstName: cart.userInfo.firstName,
     lastName: cart.userInfo.lastName,
     email: cart.userInfo.email,
-    orderUrl: `${pubUrl}/order/${cart.tx}?auth=${cart.dataKey}`,
-    orderUrlAdmin: `${pubUrl}/admin/orders/${cart.offerId}`,
+    orderUrl: `${publicURL}/#/order/${cart.tx}?auth=${cart.dataKey}`,
+    orderUrlAdmin: `${publicURL}/#/admin/orders/${cart.offerId}`,
     orderItems,
     orderItemsTxt,
     subTotal: formatPrice(cart.subTotal),
