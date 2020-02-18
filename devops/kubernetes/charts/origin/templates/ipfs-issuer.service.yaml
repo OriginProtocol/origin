@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ipfs-issuer.fullname" . }}
+  labels:
+    app: {{ template "ipfs-issuer.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: origin-ipfs
+spec:
+  type: LoadBalancer
+  loadBalancerIP: {{ .Values.ipfsIssuerIp }}
+  selector:
+    app: {{ template "ipfs-issuer.fullname" . }}
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443

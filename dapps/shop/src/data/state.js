@@ -8,6 +8,8 @@ import set from 'lodash/set'
 import pick from 'lodash/pick'
 import cloneDeep from 'lodash/cloneDeep'
 
+import fbTrack from './fbTrack'
+
 const defaultState = {
   products: [],
   collections: [],
@@ -41,6 +43,7 @@ try {
 }
 
 const reducer = (state, action) => {
+  fbTrack(state, action)
   let newState = cloneDeep(state)
   if (action.type === 'addToCart') {
     const { product, variant } = action.item
@@ -66,12 +69,12 @@ const reducer = (state, action) => {
     const index = FlexSearch.create()
     action.products.forEach(product => index.add(product.id, product.title))
     newState = set(newState, `productIndex`, index)
-    const productIds = action.products.map(p => p.id)
-    newState = set(
-      newState,
-      'cart.items',
-      state.cart.items.filter(i => productIds.indexOf(i.product) >= 0)
-    )
+    // const productIds = action.products.map(p => p.id)
+    // newState = set(
+    //   newState,
+    //   'cart.items',
+    //   state.cart.items.filter(i => productIds.indexOf(i.product) >= 0)
+    // )
   } else if (action.type === 'setCollections') {
     newState = set(newState, `collections`, action.collections)
   } else if (action.type === 'setShippingZones') {
@@ -123,18 +126,20 @@ const reducer = (state, action) => {
     return total + item.quantity * item.price
   }, 0)
 
+  const shipping = get(newState, 'cart.shipping.amount', 0)
+
   const discountObj = get(newState, 'cart.discountObj', {})
   const discountCode = get(newState, 'cart.discountObj.code')
   let discount = 0
   if (discountCode) {
     if (discountObj.discountType === 'percentage') {
-      discount = (newState.cart.subTotal * discountObj.value) / 100
+      const totalWithShipping = newState.cart.subTotal + shipping
+      discount = Math.round((totalWithShipping * discountObj.value) / 100)
     } else if (discountObj.discountType === 'fixed') {
       discount = discountObj.value * 100
     }
   }
 
-  const shipping = get(newState, 'cart.shipping.amount', 0)
   newState.cart.discount = discount
   newState.cart.total = newState.cart.subTotal + shipping - discount
 
