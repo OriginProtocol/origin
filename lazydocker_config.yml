@@ -1,0 +1,12 @@
+gui:
+  returnImmediately: true
+commandTemplates:
+  containerLogs: docker logs --follow --since=60m {{ .Container.ID }}
+update:
+  dockerRefreshInterval: 2000ms
+customCommands:
+  containers:
+    - name: bash
+      attach: true
+      command: docker exec -it {{ .Container.ID }} /bin/sh
+      serviceNames: []

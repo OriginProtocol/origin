@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+# disable "Don't use variables in the printf format string. Use printf "..%s.." "$foo""
+# they're easier to read the current way
+# shellcheck disable=SC2059
+
+# disable "Use cd ... || exit in case cd fails." - it's noisy and the error _shouldn't_ happen
+# shellcheck disable=SC2164
+
+# color codes
+# https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+
+# https://stackoverflow.com/a/2924755
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+OGN_DIR="$PWD"
+
+# guard against calling this file from anywhere but origin
+if [ "${PWD##*/}" != "origin" ]; then
+    printf "\n${RED}This isn't the origin directory!${NORMAL}\n\n"
+    exit 1
+fi
+
+function up {
+    docker-compose up
+}
+
+function upDetach {
+    docker-compose up --detach && printf "\n\nOrigineers! Please use ${GREEN}${BOLD}lazydocker ${NORMAL}to view logs and manage containers or type ${GREEN}${BOLD}ogn logs ${NORMAL}to view logs again ${NORMAL}\n\n"
+}
+
+function logs {
+    docker-compose logs --follow 
+}
+
+function log {
+    eval "$1"
+}
+
+function stop {
+    docker-compose -f docker-compose.yml stop
+}
+
+function restart {
+    eval "$1"
+}
+
+function build {
+    docker-compose build --no-cache services
+}
+
+function shell {
+    eval "$1"
+}
+
+function setup {
+    # upgrade lazydocker if not present, else install
+    if command -v lazydocker; then
+        printf "Upgrading lazydocker\n"
+        brew upgrade lazydocker
+    else
+        printf "Installing lazydocker\n"
+        brew tap jesseduffield/lazydocker
+        brew install lazydocker
+    fi
+
+    docker-compose up --detach
+}
+
+function list {
+    docker-compose ps --services
+}
+
+function usage {
+    printf "
+Script for managing origin docker-compose and running common tasks in containers
+
+Usage: ogn [command]
+
+    Commands:
+    - help                         Show this message.
+    - init                         Perform initial container setup, generate alias and install lazydocker (Run once).
+    - (up | start)                 Spin up containers and follow logs.
+        - (up | start) detach      Optional detach to not follow docker logs.
+    - build                        Rebuild the Origin Services container.
+    - list                         Display a list of container names
+    - log <container name>         Follow a single container logs e.g. ogn log services
+    - logs                         Follow ALL container log outputs.
+    - stop                         Stop ALL running containers.
+    - restart <container name>     Restart a single container.
+        - restart all              Restart ALL containers and follow logs
+        - restart all detach       Restart ALL containers and detach logs
+    - shell <container name>       Start a shell for a specific container e.g. ogn shell notifications
+    - prune                        Removes dangling docker images, containers, volumes, networks, and build cache.
+
+Run ${GREEN}${BOLD}lazydocker ${NORMAL}to view logs and manage containers
+
+"
+}
+
+# print usage if no arguments are passed
+if [[ $# -eq 0 ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $1 == "build" ]]; then
+    build 
+    exit $?
+fi
+
+if [[ $1 == "up" || $1 == "start" ]]; then
+    if [[ $2 == "detach" ]]; then
+        upDetach
+    else
+        up
+    fi
+
+    exit $?
+fi
+
+if [[ $1 == "logs" ]]; then
+    logs
+    exit $?
+fi
+
+if [[ $1 == "stop" ]]; then
+    stop
+    exit $?
+fi
+
+if [[ $1 == "help" ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $1 == "init" ]]; then
+    # add ogn as an alias for convenience - 40% less keystrokes than ./ogn!
+    ALIAS_STRING="alias ogn=${PWD}/ogn"
+    # Create new line
+    echo "" >> "$HOME/.$(echo $SHELL | rev | cut -d'/' -f1 | rev)rc"
+    # Add alias to shell rc file
+    echo "$ALIAS_STRING" >> "$HOME/.$(echo $SHELL | rev | cut -d'/' -f1 | rev)rc"
+
+    # add lazydocker customizations, it's ok if these are duplicated across setup runs
+    LAZYDOCKER_CONFIG_DIR="$HOME/Library/Application Support/jesseduffield/lazydocker"
+    mkdir -p "$LAZYDOCKER_CONFIG_DIR"
+    cat ./lazydocker_config.yml >> "$LAZYDOCKER_CONFIG_DIR/config.yml"
+
+    setup
+
+    printf "\nRun ${GREEN}source ${HOME}/.$(echo $SHELL | rev | cut -d'/' -f1 | rev)rc ${NORMAL}or open a new terminal tab to start using the ${GREEN}ogn ${NORMAL}command${NORMAL}\n\n"
+    printf "\xF0\x9F\x98\x81 OGN Docker environment setup is complete! Type ${GREEN}ogn help ${NORMAL}for a list of commands\n"
+    exit $?
+fi
+
+if [[ $1 == "prune" ]]; then
+    docker system prune --volumes --all
+    exit $?
+fi
+
+if [[ $1 == "list" ]]; then
+    list
+    exit $?
+fi
+
+if [[ $1 == "shell" ]]; then
+    # bail if there isn't a second argument
+    if [[ $# -eq 1 ]]; then
+        usage
+        exit 1
+    fi
+
+    # run a docker container with arguments after "shell"
+    shell "docker exec -ti ${*:2} /bin/bash"
+    exit $?
+fi
+
+if [[ $1 == "log" ]]; then
+    # bail if there isn't a second argument
+    if [[ $# -eq 1 ]]; then
+        usage
+        exit 1
+    fi
+
+    # run a docker container with arguments after "log"
+    log "docker-compose logs --follow ${*:2}"
+    exit $?
+fi
+
+if [[ $1 == "restart" ]]; then
+
+    if [[ $1 == "restart" && $2 == "all"  && $3 == "detach" ]]; then
+        stop
+        upDetach
+    elif [[ $1 == "restart" && $2 == "all" ]]; then
+        stop
+        up
+    else
+        restart "docker-compose restart ${*:2}"
+    fi
+
+    exit $?
+fi
+
+printf "\n${RED}Unknown command: $1 ${NORMAL}\n\n"
+printf "type ${GREEN}ogn${NORMAL} or ${GREEN}ogn help${NORMAL} for usage\n\n"
+exit 1
