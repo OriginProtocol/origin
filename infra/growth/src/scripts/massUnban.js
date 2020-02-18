@@ -59,6 +59,7 @@ class MassUnban {
       }
       if (seen[addressToUnban]) {
         logger.warn(`Skipping dupe line for ${addressToUnban}`)
+        continue
       }
       seen[addressToUnban] = true
 
