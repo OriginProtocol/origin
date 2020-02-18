@@ -581,6 +581,7 @@ async function sendViaWeb3({
      * it should be temporary, so we're just gonna ignore it.
      */
     if (error && error.message && error.message.includes('Invalid params')) {
+      console.debug('error caught by errorHandler for web3.js transaction')
       console.error(error.message)
       return
     }
