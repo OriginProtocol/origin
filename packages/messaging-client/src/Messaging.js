@@ -1125,7 +1125,6 @@ class Messaging {
       conversationIndex = respJSON.nextConversationIndex
     }
 
-
     const data = stringify({ conversationId, conversationIndex, content })
     const signature = this.account.sign(data).signature
     const response = await fetch(
