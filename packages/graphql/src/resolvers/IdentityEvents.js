@@ -408,6 +408,9 @@ export async function identity({ id }) {
   // Add avatar URLs to the identity object.
   await _decorateIdentityWithAvatarUrls(identity)
 
+  // Initialize strength to 0 to prevent NaN
+  identity.strength = 0
+
   // Compute a profile strength based firstName, lastName, and attestations that are filled in.
   Object.keys(progressPct).forEach(key => {
     if (identity[key]) {
@@ -417,8 +420,8 @@ export async function identity({ id }) {
   Array.from(identity.verifiedAttestations || []).map(attestation => {
     identity.strength += attestationProgressPct[attestation.id] || 0
   })
-  identity.strength = Math.max(identity.strength, 100)
 
+  identity.strength = Math.min(identity.strength, 100)
   return identity
 }
 
