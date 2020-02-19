@@ -15,7 +15,9 @@ function useConfig() {
     async function fetchConfig() {
       setLoading(true)
       try {
-        const raw = await fetch(`${dataUrl()}config.json`)
+        const url = `${dataUrl()}config.json`
+        console.debug(`Loading config from ${url}...`)
+        const raw = await fetch(url)
         if (raw.ok) {
           config = await raw.json()
 
@@ -26,10 +28,13 @@ function useConfig() {
           config.supportEmailPlain = supportEmailPlain
           const netConfig = config.networks[NetID] || {}
           config = { ...config, ...netConfig, netId: NetID }
+        } else {
+          console.error(`Loading of config failed from ${url}`)
         }
 
         setLoading(false)
       } catch (e) {
+        console.error(e)
         setLoading(false)
         setError(true)
       }

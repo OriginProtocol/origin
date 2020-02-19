@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "dshopBackendMainnet.fullname" . }}
+  labels:
+    app: {{ template "dshopBackendMainnet.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: dshop-backend-mainnet
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "dshopBackendMainnet.fullname" . }}
+  serviceName: {{ template "dshopBackendMainnet.fullname" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "dshopBackendMainnet.fullname" . }}
+    spec:
+      containers:
+      - name: dshop-backend-mainnet
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dshopBackendMainnetImage }}:{{ .Values.dshopBackendMainnetImageTag }}"
+        imagePullPolicy: Always
+        env:
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "dshopBackendMainnet.fullname" . }}
+                key: ENVKEY
+          - name: DATABASE_URL
+            value: "sqlite:/data/dshop/net_mainnet.db"
+        port:
+          - name: http
+            containerPort: 3000
+        volumeMounts:
+          - mountPath: /data/dshop
+            name: {{ template "dshopBackendMainnet.fullname" . }}-data
+        resources:
+          requests:
+            memory: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "dshopBackendMainnet.fullname" . }}-data
+      labels:
+        app: {{ template "dshopBackendMainnet.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce  # Read-write for a single node only
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}

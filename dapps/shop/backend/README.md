@@ -11,6 +11,9 @@ It works by watching the Ethereum blockchain for relevant activity on the Origin
 Marketplace contract. Order data is downloaded from IPFS, decrypted and stored
 in a Postgres database.
 
+- [Test Data](docs/index.md#manual-testing)
+- [Backend Web API](docs/api.md)
+
 ## Deploy to Heroku script
 
 Make sure your `.env` file has all the values you want to see configured. Make

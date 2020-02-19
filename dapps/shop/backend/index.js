@@ -2,7 +2,7 @@
 
 require('./app')
 require('./listener')
-require('./tstEnc')
+if (process.env.PGP_PRIVATE_KEY) require('./tstEnc')
 
 // const stripeCli = cp.spawn(
 //   'stripe',

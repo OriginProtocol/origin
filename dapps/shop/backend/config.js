@@ -1,9 +1,8 @@
 require('dotenv').config()
+
 const fetch = require('node-fetch')
 const memoize = require('lodash/memoize')
-
-const { NODE_ENV, NETWORK_ID, DATA_URL } = process.env
-const defaultNetwork = NODE_ENV === 'production' ? '4' : '999'
+const { PROVIDER, NETWORK_ID } = require('./utils/const')
 
 const Defaults = {
   '999': {
@@ -25,14 +24,20 @@ const Defaults = {
   }
 }
 
-const getSiteConfig = memoize(async function getSiteConfig() {
-  const url = `${DATA_URL}config.json`
-  const dataRaw = await fetch(url)
-  const data = await dataRaw.json()
-  const defaultData = Defaults[NETWORK_ID || defaultNetwork] || {}
-  const networkData = data.networks[NETWORK_ID || defaultNetwork] || {}
+const getSiteConfig = memoize(async function getSiteConfig(dataURL) {
+  let data
+  if (dataURL) {
+    const url = `${dataURL}config.json`
+    console.debug(`Loading config from ${url}`)
+    const dataRaw = await fetch(url)
+    data = await dataRaw.json()
+  } else {
+    console.warn('dataURL not provided')
+  }
+  const defaultData = Defaults[NETWORK_ID] || {}
+  const networkData = data ? data.networks[NETWORK_ID] : null || {}
   const siteConfig = {
-    provider: process.env.PROVIDER,
+    provider: PROVIDER,
     ...data,
     ...defaultData,
     ...networkData
@@ -41,9 +46,8 @@ const getSiteConfig = memoize(async function getSiteConfig() {
 })
 
 module.exports = {
-  network: NETWORK_ID || defaultNetwork,
   getSiteConfig,
-  provider: process.env.PROVIDER
+  provider: PROVIDER
 }
 
 // const Configs = {

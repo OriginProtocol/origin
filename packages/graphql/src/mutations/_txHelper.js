@@ -575,6 +575,31 @@ async function sendViaWeb3({
 
   let txHash
 
+  function errorHandler(error) {
+    /**
+     * This seems like an internal web3.js error and not caused by our code.
+     * it should be temporary, so we're just gonna ignore it.
+     */
+    if (error && error.message && error.message.includes('Invalid params')) {
+      console.debug('error caught by errorHandler for web3.js transaction')
+      console.error(error.message)
+      return
+    }
+
+    if (txHash) {
+      const hashTosend = isValidHash(txHash) ? txHash : null
+      pubsub.publish('TRANSACTION_UPDATED', {
+        transactionUpdated: {
+          id: hashTosend,
+          status: 'error',
+          error,
+          mutation
+        }
+      })
+    }
+    reject(error)
+  }
+
   tx.once('transactionHash', async hash => {
     txHash = hash
     if (typeof txHash === 'object' && get(txHash, 'message')) {
@@ -597,29 +622,8 @@ async function sendViaWeb3({
         val: { confNumber, receipt }
       })
     })
-    .on('error', function(error) {
-      /**
-       * This seems like an internal web3.js error and not caused by our code.
-       * it should be temporary, so we're just gonna ignore it.
-       */
-      if (error && error.message && error.message.includes('Invalid params')) {
-        console.error(error.message)
-        return
-      }
-
-      if (txHash) {
-        const hashTosend = isValidHash(txHash) ? txHash : null
-        pubsub.publish('TRANSACTION_UPDATED', {
-          transactionUpdated: {
-            id: hashTosend,
-            status: 'error',
-            error,
-            mutation
-          }
-        })
-      }
-    })
-    .catch(reject)
+    .on('error', errorHandler)
+    .catch(errorHandler)
 }
 
 export default function txHelper({
