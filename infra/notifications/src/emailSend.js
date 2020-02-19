@@ -2,7 +2,6 @@ const fs = require('fs')
 const _ = require('lodash')
 const sendgridMail = require('@sendgrid/mail')
 const Sequelize = require('sequelize')
-const web3Utils = require('web3-utils')
 
 const Identity = require('@origin/identity/src/models').Identity
 const { messageTemplates } = require('../templates/messageTemplates')
@@ -130,9 +129,8 @@ class EmailSender {
       senderIdentity !== null &&
       senderIdentity.firstName &&
       senderIdentity.lastName
-        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-            ''} (${web3Utils.toChecksumAddress(sender)})`
-        : web3Utils.toChecksumAddress(sender)
+        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName || ''}`
+        : null
 
     // Dynamic variables used when evaluating the template.
     const templateVars = {

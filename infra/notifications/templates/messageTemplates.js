@@ -10,15 +10,32 @@ const messageTemplates = {
   message: {
     mobile: {
       messageReceived: {
-        title: _.template('New Origin Message from <%- senderName %>'),
+        title: _.template(
+          'New message\
+          <% if (senderName) { %> \
+            from <%- senderName %>\
+          <% } else { %>\
+            on Origin\
+          <% } %>'
+        ),
         body: _.template(
-          'You have received a message on Origin from <%- senderName %>.'
+          'You have received a message on Origin\
+          <% if (senderName) { %> \
+            from <%- senderName %>\
+          <% } %>.'
         )
       }
     },
     email: {
       messageReceived: {
-        subject: _.template('New Origin Message from <%- senderName %>'),
+        subject: _.template(
+          'New message\
+          <% if (senderName) { %> \
+            from <%- senderName %>\
+          <% } else { %>\
+            on Origin\
+          <% } %>'
+        ),
         html: _.template(
           fs.readFileSync(`${templateDir}/MessageReceived.html`).toString()
         ),
