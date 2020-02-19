@@ -41,7 +41,7 @@ const App = ({ location }) => {
     }
     if (config && config.favicon) {
       const favicon = document.querySelector('link[rel="icon"]')
-      favicon.href = `${dataUrl()}/${config.favicon}`
+      favicon.href = `${dataUrl()}${config.favicon}`
     }
   }, [config])
 

@@ -19,7 +19,10 @@ export default function dataUrl() {
   } else if (CONTENT_CDN) {
     dir = `${CONTENT_CDN}${DATA_DIR || ''}/`
   } else {
-    dir = `${DATA_DIR || ''}/`
+    dir = `${DATA_DIR || ''}`
+    if (!dir.endsWith('/')) {
+      dir += '/'
+    }
   }
   return dir
 }
