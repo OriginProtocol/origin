@@ -5,10 +5,12 @@ import get from 'lodash/get'
 import dataUrl from 'utils/dataUrl'
 import Link from 'components/Link'
 import formatPrice from 'utils/formatPrice'
+import useConfig from 'utils/useConfig'
 
 const ProductList = ({ products }) => {
   const history = useHistory()
   const match = useRouteMatch('/collections/:collection')
+  const { config } = useConfig()
   const collectionParam = get(match, 'params.collection')
   const urlPrefix = collectionParam ? `/collections/${collectionParam}` : ''
 
@@ -38,7 +40,12 @@ const ProductList = ({ products }) => {
             <Link to={`${urlPrefix}/products/${product.id}`}>
               {product.title}
             </Link>
-            <div className="price">{formatPrice(product.price)}</div>
+            <div className="price">
+              {formatPrice(product.price)}
+              {config.freeShipping ? (
+                <span className="shipping">FREE Shipping</span>
+              ) : null}
+            </div>
           </div>
         </div>
       ))}

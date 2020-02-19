@@ -144,6 +144,7 @@ const webpackConfig = {
       network: process.env.NETWORK || 'localhost',
       provider: process.env.PROVIDER,
       analytics: process.env.ANALYTICS,
+      fbPixel: process.env.FB,
       absolute
     }),
     new webpack.EnvironmentPlugin({

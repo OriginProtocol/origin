@@ -3546,6 +3546,7 @@ data:
       "editable": true,
       "gnetId": null,
       "graphTooltip": 0,
+      "id": 4,
       "links": [],
       "panels": [
         {
@@ -3793,6 +3794,92 @@ data:
           "timeFrom": null,
           "timeShift": null,
           "title": "Discovery",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": null,
+          "description": "Discovery service",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 9,
+            "y": 0
+          },
+          "id": 13,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "min(up{endpoint=\"apollo\", service=\"prod-graphql\"})",
+              "hide": false,
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "0,1",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -4097,6 +4184,153 @@ data:
           "yBucketBound": "auto",
           "yBucketNumber": null,
           "yBucketSize": null
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": null,
+          "description": "Error responses from graphql health checks",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 3,
+            "x": 0,
+            "y": 20
+          },
+          "id": 12,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(http_request_duration_seconds_count{service=\"prod-graphql\", status_code!=\"200\"})",
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "5,10",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL error responses",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cards": {
+            "cardPadding": null,
+            "cardRound": null
+          },
+          "color": {
+            "cardColor": "#b4ff00",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateOranges",
+            "exponent": 0.5,
+            "mode": "spectrum"
+          },
+          "dataFormat": "timeseries",
+          "datasource": null,
+          "description": "Response times for graphql service",
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 3,
+            "y": 20
+          },
+          "heatmap": {},
+          "hideZeroBuckets": false,
+          "highlightCards": true,
+          "id": 11,
+          "legend": {
+            "show": false
+          },
+          "options": {},
+          "reverseYBuckets": false,
+          "targets": [
+            {
+              "expr": "http_request_duration_seconds_bucket{job=\"prod-graphql\", status_code=\"200\", }",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL Response Times",
+          "tooltip": {
+            "show": true,
+            "showHistogram": false
+          },
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "xBucketNumber": null,
+          "xBucketSize": null,
+          "yAxis": {
+            "decimals": null,
+            "format": "short",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true,
+            "splitFactor": null
+          },
+          "yBucketBound": "auto",
+          "yBucketNumber": null,
+          "yBucketSize": null
         }
       ],
       "schemaVersion": 20,
@@ -4126,7 +4360,7 @@ data:
       "timezone": "",
       "title": "ServiceMonitor Status (prod)",
       "uid": "jeDwGT0Zm",
-      "version": 1
+      "version": 1207311
     }
   staging-services.json: |
     {
@@ -4146,6 +4380,7 @@ data:
       "editable": true,
       "gnetId": null,
       "graphTooltip": 0,
+      "id": 4,
       "links": [],
       "panels": [
         {
@@ -4393,6 +4628,92 @@ data:
           "timeFrom": null,
           "timeShift": null,
           "title": "Discovery",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": null,
+          "description": "Discovery service",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 9,
+            "y": 0
+          },
+          "id": 13,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "min(up{endpoint=\"apollo\", service=\"staging-graphql\"})",
+              "hide": false,
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "0,1",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -4697,6 +5018,153 @@ data:
           "yBucketBound": "auto",
           "yBucketNumber": null,
           "yBucketSize": null
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": null,
+          "description": "Error responses from graphql health checks",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 3,
+            "x": 0,
+            "y": 20
+          },
+          "id": 12,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(http_request_duration_seconds_count{service=\"staging-graphql\", status_code!=\"200\"})",
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "5,10",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL error responses",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cards": {
+            "cardPadding": null,
+            "cardRound": null
+          },
+          "color": {
+            "cardColor": "#b4ff00",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateOranges",
+            "exponent": 0.5,
+            "mode": "spectrum"
+          },
+          "dataFormat": "timeseries",
+          "datasource": null,
+          "description": "Response times for graphql service",
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 3,
+            "y": 20
+          },
+          "heatmap": {},
+          "hideZeroBuckets": false,
+          "highlightCards": true,
+          "id": 11,
+          "legend": {
+            "show": false
+          },
+          "options": {},
+          "reverseYBuckets": false,
+          "targets": [
+            {
+              "expr": "http_request_duration_seconds_bucket{job=\"staging-graphql\", status_code=\"200\", }",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL Response Times",
+          "tooltip": {
+            "show": true,
+            "showHistogram": false
+          },
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "xBucketNumber": null,
+          "xBucketSize": null,
+          "yAxis": {
+            "decimals": null,
+            "format": "short",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true,
+            "splitFactor": null
+          },
+          "yBucketBound": "auto",
+          "yBucketNumber": null,
+          "yBucketSize": null
         }
       ],
       "schemaVersion": 20,
@@ -4725,8 +5193,8 @@ data:
       },
       "timezone": "",
       "title": "ServiceMonitor Status (staging)",
-      "uid": "jeDwGT0Zm",
-      "version": 1
+      "uid": "jeDwGT0Zn",
+      "version": 1207311
     }
   dev-services.json: |
     {
@@ -4746,6 +5214,7 @@ data:
       "editable": true,
       "gnetId": null,
       "graphTooltip": 0,
+      "id": 4,
       "links": [],
       "panels": [
         {
@@ -4993,6 +5462,92 @@ data:
           "timeFrom": null,
           "timeShift": null,
           "title": "Discovery",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": true,
+          "colors": [
+            "#d44a3a",
+            "rgba(237, 129, 40, 0.89)",
+            "#299c46"
+          ],
+          "datasource": null,
+          "description": "Discovery service",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 9,
+            "y": 0
+          },
+          "id": 13,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "min(up{endpoint=\"apollo\", service=\"dev-graphql\"})",
+              "hide": false,
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "0,1",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -5297,6 +5852,153 @@ data:
           "yBucketBound": "auto",
           "yBucketNumber": null,
           "yBucketSize": null
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": null,
+          "description": "Error responses from graphql health checks",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 3,
+            "x": 0,
+            "y": 20
+          },
+          "id": 12,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(http_request_duration_seconds_count{service=\"dev-graphql\", status_code!=\"200\"})",
+              "instant": false,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "5,10",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL error responses",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cards": {
+            "cardPadding": null,
+            "cardRound": null
+          },
+          "color": {
+            "cardColor": "#b4ff00",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateOranges",
+            "exponent": 0.5,
+            "mode": "spectrum"
+          },
+          "dataFormat": "timeseries",
+          "datasource": null,
+          "description": "Response times for graphql service",
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 3,
+            "y": 20
+          },
+          "heatmap": {},
+          "hideZeroBuckets": false,
+          "highlightCards": true,
+          "id": 11,
+          "legend": {
+            "show": false
+          },
+          "options": {},
+          "reverseYBuckets": false,
+          "targets": [
+            {
+              "expr": "http_request_duration_seconds_bucket{job=\"dev-graphql\", status_code=\"200\", }",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GraphQL Response Times",
+          "tooltip": {
+            "show": true,
+            "showHistogram": false
+          },
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "xBucketNumber": null,
+          "xBucketSize": null,
+          "yAxis": {
+            "decimals": null,
+            "format": "short",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true,
+            "splitFactor": null
+          },
+          "yBucketBound": "auto",
+          "yBucketNumber": null,
+          "yBucketSize": null
         }
       ],
       "schemaVersion": 20,
@@ -5325,6 +6027,6 @@ data:
       },
       "timezone": "",
       "title": "ServiceMonitor Status (dev)",
-      "uid": "jeDwGT0Zm",
-      "version": 1
+      "uid": "jeDwGT0Zo",
+      "version": 1207311
     }

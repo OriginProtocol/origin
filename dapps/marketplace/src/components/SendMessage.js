@@ -140,20 +140,23 @@ class SendMessage extends Component {
         onCompleted={({ sendMessage }) => {
           if (!sendMessage.success) {
             return this.setState({
-              messageError: sendMessage.error
+              messageError: sendMessage.error,
+              sending: false
             })
           }
 
           this.setState({
             sent: true,
             room: sendMessage.conversation.id,
-            message: ''
+            message: '',
+            sending: false
           })
         }}
         onError={err => {
           console.error(err)
           return this.setState({
-            messageError: 'Something went wrong. Please try again'
+            messageError: 'Something went wrong. Please try again',
+            sending: false
           })
         }}
       >
@@ -161,6 +164,14 @@ class SendMessage extends Component {
           <form
             onSubmit={async e => {
               e.preventDefault()
+              if (this.state.sending) {
+                return
+              }
+
+              this.setState({
+                sending: true
+              })
+
               const content = this.state.message
               if (content) {
                 sendMessage({ variables: { to, content } })
@@ -181,7 +192,12 @@ class SendMessage extends Component {
             <button
               className="btn btn-primary btn-rounded"
               type="submit"
-              children={fbt('Send', 'Send')}
+              children={
+                this.state.sending
+                  ? fbt('Sending...', 'Sending...')
+                  : fbt('Send', 'Send')
+              }
+              disabled={this.state.sending}
             />
           </form>
         )}

@@ -2,42 +2,15 @@ require('dotenv').config()
 const config = require('./config')
 
 const WebSocket = require('ws')
-const openpgp = require('openpgp')
 const Web3 = require('web3')
 const get = require('lodash/get')
 
-const { Op, Network, Shops, Transactions, Orders } = require('./data/db')
-const abi = require('./utils/_abi')
-const {
-  getIpfsHashFromBytes32,
-  getText,
-  getIPFSGateway
-} = require('./utils/_ipfs')
-const encConf = require('./utils/encryptedConfig')
+const { Op, Network, Shops } = require('./data/db')
+const handleLog = require('./utils/handleLog')
 const { NETWORK_ID } = require('./utils/const')
-const { ListingID, OfferID } = require('./utils/id')
-const { addressToVersion } = require('./utils/address')
-
-const sendMail = require('./utils/emailer')
+const { ListingID } = require('./utils/id')
 
 const web3 = new Web3()
-
-const Marketplace = new web3.eth.Contract(abi)
-const MarketplaceABI = Marketplace._jsonInterface
-/*const localContract = process.env.MARKETPLACE_CONTRACT
-const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
-  ? process.env.PGP_PRIVATE_KEY
-  : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
-const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS*/
-
-/*
-const SubscribeToLogs = address =>
-  JSON.stringify({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'eth_subscribe',
-    params: ['logs', { address, topics: [] }]
-  })*/
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -83,6 +56,7 @@ const GetPastLogs = ({ fromBlock, toBlock, listingId }) => {
 }
 const netId = NETWORK_ID
 let ws
+
 async function connectWS() {
   let lastBlock
 
@@ -93,8 +67,8 @@ async function connectWS() {
     console.log('Attempting to reconnect...')
     wsProvider = new Web3.providers.WebsocketProvider(config.provider)
 
-    wsProvider.on('connect', function () {
-        console.log('WSS Reconnected')
+    wsProvider.on('connect', function() {
+      console.log('WSS Reconnected')
     })
 
     web3.setProvider(wsProvider)
@@ -141,8 +115,16 @@ async function connectWS() {
   })
   ws.on('ping', heartbeat)
   ws.on('close', function clear(num, reason) {
+    console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     console.error(`Websocket connection closed: ${num}: ${reason}`)
-    clearTimeout(this.pingTimeout)
+    console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+    if (num !== 1006) {
+      // 1006 may be a fault, allow reconnect
+      console.log('clearing reconnect timeout.  shutting down...')
+      clearTimeout(this.pingTimeout)
+      process.exit(1)
+    }
   })
 
   ws.on('open', function open() {
@@ -233,130 +215,6 @@ const handleNewHead = head => {
   Network.upsert({ networkId: netId, lastBlock: number })
 
   return number
-}
-
-const handleLog = async ({
-  data,
-  topics,
-  transactionHash,
-  address,
-  blockNumber
-}) => {
-  const ipfsGateway = await getIPFSGateway()
-  const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
-  if (!eventAbi) {
-    console.log('Unknown event')
-    return
-  }
-  console.log('fetch existing...', transactionHash)
-  const existingTx = await Transactions.findOne({
-    where: { transactionHash: transactionHash }
-  })
-  console.log('existing', existingTx)
-  if (existingTx) {
-    console.log('Already handled tx')
-    return
-  } else {
-    Transactions.create({
-      networkId: netId,
-      transactionHash: transactionHash,
-      blockNumber: web3.utils.hexToNumber(blockNumber)
-    }).then(res => {
-      console.log(`Created tx ${res.dataValues.id}`)
-    })
-  }
-
-  const { name, inputs } = eventAbi
-  const decoded = web3.eth.abi.decodeLog(inputs, data, topics.slice(1))
-  const { listingID, offerID, ipfsHash, party } = decoded
-
-  const contractVersion = addressToVersion(address)
-  const lid = new ListingID(listingID, NETWORK_ID, contractVersion)
-  const oid = new OfferID(listingID, offerID, NETWORK_ID, contractVersion)
-
-  console.log(`${name} - ${oid.toString()} by ${party}`)
-  console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
-
-  try {
-    const offerData = await getText(ipfsGateway, ipfsHash, 10000)
-    const offer = JSON.parse(offerData)
-    console.log('Offer:', offer)
-
-    if (!offer.encryptedData) {
-      console.log('No encrypted data found')
-      return
-    }
-
-    const record = await Shops.findOne({
-      where: {
-        listingId: lid.toString()
-      }
-    })
-    const shopId = record.id
-
-    const encryptedDataJson = await getText(
-      ipfsGateway,
-      offer.encryptedData,
-      10000
-    )
-    const encryptedData = JSON.parse(encryptedDataJson)
-    console.log('Encrypted Data:', encryptedData)
-
-    const PrivateKey = await encConf.get(shopId, 'pgpPrivateKey')
-    const PrivateKeyPass = await encConf.get(shopId, 'pgpPrivateKeyPass')
-
-    if (!PrivateKey) {
-      console.error(
-        `Missing private key for shop ${shopId}. Unable to process event!`
-      )
-      return
-    }
-    if (!PrivateKeyPass) {
-      console.warn(
-        `Missing private key decryption passphrase for shop ${shopId}. This will probably fail!`
-      )
-    }
-
-    const privateKey = await openpgp.key.readArmored(PrivateKey)
-
-    if (!privateKey || !privateKey.keys || privateKey.keys.length < 1) {
-      if (privateKey.err) {
-        for (const err of privateKey.err) {
-          console.error(err)
-        }
-      }
-      console.error(
-        `Unable to load private key for shop ${shopId}. Unable to process event!`
-      )
-      return
-    }
-
-    const privateKeyObj = privateKey.keys[0]
-    await privateKeyObj.decrypt(PrivateKeyPass)
-
-    const message = await openpgp.message.readArmored(encryptedData.data)
-    const options = { message, privateKeys: [privateKeyObj] }
-
-    const plaintext = await openpgp.decrypt(options)
-    const cart = JSON.parse(plaintext.data)
-    cart.offerId = oid.toString()
-    cart.tx = transactionHash
-
-    console.log(cart)
-
-    Orders.create({
-      orderId: cart.offerId,
-      shopId: shopId,
-      networkId: netId,
-      data: JSON.stringify(cart)
-    }).then(() => {
-      console.log('Saved to DB OK')
-    })
-
-    sendMail(shopId, cart)
-  } catch (e) {
-    console.error(e)
-  }
 }
 
 connectWS()

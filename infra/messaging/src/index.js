@@ -7,6 +7,8 @@ const expressWs = require('express-ws')
 const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const Web3Utils = require('web3-utils')
+const cors = require('cors')
+
 const db = require('./models')
 const logger = require('./logger')
 
@@ -39,16 +41,18 @@ const rateLimiterOptions = {
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 
-// should be tightened up for security
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
+app.use(cors({ origin: true, credentials: true }))
 
-  next()
-})
+// // should be tightened up for security
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   )
+
+//   next()
+// })
 
 app.all((req, res, next) => {
   rateLimiter
@@ -389,6 +393,23 @@ app.get('/messages/:conversationId/count', async (req, res) => {
 
   return res.status(200).send({
     messageCount
+  })
+})
+
+// Returns the next message index for a conversation
+app.get('/messages/:conversationId/next', async (req, res) => {
+  const conv = await db.Conversation.findOne({
+    where: { externalId: req.params.conversationId }
+  })
+
+  if (!conv) {
+    return res.status(200).send({
+      nextConversationIndex: 0
+    })
+  }
+
+  return res.status(200).send({
+    nextConversationIndex: conv.messageCount
   })
 })
 
