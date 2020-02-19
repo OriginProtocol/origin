@@ -305,6 +305,9 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
     text,
     html
   }
+  if (process.env.SENGRID_REPLYTO_EMAIL) {
+    email.replyTo = process.env.SENGRID_REPLYTO_EMAIL
+  }
   try {
     await sendgridMail.send(email)
   } catch (error) {
@@ -342,6 +345,10 @@ async function sendUnbannedEmail(ethAddress) {
     await sendgridMail.send(email)
   } catch (error) {
     logger.error(`Failed sending unbanned email: ${error}`)
+    const { message, code, response } = error
+    logger.error(message, code, response)
+    const { headers, body } = response
+    logger.error(headers, body)
     throw new Error(`Failed sending unbanned email: ${error}`)
   }
 }
