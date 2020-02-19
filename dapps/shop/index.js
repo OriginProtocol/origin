@@ -53,7 +53,7 @@ async function start() {
       env: process.env
     }
   )
-  const backend = spawn('node', ['backend'], {
+  const backend = spawn('node', ['backend-old'], {
     stdio: 'inherit',
     env: {
       ...process.env,

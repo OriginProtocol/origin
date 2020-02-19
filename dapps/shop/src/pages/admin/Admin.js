@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Switch, Route, useLocation } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
@@ -22,6 +22,16 @@ const Settings = () => (
 const Admin = () => {
   const { config } = useConfig()
   const { pathname } = useLocation()
+  useEffect(() => {
+    fetch(`${config.backend}/auth`, { credentials: 'include' }).then(
+      async response => {
+        if (response.status === 200) {
+          const data = await response.json()
+          dispatch({ type: 'setAuth', auth: data.email })
+        }
+      }
+    )
+  }, [])
 
   const [{ admin }, dispatch] = useStateValue()
   if (!admin) {

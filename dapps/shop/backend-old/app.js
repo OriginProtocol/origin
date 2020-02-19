@@ -1,4 +1,6 @@
 const express = require('express')
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
 const serveStatic = require('serve-static')
 const fetch = require('node-fetch')
@@ -10,6 +12,15 @@ const html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
 app.use(cors({ origin: true, credentials: true }))
 
 app.use(serveStatic(`${__dirname}/public`))
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'keyboard cat',
+    cookie: { maxAge: 3600000, httpOnly: false, sameSite: 'none' },
+    resave: false,
+    saveUninitialized: false
+  })
+)
 
 require('./routes/auth')(app)
 require('./routes/orders')(app)
