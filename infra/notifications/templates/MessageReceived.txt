@@ -1,4 +1,8 @@
-You have received a message from <%- senderName %>
+<% if (senderName) { %>
+    You have received a new message from <%- senderName %>
+<% } else { %>
+    You have received a new message on Origin
+<% } %>
 
 View your messages at the Origin DApp:
 <%= dappUrl %>/#/messages

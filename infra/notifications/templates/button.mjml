@@ -1,0 +1,10 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <!-- a element -->
+      <a href="<%= href %>" style="background-color: #1a82ff;font-size: 16px; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; color: #ffffff; text-decoration: none; text-decoration: none;border-radius: 43px; padding: 10px 36px; border: 1px solid #1a82ff; display: inline-block;">
+        <%- title %>
+      </a>
+    </mj-text>
+  </mj-column>
+</mj-section>

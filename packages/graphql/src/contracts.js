@@ -286,7 +286,7 @@ function setupWeb3(config, net) {
   // if is running in react native environment
   if (isBrowser && isWebView) {
     // Init custom mobile bridge web3 provider which modifies certain methods
-    context.mobileBridge = OriginMobileBridge({ web3 })
+    context.mobileBridge = OriginMobileBridge({ web3, pubsub })
     const mobileBridgeProvider = context.mobileBridge.getProvider()
     context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
   } else {
