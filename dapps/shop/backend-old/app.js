@@ -1,6 +1,5 @@
 const express = require('express')
 const session = require('express-session')
-const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
 const serveStatic = require('serve-static')
 const fetch = require('node-fetch')
