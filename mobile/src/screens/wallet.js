@@ -1,6 +1,6 @@
 'use strict'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -8,7 +8,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
+  DeviceEventEmitter
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
@@ -22,6 +23,11 @@ import ListStyles from 'styles/list'
 import OriginButton from 'components/origin-button'
 
 const walletScreen = props => {
+  useEffect(() => {
+    // We want to update the balances if the network has been changed
+    DeviceEventEmitter.emit('updateBalance')
+  }, [props.settings.network])
+
   const handleFunding = currency => {
     const { address } = props.wallet.activeAccount
 
