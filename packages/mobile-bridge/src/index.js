@@ -15,10 +15,13 @@ class BlockTracker {
    */
   constructor({ pubsub }) {
     this._resetHandlers()
+    this.latest = 0
 
+    const that = this
     pubsub.ee.on('NEW_BLOCK', ({ newBlock }) => {
       if (typeof newBlock.id === 'number') {
         const blockNum = `0x${newBlock.id.toString(16)}`
+        that.latest = blockNum
         this.emit('latest', blockNum)
       } else {
         console.warn('Invalid block number in BlockTracker')
@@ -57,6 +60,23 @@ class BlockTracker {
 
   removeAllListeners() {
     return this._resetHandlers()
+  }
+
+  async getLatestBlock () {
+    // return if available
+    if (this.latest) return this.latest
+    // wait for a new latest block
+    this.latest = await new Promise(resolve => this.once('latest', resolve))
+    // return newly set current block
+    return this.latest
+  }
+
+  getCurrentBlock () {
+    return this.latest
+  }
+
+  isRunning () {
+    return true
   }
 }
 
