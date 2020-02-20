@@ -5,14 +5,6 @@ import EthGasStationProvider from './EthGasStationProvider'
 
 import initBridge from './webviewbridge'
 
-function values(obj) {
-  const vals = []
-  for (const k in obj) {
-    vals.push(obj[k])
-  }
-  return vals
-}
-
 class BlockTracker {
   /**
    * BlockTracker to replace the one used in web3-provider-engine
@@ -50,7 +42,7 @@ class BlockTracker {
   }
 
   emit() {
-    const args = values(arguments)
+    const args = Object.values(arguments)
     const evName = args.shift()
     if (typeof this.handlers[evName] !== 'undefined') {
       for (const cb of this.handlers[evName]) {
