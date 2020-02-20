@@ -1,0 +1,47 @@
+<%
+  if (typeof(messageHash) === 'undefined') {
+    messageHash = ''
+  }
+%>
+<mjml>
+  <mj-head>
+    <mj-title>Earn Origin Cryptocurrency</mj-title>
+    <mj-font name="Lato" href="https://fonts.googleapis.com/css?family=Lato:400,300,500" />
+  </mj-head>
+  <mj-body background-color="#f1f6f9">
+    <mj-section padding="0">
+      <mj-column>
+        <mj-image src="https://www.originprotocol.com/static/img/origin-logo-dark@3x.png" srcset="https://www.originprotocol.com/static/img/origin-logo-dark.png,
+                  https://www.originprotocol.com/static/img/origin-logo-dark@2x.png 2x,
+                  https://www.originprotocol.com/static/img/origin-logo-dark@3x.png 3x" width="90px" padding="24px 0" alt="" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff">
+      <mj-column>
+        <!-- Begin Message -->
+          <%= message %>
+        <!-- End Message -->
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" font-size="10px" font-family="'Lato', sans-serif" line-height="19px">
+
+          <a href="https://www.originprotocol.com" style="color:#666666;text-decoration:none; pointer: cursor">originprotocol.com</a>
+          <br />
+          <br />
+          <a href="<%= " \<%asm_group_unsubscribe_raw_url%\>" %>"
+            <% { /*
+                    Note: The above is lodash template syntax to escape the unsubscribe
+                    tag so it is ignored and passed through to Sendgrid.
+                  */ } %>
+            style="color: #666666;"
+            >Unsubscribe</a>
+          <br />
+          <span style="color: #f1f6f9">
+            <%= messageHash %></span>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
