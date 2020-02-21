@@ -1,0 +1,22 @@
+<mj-section padding="0">
+  <mj-column>
+    <mj-text padding="0 25px">
+      <div style="font-size: 18px; font-weight: bold; line-height: 1.5; margin-top:16px;" valign="top">
+        The buyer has withdrawn their offer on your listing
+        <%= listing.title %>.
+      </div>
+      <div style="width:100%;  vertical-align:top; text-align: center;">
+        <% if (listing.media[0]) { %>
+        <img class="listing-img" style="max-width:300px; height: auto; margin: 22px" src="<%= ipfsGatewayUrl %>/ipfs/<%- listing.media[0].url.slice(7,53) %>" />
+        <% } %>
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-section>
+  <mj-column>
+    <mj-text align="center">
+      <a href="<%= dappUrl %>/#/purchases/<%- offer.id %>" target="_blank" style="background-color: #1a82ff;font-size: 16px; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; color: #ffffff; text-decoration: none; text-decoration: none;border-radius: 43px; padding: 10px 36px; border: 1px solid #1a82ff; display: inline-block;">View Transaction</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
