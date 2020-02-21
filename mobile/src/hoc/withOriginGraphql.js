@@ -228,10 +228,6 @@ const withOriginGraphql = WrappedComponent => {
         balances['ogn'] = tokenBalanceFromGql(
           await this.getTokenBalance(activeAddress, 'OGN')
         )
-
-        balances['usdt'] = tokenBalanceFromGql(
-          await this.getTokenBalance(activeAddress, 'USDT')
-        )
       } catch (error) {
         console.warn('Could not retrieve balances using GraphQL: ', error)
       }

@@ -41,11 +41,6 @@ export default {
     color: '#007fff',
     icon: require(`${IMAGES_PATH}ogn-icon.png`),
     name: 'Origin Token'
-  },
-  usdt: {
-    color: '#168363',
-    icon: require(`${IMAGES_PATH}usdt-icon.png`),
-    name: 'Tether'
   }
 }
 
