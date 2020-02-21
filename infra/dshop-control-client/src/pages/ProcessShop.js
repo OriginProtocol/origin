@@ -12,10 +12,7 @@ const ProcessShop = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let shopUrl = `${API_URL}/ingest/${url}`
-      if (datadir) {
-        shopUrl += `/${datadir}`
-      }
+      const shopUrl = `${API_URL}/ingest/${url}`
       const response = await axios.get(shopUrl)
       store.update(s => {
         s.products = response.data.products
