@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -12,6 +12,7 @@ import {
   DeviceEventEmitter
 } from 'react-native'
 import { connect } from 'react-redux'
+import { withNavigationFocus } from 'react-navigation'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
@@ -22,11 +23,28 @@ import currencies from 'utils/currencies'
 import ListStyles from 'styles/list'
 import OriginButton from 'components/origin-button'
 
+// The interval to poll balances when users are staring at the screen
+const ATTENTION_POLL_INTERVAL = 10000
+
 const walletScreen = props => {
+  const [balanceInterval, setBalanceInterval] = useState(null)
+
   useEffect(() => {
     // We want to update the balances if the network has been changed
     DeviceEventEmitter.emit('updateBalance')
   }, [props.settings.network])
+
+  useEffect(() => {
+    if (props.isFocused) {
+      const interval = setInterval(() => {
+        DeviceEventEmitter.emit('updateBalance')
+      }, ATTENTION_POLL_INTERVAL)
+      setBalanceInterval(interval)
+    } else {
+      clearInterval(balanceInterval)
+      setBalanceInterval(null)
+    }
+  }, [props.isFocused])
 
   const handleFunding = currency => {
     const { address } = props.wallet.activeAccount
@@ -186,7 +204,7 @@ const mapStateToProps = ({ settings, wallet }) => {
   return { settings, wallet }
 }
 
-export default connect(mapStateToProps)(walletScreen)
+export default connect(mapStateToProps)(withNavigationFocus(walletScreen))
 
 const styles = StyleSheet.create({
   ...ListStyles,
