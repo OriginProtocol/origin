@@ -156,7 +156,8 @@ const webpackConfig = {
         process.env.DATA_DIR || process.env.CONTENT_CDN ? '' : 'example',
       CONTENT_CDN: process.env.CONTENT_CDN || '',
       CONTENT_HASH: process.env.CONTENT_HASH || '',
-      ABSOLUTE: process.env.ABSOLUTE || ''
+      ABSOLUTE: process.env.ABSOLUTE || '',
+      BACKEND_AUTH_TOKEN: process.env.BACKEND_AUTH_TOKEN
     })
   ],
 

@@ -1,24 +1,75 @@
 const Sequelize = require('sequelize')
-const config = require('../config')
+const { NETWORK } = require('../utils/const')
 
-const SqliteURI = `sqlite:${__dirname}/net_${config.network}.db`
+const SqliteURI = `sqlite:${__dirname}/net_${NETWORK}.db`
 const URI = process.env.DATABASE_URL || SqliteURI
-const sequelize = new Sequelize(URI, { logging: false })
+const sequelize = new Sequelize(URI, { logging: false, underscored: true })
 
-const Network = sequelize.define(
-  'network',
+console.debug(`Connecting to database @ ${URI}`)
+
+const baseModelOptions = {
+  underscored: true
+}
+
+const Sellers = sequelize.define(
+  'sellers',
   {
     // attributes
-    network_id: {
+    name: {
+      type: Sequelize.STRING
+    },
+    email: {
+      type: Sequelize.STRING
+    },
+    password: {
+      type: Sequelize.STRING
+    }
+  },
+  {
+    ...baseModelOptions
+  }
+)
+
+const Shops = sequelize.define(
+  'shops',
+  {
+    // attributes
+    name: {
+      type: Sequelize.STRING
+    },
+    sellerId: {
+      type: Sequelize.INTEGER
+    },
+    // e.g. 1-001-1212
+    listingId: {
+      type: Sequelize.STRING
+    },
+    authToken: {
+      type: Sequelize.STRING
+    },
+    config: {
+      type: Sequelize.TEXT
+    }
+  },
+  {
+    ...baseModelOptions
+  }
+)
+
+const Network = sequelize.define(
+  'networks',
+  {
+    // attributes
+    networkId: {
       type: Sequelize.INTEGER,
       unique: true
     },
-    last_block: {
+    lastBlock: {
       type: Sequelize.INTEGER
     }
   },
   {
-    // options
+    ...baseModelOptions
   }
 )
 
@@ -26,35 +77,38 @@ const Transactions = sequelize.define(
   'transactions',
   {
     // attributes
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER,
       unique: 'compositeIndex'
     },
-    transaction_hash: {
+    shopId: {
+      type: Sequelize.INTEGER
+    },
+    transactionHash: {
       type: Sequelize.STRING,
       unique: 'compositeIndex'
     },
-    block_number: {
+    blockNumber: {
       type: Sequelize.INTEGER
     }
   },
   {
-    // options
+    ...baseModelOptions
   }
 )
 
 const Orders = sequelize.define(
   'orders',
   {
-    order_id: {
+    orderId: {
       type: Sequelize.STRING,
       unique: true
     },
     // attributes
-    network_id: {
+    networkId: {
       type: Sequelize.INTEGER
     },
-    created_at: {
+    shopId: {
       type: Sequelize.INTEGER
     },
     data: {
@@ -62,14 +116,17 @@ const Orders = sequelize.define(
     }
   },
   {
-    // options
+    ...baseModelOptions
   }
 )
 
 const Discounts = sequelize.define(
   'discounts',
   {
-    network_id: {
+    networkId: {
+      type: Sequelize.INTEGER
+    },
+    shopId: {
       type: Sequelize.INTEGER
     },
     status: {
@@ -101,16 +158,43 @@ const Discounts = sequelize.define(
     }
   },
   {
-    // options
+    ...baseModelOptions
   }
 )
 
-sequelize.sync()
+// Seller -> Shop
+Shops.belongsTo(Sellers, { as: 'sellers', foreignKey: 'sellerId' })
+Sellers.hasMany(Shops, { as: 'shops' })
+
+// Shop -> Orders
+Orders.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
+Shops.hasMany(Orders, { as: 'orders', targetKey: 'shopId' })
+
+// Shop -> Transactions
+Transactions.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
+Shops.hasMany(Transactions, { as: 'transactions' })
+
+// Shop -> Discounts
+Discounts.belongsTo(Shops, { as: 'shops', foreignKey: 'shopId' })
+Shops.hasMany(Discounts, { as: 'discounts' })
+
+try {
+  // This is a race basically.  We'll disable it and run in explicitly in Docker
+  if (typeof process.env.DISABLE_SYNC !== 'undefined') sequelize.sync()
+} catch (err) {
+  console.error('Error occurred while doing a Sequelize sync')
+  console.error(err)
+  process.exit(1)
+}
 
 module.exports = {
+  Op: Sequelize.Op,
+  Sequelize,
+  sequelize,
+  Sellers,
+  Shops,
   Network,
   Transactions,
   Orders,
-  Discounts,
-  Sequelize
+  Discounts
 }

@@ -1,9 +1,7 @@
 const fetch = require('node-fetch')
 
-const { DATA_URL } = process.env
-
-async function fetchItem(item) {
-  const url = `${DATA_URL}${item.product}/data.json`
+async function fetchItem(dataURL, item) {
+  const url = `${dataURL}${item.product}/data.json`
   const dataRaw = await fetch(url)
   const data = await dataRaw.json()
   return {
@@ -13,8 +11,8 @@ async function fetchItem(item) {
   }
 }
 
-async function fetchItems(items) {
-  return await Promise.all(items.map(i => fetchItem(i)))
+async function fetchItems(dataURL, items) {
+  return await Promise.all(items.map(i => fetchItem(dataURL, i)))
 }
 
 module.exports = fetchItems

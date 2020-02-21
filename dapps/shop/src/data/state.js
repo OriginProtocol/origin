@@ -17,7 +17,6 @@ const defaultState = {
   paymentMethods: PaymentMethods,
   orders: [],
   discounts: [],
-  admin: '',
 
   cart: {
     items: [],
@@ -35,7 +34,6 @@ let initialState = cloneDeep(defaultState)
 try {
   initialState = {
     ...initialState,
-    admin: sessionStorage.admin,
     ...JSON.parse(localStorage.cart)
   }
 } catch (e) {
