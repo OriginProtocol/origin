@@ -27,6 +27,8 @@ const septemberConfig = require('../../campaigns/september.js')
 const octoberConfig = require('../../campaigns/october.js')
 const novemberConfig = require('../../campaigns/november.js')
 const decemberConfig = require('../../campaigns/december.js')
+const jan2020Config = require('../../campaigns/jan2020.js')
+const feb2020Config = require('../../campaigns/feb2020.js')
 
 async function createTestData() {
   //
@@ -205,6 +207,34 @@ async function createTestData() {
     startDate: Date.parse('December 1, 2019'), // TODO CHANGE THIS
     endDate: Date.parse('January 1, 2020'),
     distributionDate: Date.parse('January 1, 2020'),
+    cap: 10000 * Math.pow(10, 18),
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+
+  await db.GrowthCampaign.upsert({
+    id: 13,
+    nameKey: 'growth.jan2020.name',
+    shortNameKey: 'growth.jan2020.short_name',
+    rules: JSON.stringify(jan2020Config),
+    startDate: Date.parse('January 1, 2020'), // TODO CHANGE THIS
+    endDate: Date.parse('February 1, 2020'),
+    distributionDate: Date.parse('February 1, 2020'),
+    cap: 10000 * Math.pow(10, 18),
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+
+  await db.GrowthCampaign.upsert({
+    id: 14,
+    nameKey: 'growth.feb2020.name',
+    shortNameKey: 'growth.feb2020.short_name',
+    rules: JSON.stringify(feb2020Config),
+    startDate: Date.parse('February 1, 2019'), // TODO CHANGE THIS
+    endDate: Date.parse('March 1, 2020'),
+    distributionDate: Date.parse('March 1, 2020'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,
     currency: 'OGN',

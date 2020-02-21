@@ -7,10 +7,22 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no">
   <meta http-equiv="Content-Language" content="en">
-  <link rel="icon" href="favicon.ico" />
+
+  <% if (htmlWebpackPlugin.options.analytics) { %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.analytics %>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', '<%= htmlWebpackPlugin.options.analytics %>');
+  </script>
+  <% } %>
+
+  <link rel="icon" href="<%= htmlWebpackPlugin.options.absolute ? '/' : '' %>favicon.ico" />
   <% _.forEach(htmlWebpackPlugin.files.css, function(file, index) { %>
   <% if (htmlWebpackPlugin.files.cssIntegrity) { %>
-  <link rel="stylesheet" href="<%- file %>" integrity="<%= htmlWebpackPlugin.files.cssIntegrity[index] %>"
+  <link rel="stylesheet" href="<%- file %>"
+    integrity="<%= htmlWebpackPlugin.files.cssIntegrity[index] %>"
     crossorigin="<%= webpackConfig.output.crossOriginLoading %>" />
   <% } else { %>
   <link rel="stylesheet" href="<%- file %>" />
@@ -23,12 +35,12 @@
     <div class="loading-screen"></div>
   </div>
 </body>
-<script crossorigin src="dist/openpgp.min.js"></script>
+<script crossorigin src="<%= htmlWebpackPlugin.options.absolute ? '/' : '' %>dist/openpgp.min.js"></script>
 <script>
   if (typeof window.openpgp !== 'undefined') {
     openpgp.config.show_comment = false
     openpgp.config.show_version = false
-    openpgp.initWorker({ path: 'dist/openpgp.worker.min.js' })
+    openpgp.initWorker({ path: '<%= htmlWebpackPlugin.options.absolute ? '/' : '' %>dist/openpgp.worker.min.js' })
   }
 </script>
 <script>
@@ -38,7 +50,8 @@
 </script>
 <% _.forEach(htmlWebpackPlugin.files.js, function(file, index) { %>
 <% if (htmlWebpackPlugin.files.jsIntegrity) { %>
-<script src="<%- file %>" integrity="<%= htmlWebpackPlugin.files.jsIntegrity[index] %>"
+<script src="<%- file %>"
+  integrity="<%= htmlWebpackPlugin.files.jsIntegrity[index] %>"
   crossorigin="<%= webpackConfig.output.crossOriginLoading %>"></script>
 <% } else { %>
 <script src="<%- file %>"></script>

@@ -137,9 +137,12 @@ class SocialShareRule extends SingleEventRule {
    * Calculate personalized amount the user should get if they complete the sharing action.
    * @param {string} ethAddress
    * @param {Object} identityForTest - For testing only.
-   * @returns {Promise<Reward>}
+   * @returns {Promise<Reward|null>}
    */
   async getReward(ethAddress, identityForTest = null) {
+    if (this.config.reward === null) {
+      return null
+    }
     // Create a reward object with amount set to zero.
     const reward = new Reward(this.campaignId, this.levelId, this.id, {
       amount: '0',

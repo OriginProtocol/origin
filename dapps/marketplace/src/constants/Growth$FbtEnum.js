@@ -25,6 +25,7 @@ const Growth$FbtEnum = {
   'growth.dec2019.short_name': 'December 2019',
   'growth.jan2020.name': 'January 2020 Campaign',
   'growth.jan2020.short_name': 'January 2020',
+  'growth.feb2020.short_name': 'February 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
@@ -353,7 +354,32 @@ const Growth$FbtEnum = {
 
   'growth.share.content34.title': 'Creating the New Sharing Economy',
   'growth.share.content34.details': `Origin has built a decentralized marketplace protocol on the ethereum mainnet that replaces middlemen & connects buyers and sellers with a smart contract.`,
-  'growth.share.content34.link': 'Follow Origin'
+  'growth.share.content34.link': 'Follow Origin',
+
+  // Feb 2020 campaign
+  'growth.share.content35.title': `Origin Founders on TV with HKB News in Korea`,
+  'growth.share.content35.details': `Origin’s co-founders were interviewed by HKB News, one of the top blockchain media outlets in Korea.`,
+  'growth.share.content35.link': 'Read the article',
+
+  'growth.share.content36.title': `Origin Tokens (OGN) Now Trading on Binance`,
+  'growth.share.content36.details': `The Origin 1.0 Platform is live! Origin Tokens (OGN) are now actively trading on Binance. `,
+  'growth.share.content36.link': 'Read the article',
+
+  'growth.share.content37.title': `Buy or Sell Using Origin Tokens (OGN)`,
+  'growth.share.content37.details': `You can now use OGN to buy, sell, and promote listings on Origin's flagship marketplace application.`,
+  'growth.share.content37.link': 'Read the article',
+
+  'growth.share.content38.title': `Origin Commissions: Promote Listings with OGN`,
+  'growth.share.content38.details': `Origin Commissions: A new way for sellers to boost their sales & DApp developers and affiliates to earn OGN.`,
+  'growth.share.content38.link': 'Read the article',
+
+  'growth.share.content39.title': `Origin was Hunted on Product Hunt`,
+  'growth.share.content39.details': `A member of our community hunted us on Product Hunt!`,
+  'growth.share.content39.link': 'Read the article',
+
+  'growth.share.content40.title': `Evan Tana from 122 West Ventures Explains Why He Invested in Origin`,
+  'growth.share.content40.details': `Learn about the 3 reasons Evan decided to invest in Origin, and why he’s excited about the future of decentralized marketplaces.`,
+  'growth.share.content40.link': 'Watch the video'
 }
 
 module.exports = Growth$FbtEnum

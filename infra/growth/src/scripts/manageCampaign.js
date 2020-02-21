@@ -13,6 +13,7 @@ const octoberConfig = require('../../campaigns/october')
 const novemberConfig = require('../../campaigns/november')
 const decemberConfig = require('../../campaigns/december')
 const jan2020Config = require('../../campaigns/jan2020')
+const feb2020Config = require('../../campaigns/feb2020')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -295,6 +296,35 @@ async function updateJan2020ProdRules() {
   await campaign.update({ rules: JSON.stringify(jan2020Config) })
 }
 
+async function createFeb2020ProdCampaign() {
+  console.log('Creating Feb 2020 campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.feb2020.name',
+    shortNameKey: 'growth.feb2020.short_name',
+    rules: JSON.stringify(feb2020Config),
+    startDate: Date.parse('February 1, 2020, 00:00 UTC'),
+    endDate: Date.parse('March 1, 2020, 00:00 UTC'),
+    distributionDate: Date.parse('March 1, 2020, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateFeb2020ProdRules() {
+  console.log('Updating Feb 2020 campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.feb2020.name' }
+  })
+  await campaign.update({ rules: JSON.stringify(feb2020Config) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -312,7 +342,8 @@ const createByMonth = {
   october: createOctoberProdCampaign,
   november: createNovemberProdCampaign,
   december: createDecemberProdCampaign,
-  jan2020: createJan2020ProdCampaign
+  jan2020: createJan2020ProdCampaign,
+  feb2020: createFeb2020ProdCampaign
 }
 
 const updateByMonth = {
@@ -324,7 +355,8 @@ const updateByMonth = {
   october: updateOctoberProdRules,
   november: updateNovemberProdRules,
   december: updateDecemberProdRules,
-  jan2020: updateJan2020ProdRules
+  jan2020: updateJan2020ProdRules,
+  feb2020: updateFeb2020ProdRules
 }
 
 const action = args['--action']
