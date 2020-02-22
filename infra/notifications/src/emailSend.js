@@ -1,8 +1,8 @@
 const fs = require('fs')
-const _ = require('lodash')
+const template = require('lodash/template')
 const sendgridMail = require('@sendgrid/mail')
 const Sequelize = require('sequelize')
-const web3Utils = require('web3-utils')
+const mjml2html = require('mjml')
 
 const Identity = require('@origin/identity/src/models').Identity
 const { messageTemplates } = require('../templates/messageTemplates')
@@ -110,12 +110,12 @@ class EmailSender {
     // Load email template
     const templateDir = `${__dirname}/../templates`
 
-    // Standard template for HTML emails
-    const emailTemplateHtml = _.template(
-      fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+    // Standard template for MJML emails
+    const emailTemplateMjml = template(
+      fs.readFileSync(`${templateDir}/emailTemplate.mjml`).toString()
     )
     // Standard template for text emails
-    const emailTemplateTxt = _.template(
+    const emailTemplateTxt = template(
       fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
     )
 
@@ -130,9 +130,8 @@ class EmailSender {
       senderIdentity !== null &&
       senderIdentity.firstName &&
       senderIdentity.lastName
-        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-            ''} (${web3Utils.toChecksumAddress(sender)})`
-        : web3Utils.toChecksumAddress(sender)
+        ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName || ''}`
+        : null
 
     // Dynamic variables used when evaluating the template.
     const templateVars = {
@@ -166,10 +165,12 @@ class EmailSender {
             message: message.text(templateVars),
             messageHash
           }),
-          html: emailTemplateHtml({
-            message: message.html(templateVars),
-            messageHash
-          }),
+          html: mjml2html(
+            emailTemplateMjml({
+              message: message.mjml(templateVars),
+              messageHash
+            })
+          ).html,
           asm: {
             groupId: this.config.asmGroupId
           },
@@ -224,12 +225,12 @@ class EmailSender {
     // Load email template
     const templateDir = `${__dirname}/../templates`
 
-    // Standard template for HTML emails
-    const emailTemplateHtml = _.template(
-      fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+    // Standard template for MJML emails
+    const emailTemplateMjml = template(
+      fs.readFileSync(`${templateDir}/emailTemplate.mjml`).toString()
     )
     // Standard template for text emails
-    const emailTemplateTxt = _.template(
+    const emailTemplateTxt = template(
       fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
     )
 
@@ -284,9 +285,11 @@ class EmailSender {
           text: emailTemplateTxt({
             message: message.text(templateVars)
           }),
-          html: emailTemplateHtml({
-            message: message.html(templateVars)
-          }),
+          html: mjml2html(
+            emailTemplateMjml({
+              message: message.mjml(templateVars)
+            })
+          ).html,
           asm: {
             groupId: this.config.asmGroupId
           }

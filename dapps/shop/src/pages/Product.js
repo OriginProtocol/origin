@@ -167,7 +167,12 @@ const Product = ({ history, location, match }) => {
             </div>
           )}
           {onSale}
-          <div className="price mb-4">{formatPrice(get(variant, 'price'))}</div>
+          <div className="price mb-4">
+            {formatPrice(get(variant, 'price'))}
+            {config.freeShipping ? (
+              <span className="shipping">FREE shipping</span>
+            ) : null}
+          </div>
           {!productOptions ||
           (productData.variants || []).length <= 1 ? null : (
             <div
@@ -263,6 +268,11 @@ require('react-styl')(`
           margin-left: 0.5rem
     .price
       font-size: 1.25rem
+      .shipping
+        opacity: 0.6
+        font-weight: normal
+        margin-left: 1rem
+        font-size: 1rem
     .byline
       opacity: 0.6
     .actions

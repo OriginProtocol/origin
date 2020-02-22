@@ -3,10 +3,17 @@ import { useStateValue } from 'data/state'
 import memoize from 'lodash/memoize'
 import useConfig from 'utils/useConfig'
 
+const { BACKEND_AUTH_TOKEN } = process.env
+
 const getOrder = memoize(
   async function fetchOrder(admin, orderId, backend) {
-    const headers = new Headers({ authorization: admin })
-    const myRequest = new Request(`${backend}/orders/${orderId}`, { headers })
+    const headers = new Headers({
+      authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+    })
+    const myRequest = new Request(`${backend}/orders/${orderId}`, {
+      credentials: 'include',
+      headers
+    })
     const raw = await fetch(myRequest)
 
     const order = await raw.json()
