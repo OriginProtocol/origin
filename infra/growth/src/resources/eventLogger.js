@@ -8,7 +8,7 @@ const logger = require('../logger')
 /**
  * Endpoint for logging entries in the growth_event table.
  * For now we only support logging events of the BrowserExtensionInstalled type.
- * Expected paramaters:
+ * Expected params:
  *  - type: "BrowserExtensionInstalled"
  *  - eth_address: eth address the user used when signing up for origin rewwards.
  *  - uid: unique browser extension id
@@ -18,13 +18,13 @@ const logger = require('../logger')
  */
 async function logEvent(req, res) {
   // Check presence and validity of the type parameter.
-  const type = req.query.type
+  const type = req.body.type
   if (type !== 'BrowserExtensionInstalled') {
     return res.status(400).end('Invalid event type')
   }
 
   // Check presence and validity of the eth_address parameter.
-  const ethAddress = req.query.eth_address
+  const ethAddress = req.body.eth_address
   if (!ethAddress) {
     return res.status(400).end('Missing eth_address')
   }
@@ -33,11 +33,18 @@ async function logEvent(req, res) {
   }
 
   // Check presence and validity of the uid parameter
-  // TODO(franck): check validity of the uid.
-  const uid = req.query.uid
-  if (!uid) {
-    return res.status(400).end('Missing uid')
+  const installId = req.body.install_id
+  if (!installId) {
+    return res.status(400).end('Missing installId')
   }
+
+  // Check presence and validity of the fingerprint parameter.
+  const fingerprint = req.body.fingerprint
+  if (!fingerprint) {
+    return res.status(400).end('Missing fingerprint')
+  }
+
+  const ip = req.connection.remoteAddress
 
   const now = new Date()
   await GrowthEvent.insert(
@@ -45,8 +52,8 @@ async function logEvent(req, res) {
     1,
     ethAddress,
     GrowthEventTypes.BrowserExtensionInstalled,
-    uid,
-    null, // TODO: consider logging the UserAgent. Could be useful for fraud detection.
+    installId,
+    { fingerprint, ip },
     now
   )
 

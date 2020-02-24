@@ -20,6 +20,7 @@
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "6.5.2",
     "apollo-server-express": "2.10.0",
+    "body-parser": "^1.19.0",
     "bignumber.js": "9.0.0",
     "cors": "2.8.5",
     "cross-fetch": "3.0.4",
