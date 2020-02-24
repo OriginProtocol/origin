@@ -208,7 +208,6 @@ require('react-styl')(`
     display: flex
     flex-direction: column
   #app
-    height: 100%
     display: flex
     flex-direction: column
   .test-build-badge
