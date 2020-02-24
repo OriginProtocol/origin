@@ -7,6 +7,14 @@ const range = require('lodash/range')
 const flattenDeep = require('lodash/flattenDeep')
 const Bottleneck = require('bottleneck')
 const fetch = require('node-fetch')
+const get = require('lodash/get')
+const { getIpfsHashFromBytes32 } = require('../utils/_ipfs')
+
+const { Shops, Events } = require('../data/db')
+const { CONTRACTS } = require('../utils/const')
+
+const abi = require('../utils/_abi')
+const Marketplace = new web3.eth.Contract(abi)
 
 const handleLog = require('../utils/handleLog')
 
@@ -14,10 +22,7 @@ const limiter = new Bottleneck({ maxConcurrent: 10 })
 const batchSize = 5000
 const Provider = process.env.PROVIDER_HTTP
 
-program
-  .requiredOption('-f, --from <blockId>', 'From block')
-  .requiredOption('-t, --to <blockId>', 'To block')
-  .requiredOption('-l, --listing <listingId>', 'Listing ID')
+program.requiredOption('-l, --listing <listingId>', 'Listing ID')
 
 program.parse(process.argv)
 
@@ -36,40 +41,154 @@ async function getLogs({ listingId, address, fromBlock, toBlock }) {
       }
     ]
   }
-  const res = await fetch(Provider, {
-    method: 'POST',
-    body: JSON.stringify(rpc)
-  })
-  const data = await res.json()
-  return data.result
+
+  console.log(`Fetching logs ${fromBlock}-${toBlock}`)
+  const body = JSON.stringify(rpc)
+  const res = await fetch(Provider, { method: 'POST', body })
+  const resJson = await res.json()
+  return resJson.result
 }
 
-async function fetchEvents({ fromBlock, toBlock, listingId, address }) {
-  const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
-    limiter.schedule(args => getLogs(args), {
-      fromBlock: start,
-      toBlock: Math.min(start + batchSize - 1, toBlock),
-      listingId,
-      address
-    })
+function getEventObj(event) {
+  let decodedLog = {},
+    eventAbi = {}
+  eventAbi = Marketplace._jsonInterface.find(
+    i => i.signature === event.topics[0]
   )
-
-  const numBlocks = toBlock - fromBlock + 1
-  console.log(`Get ${numBlocks} blocks in ${requests.length} requests`)
-
-  if (!numBlocks) return
-
-  const newEvents = flattenDeep(await Promise.all(requests))
-  console.log(`Got ${newEvents.length} new events`)
-
-  for (const event of newEvents) {
-    await handleLog(event)
+  if (eventAbi) {
+    decodedLog = web3.eth.abi.decodeLog(
+      eventAbi.inputs,
+      event.data,
+      event.topics.slice(1)
+    )
+  }
+  return {
+    ...event,
+    blockNumber: web3.utils.toDecimal(event.blockNumber),
+    topic1: event.topics[0],
+    topic2: event.topics[1],
+    topic3: event.topics[2],
+    topic4: event.topics[3],
+    eventName: eventAbi.name,
+    party: decodedLog.party,
+    listingId: decodedLog.listingID,
+    offerId: decodedLog.offerID,
+    ipfsHash: getIpfsHashFromBytes32(decodedLog.ipfsHash)
   }
 }
 
-fetchEvents({
-  fromBlock: Number(program.from),
-  toBlock: Number(program.to),
-  listingId: Number(program.listing),
-  address: '0x698ff47b84837d3971118a369c570172ee7e54c2'
-})
+async function storeEvents({ events, shopId, networkId }) {
+  for (const event of events) {
+    try {
+      const eventObj = { ...getEventObj(event), shopId, networkId }
+      const block = await web3.eth.getBlock(eventObj.blockNumber)
+      eventObj.timestamp = block.timestamp
+      const record = await Events.create(eventObj)
+      if (!record.id) {
+        throw new Error('Shop does not have an id, something failed!')
+      }
+    } catch (e) {
+      console.log(e)
+      throw new Error(e)
+    }
+    // await handleLog(event)
+  }
+}
+
+async function fetchEvents(listingIdFull) {
+  if (!String(listingIdFull).match(/^[0-9]+-[0-9]+-[0-9]+$/)) {
+    console.log('Invalid Listing ID. Must be xxx-xxx-xxx eg 1-001-123')
+    return
+  }
+
+  const [networkId, contractId, listingId] = listingIdFull.split('-')
+
+  const shop = await Shops.findOne({ listingId })
+  if (!shop) {
+    console.log('No shop with that ID')
+    return
+  }
+
+  const contract = get(CONTRACTS, `${networkId}.marketplace.${contractId}`)
+  if (!contract) {
+    console.log('Could not find contract address')
+    return
+  }
+
+  web3.setProvider(Provider)
+
+  const currentNet = await web3.eth.net.getId()
+
+  if (currentNet !== Number(networkId)) {
+    console.log(`Provider is not on network ${networkId}`)
+    return
+  }
+
+  console.log(currentNet)
+  console.log(contract)
+  console.log(shop.dataValues)
+
+  let events = []
+
+  const latestBlock = await web3.eth.getBlockNumber()
+
+  // Fetch all events from inspected block until latest block
+  if (shop.lastBlock) {
+    const toBlock = latestBlock
+    const fromBlock = shop.lastBlock + 1
+    const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
+      limiter.schedule(args => getLogs(args), {
+        fromBlock: start,
+        toBlock: Math.min(start + batchSize - 1, toBlock),
+        listingId,
+        address: contract
+      })
+    )
+
+    const numBlocks = toBlock - fromBlock + 1
+    console.log(`Get ${numBlocks} blocks in ${requests.length} requests`)
+
+    if (!numBlocks) return
+
+    const eventsChunks = await Promise.all(requests)
+    events = flattenDeep(eventsChunks)
+    console.log(`Got ${events.length} new events`)
+
+    storeEvents({ events, shopId: shop.id, networkId })
+
+    shop.lastBlock = latestBlock
+    await shop.save()
+    console.log('Saved shop')
+  } else { // Fetch all events from current block going back until we find ListingCreated event
+    console.log(`Fetching all events ending block ${latestBlock}`)
+    let listingCreatedEvent
+    let fromBlock = latestBlock
+    do {
+      const toBlock = fromBlock - 1
+      fromBlock -= batchSize
+      const batchEvents = await getLogs({
+        fromBlock,
+        toBlock,
+        listingId,
+        address: contract
+      })
+
+      console.log(`Found ${batchEvents.length} events`)
+
+      storeEvents({ events: batchEvents, shopId: shop.id, networkId })
+
+      listingCreatedEvent = batchEvents
+        .map(e => getEventObj(e))
+        .find(o => o.eventName === 'ListingCreated')
+    } while (!listingCreatedEvent)
+
+    if (listingCreatedEvent) {
+      shop.firstBlock = listingCreatedEvent.blockNumber
+      shop.lastBlock = latestBlock
+      await shop.save()
+      console.log('Saved shop')
+    }
+  }
+}
+
+fetchEvents(program.listing)

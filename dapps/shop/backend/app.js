@@ -6,7 +6,6 @@ const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const serveStatic = require('serve-static')
-const { passport } = require('./routes/_combinedAuth')
 const { IS_PROD, SESSION_SECRET } = require('./utils/const')
 const app = express()
 //const html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
@@ -41,8 +40,6 @@ app.use((req, res, next) => {
   return jsonBodyParser(req, res, next)
 })
 
-app.use(passport.initialize())
-app.use(passport.session())
 app.use(
   cors({
     origin: (origin, cb) => {

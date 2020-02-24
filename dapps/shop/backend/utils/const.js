@@ -19,8 +19,8 @@ const NETWORK_NAME_TO_ID = {
 const CONTRACTS = {
   999: {
     marketplace: {
-      '000': '0xBFF408fD7DCb4E9B3fF68941699636a86B93eD7C',
-      '001': '0x46e4572294987fbeE82DDe6Ca7168f7C2E1bB83e'
+      '000': process.env.MARKETPLACE_CONTRACT,
+      '001': process.env.MARKETPLACE_CONTRACT
     }
   },
   4: {
@@ -46,6 +46,7 @@ const {
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
   WEB3_PK,
   PROVIDER,
+  PROVIDER_WS,
   IPFS_GATEWAY, // IFPS gateway oerride
   SUPPORT_EMAIL_OVERRIDE,
   SENDGRID_API_KEY,
@@ -76,6 +77,7 @@ module.exports = {
   SESSION_SECRET,
   PASSWORD_SALT_ROUNDS,
   WEB3_PK,
+  PROVIDER_WS,
   PROVIDER,
   IPFS_GATEWAY,
   NETWORK,
