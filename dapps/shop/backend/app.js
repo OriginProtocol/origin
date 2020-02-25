@@ -2,11 +2,12 @@
 const fs = require('fs')*/
 const express = require('express')
 const session = require('express-session')
-const MemoryStore = require('memorystore')(session)
+const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const serveStatic = require('serve-static')
 const { IS_PROD, SESSION_SECRET } = require('./utils/const')
+const { sequelize } = require('./data/db')
 const app = express()
 //const html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
 
@@ -17,19 +18,20 @@ const BODYPARSER_EXCLUDES = ['/webhook']
 // TODO: Restrict this more? See: https://expressjs.com/en/guide/behind-proxies.html
 app.set('trust proxy', true)
 
+const sessionStore = new SequelizeStore({ db: sequelize })
+// sessionStore.sync()
+
 app.use(
   session({
-    secret: SESSION_SECRET,
+    secret: 'keyboard cat',
     resave: true,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: false, // TODO: testing
-      sameSite: 'none', // TODO: Lax for prod?
-      secure: IS_PROD
-    },
-    store: new MemoryStore({
-      checkPeriod: 3600000 // 1 hr
-    })
+    saveUninitialized: false,
+    // cookie: {
+    //   httpOnly: false, // TODO: testing
+    //   sameSite: 'none', // TODO: Lax for prod?
+    //   secure: IS_PROD
+    // },
+    store: sessionStore
   })
 )
 
@@ -70,6 +72,7 @@ require('./routes/auth')(app)
 require('./routes/orders')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
+require('./routes/tx')(app)
 
 app.get('/', (req, res) => {
   res.send('')

@@ -12,12 +12,8 @@ import Discounts from './discounts/Discounts'
 import EditDiscount from './discounts/EditDiscount'
 import Order from './order/Order'
 import Login from './Login'
-
-const Settings = () => (
-  <div>
-    <h3>Settings</h3>
-  </div>
-)
+import Settings from './Settings'
+import Events from './Events'
 
 const Admin = () => {
   const { config } = useConfig()
@@ -67,6 +63,20 @@ const Admin = () => {
               >
                 <Link to="/admin/discounts">Discounts</Link>
               </li>
+              <li
+                className={
+                  pathname.indexOf('/admin/config') === 0 ? 'active' : ''
+                }
+              >
+                <Link to="/admin/settings">Settings</Link>
+              </li>
+              <li
+                className={
+                  pathname.indexOf('/admin/events') === 0 ? 'active' : ''
+                }
+              >
+                <Link to="/admin/events">Events</Link>
+              </li>
               {/* <li className={pathname === '/admin/settings' ? 'active' : ''}>
                 <Link to="/admin/settings">Settings</Link>
               </li> */}
@@ -91,6 +101,7 @@ const Admin = () => {
             <Route path="/admin/products" component={Products} />
             <Route path="/admin/collections" component={Collections} />
             <Route path="/admin/settings" component={Settings} />
+            <Route path="/admin/events" component={Events} />
             <Route path="/admin/orders/:id" component={Order} />
             <Route path="/admin/orders" component={Orders} />
             <Redirect to="/admin/orders" />

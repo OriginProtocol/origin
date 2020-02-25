@@ -4,6 +4,7 @@ const { checkPassword } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const { IS_PROD } = require('../utils/const')
 const encConf = require('../utils/encryptedConfig')
+const { authSellerAndShop } = require('./_auth')
 const { validateConfig, validateShop } = require('../utils/validators')
 
 module.exports = function(app) {
@@ -140,17 +141,13 @@ module.exports = function(app) {
     res.json({ success: true })
   })
 
-  app.post('/config', async (req, res) => {
-    const { sellerId } = req.session
-    const { shopId, config } = req.body
+  app.get('/config', authSellerAndShop, async (req, res) => {
+    const config = await encConf.dump(req.shop.id)
+    return res.json({ success: true, config })
+  })
 
-    const shop = await Shops.findOne({
-      where: { id: shopId, sellerId }
-    })
-
-    if (!shop) {
-      return res.status(400).json({ success: false, message: 'Shop not found' })
-    }
+  app.post('/config', authSellerAndShop, async (req, res) => {
+    const config = req.body
 
     if (!validateConfig(config)) {
       return res
@@ -158,9 +155,7 @@ module.exports = function(app) {
         .json({ success: false, message: 'Invalid config data' })
     }
 
-    console.log('config to update: ', config)
-
-    await encConf.assign(shopId, config)
+    await encConf.assign(req.shop.id, config)
     return res.json({ success: true })
   })
 

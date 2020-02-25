@@ -22,6 +22,7 @@ const handleLog = async ({
   blockNumber
 }) => {
   const ipfsGateway = await getIPFSGateway()
+  console.log('IPFS Gateway', ipfsGateway)
   const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
   if (!eventAbi) {
     console.log('Unknown event')
