@@ -15,6 +15,7 @@ const { getUserAuthStatusAndToken } = require('../resources/authentication')
 const { logEvent } = require('../resources/eventLogger')
 
 const { ApolloServer } = require('apollo-server-express')
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
@@ -27,6 +28,8 @@ const { validateToken } = require('@origin/auth-utils/src/index')
 
 const app = express()
 app.use(cors())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const bundle = promBundle({
   promClient: {
