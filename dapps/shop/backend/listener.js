@@ -1,15 +1,19 @@
 require('dotenv').config()
 
+const ReconnectingWebSocket = require('reconnecting-websocket')
 const WebSocket = require('ws')
 
 const Web3 = require('web3')
 const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
 
 const { Op, Network, Shops } = require('./data/db')
 const handleLog = require('./utils/handleLog')
 const { CONTRACTS, PROVIDER, PROVIDER_WS } = require('./utils/const')
 
 const web3 = new Web3(PROVIDER)
+
+let networkId, listingIds, ws
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -22,8 +26,6 @@ const SubscribeToLogs = ({ address, listingIds }) => {
   const listingTopics = listingIds.map(listingId => {
     return web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
   })
-
-  console.log('Subscribe to ', listingTopics, address )
 
   return JSON.stringify({
     jsonrpc: '2.0',
@@ -53,25 +55,8 @@ const GetPastLogs = ({ address, fromBlock, toBlock, listingIds }) => {
   return JSON.stringify(rpc)
 }
 
-let ws
-
 async function connectWS() {
-  let lastBlock
-
-  const networkId = await web3.eth.net.getId()
-
-  const shops = await Shops.findAll({
-    attributes: ['listingId'],
-    group: ['listingId'],
-    where: { networkId, listingId: { [Op.ne]: null } }
-  })
-  const contractVersion = '001'
-  const listingIds = shops.map(shop => shop.listingId.split('-')[2])
-  const address = get(CONTRACTS, `${networkId}.marketplace.${contractVersion}`)
-
-  console.log(`Connecting to ${PROVIDER_WS} (netId ${networkId})`)
-  console.log(`Watching listings ${listingIds.join(', ')} on contract ${address}`)
-
+  let lastBlock, pingTimeout
   const res = await Network.findOne({ where: { networkId } })
   if (res) {
     lastBlock = res.last_block
@@ -80,50 +65,66 @@ async function connectWS() {
     console.log('No recorded block found')
   }
 
+  const contractVersion = '001' // Hardcoded for now
+  const address = get(CONTRACTS, `${networkId}.marketplace.${contractVersion}`)
+
+  console.log(`Connecting to ${PROVIDER_WS} (netId ${networkId})`)
+  console.log(
+    `Watching listings ${listingIds.join(', ')} on contract ${address}`
+  )
+
   if (ws) {
-    ws.removeAllListeners()
+    clearTimeout(pingTimeout)
+    ws.close()
   }
 
   console.log('Trying to connect...')
-  ws = new WebSocket(PROVIDER_WS)
+  ws = new ReconnectingWebSocket(PROVIDER_WS, [], { WebSocket })
 
   function heartbeat() {
-    console.log('Got ping...')
-    clearTimeout(this.pingTimeout)
-    this.pingTimeout = setTimeout(() => {
-      console.log('ping timeout')
-      ws.terminate()
-      connectWS()
-    }, 30000 + 1000)
+    clearTimeout(pingTimeout)
+    pingTimeout = setTimeout(() => {
+      console.log('WS Ping timeout! Reconnecting...')
+      ws.reconnect()
+    }, 30000 + 5000)
   }
-  ws.heartbeat = heartbeat
 
-  ws.on('error', err => {
-    console.log('Error')
-    console.error(err)
-    setTimeout(() => connectWS(), 5000)
+  ws.addEventListener('error', err => {
+    console.log('WS error:', err.message)
   })
-  ws.on('ping', heartbeat)
-  ws.on('close', function clear() {
-    console.log('Connection closed')
-    clearTimeout(this.pingTimeout)
+  ws.addEventListener('close', function clear() {
+    console.log('WS closed.')
   })
 
-  ws.on('open', function open() {
-    console.log('Connection open')
-    this.heartbeat()
+  ws.addEventListener('open', function open() {
+    console.log('WS open.')
+    heartbeat()
+    ws._ws.on('ping', () => {
+      console.log('WS ping.')
+      heartbeat()
+    })
     ws.send(SubscribeToLogs({ address, listingIds }))
     ws.send(SubscribeToNewHeads)
   })
 
   const handled = {}
   let heads, logs
-  ws.on('message', function incoming(raw) {
+  ws.addEventListener('message', async function incoming(raw) {
+    raw = raw.data
+
     const hash = web3.utils.sha3(raw)
     if (handled[hash]) {
       console.log('Ignoring repeated ws message')
     }
     handled[hash] = true
+
+    const latestListings = await getListingIds()
+    if (!isEqual(latestListings, listingIds)) {
+      console.log('Change in listings detected. Restarting listener...')
+      listingIds = latestListings
+      connectWS()
+      return
+    }
 
     const data = JSON.parse(raw)
     if (data.id === 1) {
@@ -166,4 +167,20 @@ const handleNewHead = (head, networkId) => {
   return number
 }
 
-connectWS()
+async function getListingIds() {
+  const shops = await Shops.findAll({
+    attributes: ['listingId'],
+    group: ['listingId'],
+    where: { networkId, listingId: { [Op.ne]: null } }
+  })
+
+  return shops.map(shop => shop.listingId.split('-')[2])
+}
+
+async function start() {
+  networkId = await web3.eth.net.getId()
+  listingIds = await getListingIds()
+  connectWS()
+}
+
+start()
