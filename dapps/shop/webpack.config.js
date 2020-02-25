@@ -145,7 +145,8 @@ const webpackConfig = {
       provider: process.env.PROVIDER,
       analytics: process.env.ANALYTICS,
       fbPixel: process.env.FB,
-      dataDir: process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
+      dataDir:
+        process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
       absolute
     }),
     new webpack.EnvironmentPlugin({

@@ -5,8 +5,6 @@ import sortBy from 'lodash/sortBy'
 
 const { BACKEND_AUTH_TOKEN } = process.env
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function useOrders() {
   const { config } = useConfig()
   const [loading, setLoading] = useState(false)
