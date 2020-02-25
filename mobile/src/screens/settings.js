@@ -26,13 +26,14 @@ import MenuStyles from 'styles/menu'
 
 const IMAGES_PATH = '../../assets/images/'
 
-class settingsScreen extends React.Component {
+class SettingsScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       biometryType: null,
       biometryError: {},
-      authGuardCallback: false
+      authGuardCallback: false,
+      displayNetworkOptions: __DEV__
     }
   }
 
@@ -91,6 +92,27 @@ class settingsScreen extends React.Component {
       },
       { text: String(fbt('Cancel', 'Authentication.alertCancelButton')) }
     ])
+  }
+
+  handleVersionPress = () => {
+    const delta = new Date().getTime() - this.state.lastVersionPress
+    this.setState({
+      lastVersionPress: new Date().getTime()
+    })
+    if (delta < 300) {
+      if (this.state.versionPressCount === 4) {
+        this.setState({
+          versionPressCount: 0,
+          displayNetworkOptions: !this.state.displayNetworkOptions
+        })
+      } else {
+        this.setState({
+          versionPressCount: this.state.versionPressCount + 1
+        })
+      }
+    } else {
+      this.setState({ versionPressCount: 0 })
+    }
   }
 
   render() {
@@ -154,37 +176,41 @@ class settingsScreen extends React.Component {
             </View>
           </TouchableHighlight>
 
-          <View style={styles.menuHeadingContainer}>
-            <Text style={styles.menuHeading}>
-              <fbt desc="SettingsScreen.networkHeading">Network</fbt>
-            </Text>
-          </View>
+          {this.state.displayNetworkOptions && (
+            <>
+              <View style={styles.menuHeadingContainer}>
+                <Text style={styles.menuHeading}>
+                  <fbt desc="SettingsScreen.networkHeading">Network</fbt>
+                </Text>
+              </View>
 
-          {NETWORKS.map(network => (
-            <Fragment key={network.name}>
-              <TouchableHighlight
-                onPress={() => this.props.setNetwork(network)}
-              >
-                <View style={styles.menuItem}>
-                  <Text style={styles.menuText}>{network.name}</Text>
-                  <View style={styles.menuItemIconContainer}>
-                    {network.name === this.props.settings.network.name && (
-                      <Image
-                        source={require(`${IMAGES_PATH}selected.png`)}
-                        style={styles.menuItemIcon}
-                      />
-                    )}
-                    {network.name !== this.props.settings.network.name && (
-                      <Image
-                        source={require(`${IMAGES_PATH}deselected.png`)}
-                        style={styles.menuItemIcon}
-                      />
-                    )}
-                  </View>
-                </View>
-              </TouchableHighlight>
-            </Fragment>
-          ))}
+              {NETWORKS.map(network => (
+                <Fragment key={network.name}>
+                  <TouchableHighlight
+                    onPress={() => this.props.setNetwork(network)}
+                  >
+                    <View style={styles.menuItem}>
+                      <Text style={styles.menuText}>{network.name}</Text>
+                      <View style={styles.menuItemIconContainer}>
+                        {network.name === this.props.settings.network.name && (
+                          <Image
+                            source={require(`${IMAGES_PATH}selected.png`)}
+                            style={styles.menuItemIcon}
+                          />
+                        )}
+                        {network.name !== this.props.settings.network.name && (
+                          <Image
+                            source={require(`${IMAGES_PATH}deselected.png`)}
+                            style={styles.menuItemIcon}
+                          />
+                        )}
+                      </View>
+                    </View>
+                  </TouchableHighlight>
+                </Fragment>
+              ))}
+            </>
+          )}
 
           <View style={styles.menuHeadingContainer}>
             <Text style={styles.menuHeading}>
@@ -264,7 +290,7 @@ class settingsScreen extends React.Component {
             </Text>
           </View>
 
-          <TouchableHighlight>
+          <TouchableHighlight onPress={this.handleVersionPress}>
             <View style={[styles.menuItem, styles.menuItemInactionable]}>
               <Text style={styles.menuText}>{VERSION}</Text>
             </View>
@@ -275,7 +301,7 @@ class settingsScreen extends React.Component {
   }
 }
 
-settingsScreen.navigationOptions = () => {
+SettingsScreen.navigationOptions = () => {
   return {
     title: String(fbt('Settings', 'SettingsScreen.headerTitle')),
     headerTitleStyle: {
@@ -296,7 +322,7 @@ const mapStateToProps = ({ settings }) => {
   return { settings }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(settingsScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

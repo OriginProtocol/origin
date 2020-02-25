@@ -50,7 +50,7 @@ class FinalizeOffer extends Component {
       return
     }
 
-    this.setState({ waitFor: 'pending' })
+    this.setState({ waitFor: 'pending', confirmationModal: false })
 
     const { offer, rating, review, from } = this.props
     finalizeOffer({
