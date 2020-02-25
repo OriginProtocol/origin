@@ -1,56 +1,11 @@
-const config = require('../config')
+const { getSiteConfig } = require('../config')
 const mjml2html = require('mjml')
 const nodemailer = require('nodemailer')
 const aws = require('aws-sdk')
 
 const cartData = require('./cartData')
 const encConf = require('./encryptedConfig')
-const {
-  SUPPORT_EMAIL_OVERRIDE,
-  SENDGRID_API_KEY,
-  SENDGRID_USERNAME,
-  SENDGRID_PASSWORD,
-  MAILGUN_SMTP_SERVER,
-  MAILGUN_SMTP_PORT,
-  MAILGUN_SMTP_LOGIN,
-  MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID
-} = require('./const')
-
-let transporter
-if (SENDGRID_API_KEY || SENDGRID_USERNAME) {
-  let auth
-  if (SENDGRID_API_KEY) {
-    auth = {
-      user: 'apikey',
-      pass: SENDGRID_API_KEY
-    }
-  } else {
-    auth = {
-      user: SENDGRID_USERNAME,
-      pass: SENDGRID_PASSWORD
-    }
-  }
-  transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
-    auth
-  })
-} else if (MAILGUN_SMTP_SERVER) {
-  transporter = nodemailer.createTransport({
-    host: MAILGUN_SMTP_SERVER,
-    port: MAILGUN_SMTP_PORT,
-    auth: {
-      user: MAILGUN_SMTP_LOGIN,
-      pass: MAILGUN_SMTP_PASSWORD
-    }
-  })
-} else if (AWS_ACCESS_KEY_ID) {
-  const SES = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1' })
-  transporter = nodemailer.createTransport({ SES })
-} else {
-  transporter = nodemailer.createTransport({ sendmail: true })
-}
+const { SUPPORT_EMAIL_OVERRIDE } = require('./const')
 
 const head = require('./templates/head')
 const vendor = require('./templates/vendor')
@@ -74,9 +29,54 @@ function optionsForItem(item) {
 }
 
 async function sendMail(shopId, cart, skip) {
-  const dataURL = await encConf.get(shopId, 'dataUrl')
-  let publicURL = await encConf.get(shopId, 'publicUrl')
-  const data = await config.getSiteConfig(dataURL)
+  const config = await encConf.dump(shopId)
+  if (!config.email || config.email === 'disabled') {
+    console.log('Emailer disabled')
+  }
+
+  let transporter
+  if (config.email === 'sendgrid') {
+    let auth
+    if (config.sendgridApiKey) {
+      auth = {
+        user: 'apikey',
+        pass: config.sendgridApiKey
+      }
+    } else {
+      auth = {
+        user: config.sendgridUsername,
+        pass: config.sendgridPassword
+      }
+    }
+    transporter = nodemailer.createTransport({
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      auth
+    })
+  } else if (config.email === 'sendgrid') {
+    transporter = nodemailer.createTransport({
+      host: config.mailgunSmtpServer,
+      port: config.mailgunSmtpPort,
+      auth: {
+        user: config.mailgunSmtpLogin,
+        pass: config.mailgunSmtpPassword
+      }
+    })
+  } else if (config.email === 'aws') {
+    const SES = new aws.SES({
+      apiVersion: '2010-12-01',
+      region: 'us-east-1',
+      accessKeyId: config.awsAccessKey,
+      secretAccessKey: config.awsAccessSecret
+    })
+    transporter = nodemailer.createTransport({ SES })
+  } else {
+    transporter = nodemailer.createTransport({ sendmail: true })
+  }
+
+  const dataURL = config.dataUrl
+  let publicURL = config.publicUrl
+  const data = await getSiteConfig(dataURL)
   const items = await cartData(dataURL, cart.items)
 
   const orderItems = items.map(item => {

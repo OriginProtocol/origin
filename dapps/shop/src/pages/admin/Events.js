@@ -1,14 +1,10 @@
 import React from 'react'
-import get from 'lodash/get'
 
 import Paginate from 'components/Paginate'
-
 import useRest from 'utils/useRest'
 
 const AdminEvents = () => {
-  const { data, loading } = useRest('/events')
-
-  const rows = get(data, 'rows', [])
+  const { data = [], loading } = useRest('/events')
 
   return (
     <>
@@ -19,25 +15,30 @@ const AdminEvents = () => {
         <table className="table admin-orders table-hover">
           <thead>
             <tr>
-              <th>Hash</th>
+              <th>Listing</th>
+              <th>Offer</th>
+              <th>Name</th>
+              <th>Timestamp</th>
+              <th>IPFS</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map(event => (
+            {data.map(event => (
               <tr key={event.id}>
-                <td>{event.transactionHash}</td>
+                <td>{event.listingId}</td>
+                <td>{event.offerId}</td>
+                <td>{event.eventName}</td>
+                <td>{event.timestamp}</td>
+                <td>{(event.ipfsHash || '').substr(0, 8)}...</td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      <Paginate total={rows.length} />
+      <Paginate total={data.length} />
     </>
   )
 }
 
 export default AdminEvents
-
-require('react-styl')(`
-`)

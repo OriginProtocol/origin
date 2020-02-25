@@ -3,15 +3,20 @@ require('dotenv').config()
 const Web3 = require('web3')
 const openpgp = require('openpgp')
 
-const { getIpfsHashFromBytes32, getText, getIPFSGateway } = require('./_ipfs')
+const { getText, getIPFSGateway } = require('./_ipfs')
 const abi = require('./_abi')
 const sendMail = require('./emailer')
+const { upsertEvent, getEventObj } = require('./events')
 const encConf = require('./encryptedConfig')
 const { Transactions, Orders, Shops } = require('../data/db')
 
 const web3 = new Web3()
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
+
+function handleError(event, error) {
+  console.log(error)
+}
 
 const handleLog = async ({
   networkId,
@@ -21,13 +26,12 @@ const handleLog = async ({
   transactionHash,
   blockNumber
 }) => {
-  const ipfsGateway = await getIPFSGateway()
-  console.log('IPFS Gateway', ipfsGateway)
   const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
   if (!eventAbi) {
     console.log('Unknown event')
     return
   }
+
   console.log('fetch existing...', transactionHash)
   const existingTx = await Transactions.findOne({ where: { transactionHash } })
   if (existingTx) {
@@ -43,29 +47,47 @@ const handleLog = async ({
     })
   }
 
-  const { name, inputs } = eventAbi
-  const decoded = web3.eth.abi.decodeLog(inputs, data, topics.slice(1))
-  const { listingID, offerID, ipfsHash, party } = decoded
+  const eventObj = getEventObj({
+    data,
+    topics,
+    transactionHash,
+    blockNumber
+  })
 
-  const listingId = `${networkId}-${contractVersion}-${listingID}`
-  const offerId = `${listingId}-${offerID}`
+  const listingId = `${networkId}-${contractVersion}-${eventObj.listingId}`
+  const offerId = `${listingId}-${eventObj.offerId}`
   const shop = await Shops.findOne({ where: { listingId } })
   if (!shop) {
     console.log(`No shop for listing ${listingId}`)
+    return
   }
 
-  console.log(`${name} - ${offerID} by ${party}`)
-  console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
+  const event = await upsertEvent({
+    shopId: shop.id,
+    networkId,
+    event: {
+      data,
+      topics,
+      transactionHash,
+      blockNumber
+    }
+  })
+
+  console.log(`${event.eventName} - ${event.offerId} by ${event.party}`)
+  console.log(`IPFS Hash: ${event.ipfsHash}`)
 
   try {
-    const offerData = await getText(ipfsGateway, ipfsHash, 10000)
+    const dataUrl = await encConf.get(shop.id, 'dataUrl')
+    const ipfsGateway = await getIPFSGateway(dataUrl, networkId)
+    console.log('IPFS Gateway', ipfsGateway)
+
+    const offerData = await getText(ipfsGateway, eventObj.ipfsHash, 10000)
     const offer = JSON.parse(offerData)
     console.log('Offer:', offer)
 
     const encrypedHash = offer.encryptedData
     if (!encrypedHash) {
-      console.log('No encrypted data found')
-      return
+      return handleError(event, 'No encrypted data found')
     }
 
     const encryptedDataJson = await getText(ipfsGateway, encrypedHash, 10000)
@@ -88,22 +110,19 @@ const handleLog = async ({
 
     console.log(cart)
 
-    Orders.create({
+    const order = await Orders.create({
       networkId,
       shopId: shop.id,
       orderId: offerId,
       data: JSON.stringify(cart)
     })
-      .then(() => {
-        console.log('Saved to DB OK')
-      })
-      .catch(e => {
-        console.log('Error saving order', e)
-      })
+
+    console.log(`Saved order ${order.id} to DB.`)
     console.log('sendMail', cart)
-    // sendMail(cart)
+    sendMail(shop.id, cart)
   } catch (e) {
     console.error(e)
+    handleError(event, e.message)
   }
 }
 

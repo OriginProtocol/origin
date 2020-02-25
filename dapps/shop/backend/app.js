@@ -26,11 +26,9 @@ app.use(
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: false,
-    // cookie: {
-    //   httpOnly: false, // TODO: testing
-    //   sameSite: 'none', // TODO: Lax for prod?
-    //   secure: IS_PROD
-    // },
+    cookie: {
+      secure: IS_PROD
+    },
     store: sessionStore
   })
 )

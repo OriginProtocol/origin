@@ -24,7 +24,10 @@ const Defaults = {
   }
 }
 
-const getSiteConfig = memoize(async function getSiteConfig(dataURL) {
+const getSiteConfig = memoize(async function getSiteConfig(
+  dataURL,
+  netId = NETWORK_ID
+) {
   let data
   if (dataURL) {
     const url = `${dataURL}config.json`
@@ -34,8 +37,8 @@ const getSiteConfig = memoize(async function getSiteConfig(dataURL) {
   } else {
     console.warn('dataURL not provided')
   }
-  const defaultData = Defaults[NETWORK_ID] || {}
-  const networkData = data ? data.networks[NETWORK_ID] : null || {}
+  const defaultData = Defaults[netId] || {}
+  const networkData = data ? data.networks[netId] : null || {}
   const siteConfig = {
     provider: PROVIDER,
     ...data,
