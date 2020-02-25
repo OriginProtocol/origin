@@ -101,7 +101,7 @@
     "@babel/plugin-transform-runtime": "7.8.3",
     "@babel/preset-env": "7.8.4",
     "@babel/runtime": "7.8.4",
-    "apollo-server": "2.10.0",
+    "apollo-server": "2.10.1",
     "babel-eslint": "10.0.3",
     "babel-loader": "8.0.6",
     "bip39": "2.6.0",
