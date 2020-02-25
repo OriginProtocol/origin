@@ -44,7 +44,7 @@ async function logEvent(req, res) {
     return res.status(400).end('Missing fingerprint')
   }
 
-  const ip = req.connection.remoteAddress
+  const ip = req.ip
 
   const now = new Date()
   await GrowthEvent.insert(
