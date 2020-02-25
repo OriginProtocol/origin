@@ -33,9 +33,9 @@ async function logEvent(req, res) {
   }
 
   // Check presence and validity of the uid parameter
-  const installId = req.body.install_id
-  if (!installId) {
-    return res.status(400).end('Missing installId')
+  const uid = req.body.uid
+  if (!uid) {
+    return res.status(400).end('Missing uid')
   }
 
   // Check presence and validity of the fingerprint parameter.
@@ -52,7 +52,7 @@ async function logEvent(req, res) {
     1,
     ethAddress,
     GrowthEventTypes.BrowserExtensionInstalled,
-    installId,
+    uid,
     { fingerprint, ip },
     now
   )
