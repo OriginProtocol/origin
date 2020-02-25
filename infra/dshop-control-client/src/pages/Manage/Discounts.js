@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import dayjs from 'dayjs'
 
-import axios from 'utils/axiosWithCredentials'
 import usePaginate from 'utils/usePaginate'
-import Loading from 'components/Loading'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
@@ -31,7 +29,6 @@ function active(discount) {
 }
 
 const Discounts = () => {
-  const backendConfig = useStoreState(store, s => s.backend)
   const discounts = useStoreState(store, s => s.discounts)
 
   const [redirectTo, setRedirectTo] = useState(false)

@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
-import axios from 'axios'
 
 import App from './pages/App'
 import './css/app.css'

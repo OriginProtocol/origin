@@ -40,7 +40,7 @@ const defaultValues = {
   status: 'active'
 }
 
-const EditDiscount = ({ shop }) => {
+const EditDiscount = () => {
   const match = useRouteMatch('/manage/discounts/:discountId')
   const { discountId } = match.params
 

@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import moment from 'moment'
 
-import axios from 'utils/axiosWithCredentials'
 import usePaginate from 'utils/usePaginate'
 import formatPrice from 'utils/formatPrice'
 import Paginate from 'components/Paginate'
 import store from '@/store'
 
-const Orders = ({ shop }) => {
-  const backendConfig = useStoreState(store, s => s.backend)
+const Orders = () => {
   const orders = useStoreState(store, s => s.orders)
 
   const [redirectTo, setRedirectTo] = useState(null)
