@@ -47,7 +47,7 @@ app.use(
       if (ORIGIN_WHITELIST_ENABLED && !ORIGIN_WHITELIST.includes(origin)) {
         cb(new Error('Not allowed by CORS'))
       }
-      if (!origin) console.debug('No Origin header provided')
+      // if (!origin) console.debug('No Origin header provided')
       cb(null, origin || '*')
     },
     credentials: true
@@ -113,7 +113,6 @@ app.get(
 )
 
 app.get('*', (req, res, next) => {
-  console.log(req.hostname)
   serveStatic(`${__dirname}/public/${req.hostname}`)(req, res, next)
 })
 

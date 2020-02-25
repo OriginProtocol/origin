@@ -13,7 +13,7 @@ const { Shops } = require('../data/db')
 const { CONTRACTS } = require('../utils/const')
 const { storeEvents, getEventObj } = require('../utils/events')
 
-const handleLog = require('../utils/handleLog')
+// const handleLog = require('../utils/handleLog')
 
 const limiter = new Bottleneck({ maxConcurrent: 10 })
 const batchSize = 5000
@@ -110,7 +110,8 @@ async function fetchEvents(listingIdFull) {
     shop.lastBlock = latestBlock
     await shop.save()
     console.log('Saved shop')
-  } else { // Fetch all events from current block going back until we find ListingCreated event
+  } else {
+    // Fetch all events from current block going back until we find ListingCreated event
     console.log(`Fetching all events ending block ${latestBlock}`)
     let listingCreatedEvent
     let fromBlock = latestBlock

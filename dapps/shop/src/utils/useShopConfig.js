@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useStateValue } from 'data/state'
 import memoize from 'lodash/memoize'
 import useConfig from 'utils/useConfig'
 
@@ -26,7 +25,6 @@ function useShopConfig() {
   const { config } = useConfig()
   const [loading, setLoading] = useState(false)
   const [shopConfig, setShopConfig] = useState()
-  const [{ admin }] = useStateValue()
 
   useEffect(() => {
     async function fetchConfig() {
