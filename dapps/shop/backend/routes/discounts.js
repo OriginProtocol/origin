@@ -28,7 +28,7 @@ module.exports = function(app) {
       return
     }
 
-    res.status(204)
+    res.json({})
   })
 
   app.get('/discounts', authenticated, shopGate, async (req, res) => {
@@ -36,7 +36,6 @@ module.exports = function(app) {
       where: { shopId: req.shopId },
       order: [['createdAt', 'desc']]
     })
-
     res.json(discounts)
   })
 
@@ -47,7 +46,6 @@ module.exports = function(app) {
         shopId: req.shopId
       }
     })
-
     res.json(discount)
   })
 
@@ -56,19 +54,29 @@ module.exports = function(app) {
       shopId: req.shopId,
       ...req.body
     })
-
-    res.status(201).json(discount)
+    res.json({ success: true, discount })
   })
 
   app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
-    const discount = await Discounts.update(req.body, {
+    const result = await Discounts.update(req.body, {
       where: {
         id: req.params.id,
         shopId: req.shopId
       }
     })
 
-    res.json(discount)
+    if (!result || result[0] < 1) {
+      return res.json({ success: false })
+    }
+
+    const discount = await Discounts.findOne({
+      where: {
+        id: req.params.id,
+        shopId: req.shopId
+      }
+    })
+
+    res.json({ success: true, discount })
   })
 
   app.delete('/discounts/:id', authenticated, shopGate, async (req, res) => {
@@ -78,6 +86,6 @@ module.exports = function(app) {
         shopId: req.shopId
       }
     })
-    res.status(204)
+    res.json({ success: true, discount })
   })
 }

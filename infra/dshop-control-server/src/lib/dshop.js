@@ -1,6 +1,33 @@
 const fetch = require('node-fetch')
+const { JSDOM } = require('jsdom')
 
 const { titleToId } = require('../util')
+
+/**
+ * Get the data_url as defined in the <link rel="data-dir"> tag
+ */
+const fetchDataDir = async dshopUrl => {
+  let target = null
+
+  const req = new Request(dshopUrl)
+  const res = await fetch(req)
+  if (!res.ok) return null
+
+  const htmlString = await res.text()
+  const htmlDOM = new JSDOM(htmlString)
+
+  // iterate link tags looking for what we want
+  const head = htmlDOM.window.document.head
+  if (!head) return target
+
+  for (const node of head.childNodes) {
+    if (node && node.rel && node.rel === 'data-dir') {
+      target = node.href
+    }
+  }
+
+  return target
+}
 
 const getConfig = async dshopDataUrl => {
   const response = await fetch(`${dshopDataUrl}/config.json`)
@@ -62,6 +89,7 @@ const convertCollectionIdsToIndices = (collection, products) => {
 }
 
 module.exports = {
+  fetchDataDir,
   getConfig,
   getCollections,
   getProducts,

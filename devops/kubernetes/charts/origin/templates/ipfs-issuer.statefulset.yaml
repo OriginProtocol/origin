@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "ipfs-issuer.fullname" . }}
+  labels:
+    app: {{ template "ipfs-issuer.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: origin-ipfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "ipfs-issuer.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ipfs-issuer.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: ipfs-issuer
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.ipfsIssuerImage }}:{{ .Values.ipfsIssuerImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        env:
+          - name: SERVER_ENDPOINT
+            value: "{{ template "ipfs.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8080"
+        volumeMounts:
+          - name: {{ template "ipfs-issuer.fullname" . }}-data
+            mountPath: /etc/resty-auto-ssl
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "ipfs-issuer.fullname" . }}-data
+    spec:
+      storageClassName: "standard"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi

@@ -1,3 +1,4 @@
+const path = require('path')
 const axios = require('axios')
 const express = require('express')
 const cors = require('cors')
@@ -12,6 +13,7 @@ const {
   convertCollectionUrlsToIds: convertShopifyCollectionUrlsToIds
 } = require('./lib/shopify')
 const {
+  fetchDataDir,
   getCollections: getDshopCollections,
   getProducts: getDshopProducts,
   getConfig: getDshopConfig,
@@ -32,10 +34,17 @@ app.use(
 app.use(bodyParser.json({ limit: '100mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/ingest/:url/:datadir?', async (req, res) => {
-  const isShopify = req.params.datadir === undefined
+app.get('/ingest/:url', async (req, res) => {
+  const { url } = req.params
+
+  let datadir = await fetchDataDir(url)
+  if (datadir && !datadir.startsWith('http')) {
+    datadir = path.join(url, datadir)
+  }
+  const isShopify = datadir === null
+
   if (isShopify) {
-    console.log('Fetching Shopify data for', req.params.url)
+    console.log('Fetching Shopify data for', url)
 
     // Disable eslint because can't destructure to different variable types,
     // i.e. let and const
@@ -54,13 +63,13 @@ app.get('/ingest/:url/:datadir?', async (req, res) => {
       products
     })
   } else {
-    console.log('Fetching dShop data for', `${req.params.url}`)
+    console.log('Fetching dShop data for', `${url}`)
 
     // eslint-disable-next-line
     let [collections, products, config] = await Promise.all([
-      getDshopCollections(req.params.url + '/' + req.params.datadir),
-      getDshopProducts(req.params.url + '/' + req.params.datadir),
-      getDshopConfig(req.params.url + '/' + req.params.datadir)
+      getDshopCollections(datadir),
+      getDshopProducts(datadir),
+      getDshopConfig(datadir)
     ])
 
     collections = collections.map(c =>
