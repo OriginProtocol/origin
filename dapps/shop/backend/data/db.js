@@ -43,6 +43,9 @@ const Shops = sequelize.define(
     sellerId: {
       type: Sequelize.INTEGER
     },
+    hostname: {
+      type: Sequelize.STRING
+    },
     name: {
       type: Sequelize.STRING
     },
@@ -122,10 +125,10 @@ const Orders = sequelize.define(
       type: Sequelize.STRING
     },
     createdBlock: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER
     },
     updatedBlock: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER
     },
     shopId: {
       type: Sequelize.INTEGER

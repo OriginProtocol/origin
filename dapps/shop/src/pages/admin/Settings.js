@@ -221,6 +221,14 @@ const AdminSettings = () => {
           </div>
         </div>
         <div className="form-group">
+          <label>PGP Public Key String</label>
+          <input
+            className="form-control"
+            readOnly
+            value={state.pgpPublicKey.replace(/\n/g, '\\n')}
+          />
+        </div>
+        <div className="form-group">
           <label>PGP Private Key Password</label>
           <input type="text" {...input('pgpPrivateKeyPass')} />
           {Feedback('pgpPrivateKeyPass')}

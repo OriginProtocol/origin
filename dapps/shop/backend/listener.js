@@ -8,7 +8,6 @@ const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
 
 const { Op, Network, Shops } = require('./data/db')
-const { getIPFSGateway } = require('./utils/_ipfs')
 const handleLog = require('./utils/handleLog')
 const { CONTRACTS, PROVIDER, PROVIDER_WS } = require('./utils/const')
 

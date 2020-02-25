@@ -4,10 +4,7 @@ const randomstring = require('randomstring')
 try {
   require('envkey')
 } catch (err) {
-  if (process.env.NODE_ENV === 'production') {
-    console.error(err)
-    process.exit(1)
-  }
+  console.log('Is ENVKEY missing?')
 }
 
 const NETWORK_NAME_TO_ID = {
@@ -48,15 +45,7 @@ const {
   PROVIDER,
   PROVIDER_WS,
   IPFS_GATEWAY, // IFPS gateway oerride
-  SUPPORT_EMAIL_OVERRIDE,
-  SENDGRID_API_KEY,
-  SENDGRID_USERNAME,
-  SENDGRID_PASSWORD,
-  MAILGUN_SMTP_SERVER,
-  MAILGUN_SMTP_PORT,
-  MAILGUN_SMTP_LOGIN,
-  MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID
+  SUPPORT_EMAIL_OVERRIDE
 } = process.env
 
 /**
@@ -83,13 +72,5 @@ module.exports = {
   NETWORK,
   NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,
   SUPPORT_EMAIL_OVERRIDE,
-  SENDGRID_API_KEY,
-  SENDGRID_USERNAME,
-  SENDGRID_PASSWORD,
-  MAILGUN_SMTP_SERVER,
-  MAILGUN_SMTP_PORT,
-  MAILGUN_SMTP_LOGIN,
-  MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID,
   PRINTFUL_URL
 }

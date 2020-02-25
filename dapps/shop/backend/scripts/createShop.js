@@ -24,7 +24,12 @@ const userQuestions = [
 
 const shopQuestions = [
   { type: 'input', name: 'listingId', message: 'Listing ID', validate },
-  { type: 'input', name: 'name', message: 'Shop name', validate }
+  { type: 'input', name: 'name', message: 'Shop name', validate },
+  {
+    type: 'input',
+    name: 'authToken',
+    message: 'Auth Token (leave empty to generate)'
+  }
 ]
 
 async function go() {
@@ -59,12 +64,12 @@ async function go() {
 
   const shopAnswers = await inquirer.prompt(shopQuestions)
 
-  const authToken = crypto.randomBytes(32).toString('hex')
-
   const shop = {
     ...shopAnswers,
-    sellerId: seller.id,
-    authToken
+    sellerId: seller.id
+  }
+  if (!shop.authToken) {
+    shop.authToken = crypto.randomBytes(32).toString('hex')
   }
   const shopResponse = await createShop(shop)
 
