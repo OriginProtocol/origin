@@ -5,9 +5,9 @@ const Web3 = require('web3')
 const bodyParser = require('body-parser')
 const Stripe = require('stripe')
 
-const { authenticated } = require('./_combinedAuth')
+const { Shops } = require('../data/db')
+const { authShop } = require('./_auth')
 const { ListingID } = require('../utils/id')
-const { shopGate } = require('../utils/gates')
 const encConf = require('../utils/encryptedConfig')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
 const abi = require('../utils/_abi')
@@ -29,8 +29,8 @@ if (WEB3_PK) {
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
 module.exports = function(app) {
-  app.post('/pay', authenticated, shopGate, async (req, res) => {
-    const { shopId } = req
+  app.post('/pay', authShop, async (req, res) => {
+    const shopId = req.shop.id
 
     if (req.body.amount < 50) {
       return res.status(400).send({
@@ -69,7 +69,11 @@ module.exports = function(app) {
     let jasonBody, shopId
     try {
       jasonBody = JSON.parse(req.body.toString())
-      shopId = get(jasonBody, 'data.object.metadata.shopId')
+      const listingId = get(jasonBody, 'data.object.metadata.listingId')
+      const shop = await Shops.findOne({ where: { listingId } })
+      if (shop) {
+        shopId = shop.id
+      }
     } catch (err) {
       console.error('Error parsing body: ', err)
       return res.sendStatus(400)

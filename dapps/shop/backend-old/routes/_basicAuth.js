@@ -1,4 +1,9 @@
 require('dotenv').config()
-const basicAuth = require('express-basic-auth')
 
-module.exports = basicAuth({ users: { admin: process.env.ADMIN_PW } })
+module.exports = function(req, res, next) {
+  if (!req.session.email) {
+    res.status(401).json({ success: false })
+    return
+  }
+  next()
+}

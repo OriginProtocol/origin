@@ -5,6 +5,8 @@ const CryptoWallet = ({ walletStatus }) => {
     return <div>Cannot query web3</div>
   } else if (walletStatus === 'no-wallet') {
     return <div className="alert alert-danger">No crypto wallet detected.</div>
+  } else if (walletStatus === 'loading') {
+    return <div>Loading wallet status...</div>
   } else if (walletStatus === 'wallet-locked') {
     return (
       <div className="alert alert-danger">
