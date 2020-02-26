@@ -20,7 +20,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,authentication,X-Growth-Secret,X-Growth-Wallet"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-    nginx.ingress.kubernetes.io/rewrite-target: /graphql
     nginx.ingress.kubernetes.io/limit-rps: "100"
 spec:
   tls:
