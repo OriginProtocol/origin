@@ -233,7 +233,7 @@ async function createTestData() {
     nameKey: 'growth.feb2020.name',
     shortNameKey: 'growth.feb2020.short_name',
     rules: JSON.stringify(feb2020Config),
-    startDate: Date.parse('February 1, 2019'), // TODO CHANGE THIS
+    startDate: Date.parse('February 1, 2020'),
     endDate: Date.parse('March 1, 2020'),
     distributionDate: Date.parse('March 1, 2020'),
     cap: 10000 * Math.pow(10, 18),
@@ -247,7 +247,7 @@ async function createTestData() {
     nameKey: 'growth.mar2020.name',
     shortNameKey: 'growth.mar2020.short_name',
     rules: JSON.stringify(mar2020Config),
-    startDate: Date.parse('March 1, 2019'), // TODO CHANGE THIS
+    startDate: Date.parse('March 1, 2020'),
     endDate: Date.parse('April 1, 2020'),
     distributionDate: Date.parse('April 1, 2020'),
     cap: 10000 * Math.pow(10, 18),
