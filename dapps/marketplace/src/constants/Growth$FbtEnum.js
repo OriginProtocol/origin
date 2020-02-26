@@ -401,7 +401,7 @@ const Growth$FbtEnum = {
 
   'growth.share.content45.title': `TBD`,
   'growth.share.content45.details': `TBD`,
-  'growth.share.content45.link': 'Read the article',
+  'growth.share.content45.link': 'Read the article'
 }
 
 module.exports = Growth$FbtEnum
