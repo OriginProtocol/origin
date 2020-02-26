@@ -20,6 +20,17 @@ const actionTypeToName = {
       return action.conditionalName
     }
     return partnerReferralText
+  },
+  BrowserExtensionInstall: action => {
+    const browserExtensionInstallText = (
+      <fbt desc="CompletedActionGroups.BrowserExtensionInstall">
+        Origin Browser Extension Installed
+      </fbt>
+    )
+    if (action.conditionalName) {
+      return action.conditionalName
+    }
+    return browserExtensionInstallText
   }
 }
 
