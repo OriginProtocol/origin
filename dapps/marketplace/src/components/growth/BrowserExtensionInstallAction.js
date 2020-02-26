@@ -35,7 +35,7 @@ function BrowserExtensionInstallAction(props) {
     >
       <img
         className="download-icon"
-        src="images/growth/download-browser-extension.svg"
+        src="images/growth/download-extension@2x.png"
       />
     </div>
   )
