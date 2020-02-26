@@ -48,10 +48,10 @@ const AdminOrdersTable = ({ orders }) => {
           <tr
             key={order.id}
             onClick={() => {
-              history.push(`/admin/orders/${order.order_id}`)
+              history.push(`/admin/orders/${order.orderId}`)
             }}
           >
-            <td>{order.order_id}</td>
+            <td>{order.orderId}</td>
             <td>{dayjs(order.createdAt).format('MMM D, h:mm A')}</td>
             <td>{order.data.paymentMethod.label}</td>
             <td>{order.status}</td>
