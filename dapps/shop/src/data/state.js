@@ -8,6 +8,8 @@ import set from 'lodash/set'
 import pick from 'lodash/pick'
 import cloneDeep from 'lodash/cloneDeep'
 
+import fbTrack from './fbTrack'
+
 const defaultState = {
   products: [],
   collections: [],
@@ -15,7 +17,6 @@ const defaultState = {
   paymentMethods: PaymentMethods,
   orders: [],
   discounts: [],
-  admin: '',
 
   cart: {
     items: [],
@@ -33,7 +34,6 @@ let initialState = cloneDeep(defaultState)
 try {
   initialState = {
     ...initialState,
-    admin: sessionStorage.admin,
     ...JSON.parse(localStorage.cart)
   }
 } catch (e) {
@@ -41,6 +41,7 @@ try {
 }
 
 const reducer = (state, action) => {
+  fbTrack(state, action)
   let newState = cloneDeep(state)
   if (action.type === 'addToCart') {
     const { product, variant } = action.item

@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "dshopBackendRinkeby.fullname" . }}
+  labels:
+    app: {{ template "dshopBackendRinkeby.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: dshop-backend-rinkeby
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+spec:
+  tls:
+    - secretName: "{{ .Values.dshopBackendRinkebyHost }}"
+      hosts:
+        - {{ .Values.dshopBackendRinkebyHost }}
+  rules:
+  - host: {{ .Values.dshopBackendRinkebyHost }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "dshopBackendRinkeby.fullname" . }}
+            servicePort: 3000

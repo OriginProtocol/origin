@@ -53,15 +53,18 @@ async function start() {
       env: process.env
     }
   )
-  const backend = spawn('node', ['backend'], {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      MARKETPLACE_CONTRACT: localContractAddress,
-      DATA_URL:
-        process.env.DATA_URL || `http://0.0.0.0:8081/${process.env.DATA_DIR}/`
-    }
-  })
+  let backend
+  if (!process.env.NO_BACKEND) {
+    backend = spawn('node', ['backend'], {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        MARKETPLACE_CONTRACT: localContractAddress,
+        DATA_URL:
+          process.env.DATA_URL || `http://0.0.0.0:8081/${process.env.DATA_DIR}/`
+      }
+    })
+  }
 }
 
 start()

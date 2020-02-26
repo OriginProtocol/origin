@@ -1,0 +1,33 @@
+<div style="font-size: 28px; font-weight: bold;" valign="top">
+  A review has been left on your transaction.
+</div>
+
+<div style="width:100%;  vertical-align:top; text-align: center;">
+  <% if (listing.media[0]) { %>
+      <img class="listing-img" style="max-width:300px; height: auto; margin: 22px" src="<%= ipfsGatewayUrl %>/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+  <% } %>
+</div>
+
+<!-- button -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+  <td>
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td
+          align="center"
+          style="border-radius: 43px;"
+          bgcolor="#1a82ff"
+        >
+          <a
+            href="<%= dappUrl %>/#/purchases/<%- offer.id %>"
+            target="_blank"
+            style="font-size: 16px; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; color: #ffffff; text-decoration: none; text-decoration: none;border-radius: 43px; padding: 10px 36px; border: 1px solid #1a82ff; display: inline-block;"
+            >View Transaction</a
+          >
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
