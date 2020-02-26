@@ -26,6 +26,7 @@ const Growth$FbtEnum = {
   'growth.jan2020.name': 'January 2020 Campaign',
   'growth.jan2020.short_name': 'January 2020',
   'growth.feb2020.short_name': 'February 2020',
+  'growth.mar2020.short_name': 'March 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
@@ -379,7 +380,28 @@ const Growth$FbtEnum = {
 
   'growth.share.content40.title': `Evan Tana from 122 West Ventures Explains Why He Invested in Origin`,
   'growth.share.content40.details': `Learn about the 3 reasons Evan decided to invest in Origin, and why he’s excited about the future of decentralized marketplaces.`,
-  'growth.share.content40.link': 'Watch the video'
+  'growth.share.content40.link': 'Watch the video',
+
+  // Mar 2020 campaign
+  'growth.share.content41.title': `Origin Marketplace App Now Available on Samsung Blockchain Wallet`,
+  'growth.share.content41.details': `Putting real-world use cases for decentralized applications in the hands of people everywhere, through mobile.`,
+  'growth.share.content41.link': 'Read the article',
+
+  'growth.share.content42.title': `OGN Lists on Korean Exchanges Coinone and GOPAX`,
+  'growth.share.content42.details': `OGN is now listed on GOPAX and Coinone, two of the most reputable exchanges in South Korea.`,
+  'growth.share.content42.link': 'Read the article',
+
+  'growth.share.content43.title': `Gumi’s Ray Zhang on Origin’s World-Class Team`,
+  'growth.share.content43.details': `Ray Zhang, Managing Director at Gumi, discusses Origin’s world-class team.`,
+  'growth.share.content43.link': 'Watch the video',
+
+  'growth.share.content44.title': `KryptoSeoul’s Erica Kang on Origin’s User Experience`,
+  'growth.share.content44.details': `Erica Kang, founder of KryptoSeoul, shares her experience using the Origin Marketplace app.`,
+  'growth.share.content44.link': 'Watch the video',
+
+  'growth.share.content45.title': `TBD`,
+  'growth.share.content45.details': `TBD`,
+  'growth.share.content45.link': 'Read the article',
 }
 
 module.exports = Growth$FbtEnum

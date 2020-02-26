@@ -176,7 +176,67 @@ const mar2020Config = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'TBD',
+            contentId: 'samsung',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare42',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            contentId: 'gopax',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare43',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            contentId: 'gumi',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare44',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            contentId: 'seoul',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare45',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            contentId: 'extension',
             reward: null,
             visible: true,
             nextLevelCondition: false,
@@ -190,7 +250,63 @@ const mar2020Config = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'TBD',
+            contentId: 'samsung',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare42',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            contentId: 'gopax',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare43',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            contentId: 'gumi',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare44',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            contentId: 'seoul',
+            reward: null,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare45',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            contentId: 'extension',
             reward: null,
             visible: true,
             nextLevelCondition: false,
@@ -267,15 +383,67 @@ const mar2020Config = {
     cap: 0,
   },
   content: {
-    TBD: {
+    samsung: {
       titleKey: 'growth.share.content41.title',
       detailsKey: 'growth.share.content41.details',
       image: 'images/growth/share-content41.png',
-      link: 'https://originprotocol.com',
+      link: 'https://medium.com/originprotocol/samsung-keystore-sdk-react-native-wrapper-65b73294cf33',
       linkKey: 'growth.share.content41.link',
       post: {
         tweet: {
-          default: `To be defined`,
+          default: `Together with @Samsung, @originprotocol is putting real-world use cases for decentralized applications in the hands of people everywhere, through mobile. https://medium.com/originprotocol/samsung-keystore-sdk-react-native-wrapper-65b73294cf33`,
+          translations: [ ]
+        }
+      }
+    },
+    gopax: {
+      titleKey: 'growth.share.content42.title',
+      detailsKey: 'growth.share.content42.details',
+      image: 'images/growth/share-content42.png',
+      link: 'https://medium.com/originprotocol/origin-tokens-ogn-list-on-exchanges-coinone-and-gopax-e2874c7b73e8',
+      linkKey: 'growth.share.content42.link',
+      post: {
+        tweet: {
+          default: `In addition to @binance, $OGN from @originprotocol is now listed on @CoinoneOfficial and @GOPAX_kr https://medium.com/originprotocol/origin-tokens-ogn-list-on-exchanges-coinone-and-gopax-e2874c7b73e8`,
+          translations: [ ]
+        }
+      }
+    },
+    gumi: {
+      titleKey: 'growth.share.content43.title',
+      detailsKey: 'growth.share.content43.details',
+      image: 'images/growth/share-content43.png',
+      link: 'https://www.originprotocol.com/video/gumi-ray-zhang-origin-team',
+      linkKey: 'growth.share.content43.link',
+      post: {
+        tweet: {
+          default: `Ray Zhang, Managing Director at Gumi, shares his vision on how @originprotocol can tackle its large-scale mission with its world-class team. https://www.originprotocol.com/video/gumi-ray-zhang-origin-team`,
+          translations: [ ]
+        }
+      }
+    },
+    seoul: {
+      titleKey: 'growth.share.content44.title',
+      detailsKey: 'growth.share.content44.details',
+      image: 'images/growth/share-content44.png',
+      link: 'https://www.originprotocol.com/video/erica-kang-south-korea-seoul',
+      linkKey: 'growth.share.content44.link',
+      post: {
+        tweet: {
+          default: `Erica Kang @ekang426, founder of @kryptoseoul, shares her experience using the @originprotocol Marketplace app and encourages new entrants to the ecosystem to try it out. https://www.originprotocol.com/video/erica-kang-south-korea-seoul`,
+          translations: [ ]
+        }
+      }
+    },
+    extension: {
+      titleKey: 'growth.share.content45.title',
+      detailsKey: 'growth.share.content45.details',
+      image: 'images/growth/share-content45.png',
+      link: 'TBD',
+      linkKey: 'growth.share.content45.link',
+      post: {
+        tweet: {
+          default: `TBD`,
           translations: [ ]
         }
       }

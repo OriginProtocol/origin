@@ -28,7 +28,7 @@ function BrowserExtensionInstallAction(props) {
       }`}
       onClick={() => {
         window.open(
-          'https://chrome.google.com/webstore/category/extensions',
+          'https://originprotocol.com/reward/extension/march_2020',
           'blank'
         )
       }}
