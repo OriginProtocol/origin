@@ -41,6 +41,9 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
+// Non-graphQL routes first.
+app.post('/log_event', logEvent)
+
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
 const server = new ApolloServer({
@@ -108,10 +111,7 @@ const server = new ApolloServer({
     }
   }
 })
-server.applyMiddleware({ app })
-
-// Non-graphQL routes.
-app.post('/log_event', logEvent)
+server.applyMiddleware({ app, path: '/' })
 
 const port = process.env.PORT || 4008
 

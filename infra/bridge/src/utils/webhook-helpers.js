@@ -47,7 +47,7 @@ module.exports.populateValidContents = async () => {
 
   try {
     const response = await request
-      .post(process.env.GROWTH_SERVER_URL + '/graphql')
+      .post(process.env.GROWTH_SERVER_URL)
       .send({
         query
       })
