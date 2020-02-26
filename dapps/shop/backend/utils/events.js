@@ -4,7 +4,7 @@ const web3 = new Web3(PROVIDER)
 
 const { getIpfsHashFromBytes32 } = require('./_ipfs')
 
-const { Events } = require('../data/db')
+const { Event } = require('../models')
 
 const abi = require('./_abi')
 const Marketplace = new web3.eth.Contract(abi)
@@ -43,12 +43,12 @@ async function upsertEvent({ event, shopId, networkId }) {
   eventObj.timestamp = block.timestamp
   const { transactionHash } = event
 
-  const exists = await Events.findOne({ where: { transactionHash } })
+  const exists = await Event.findOne({ where: { transactionHash } })
   if (exists) {
     return exists
   }
 
-  const record = await Events.create(eventObj)
+  const record = await Event.create(eventObj)
   if (!record.id) {
     throw new Error('Could not save event')
   }

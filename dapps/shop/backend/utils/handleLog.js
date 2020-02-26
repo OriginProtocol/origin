@@ -8,7 +8,7 @@ const abi = require('./_abi')
 const sendMail = require('./emailer')
 const { upsertEvent, getEventObj } = require('./events')
 const encConf = require('./encryptedConfig')
-const { Transactions, Orders, Shops } = require('../data/db')
+const { Transaction, Order, Shop } = require('../models')
 
 const web3 = new Web3()
 const Marketplace = new web3.eth.Contract(abi)
@@ -33,12 +33,12 @@ const handleLog = async ({
   }
 
   console.log('fetch existing...', transactionHash)
-  const existingTx = await Transactions.findOne({ where: { transactionHash } })
+  const existingTx = await Transaction.findOne({ where: { transactionHash } })
   if (existingTx) {
     console.log('Already handled tx')
     return
   } else {
-    Transactions.create({
+    Transaction.create({
       networkId,
       transactionHash,
       blockNumber: web3.utils.hexToNumber(blockNumber)
@@ -56,7 +56,7 @@ const handleLog = async ({
 
   const listingId = `${networkId}-${contractVersion}-${eventObj.listingId}`
   const offerId = `${listingId}-${eventObj.offerId}`
-  const shop = await Shops.findOne({ where: { listingId } })
+  const shop = await Shop.findOne({ where: { listingId } })
   if (!shop) {
     console.log(`No shop for listing ${listingId}`)
     return
@@ -110,7 +110,7 @@ const handleLog = async ({
 
     console.log(cart)
 
-    const order = await Orders.create({
+    const order = await Order.create({
       networkId,
       shopId: shop.id,
       orderId: offerId,

@@ -1,9 +1,9 @@
-const { Sequelize, Discounts } = require('../data/db')
+const { Sequelize, Discount } = require('../models')
 const { authShop, authSellerAndShop } = require('./_auth')
 
 module.exports = function(app) {
   app.post('/check-discount', authShop, async (req, res) => {
-    const discounts = await Discounts.findAll({
+    const discounts = await Discount.findAll({
       where: {
         [Sequelize.Op.and]: [
           { status: 'active' },
@@ -30,7 +30,7 @@ module.exports = function(app) {
   })
 
   app.get('/discounts', authSellerAndShop, async (req, res) => {
-    const discounts = await Discounts.findAll({
+    const discounts = await Discount.findAll({
       where: { shopId: req.shop.id },
       order: [['createdAt', 'desc']]
     })
@@ -38,7 +38,7 @@ module.exports = function(app) {
   })
 
   app.get('/discounts/:id', authSellerAndShop, async (req, res) => {
-    const discount = await Discounts.findOne({
+    const discount = await Discount.findOne({
       where: {
         id: req.params.id,
         shopId: req.shop.id
@@ -48,7 +48,7 @@ module.exports = function(app) {
   })
 
   app.post('/discounts', authSellerAndShop, async (req, res) => {
-    const discount = await Discounts.create({
+    const discount = await Discount.create({
       shopId: req.shop.id,
       ...req.body
     })
@@ -56,7 +56,7 @@ module.exports = function(app) {
   })
 
   app.put('/discounts/:id', authSellerAndShop, async (req, res) => {
-    const result = await Discounts.update(req.body, {
+    const result = await Discount.update(req.body, {
       where: {
         id: req.params.id,
         shopId: req.shop.id
@@ -67,7 +67,7 @@ module.exports = function(app) {
       return res.json({ success: false })
     }
 
-    const discount = await Discounts.findOne({
+    const discount = await Discount.findOne({
       where: {
         id: req.params.id,
         shopId: req.shopId
@@ -78,7 +78,7 @@ module.exports = function(app) {
   })
 
   app.delete('/discounts/:id', authSellerAndShop, async (req, res) => {
-    const discount = await Discounts.destroy({
+    const discount = await Discount.destroy({
       where: {
         id: req.params.id,
         shopId: req.shop.id
