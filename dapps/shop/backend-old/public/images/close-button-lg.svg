@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80" height="80" viewBox="0 0 80 80">
+    <defs>
+        <path id="b" d="M1380.378 84.858l-10.36-10.258-10.29 10.4-4.583-4.582 10.26-10.396L1355 59.727l4.582-4.582 10.385 10.255 10.265-10.4 4.626 4.623-10.253 10.352L1385 80.233l-4.622 4.624zM1370 40c-16.568 0-30 13.432-30 30 0 16.567 13.432 30 30 30 16.568 0 30-13.433 30-30 0-16.568-13.432-30-30-30z"/>
+        <filter id="a" width="150%" height="150%" x="-25%" y="-25%" filterUnits="objectBoundingBox">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(-1330 -30)">
+        <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+        <use fill="#FFF" fill-opacity=".8" xlink:href="#b"/>
+    </g>
+</svg>

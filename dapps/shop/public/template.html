@@ -36,6 +36,8 @@
     /></noscript>
   <% } %>
 
+  <link rel="data-dir" href="<%= htmlWebpackPlugin.options.dataDir %>" />
+
   <link rel="icon" href="<%= htmlWebpackPlugin.options.absolute ? '/' : '' %>favicon.ico" />
   <% _.forEach(htmlWebpackPlugin.files.css, function(file, index) { %>
   <% if (htmlWebpackPlugin.files.cssIntegrity) { %>
