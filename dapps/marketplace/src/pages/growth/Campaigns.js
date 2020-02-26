@@ -26,7 +26,7 @@ import ToastNotification from 'pages/user/ToastNotification'
 import CompletedActionGroups from './CompletedActionGroups'
 
 const GrowthEnum = require('Growth$FbtEnum')
-const maxProgressBarTokens = 2500
+const maxProgressBarTokens = 15
 
 const GrowthTranslation = ({ stringKey }) => {
   return (
