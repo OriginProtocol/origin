@@ -52,19 +52,13 @@ ensure this does not happen.
     heroku addons:create sendgrid:starter
 
     # Set environment variables
-    heroku config:set PUBLIC_URL=https://myshop.eth.link
-    heroku config:set DATA_URL=https://myshop.eth.link/myshop/
-    heroku config:set ADMIN_PW=secretpassword
-    heroku config:set NETWORK_ID=1
-    heroku config:set PROVIDER=wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
-    heroku config:set PGP_PRIVATE_KEY_PASS=secretpgp
-    heroku config:set PGP_PRIVATE_KEY='<PASTE_MULTI_LINE>'
+    heroku config:set PROVIDER=https://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
+    heroku config:set PROVIDER_WS=wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
+    heroku config:set ENCRYPTION_KEY=randomstring
 
     # If you're taking credit card orders, provide a private key. Offers on the
     # Origin Marketplace contract will be made with this account.
     heroku config:set WEB3_PK=0xprivatekey
-    heroku config:set STRIPE_BACKEND=<STRIPE_SECRET_KEY>
-    heroku config:set STRIPE_WEBHOOK_SECRET=<STRIPE_WEBHOOK>
 
     # Commit files
     git add .
@@ -77,6 +71,10 @@ ensure this does not happen.
     # Switch to 'hobby' type dyno to prevent sleeping ($7/month)
 
     heroku ps:type hobby
+
+    # Set up a new shop
+
+    heroku run -- node scripts/createShop.js
 
 ## PGP/GPG Key Export
 

@@ -3,116 +3,100 @@ require('dotenv').config()
 const Web3 = require('web3')
 const openpgp = require('openpgp')
 
-const { getIpfsHashFromBytes32, getText, getIPFSGateway } = require('./_ipfs')
-const encConf = require('./encryptedConfig')
+const { getText, getIPFSGateway } = require('./_ipfs')
 const abi = require('./_abi')
 const sendMail = require('./emailer')
-const { NETWORK_ID } = require('./const')
-const { ListingID, OfferID } = require('./id')
-const { addressToVersion } = require('./address')
-const { Transactions, Shops, Orders } = require('../data/db')
+const { upsertEvent, getEventObj } = require('./events')
+const encConf = require('./encryptedConfig')
+const { Transactions, Orders, Shops } = require('../data/db')
 
 const web3 = new Web3()
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
-const netId = NETWORK_ID
+
+function handleError(event, error) {
+  console.log(error)
+}
 
 const handleLog = async ({
+  networkId,
+  contractVersion,
   data,
   topics,
   transactionHash,
-  address,
   blockNumber
 }) => {
-  const ipfsGateway = await getIPFSGateway()
   const eventAbi = MarketplaceABI.find(i => i.signature === topics[0])
   if (!eventAbi) {
     console.log('Unknown event')
     return
   }
+
   console.log('fetch existing...', transactionHash)
-  const existingTx = await Transactions.findOne({
-    where: { transactionHash: transactionHash }
-  })
-  console.log('existing', existingTx)
+  const existingTx = await Transactions.findOne({ where: { transactionHash } })
   if (existingTx) {
     console.log('Already handled tx')
     return
   } else {
     Transactions.create({
-      networkId: netId,
-      transactionHash: transactionHash,
+      networkId,
+      transactionHash,
       blockNumber: web3.utils.hexToNumber(blockNumber)
     }).then(res => {
       console.log(`Created tx ${res.dataValues.id}`)
     })
   }
 
-  const { name, inputs } = eventAbi
-  const decoded = web3.eth.abi.decodeLog(inputs, data, topics.slice(1))
-  const { listingID, offerID, ipfsHash, party } = decoded
+  const eventObj = getEventObj({
+    data,
+    topics,
+    transactionHash,
+    blockNumber
+  })
 
-  const contractVersion = addressToVersion(address)
-  const lid = new ListingID(listingID, NETWORK_ID, contractVersion)
-  const oid = new OfferID(listingID, offerID, NETWORK_ID, contractVersion)
+  const listingId = `${networkId}-${contractVersion}-${eventObj.listingId}`
+  const offerId = `${listingId}-${eventObj.offerId}`
+  const shop = await Shops.findOne({ where: { listingId } })
+  if (!shop) {
+    console.log(`No shop for listing ${listingId}`)
+    return
+  }
 
-  console.log(`${name} - ${oid.toString()} by ${party}`)
-  console.log(`IPFS Hash: ${getIpfsHashFromBytes32(ipfsHash)}`)
+  const event = await upsertEvent({
+    shopId: shop.id,
+    networkId,
+    event: {
+      data,
+      topics,
+      transactionHash,
+      blockNumber
+    }
+  })
+
+  console.log(`${event.eventName} - ${event.offerId} by ${event.party}`)
+  console.log(`IPFS Hash: ${event.ipfsHash}`)
 
   try {
-    const offerData = await getText(ipfsGateway, ipfsHash, 10000)
+    const dataUrl = await encConf.get(shop.id, 'dataUrl')
+    const ipfsGateway = await getIPFSGateway(dataUrl, networkId)
+    console.log('IPFS Gateway', ipfsGateway)
+
+    const offerData = await getText(ipfsGateway, eventObj.ipfsHash, 10000)
     const offer = JSON.parse(offerData)
     console.log('Offer:', offer)
 
-    if (!offer.encryptedData) {
-      console.log('No encrypted data found')
-      return
+    const encrypedHash = offer.encryptedData
+    if (!encrypedHash) {
+      return handleError(event, 'No encrypted data found')
     }
 
-    const record = await Shops.findOne({
-      where: {
-        listingId: lid.toString()
-      }
-    })
-    const shopId = record.id
-
-    const encryptedDataJson = await getText(
-      ipfsGateway,
-      offer.encryptedData,
-      10000
-    )
+    const encryptedDataJson = await getText(ipfsGateway, encrypedHash, 10000)
     const encryptedData = JSON.parse(encryptedDataJson)
-    console.log('Encrypted Data:', encryptedData)
 
-    const PrivateKey = await encConf.get(shopId, 'pgpPrivateKey')
-    const PrivateKeyPass = await encConf.get(shopId, 'pgpPrivateKeyPass')
-
-    if (!PrivateKey) {
-      console.error(
-        `Missing private key for shop ${shopId}. Unable to process event!`
-      )
-      return
-    }
-    if (!PrivateKeyPass) {
-      console.warn(
-        `Missing private key decryption passphrase for shop ${shopId}. This will probably fail!`
-      )
-    }
+    const PrivateKey = await encConf.get(shop.id, 'pgpPrivateKey')
+    const PrivateKeyPass = await encConf.get(shop.id, 'pgpPrivateKeyPass')
 
     const privateKey = await openpgp.key.readArmored(PrivateKey)
-
-    if (!privateKey || !privateKey.keys || privateKey.keys.length < 1) {
-      if (privateKey.err) {
-        for (const err of privateKey.err) {
-          console.error(err)
-        }
-      }
-      console.error(
-        `Unable to load private key for shop ${shopId}. Unable to process event!`
-      )
-      return
-    }
-
     const privateKeyObj = privateKey.keys[0]
     await privateKeyObj.decrypt(PrivateKeyPass)
 
@@ -121,23 +105,24 @@ const handleLog = async ({
 
     const plaintext = await openpgp.decrypt(options)
     const cart = JSON.parse(plaintext.data)
-    cart.offerId = oid.toString()
+    cart.offerId = offerId
     cart.tx = transactionHash
 
     console.log(cart)
 
-    Orders.create({
-      orderId: cart.offerId,
-      shopId: shopId,
-      networkId: netId,
+    const order = await Orders.create({
+      networkId,
+      shopId: shop.id,
+      orderId: offerId,
       data: JSON.stringify(cart)
-    }).then(() => {
-      console.log('Saved to DB OK')
     })
 
-    sendMail(shopId, cart)
+    console.log(`Saved order ${order.id} to DB.`)
+    console.log('sendMail', cart)
+    sendMail(shop.id, cart)
   } catch (e) {
     console.error(e)
+    handleError(event, e.message)
   }
 }
 

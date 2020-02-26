@@ -27,6 +27,7 @@ const typeDefs = require('./schema')
 const { validateToken } = require('@origin/auth-utils/src/index')
 
 const app = express()
+app.set('trust proxy', true)
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

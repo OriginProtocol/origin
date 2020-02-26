@@ -4,10 +4,7 @@ const randomstring = require('randomstring')
 try {
   require('envkey')
 } catch (err) {
-  if (process.env.NODE_ENV === 'production') {
-    console.error(err)
-    process.exit(1)
-  }
+  console.log('Is ENVKEY missing?')
 }
 
 const NETWORK_NAME_TO_ID = {
@@ -19,8 +16,8 @@ const NETWORK_NAME_TO_ID = {
 const CONTRACTS = {
   999: {
     marketplace: {
-      '000': '0xBFF408fD7DCb4E9B3fF68941699636a86B93eD7C',
-      '001': '0x46e4572294987fbeE82DDe6Ca7168f7C2E1bB83e'
+      '000': process.env.MARKETPLACE_CONTRACT,
+      '001': process.env.MARKETPLACE_CONTRACT
     }
   },
   4: {
@@ -46,16 +43,9 @@ const {
   NETWORK = IS_PROD ? 'rinkeby' : 'dev',
   WEB3_PK,
   PROVIDER,
+  PROVIDER_WS,
   IPFS_GATEWAY, // IFPS gateway oerride
-  SUPPORT_EMAIL_OVERRIDE,
-  SENDGRID_API_KEY,
-  SENDGRID_USERNAME,
-  SENDGRID_PASSWORD,
-  MAILGUN_SMTP_SERVER,
-  MAILGUN_SMTP_PORT,
-  MAILGUN_SMTP_LOGIN,
-  MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID
+  SUPPORT_EMAIL_OVERRIDE
 } = process.env
 
 /**
@@ -76,18 +66,11 @@ module.exports = {
   SESSION_SECRET,
   PASSWORD_SALT_ROUNDS,
   WEB3_PK,
+  PROVIDER_WS,
   PROVIDER,
   IPFS_GATEWAY,
   NETWORK,
   NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,
   SUPPORT_EMAIL_OVERRIDE,
-  SENDGRID_API_KEY,
-  SENDGRID_USERNAME,
-  SENDGRID_PASSWORD,
-  MAILGUN_SMTP_SERVER,
-  MAILGUN_SMTP_PORT,
-  MAILGUN_SMTP_LOGIN,
-  MAILGUN_SMTP_PASSWORD,
-  AWS_ACCESS_KEY_ID,
   PRINTFUL_URL
 }
