@@ -28,6 +28,10 @@ const sessionStore = store('sessionStorage')
 
 const GrowthEnum = require('Growth$FbtEnum')
 
+// List of country codes for which the citizenship confirmation
+// is done on the TOS page rather than on a separate modal.
+const optimizedRestrictedUiWhitelist = [ ]
+
 const GrowthTranslation = key => {
   return (
     <fbt desc="growth">
@@ -149,9 +153,11 @@ function withEnrolmentModal(WrappedComponent) {
       const termsAccepted = e.target.checked
       this.setState({ termsAccepted })
       const { notCitizenChecked } = this.state
-      // If we detected country as US based on IP, user must certify they
-      // are not US citizen/resident before we enable the signup button.
-      if (this.countryCode === 'US') {
+      // If the user is part of a restricted country and the country
+      // is on the whitelist for the optimized UI, we need to have them
+      // certify they are not citizen/resident of that country before we
+      // enable the signup button.
+      if (optimizedRestrictedUiWhitelist.includes(this.countryCode)) {
         this.setState({
           enableSignupButton: notCitizenChecked && termsAccepted
         })
@@ -350,7 +356,7 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            {this.countryCode === 'US' && (
+            {optimizedRestrictedUiWhitelist.includes(this.countryCode) && (
               <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
                 <label className="checkbox-holder">
                   <input
