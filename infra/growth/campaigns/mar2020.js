@@ -360,7 +360,7 @@ const mar2020Config = {
           config: {
             eventType: 'BrowserExtensionInstalled',
             reward: {
-              amount: tokenToNaturalUnits(10),
+              amount: tokenToNaturalUnits(15),
               currency: 'OGN'
             },
             limit: 1,
