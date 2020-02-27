@@ -62,7 +62,7 @@ class BlockTracker {
     return this._resetHandlers()
   }
 
-  async getLatestBlock () {
+  async getLatestBlock() {
     // return if available
     if (this.latest) return this.latest
     // wait for a new latest block
@@ -71,11 +71,11 @@ class BlockTracker {
     return this.latest
   }
 
-  getCurrentBlock () {
+  getCurrentBlock() {
     return this.latest
   }
 
-  isRunning () {
+  isRunning() {
     return true
   }
 }

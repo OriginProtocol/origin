@@ -29,7 +29,7 @@ function useOrders() {
         }
       })
       const sortedOrders = sortBy(orders, order => {
-        return -Number(order.order_id.split('-')[3])
+        return -Number(order.orderId.split('-')[3])
       })
 
       setLoading(false)

@@ -15,9 +15,10 @@ const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
 
 const PrivateKeyPass = process.env.PGP_PRIVATE_KEY_PASS
-const PrivateKey = process.env.PGP_PRIVATE_KEY.startsWith('--')
-  ? process.env.PGP_PRIVATE_KEY
-  : Buffer.from(process.env.PGP_PRIVATE_KEY, 'base64').toString('ascii')
+const PrivateKeyVar = process.env.PGP_PRIVATE_KEY || ''
+const PrivateKey = PrivateKeyVar.startsWith('--')
+  ? PrivateKeyVar
+  : Buffer.from(PrivateKeyVar, 'base64').toString('ascii')
 
 const handleLog = async ({ data, topics, transactionHash, blockNumber }) => {
   const siteConfig = await config.getSiteConfig()

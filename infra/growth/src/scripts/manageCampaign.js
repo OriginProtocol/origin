@@ -14,6 +14,7 @@ const novemberConfig = require('../../campaigns/november')
 const decemberConfig = require('../../campaigns/december')
 const jan2020Config = require('../../campaigns/jan2020')
 const feb2020Config = require('../../campaigns/feb2020')
+const mar2020Config = require('../../campaigns/mar2020')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -325,6 +326,35 @@ async function updateFeb2020ProdRules() {
   await campaign.update({ rules: JSON.stringify(feb2020Config) })
 }
 
+async function createMar2020ProdCampaign() {
+  console.log('Creating Mar 2020 campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.mar2020.name',
+    shortNameKey: 'growth.mar2020.short_name',
+    rules: JSON.stringify(mar2020Config),
+    startDate: Date.parse('February 28, 2020, 21:00 UTC'), // Fri Feb 28 2020 4pm PST
+    endDate: Date.parse('April 1, 2020, 00:00 UTC'),
+    distributionDate: Date.parse('April 1, 2020, 00:00 UTC'),
+    cap: tokenToNaturalUnits(150000), // Set cap to 150k tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateMar2020ProdRules() {
+  console.log('Updating Mar 2020 campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.mar2020.name' }
+  })
+  await campaign.update({ rules: JSON.stringify(mar2020Config) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -343,7 +373,8 @@ const createByMonth = {
   november: createNovemberProdCampaign,
   december: createDecemberProdCampaign,
   jan2020: createJan2020ProdCampaign,
-  feb2020: createFeb2020ProdCampaign
+  feb2020: createFeb2020ProdCampaign,
+  mar2020: createMar2020ProdCampaign
 }
 
 const updateByMonth = {
@@ -356,7 +387,8 @@ const updateByMonth = {
   november: updateNovemberProdRules,
   december: updateDecemberProdRules,
   jan2020: updateJan2020ProdRules,
-  feb2020: updateFeb2020ProdRules
+  feb2020: updateFeb2020ProdRules,
+  mar2020: updateMar2020ProdRules
 }
 
 const action = args['--action']

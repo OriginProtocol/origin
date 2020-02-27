@@ -33,15 +33,20 @@ const Sellers = sequelize.define(
 const Shops = sequelize.define(
   'shops',
   {
-    // attributes
-    name: {
+    networkId: {
+      type: Sequelize.INTEGER
+    },
+    // e.g. 1-001-1212
+    listingId: {
       type: Sequelize.STRING
     },
     sellerId: {
       type: Sequelize.INTEGER
     },
-    // e.g. 1-001-1212
-    listingId: {
+    hostname: {
+      type: Sequelize.STRING
+    },
+    name: {
       type: Sequelize.STRING
     },
     authToken: {
@@ -49,6 +54,12 @@ const Shops = sequelize.define(
     },
     config: {
       type: Sequelize.TEXT
+    },
+    firstBlock: {
+      type: Sequelize.INTEGER
+    },
+    lastBlock: {
+      type: Sequelize.INTEGER
     }
   },
   {
@@ -100,10 +111,68 @@ const Transactions = sequelize.define(
 const Orders = sequelize.define(
   'orders',
   {
+    networkId: {
+      type: Sequelize.INTEGER
+    },
     orderId: {
       type: Sequelize.STRING,
       unique: true
     },
+    ipfsHash: {
+      type: Sequelize.STRING
+    },
+    encryptedIpfsHash: {
+      type: Sequelize.STRING
+    },
+    createdBlock: {
+      type: Sequelize.INTEGER
+    },
+    updatedBlock: {
+      type: Sequelize.INTEGER
+    },
+    shopId: {
+      type: Sequelize.INTEGER
+    },
+    status: {
+      type: Sequelize.INTEGER
+    },
+    currency: {
+      type: Sequelize.STRING
+    },
+    value: {
+      type: Sequelize.STRING
+    },
+    commission: {
+      type: Sequelize.STRING
+    },
+    buyer: {
+      type: Sequelize.STRING
+    },
+    affiliate: {
+      type: Sequelize.STRING
+    },
+    arbitrator: {
+      type: Sequelize.STRING
+    },
+    finalizes: {
+      type: Sequelize.STRING
+    },
+    notes: {
+      type: Sequelize.TEXT
+    },
+    data: {
+      type: Sequelize.TEXT
+    }
+  },
+  {
+    ...baseModelOptions,
+    timestamps: false
+  }
+)
+
+const Events = sequelize.define(
+  'events',
+  {
     // attributes
     networkId: {
       type: Sequelize.INTEGER
@@ -111,12 +180,55 @@ const Orders = sequelize.define(
     shopId: {
       type: Sequelize.INTEGER
     },
+    transactionHash: {
+      type: Sequelize.STRING
+    },
+    address: {
+      type: Sequelize.STRING
+    },
+    blockHash: {
+      type: Sequelize.STRING
+    },
+    blockNumber: {
+      type: Sequelize.INTEGER
+    },
+    timestamp: {
+      type: Sequelize.INTEGER
+    },
     data: {
-      type: Sequelize.TEXT
+      type: Sequelize.STRING
+    },
+    topic1: {
+      type: Sequelize.STRING
+    },
+    topic2: {
+      type: Sequelize.STRING
+    },
+    topic3: {
+      type: Sequelize.STRING
+    },
+    topic4: {
+      type: Sequelize.STRING
+    },
+    eventName: {
+      type: Sequelize.STRING
+    },
+    party: {
+      type: Sequelize.STRING
+    },
+    listingId: {
+      type: Sequelize.INTEGER
+    },
+    offerId: {
+      type: Sequelize.INTEGER
+    },
+    ipfsHash: {
+      type: Sequelize.STRING
     }
   },
   {
-    ...baseModelOptions
+    ...baseModelOptions,
+    timestamps: false
   }
 )
 
@@ -196,5 +308,6 @@ module.exports = {
   Network,
   Transactions,
   Orders,
-  Discounts
+  Discounts,
+  Events
 }

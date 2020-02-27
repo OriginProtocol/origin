@@ -145,6 +145,8 @@ const webpackConfig = {
       provider: process.env.PROVIDER,
       analytics: process.env.ANALYTICS,
       fbPixel: process.env.FB,
+      dataDir:
+        process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
       absolute
     }),
     new webpack.EnvironmentPlugin({
@@ -153,11 +155,11 @@ const webpackConfig = {
       MARKETPLACE_CONTRACT: localContractAddress,
       NETWORK: process.env.NETWORK || 'localhost',
       DATA_DIR:
-        process.env.DATA_DIR || process.env.CONTENT_CDN ? '' : 'example',
+        process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
       CONTENT_CDN: process.env.CONTENT_CDN || '',
       CONTENT_HASH: process.env.CONTENT_HASH || '',
       ABSOLUTE: process.env.ABSOLUTE || '',
-      BACKEND_AUTH_TOKEN: process.env.BACKEND_AUTH_TOKEN
+      BACKEND_AUTH_TOKEN: process.env.BACKEND_AUTH_TOKEN || ''
     })
   ],
 

@@ -6,7 +6,13 @@
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Modal, StyleSheet, PermissionsAndroid, Platform } from 'react-native'
+import {
+  Modal,
+  StyleSheet,
+  PermissionsAndroid,
+  Platform,
+  DeviceEventEmitter
+} from 'react-native'
 import { ethers } from 'ethers'
 import { WebView } from 'react-native-webview'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -245,6 +251,7 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
           }
           console.debug('Got transaction hash', transaction.hash)
           setTransactionCardLoading(false)
+          DeviceEventEmitter.emit('transactionSent', transaction.hash)
           toggleModal(modal, transaction.hash)
         }}
         loading={transactionCardLoading}
