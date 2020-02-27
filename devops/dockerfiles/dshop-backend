@@ -18,7 +18,10 @@ COPY $DSHOP_BACKEND_DIR/listener.js ./
 COPY $DSHOP_BACKEND_DIR/tstEnc.js ./
 COPY $DSHOP_BACKEND_DIR/routes ./routes
 COPY $DSHOP_BACKEND_DIR/utils ./utils
-COPY $DSHOP_BACKEND_DIR/data/db.js ./data/db.js
+COPY $DSHOP_BACKEND_DIR/data/config.js ./data/config.js
+COPY $DSHOP_BACKEND_DIR/data/migrations ./data/migrations
+COPY $DSHOP_BACKEND_DIR/models ./models
+COPY $DSHOP_BACKEND_DIR/scripts ./scripts
 
 RUN yarn install
-CMD npm run sequelize:sync && node index.js
+CMD npm run migrate && node index.js
