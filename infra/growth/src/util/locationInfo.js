@@ -1,6 +1,6 @@
 const { ip2geo } = require('@origin/ip2geo')
 
-const restrictedCountryCodes = ['US']
+const restrictedCountryCodes = []
 const forbiddenCountryCodes = ['CU', 'IR', 'KP', 'SY']
 
 /**
