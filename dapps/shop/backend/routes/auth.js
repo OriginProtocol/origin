@@ -25,18 +25,17 @@ module.exports = function(app) {
   })
 
   app.post('/auth/login', async (req, res) => {
-    Seller.findOne({ where: { email: req.body.email } }).then(seller => {
-      if (!seller) {
-        res.status(404).send({ success: false })
-        return
-      }
-      if (checkPassword(seller.password, req.body.password)) {
-        req.session.sellerId = seller.id
-        res.json({ success: true })
-      } else {
-        res.json({ success: false })
-      }
-    })
+    const seller = await Seller.findOne({ where: { email: req.body.email } })
+    if (!seller) {
+      return res.status(404).send({ success: false })
+    }
+    const check = await checkPassword(req.body.password, seller.password)
+    if (check === true) {
+      req.session.sellerId = seller.id
+      res.json({ success: true })
+    } else {
+      res.json({ success: false })
+    }
   })
 
   const logoutHandler = (req, res) => {
@@ -53,7 +52,7 @@ module.exports = function(app) {
 
   // TODO: Should this at least use API key auth?
   app.post('/auth/registration', async (req, res) => {
-    const { seller, status, error } = createSeller(req.body)
+    const { seller, status, error } = await createSeller(req.body)
 
     if (error) {
       return res.status(status).json({ success: false, message: error })
@@ -159,8 +158,11 @@ module.exports = function(app) {
     return res.json({ success: true })
   })
 
-  app.get('/config/dump/:id', async (req, res) => {
-    const { id } = req.params
+  app.get('/config/dump', authSellerAndShop, async (req, res) => {
+    if (!req.session.sellerId) {
+      return res.json({ success: false })
+    }
+    const { id } = req.shop
 
     // Testing only
     if (IS_PROD) return res.sendStatus(404)
