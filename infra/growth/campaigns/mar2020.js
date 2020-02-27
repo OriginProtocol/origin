@@ -368,6 +368,7 @@ const mar2020Config = {
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
+
           }
         }
       ]
