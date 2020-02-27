@@ -29,7 +29,8 @@ const shopQuestions = [
     type: 'input',
     name: 'authToken',
     message: 'Auth Token (leave empty to generate)'
-  }
+  },
+  { type: 'input', name: 'hostname', message: 'Hostname' }
 ]
 
 async function go() {
