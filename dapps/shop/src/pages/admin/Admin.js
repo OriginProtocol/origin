@@ -65,7 +65,7 @@ const Admin = () => {
               </li>
               <li
                 className={
-                  pathname.indexOf('/admin/config') === 0 ? 'active' : ''
+                  pathname.indexOf('/admin/settings') === 0 ? 'active' : ''
                 }
               >
                 <Link to="/admin/settings">Settings</Link>
@@ -77,9 +77,6 @@ const Admin = () => {
               >
                 <Link to="/admin/events">Events</Link>
               </li>
-              {/* <li className={pathname === '/admin/settings' ? 'active' : ''}>
-                <Link to="/admin/settings">Settings</Link>
-              </li> */}
               <li className="db">
                 <a
                   href="#logout"

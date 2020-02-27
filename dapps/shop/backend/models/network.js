@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         primaryKey: true
       },
-      lastBlock: {
-        type: DataTypes.INTEGER
-      }
+      lastBlock: DataTypes.INTEGER,
+      provider: DataTypes.STRING,
+      providerWs: DataTypes.STRING
     },
     {
       timestamps: false,
