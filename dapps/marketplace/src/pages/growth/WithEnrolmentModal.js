@@ -30,7 +30,7 @@ const GrowthEnum = require('Growth$FbtEnum')
 
 // List of country codes for which the citizenship confirmation
 // is done on the TOS page rather than on a separate modal.
-const optimizedRestrictedUiWhitelist = [ ]
+const optimizedRestrictedUiWhitelist = []
 
 const GrowthTranslation = key => {
   return (
@@ -366,7 +366,8 @@ function withEnrolmentModal(WrappedComponent) {
                     value="confirm-not-us-citizen"
                   />
                   <span className="checkmark" />
-                  &nbsp;
+                  &nbsp; /* TODO: country name should be dynamic based on
+                  this.countryCode */
                   <fbt desc="EnrollmentModal.notAUsCitizen">
                     I am not a citizen or resident of the United States of
                     America
@@ -521,7 +522,7 @@ function withEnrolmentModal(WrappedComponent) {
               eligibility = countryOverride.eligibility
             }
 
-            // Note: US is restricted but as opposed to other restricted countries,
+            // Note: For countries restricted but whitelisted for the optimized restricted UI,
             // we have the user answer the citizenship question on the
             // terms acceptance page rather than on a separate modal in order
             // to streamline the flow.
@@ -529,7 +530,8 @@ function withEnrolmentModal(WrappedComponent) {
             if (
               eligibility === 'Eligible' ||
               (eligibility === 'Restricted' && notCitizenConfirmed) ||
-              (eligibility === 'Restricted' && this.countryCode === 'US')
+              (eligibility === 'Restricted' &&
+                optimizedRestrictedUiWhitelist.includes(this.countryCode))
             ) {
               return this.renderTermsModal()
             } else if (
