@@ -42,12 +42,13 @@ module.exports = {
         queryInterface.createTable(
           'networks',
           {
-            // attributes
             network_id: {
               type: Sequelize.INTEGER,
               unique: true
             },
-            last_block: Sequelize.INTEGER
+            last_block: Sequelize.INTEGER,
+            provider: Sequelize.STRING,
+            provider_ws: Sequelize.STRING
           }
         ),
         queryInterface.createTable(
