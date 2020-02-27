@@ -6,7 +6,7 @@ bridgeImageTag: 'e3253c1'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '1e42c1a'
+dappImageTag: '8053d24'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
