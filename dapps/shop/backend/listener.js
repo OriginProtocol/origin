@@ -7,7 +7,7 @@ const Web3 = require('web3')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
 
-const { Op, Network, Shops } = require('./data/db')
+const { Op, Network, Shop } = require('./models')
 const handleLog = require('./utils/handleLog')
 const { CONTRACTS, PROVIDER, PROVIDER_WS } = require('./utils/const')
 
@@ -59,7 +59,7 @@ async function connectWS() {
   let lastBlock, pingTimeout
   const res = await Network.findOne({ where: { networkId } })
   if (res) {
-    lastBlock = res.last_block
+    lastBlock = res.lastBlock
     console.log(`Last recorded block: ${lastBlock}`)
   } else {
     console.log('No recorded block found')
@@ -161,14 +161,14 @@ const handleNewHead = (head, networkId) => {
   const number = web3.utils.hexToNumber(head.number)
   const timestamp = web3.utils.hexToNumber(head.timestamp)
 
-  Network.upsert({ networkId, last_block: number })
+  Network.upsert({ networkId, lastBlock: number })
   console.log(`New block ${number} timestamp: ${timestamp}`)
 
   return number
 }
 
 async function getListingIds() {
-  const shops = await Shops.findAll({
+  const shops = await Shop.findAll({
     attributes: ['listingId'],
     group: ['listingId'],
     where: { networkId, listingId: { [Op.ne]: null } }

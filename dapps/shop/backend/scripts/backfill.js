@@ -9,7 +9,7 @@ const Bottleneck = require('bottleneck')
 const fetch = require('node-fetch')
 const get = require('lodash/get')
 
-const { Shops } = require('../data/db')
+const { Shop } = require('../models')
 const { CONTRACTS } = require('../utils/const')
 const { storeEvents, getEventObj } = require('../utils/events')
 
@@ -54,7 +54,7 @@ async function fetchEvents(listingIdFull) {
 
   const [networkId, contractId, listingId] = listingIdFull.split('-')
 
-  const shop = await Shops.findOne({ listingId })
+  const shop = await Shop.findOne({ listingId })
   if (!shop) {
     console.log('No shop with that ID')
     return

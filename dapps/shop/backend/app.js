@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const serveStatic = require('serve-static')
 const { IS_PROD } = require('./utils/const')
 const { findShopByHostname } = require('./utils/shop')
-const { sequelize } = require('./data/db')
+const { sequelize } = require('./models')
 const encConf = require('./utils/encryptedConfig')
 const app = express()
 
@@ -21,6 +21,19 @@ app.set('trust proxy', true)
 
 const sessionStore = new SequelizeStore({ db: sequelize })
 // sessionStore.sync()
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (ORIGIN_WHITELIST_ENABLED && !ORIGIN_WHITELIST.includes(origin)) {
+        cb(new Error('Not allowed by CORS'))
+      }
+      // if (!origin) console.debug('No Origin header provided')
+      cb(null, origin || '*')
+    },
+    credentials: true
+  })
+)
 
 app.use(
   session({
@@ -41,22 +54,10 @@ app.use((req, res, next) => {
   return jsonBodyParser(req, res, next)
 })
 
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      if (ORIGIN_WHITELIST_ENABLED && !ORIGIN_WHITELIST.includes(origin)) {
-        cb(new Error('Not allowed by CORS'))
-      }
-      // if (!origin) console.debug('No Origin header provided')
-      cb(null, origin || '*')
-    },
-    credentials: true
-  })
-)
-
 // Error handler (needs 4 arg signature apparently)
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
+  console.trace(err)
   return res.status(err.status || 500).json({
     error: {
       name: err.name,
@@ -82,7 +83,7 @@ app.get(
     let html
     try {
       html = fs.readFileSync(`${__dirname}/public/index.html`).toString()
-    } catch(e) {
+    } catch (e) {
       return res.send('')
     }
 

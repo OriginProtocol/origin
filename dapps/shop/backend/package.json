@@ -7,7 +7,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "sequelize:sync": "node -e \"const { sequelize } = require('./data/db'); sequelize.sync().then(() => console.log('success')).catch(err => console.error(err))\"",
+    "migrate": "sequelize db:migrate --config data/config.js --migrations-path data/migrations",
+    "heroku-postbuild": "npm run migrate",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
@@ -39,6 +40,7 @@
     "randomstring": "^1.1.5",
     "reconnecting-websocket": "^4.4.0",
     "sequelize": "^5.21.2",
+    "sequelize-cli": "^5.5.1",
     "serve-static": "^1.14.1",
     "sqlite3": "^4.1.1",
     "stripe": "^8.0.0",

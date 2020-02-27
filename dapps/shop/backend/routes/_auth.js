@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const { PASSWORD_SALT_ROUNDS } = require('../utils/const')
 
-const { Shops } = require('../data/db')
+const { Shop } = require('../models')
 
 async function createSalt() {
   return await bcrypt.genSalt(PASSWORD_SALT_ROUNDS)
@@ -28,7 +28,7 @@ async function authSellerAndShop(req, res, next) {
     return res.status(401).json({ success: false, message: 'No auth token' })
   }
 
-  Shops.findOne({ where: { sellerId, authToken } }).then(shop => {
+  Shop.findOne({ where: { sellerId, authToken } }).then(shop => {
     if (!shop) {
       return res.status(401).json({ success: false, message: 'Shop not found' })
     }
@@ -44,7 +44,7 @@ async function authShop(req, res, next) {
     return res.status(401).json({ success: false, message: 'No auth token' })
   }
 
-  Shops.findOne({ where: { authToken } }).then(shop => {
+  Shop.findOne({ where: { authToken } }).then(shop => {
     if (!shop) {
       return res.status(401).json({ success: false, message: 'Shop not found' })
     }

@@ -5,7 +5,7 @@ const Web3 = require('web3')
 const bodyParser = require('body-parser')
 const Stripe = require('stripe')
 
-const { Shops } = require('../data/db')
+const { Shop } = require('../models')
 const { authShop } = require('./_auth')
 const { ListingID } = require('../utils/id')
 const encConf = require('../utils/encryptedConfig')
@@ -23,13 +23,19 @@ if (WEB3_PK) {
   walletAddress = account.address
   console.log(`using walletAddress ${walletAddress}`)
 } else {
-  throw new Error('WEB3_PK must be defined')
+  console.log('No wallet key found.')
 }
 
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
 module.exports = function(app) {
   app.post('/pay', authShop, async (req, res) => {
+    if (!WEB3_PK) {
+      return res.status(400).send({
+        success: false,
+        message: 'CC payments unavailable'
+      })
+    }
     const shopId = req.shop.id
 
     if (req.body.amount < 50) {
@@ -64,13 +70,16 @@ module.exports = function(app) {
   //    stripe trigger payment_intent.succeeded
 
   app.post('/webhook', rawJson, async (req, res) => {
+    if (!WEB3_PK) {
+      return res.sendStatus(400)
+    }
     // Need to get the shopId before the stripe library processes the incoming
     // buffer
     let jasonBody, shopId
     try {
       jasonBody = JSON.parse(req.body.toString())
       const listingId = get(jasonBody, 'data.object.metadata.listingId')
-      const shop = await Shops.findOne({ where: { listingId } })
+      const shop = await Shop.findOne({ where: { listingId } })
       if (shop) {
         shopId = shop.id
       }
