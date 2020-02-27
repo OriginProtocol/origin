@@ -1,9 +1,5 @@
 const { Seller } = require('../models')
-const {
-  createSalt,
-  hashPassword,
-  checkPassword
-} = require('../routes/_auth')
+const { createSalt, hashPassword, checkPassword } = require('../routes/_auth')
 
 async function createSeller({ name, email, password }) {
   if (!name || !email || !password) {
@@ -28,7 +24,6 @@ async function createSeller({ name, email, password }) {
     email,
     password: passwordHash
   })
-
   return { seller }
 }
 

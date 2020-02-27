@@ -243,7 +243,7 @@ describe('mar2020 campaign rules', () => {
       ruleId: 'BrowserExtensionInstall',
       value: {
         currency: 'OGN',
-        amount: tokenToNaturalUnits(10)
+        amount: tokenToNaturalUnits(15)
       }
     })
     expect(rewards).to.deep.equal(this.expectedRewards)
