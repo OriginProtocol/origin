@@ -431,7 +431,7 @@ const mar2020Config = {
       linkKey: 'growth.share.content44.link',
       post: {
         tweet: {
-          default: `Erica Kang @ekang426, founder of @kryptoseoul, shares her experience using the @originprotocol Marketplace app and encourages new entrants to the ecosystem to try it out. https://www.originprotocol.com/video/erica-kang-south-korea-seoul`,
+          default: `Erica Kang @ekang426, founder of @kryptoseoul, shares her experience using the @originprotocol Marketplace app. https://www.originprotocol.com/video/erica-kang-south-korea-seoul`,
           translations: [ ]
         }
       }
