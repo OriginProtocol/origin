@@ -157,6 +157,50 @@ consuming. To install new dependencies, get a shell in the container and run
 ⚠️ Don't run `docker-compose down` when stopping containers! Any changes made
 since the initial Docker build will be lost. Instead use `docker-compose stop`.
 
+#### Would you like a docker-compose shortcut?
+In case you need to go fast, we have created a script that will convert some of the
+`docker-compose` commands to `ogn [command]`. Note: you still can use 
+`docker-compose` and all other docker commands. This is just an added layer to your 
+docker user-experience here at Origin Protocol. 
+
+ 
+🏎️ Follow these steps to get setup today:
+1. Make sure you have [homebrew](https://brew.sh/) installed
+2. `cd` to your origin directory
+3. Run `./ogn init` - This will create an alias in your shell file and installs [lazydocker](https://github.com/jesseduffield/lazydocker).
+3. Open a new terminal or source your shell e.g. `source ~/.bashrc` or `source ~/.zshrc`.
+4. Now you are ready to start using `ogn`; type `ogn help` to see a list of helpful commands.
+5. Run `lazydocker` to see your running containers and manage them from there.
+
+🏁
+
+<details>
+<summary>Click here to see the list of commands</summary>
+    
+    Script for managing origin docker-compose and running common tasks in containers
+
+    Usage: ogn [command]
+
+        Commands:
+        - help                         Show this message.
+        - init                         Perform initial container setup, generate alias and install lazydocker (Run once).
+        - up | start                   Spin up containers and follow logs.
+            - (up | start) detach      Optional detach to not follow docker logs.
+        - build                        Rebuild the Origin Services container.
+        - list                         Display a list of container names
+        - log <container name>         Follow a single container logs e.g. ogn log services
+        - logs                         Follow ALL container log outputs.
+        - stop                         Stop ALL running containers.
+        - restart <container name>     Restart a single container.
+            - restart all              Restart ALL containers and follow logs
+            - restart all detach       Restart ALL containers and detach logs
+        - shell <container name>       Start a shell for a specific container e.g. ogn shell notifications
+        - prune                        Removes dangling docker images, containers, volumes, networks, and build cache.
+
+    Run lazydocker to view logs and manage containers
+</details>
+
+
 ### Troubleshooting
 
 - If you get errors about missing npm packages, clean install of all modules -
