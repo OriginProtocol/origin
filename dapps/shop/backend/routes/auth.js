@@ -1,5 +1,5 @@
 const omit = require('lodash/omit')
-const { Sellers, Shops } = require('../data/db')
+const { Seller, Shop } = require('../models')
 const { checkPassword } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const { IS_PROD } = require('../utils/const')
@@ -12,7 +12,7 @@ module.exports = function(app) {
     if (!req.session.sellerId) {
       return res.json({ success: false })
     }
-    Sellers.findOne({ where: { id: req.session.sellerId } }).then(seller => {
+    Seller.findOne({ where: { id: req.session.sellerId } }).then(seller => {
       res.json({ success: true, email: seller.email })
     })
   })
@@ -20,23 +20,22 @@ module.exports = function(app) {
   app.get('/auth/:email', async (req, res) => {
     // TODO: Add some rate limiting here
     const { email } = req.params
-    const seller = await Sellers.findOne({ where: { email } })
+    const seller = await Seller.findOne({ where: { email } })
     return res.sendStatus(seller === null ? 404 : 204)
   })
 
   app.post('/auth/login', async (req, res) => {
-    Sellers.findOne({ where: { email: req.body.email } }).then(seller => {
-      if (!seller) {
-        res.status(404).send({ success: false })
-        return
-      }
-      if (checkPassword(seller.password, req.body.password)) {
-        req.session.sellerId = seller.id
-        res.json({ success: true })
-      } else {
-        res.json({ success: false })
-      }
-    })
+    const seller = await Seller.findOne({ where: { email: req.body.email } })
+    if (!seller) {
+      return res.status(404).send({ success: false })
+    }
+    const check = await checkPassword(req.body.password, seller.password)
+    if (check === true) {
+      req.session.sellerId = seller.id
+      res.json({ success: true })
+    } else {
+      res.json({ success: false })
+    }
   })
 
   const logoutHandler = (req, res) => {
@@ -53,7 +52,7 @@ module.exports = function(app) {
 
   // TODO: Should this at least use API key auth?
   app.post('/auth/registration', async (req, res) => {
-    const { seller, status, error } = createSeller(req.body)
+    const { seller, status, error } = await createSeller(req.body)
 
     if (error) {
       return res.status(status).json({ success: false, message: error })
@@ -78,7 +77,7 @@ module.exports = function(app) {
       return res.status(400).json({ success: false })
     }
 
-    const destroy = await Sellers.destroy({ where: { id: sellerId } })
+    const destroy = await Seller.destroy({ where: { id: sellerId } })
 
     req.logout()
     res.json({ success: false, destroy })
@@ -91,7 +90,7 @@ module.exports = function(app) {
       return res.status(400).json({ success: false })
     }
 
-    const rows = await Shops.findAll({ where: { sellerId } })
+    const rows = await Shop.findAll({ where: { sellerId } })
 
     const shops = []
     for (const row of rows) {
@@ -119,7 +118,7 @@ module.exports = function(app) {
         .json({ success: false, message: 'Invalid shop data' })
     }
 
-    const shop = await Shops.create({
+    const shop = await Shop.create({
       ...shopObj,
       sellerId: req.session.sellerId
     })
@@ -132,7 +131,7 @@ module.exports = function(app) {
       return res.json({ success: false })
     }
 
-    await Shops.destroy({
+    await Shop.destroy({
       where: {
         id: req.body.id,
         sellerId: req.session.sellerId
@@ -159,13 +158,16 @@ module.exports = function(app) {
     return res.json({ success: true })
   })
 
-  app.get('/config/dump/:id', async (req, res) => {
-    const { id } = req.params
+  app.get('/config/dump', authSellerAndShop, async (req, res) => {
+    if (!req.session.sellerId) {
+      return res.json({ success: false })
+    }
+    const { id } = req.shop
 
     // Testing only
     if (IS_PROD) return res.sendStatus(404)
 
-    const shop = await Shops.findOne({
+    const shop = await Shop.findOne({
       where: { id, sellerId: req.session.sellerId }
     })
 

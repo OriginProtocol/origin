@@ -2,7 +2,7 @@ const get = require('lodash/get')
 const fetch = require('node-fetch')
 
 const { authSellerAndShop } = require('./_auth')
-const { Orders } = require('../data/db')
+const { Order } = require('../models')
 const encConf = require('../utils/encryptedConfig')
 const { PRINTFUL_URL } = require('../utils/const')
 
@@ -10,7 +10,7 @@ const PrintfulURL = PRINTFUL_URL
 
 function findOrder(req, res, next) {
   const { orderId } = req.params
-  Orders.findOne({
+  Order.findOne({
     where: { orderId, shopId: req.shop.id }
   }).then(order => {
     if (!order) {
@@ -23,7 +23,7 @@ function findOrder(req, res, next) {
 
 module.exports = function(app) {
   app.get('/orders', authSellerAndShop, async (req, res) => {
-    const orders = await Orders.findAll({
+    const orders = await Order.findAll({
       where: { shopId: req.shop.id },
       order: [['createdBlock', 'desc']]
     })
