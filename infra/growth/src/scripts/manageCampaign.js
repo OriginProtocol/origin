@@ -336,7 +336,7 @@ async function createMar2020ProdCampaign() {
     nameKey: 'growth.mar2020.name',
     shortNameKey: 'growth.mar2020.short_name',
     rules: JSON.stringify(mar2020Config),
-    startDate: Date.parse('February 28, 2020, 21:00 UTC'), // Fri Feb 28 2020 4pm PST
+    startDate: Date.parse('February 28, 2020, 21:00 UTC'), // Fri Feb 28 2020 1pm PST
     endDate: Date.parse('April 1, 2020, 00:00 UTC'),
     distributionDate: Date.parse('April 1, 2020, 00:00 UTC'),
     cap: tokenToNaturalUnits(150000), // Set cap to 150k tokens

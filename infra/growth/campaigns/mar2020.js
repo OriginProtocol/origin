@@ -440,11 +440,11 @@ const mar2020Config = {
       titleKey: 'growth.share.content45.title',
       detailsKey: 'growth.share.content45.details',
       image: 'images/growth/share-content45.png',
-      link: 'TBD',
+      link: 'https://medium.com/originprotocol/install-the-new-origin-browser-extension-to-earn-ogn-d3f0cd30ea8d',
       linkKey: 'growth.share.content45.link',
       post: {
         tweet: {
-          default: `TBD`,
+          default: `Check out the @originprotocol browser extension and earn 15 $OGN! https://medium.com/originprotocol/install-the-new-origin-browser-extension-to-earn-ogn-d3f0cd30ea8d`,
           translations: [ ]
         }
       }
