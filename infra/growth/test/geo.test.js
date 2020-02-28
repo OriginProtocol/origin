@@ -11,7 +11,7 @@ describe('Geolocation', () => {
 
     expect(info.countryCode).to.equal('US')
     expect(info.countryName).to.equal('United States of America')
-    expect(info.eligibility).to.equal('Restricted')
+    expect(info.eligibility).to.equal('Eligible')
   })
 
   it(`Should geolocalize an IP`, async () => {

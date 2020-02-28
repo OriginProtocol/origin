@@ -1,4 +1,4 @@
-const { Shops } = require('../data/db')
+const { Shop } = require('../models')
 
 async function createShop({ name, listingId, authToken, config, sellerId }) {
   if (!name) {
@@ -22,7 +22,7 @@ async function createShop({ name, listingId, authToken, config, sellerId }) {
 
   const networkId = Number(listingId.split('-')[0])
 
-  const shop = await Shops.create({
+  const shop = await Shop.create({
     name,
     networkId,
     listingId,
@@ -35,7 +35,7 @@ async function createShop({ name, listingId, authToken, config, sellerId }) {
 }
 
 function findShopByHostname(req, res, next) {
-  Shops.findOne({ where: { hostname: req.hostname } }).then(shop => {
+  Shop.findOne({ where: { hostname: req.hostname } }).then(shop => {
     req.shop = shop
     next()
   })

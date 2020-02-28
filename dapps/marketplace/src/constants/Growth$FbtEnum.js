@@ -399,8 +399,8 @@ const Growth$FbtEnum = {
   'growth.share.content44.details': `Erica Kang, founder of KryptoSeoul, shares her experience using the Origin Marketplace app.`,
   'growth.share.content44.link': 'Watch the video',
 
-  'growth.share.content45.title': `TBD`,
-  'growth.share.content45.details': `TBD`,
+  'growth.share.content45.title': `Install the New Origin Browser Extension and Earn OGN`,
+  'growth.share.content45.details': `Origin Browser Extension Now Available for Chrome, Firefox and Brave.`,
   'growth.share.content45.link': 'Read the article'
 }
 
