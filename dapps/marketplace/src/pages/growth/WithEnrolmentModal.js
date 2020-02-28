@@ -343,19 +343,6 @@ function withEnrolmentModal(WrappedComponent) {
                 least 1 year from the date of earning your tokens.
               </fbt>
             </div>
-            <div className="terms">
-              <fbt desc="EnrollmentModal.termsBody">
-                OGN are being issued in a transaction originally exempt from
-                registration under the U.S. Securities Act of 1933, as amended
-                (the “Securities Act”), and may not be transferred in the United
-                States to, or for the account or benefit of, any U.S. person
-                except pursuant to an available exemption from the registration
-                requirements of the Securities Act and all applicable state
-                securities laws. Terms used above have the meanings given to
-                them in Regulation S under the Securities Act and all applicable
-                laws and regulations.
-              </fbt>
-            </div>
             {optimizedRestrictedUiWhitelist.includes(this.countryCode) && (
               <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
                 <label className="checkbox-holder">
