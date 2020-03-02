@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 import { get } from 'lodash'
-import axios from 'axios'
+import axios from 'utils/axiosWithCredentials'
 
 import Loading from 'components/Loading'
 import store from '@/store'
@@ -20,11 +20,31 @@ const Complete = ({ ethNetworkId }) => {
     deploy()
   }, [])
 
+  const lookupShop = async (listingId) => {
+    let response
+    try {
+      response = await axios.get(`${settings.backend}/shop/listing/${listingId}`)
+    } catch (error) {
+      if (error.response.status === 401) {
+        // Unauthorized error, start the wizard again so user logs in
+        store.update(s => {
+          s.backend = {}
+        })
+      }
+      return
+    }
+
+    if (!response || !response.data || !response.data.success) {
+      return  null
+    }
+    return response.data.shop
+  }
+
   /* Create a shop on the DShop backend
    *
    */
   const createShop = async () => {
-    const authToken = [...Array(30)]
+    const randomAuthToken = [...Array(30)]
       .map(() => Math.random().toString(36)[2])
       .join('')
 
@@ -33,7 +53,7 @@ const Complete = ({ ethNetworkId }) => {
       response = await axios.post(`${settings.backend}/shop`, {
         name: settings.fullTitle,
         listingId: settings.networks[ethNetworkId].listingId,
-        authToken
+        authToken: settings.backendAuthCode || randomAuthToken
       })
     } catch (error) {
       if (error.response.status === 401) {
@@ -76,7 +96,14 @@ const Complete = ({ ethNetworkId }) => {
   const deploy = async () => {
     let shopId = get(settings, `networks[${ethNetworkId}].shopId`)
     if (!shopId) {
-      shopId = await createShop()
+      // Look for an existing shop
+      const shop = await lookupShop(settings.networks[ethNetworkId].listingId)
+      if (shop) {
+        shopId = shop.id
+      } else {
+        // Create a shop if we didn't find ont
+        shopId = await createShop()
+      }
     }
 
     const root = await uploadToIpfs()

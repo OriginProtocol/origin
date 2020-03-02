@@ -27,7 +27,10 @@ function useShopConfig() {
   useEffect(() => {
     async function fetchConfig() {
       setLoading(true)
-      const shopConfig = await getShopConfig(config.backend, config.backendAuthToken)
+      const shopConfig = await getShopConfig(
+        config.backend,
+        config.backendAuthToken
+      )
       setLoading(false)
       setShopConfig(shopConfig)
     }

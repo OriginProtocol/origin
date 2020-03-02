@@ -4,11 +4,11 @@ import { Redirect } from 'react-router-dom'
 import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
-const SignIn = () => {
+const SignIn = (props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [backend, setBackend] = useState('https://rinkebyapi.ogn.app')
-  const [redirectTo, setRedirectTo] = useState(false)
+  const [backend, setBackend] = useState('https://localhost')
+  const [redirect, setRedirect] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -23,9 +23,10 @@ const SignIn = () => {
         password
       })
     } catch (error) {
-      if (error.response.status) {
+      if (error.response && error.response.status) {
         setError('Invalid email or password')
       } else {
+        console.error(error)
         setError('An error occurred')
       }
       setLoading(false)
@@ -38,18 +39,21 @@ const SignIn = () => {
         password,
         url: backend
       }
+      if (!error) s.hasAuthenticated = true
     })
 
-    setRedirectTo('/manage')
+    setRedirect(props.redirectTo || '/manage')
   }
 
-  if (redirectTo) {
-    return <Redirect push to={redirectTo} />
+  if (redirect) {
+    console.log('redirecting to...', redirect)
+    return <Redirect push to={redirect} />
   }
 
   return (
     <div className="row">
       <div className="col-4 mx-auto mt-5">
+        {props.text ? <p>{props.text}</p> : null}
         <form className="mt-3" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>
@@ -76,8 +80,7 @@ const SignIn = () => {
             <input
               className="form-control input-lg"
               onChange={e => setBackend(e.target.value)}
-              value={backend}
-              placeholder="https://backend.ogn.app"
+              value={backend || 'https://api.ogn.app'}
             />
           </div>
           {error && <div className="alert alert-danger">{error}</div>}

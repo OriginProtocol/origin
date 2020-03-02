@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react'
 import { Redirect, Switch, Route, withRouter } from 'react-router-dom'
 import { useStoreState } from 'pullstate'
 
+import SignIn from './SignIn'
 import Orders from 'pages/Manage/Orders'
 import Order from 'pages/Manage/Order'
 import Discounts from 'pages/Manage/Discounts'
 import EditDiscount from 'pages/Manage/EditDiscount'
-import Navigation from 'components/Manage/Navigation'
+import Navigation from 'components/Navigation'
 import Loading from 'components/Loading'
 import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
 const Manage = props => {
+  const [refetch, setRefetch] = useState(false)
   const backendConfig = useStoreState(store, s => s.backend)
   const shops = useStoreState(store, s => s.shops)
+  const dataURL = useStoreState(store, s => s.dataURL)
+  const authenticated = useStoreState(store, s => s.hasAuthenticated)
+  const selectedShopIndex = useStoreState(store, s => s.selectedShopIndex)
 
   const [expandSidebar, setExpandSidebar] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [shopIndex, setShopIndex] = useState(0)
 
   useEffect(
     () =>
@@ -30,28 +34,37 @@ const Manage = props => {
   /* Load shops and set a current shop on index
    */
   useEffect(() => {
+    if (!authenticated) {
+      setLoading(false)
+      return
+    }
     const fetchShops = async () => {
-      console.debug('Fetching shops...')
+      console.debug('Fetching shops... url:', backendConfig.url)
       const response = await axios.get(`${backendConfig.url}/shop`)
       if (response.data.shops) {
         await store.update(s => {
           s.shops = response.data.shops
         })
+      } else if (response.status === 401) {
+        store.update(s => {
+          s.hasAuthenticated = false
+        })
       }
       setLoading(false)
     }
     fetchShops()
-  }, [])
+  }, [refetch])
 
   /* Load orders and discounts on shop changes
    */
   useEffect(() => {
     const fetchData = async () => {
-      if (!shops || !shops[shopIndex]) return
+      setRefetch(false)
+      if (!authenticated || !shops || !shops[selectedShopIndex]) return
 
       axios.defaults.headers.common[
         'Authorization'
-      ] = `Bearer ${shops[shopIndex].authToken}`
+      ] = `Bearer ${shops[selectedShopIndex].authToken}`
 
       setLoading(true)
 
@@ -68,17 +81,37 @@ const Manage = props => {
       setLoading(false)
     }
     fetchData()
-  }, [shops, shopIndex])
+  }, [refetch, shops, selectedShopIndex])
+
+  // Inline auth
+  if (!authenticated) {
+    const redirectTo = window.location.hash ? window.location.hash.slice(1) : '/manage'
+    return <div className="wrapper">
+      <Navigation
+        onExpandSidebar={toggleSidebar}
+        expandSidebar={expandSidebar}
+        dataURL={dataURL}
+        authenticated={authenticated}
+      />
+      <div id="main" className={expandSidebar ? 'd-none' : ''}>
+        <div className="row login-prompt">You must login to use these features</div>
+        <SignIn redirectTo={redirectTo} />
+      </div>
+    </div>
+  }
 
   const toggleSidebar = () => {
     setExpandSidebar(!expandSidebar)
   }
 
   const handleShopChange = shopIndex => {
-    setShopIndex(shopIndex)
+    store.update(s => {
+      s.selectedShopIndex = shopIndex
+    })
   }
 
   if (loading) {
+    console.log('loading...')
     return <Loading />
   }
 
@@ -87,16 +120,18 @@ const Manage = props => {
       <Navigation
         onExpandSidebar={toggleSidebar}
         expandSidebar={expandSidebar}
-        shop={shops[shopIndex]}
+        dataURL={dataURL}
+        authenticated={authenticated}
       />
       <div id="main" className={expandSidebar ? 'd-none' : ''}>
+        {/*testing... <button onClick={() => setRefetch(true)}>Refresh</button>*/}
         {shops && shops.length > 1 && (
           <div className="row">
             <div className="col-6 col-md-4">
               <select
                 className="form-control"
                 onChange={() => handleShopChange(event.target.value)}
-                value={shopIndex}
+                value={selectedShopIndex}
               >
                 {shops.map((s, index) => (
                   <option value={index} key={index}>
