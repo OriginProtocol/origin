@@ -8,8 +8,6 @@ import usePrintfulIds from 'utils/usePrintfulIds'
 import usePrintful from 'utils/usePrintful'
 import { Countries } from 'data/Countries'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function generatePrintfulOrder(order, printfulIds) {
   const data = order.data
 
@@ -75,7 +73,7 @@ const Printful = () => {
               }
               setConfirm(true)
               const headers = new Headers({
-                authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
+                authorization: `bearer ${config.backendAuthToken}`,
                 'content-type': 'application/json'
               })
               const myRequest = new Request(
@@ -110,7 +108,7 @@ const Printful = () => {
           }
           setCreate(true)
           const headers = new Headers({
-            authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
+            authorization: `bearer ${config.backendAuthToken}`,
             'content-type': 'application/json'
           })
           const myRequest = new Request(

@@ -3,12 +3,10 @@ import { useStateValue } from 'data/state'
 import memoize from 'lodash/memoize'
 import useConfig from 'utils/useConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const getOrder = memoize(
-  async function fetchOrder(admin, orderId, backend) {
+  async function fetchOrder(admin, orderId, backend, authToken) {
     const headers = new Headers({
-      authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+      authorization: `bearer ${authToken}`
     })
     const myRequest = new Request(`${backend}/orders/${orderId}`, {
       credentials: 'include',
@@ -33,7 +31,7 @@ function useOrder(orderId) {
   useEffect(() => {
     async function fetchOrder() {
       setLoading(true)
-      const order = await getOrder(admin, orderId, config.backend)
+      const order = await getOrder(admin, orderId, config.backend, config.backendAuthToken)
       setLoading(false)
       setOrder(order)
     }

@@ -5,6 +5,7 @@ import dataUrl from 'utils/dataUrl'
 const { NETWORK } = process.env
 const NetID = NETWORK === 'mainnet' ? '1' : NETWORK === 'rinkeby' ? '4' : '999'
 
+const { BACKEND_AUTH_TOKEN } = process.env
 let config
 
 function useConfig() {
@@ -28,6 +29,9 @@ function useConfig() {
           config.supportEmailPlain = supportEmailPlain
           const netConfig = config.networks[NetID] || {}
           config = { ...config, ...netConfig, netId: NetID }
+          if (BACKEND_AUTH_TOKEN) {
+            config.backendAuthToken = BACKEND_AUTH_TOKEN
+          }
         } else {
           console.error(`Loading of config failed from ${url}`)
         }
