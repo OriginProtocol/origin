@@ -37,7 +37,10 @@ const getConfig = async dshopDataUrl => {
 }
 
 const getCollections = async dshopDataUrl => {
-  console.log('getCollections path:', joinURLPath(dshopDataUrl, 'collections.json'))
+  console.log(
+    'getCollections path:',
+    joinURLPath(dshopDataUrl, 'collections.json')
+  )
   const response = await fetch(joinURLPath(dshopDataUrl, 'collections.json'))
   return JSON.parse(await response.text())
 }
@@ -56,15 +59,22 @@ const getProducts = async dshopDataUrl => {
       try {
         fullProductData = JSON.parse(await response.text())
       } catch (error) {
-        console.warn('Could not fetch data for', joinURLPath(productUrl, 'data.json'))
+        console.warn(
+          'Could not fetch data for',
+          joinURLPath(productUrl, 'data.json')
+        )
         return null
       }
 
       // Make the images absolute URLs
-      fullProductData.images = fullProductData.images.map(
-        i => joinURLPath(productUrl, 'orig', i)
+      fullProductData.images = fullProductData.images.map(i =>
+        joinURLPath(productUrl, 'orig', i)
       )
-      fullProductData.image = joinURLPath(productUrl, 'orig', fullProductData.image)
+      fullProductData.image = joinURLPath(
+        productUrl,
+        'orig',
+        fullProductData.image
+      )
       fullProductData.variants.map(v => {
         return {
           ...v,

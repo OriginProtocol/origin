@@ -6,7 +6,7 @@ const titleToId = str => {
 
 function joinURLPath() {
   let urlString = ''
-  Array.prototype.map.call(arguments, (part) => {
+  Array.prototype.map.call(arguments, part => {
     console.log('urlString:', urlString)
     console.log('part:', part)
     if (urlString === '') {

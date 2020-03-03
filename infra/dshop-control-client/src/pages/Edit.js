@@ -83,7 +83,7 @@ const Edit = props => {
       }
     }
 
-    if (!dataURL && shops  && shops.length > 0) {
+    if (!dataURL && shops && shops.length > 0) {
       store.update(s => {
         s.dataURL = shops[selectedShopIndex].dataUrl
       })
@@ -98,16 +98,21 @@ const Edit = props => {
      * won't work if backend deets aren't set(e.g. backend.email).
      */
     if (
-      settings
-      && settings.networks[ethNetworkId]
-      && settings.networks[ethNetworkId].listingId
+      settings &&
+      settings.networks[ethNetworkId] &&
+      settings.networks[ethNetworkId].listingId
     ) {
       setLoginRequired(true)
     }
   }, [settings])
 
   if (loginRequired && !authenticated) {
-    return <SignIn redirectTo={props.location.pathname} text="Sign in is required for this shop" />
+    return (
+      <SignIn
+        redirectTo={props.location.pathname}
+        text="Sign in is required for this shop"
+      />
+    )
   }
 
   const toggleSidebar = () => {

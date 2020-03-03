@@ -85,19 +85,25 @@ const Manage = props => {
 
   // Inline auth
   if (!authenticated) {
-    const redirectTo = window.location.hash ? window.location.hash.slice(1) : '/manage'
-    return <div className="wrapper">
-      <Navigation
-        onExpandSidebar={toggleSidebar}
-        expandSidebar={expandSidebar}
-        dataURL={dataURL}
-        authenticated={authenticated}
-      />
-      <div id="main" className={expandSidebar ? 'd-none' : ''}>
-        <div className="row login-prompt">You must login to use these features</div>
-        <SignIn redirectTo={redirectTo} />
+    const redirectTo = window.location.hash
+      ? window.location.hash.slice(1)
+      : '/manage'
+    return (
+      <div className="wrapper">
+        <Navigation
+          onExpandSidebar={toggleSidebar}
+          expandSidebar={expandSidebar}
+          dataURL={dataURL}
+          authenticated={authenticated}
+        />
+        <div id="main" className={expandSidebar ? 'd-none' : ''}>
+          <div className="row login-prompt">
+            You must login to use these features
+          </div>
+          <SignIn redirectTo={redirectTo} />
+        </div>
       </div>
-    </div>
+    )
   }
 
   const toggleSidebar = () => {

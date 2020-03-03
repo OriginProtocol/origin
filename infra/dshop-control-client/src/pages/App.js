@@ -58,10 +58,7 @@ const App = ({ location }) => {
           <Switch>
             <Route path="/edit" component={Edit}></Route>
             <Route path="/manage" component={Manage}></Route>
-            <Route
-              path="/process/:url"
-              component={ProcessShop}
-            ></Route>
+            <Route path="/process/:url" component={ProcessShop}></Route>
             <Route
               path="/process-config/:dataurl"
               component={ProcessShop}

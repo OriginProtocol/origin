@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import axios from 'utils/axiosWithCredentials'
 import store from '@/store'
 
-const SignIn = (props) => {
+const SignIn = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [backend, setBackend] = useState('https://localhost')

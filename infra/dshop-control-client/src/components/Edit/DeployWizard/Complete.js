@@ -20,10 +20,12 @@ const Complete = ({ ethNetworkId }) => {
     deploy()
   }, [])
 
-  const lookupShop = async (listingId) => {
+  const lookupShop = async listingId => {
     let response
     try {
-      response = await axios.get(`${settings.backend}/shop/listing/${listingId}`)
+      response = await axios.get(
+        `${settings.backend}/shop/listing/${listingId}`
+      )
     } catch (error) {
       if (error.response.status === 401) {
         // Unauthorized error, start the wizard again so user logs in
@@ -35,7 +37,7 @@ const Complete = ({ ethNetworkId }) => {
     }
 
     if (!response || !response.data || !response.data.success) {
-      return  null
+      return null
     }
     return response.data.shop
   }

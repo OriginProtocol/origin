@@ -12,9 +12,10 @@ const Settings = () => {
   const ethNetworkId = Number(web3.currentProvider.chainId)
   const settings = useStoreState(store, s => s.settings)
 
-  const networkSettings = settings.networks && settings.networks[ethNetworkId]
-    ? settings.networks[ethNetworkId]
-    : null
+  const networkSettings =
+    settings.networks && settings.networks[ethNetworkId]
+      ? settings.networks[ethNetworkId]
+      : null
 
   const [title, setTitle] = useState(settings.title || '')
   const [fullTitle, setFullTitle] = useState(settings.fullTitle || '')
