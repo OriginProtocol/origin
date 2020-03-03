@@ -22,7 +22,6 @@ import SignIn from 'pages/SignIn'
 //import Navigation from 'components/Edit/Navigation'
 import Navigation from 'components/Navigation'
 import axios from 'utils/axiosWithCredentials'
-import joinURLPath from 'utils/joinURLPath'
 
 import store from '@/store'
 
