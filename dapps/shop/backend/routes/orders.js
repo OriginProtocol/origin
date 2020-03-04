@@ -1,108 +1,73 @@
 const get = require('lodash/get')
 const fetch = require('node-fetch')
 
-const { authenticatedAsSeller } = require('./_combinedAuth')
-const { Shops, Orders } = require('../data/db')
-const { shopGate } = require('../utils/gates')
+const { authSellerAndShop } = require('./_auth')
+const { Order } = require('../models')
 const encConf = require('../utils/encryptedConfig')
 const { PRINTFUL_URL } = require('../utils/const')
 
 const PrintfulURL = PRINTFUL_URL
 
+function findOrder(req, res, next) {
+  const { orderId } = req.params
+  Order.findOne({
+    where: { orderId, shopId: req.shop.id }
+  }).then(order => {
+    if (!order) {
+      return res.status(404).send({ success: false })
+    }
+    req.order = order
+    next()
+  })
+}
+
 module.exports = function(app) {
-  app.get('/orders', authenticatedAsSeller, shopGate, async (req, res) => {
-    const orders = await Orders.findAll({
-      where: { shopId: req.shopId },
-      order: [['createdAt', 'desc']]
+  app.get('/orders', authSellerAndShop, async (req, res) => {
+    const orders = await Order.findAll({
+      where: { shopId: req.shop.id },
+      order: [['createdBlock', 'desc']]
     })
     res.json(orders)
   })
 
-  app.get('/orders/:id', authenticatedAsSeller, shopGate, async (req, res) => {
-    const order = await Orders.findOne({
-      where: {
-        orderId: req.params.id,
-        shopId: req.shopId
-      }
-    })
-    res.json(order)
+  app.get('/orders/:orderId', authSellerAndShop, findOrder, (req, res) => {
+    res.json(req.order)
   })
 
-  app.get('/orders/:id/printful', authenticatedAsSeller, async (req, res) => {
-    const { id } = req.params
-
-    const order = await Orders.findOne({
-      where: {
-        orderId: id
-      },
-      include: [
-        {
-          model: Shops,
-          as: Shops.tableName,
-          where: {
-            sellerId: req.user.id
-          },
-          required: true
-        }
-      ]
-    })
-
-    if (!order) {
-      return res.json({
-        success: false,
-        message: 'Order not found'
-      })
-    }
-
-    const apiKey = await encConf.get(order.shopId, 'printful')
-    if (!apiKey) {
-      return res.status(500).json({
-        success: false,
-        message: 'Missing printful API configuration'
-      })
-    }
-    const apiAuth = Buffer.from(apiKey).toString('base64')
-
-    const result = await fetch(`${PrintfulURL}/orders/@${id}`, {
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Basic ${apiAuth}`
-      }
-    })
-    const json = await result.json()
-    res.json(get(json, 'result'))
-  })
-
-  app.post(
-    '/orders/:id/printful/create',
-    authenticatedAsSeller,
+  app.get(
+    '/orders/:orderId/printful',
+    authSellerAndShop,
+    findOrder,
     async (req, res) => {
-      const { id } = req.params
-
-      const order = await Orders.findOne({
-        where: {
-          orderId: id
-        },
-        include: [
-          {
-            model: Shops,
-            as: Shops.tableName,
-            where: {
-              sellerId: req.user.id
-            },
-            required: true
-          }
-        ]
-      })
-
-      if (!order) {
-        return res.json({
+      const apiKey = await encConf.get(req.order.shopId, 'printful')
+      if (!apiKey) {
+        return res.status(500).json({
           success: false,
-          message: 'Order not found'
+          message: 'Missing printful API configuration'
         })
       }
+      const apiAuth = Buffer.from(apiKey).toString('base64')
 
-      const apiKey = await encConf.get(order.shopId, 'printful')
+      const result = await fetch(
+        `${PrintfulURL}/orders/@${req.order.orderId}`,
+        {
+          headers: {
+            'content-type': 'application/json',
+            authorization: `Basic ${apiAuth}`
+          }
+        }
+      )
+      const json = await result.json()
+      res.json(get(json, 'result'))
+    }
+  )
+
+  app.post(
+    '/orders/:orderId/printful/create',
+    authSellerAndShop,
+    findOrder,
+    async (req, res) => {
+      const apiKey = await encConf.get(req.order.shopId, 'printful')
       if (!apiKey) {
         return res.status(500).json({
           success: false,
@@ -139,35 +104,11 @@ module.exports = function(app) {
   )
 
   app.post(
-    '/orders/:id/printful/confirm',
-    authenticatedAsSeller,
+    '/orders/:orderId/printful/confirm',
+    authSellerAndShop,
+    findOrder,
     async (req, res) => {
-      const { id } = req.params
-
-      const order = await Orders.findOne({
-        where: {
-          orderId: id
-        },
-        include: [
-          {
-            model: Shops,
-            as: Shops.tableName,
-            where: {
-              sellerId: req.user.id
-            },
-            required: true
-          }
-        ]
-      })
-
-      if (!order) {
-        return res.json({
-          success: false,
-          message: 'Order not found'
-        })
-      }
-
-      const apiKey = await encConf.get(order.shopId, 'printful')
+      const apiKey = await encConf.get(req.order.shopId, 'printful')
       if (!apiKey) {
         return res.status(500).json({
           success: false,

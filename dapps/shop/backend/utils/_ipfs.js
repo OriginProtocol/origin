@@ -14,9 +14,9 @@ const { DATA_URL, IPFS_GATEWAY } = require('./const')
  * @param dataURL {string} - optional URL to load config JSON from
  * @returns {string} IPFS gateway URL
  */
-async function resolveIPFSGateway(dataURL) {
+async function resolveIPFSGateway(dataURL, networkId) {
   if (typeof DATA_URL !== 'undefined' || typeof dataURL !== 'undefined') {
-    const conf = await config.getSiteConfig(DATA_URL || dataURL)
+    const conf = await config.getSiteConfig(DATA_URL || dataURL, networkId)
     if (!conf) {
       // TODO: Use a fallback/default?
       throw new Error('Unable to fetch config')

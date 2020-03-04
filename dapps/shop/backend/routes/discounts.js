@@ -1,11 +1,9 @@
-const { Sequelize, Discounts } = require('../data/db')
-
-const { authenticated } = require('./_combinedAuth')
-const { shopGate } = require('../utils/gates')
+const { Sequelize, Discount } = require('../models')
+const { authShop, authSellerAndShop } = require('./_auth')
 
 module.exports = function(app) {
-  app.post('/check-discount', authenticated, shopGate, async (req, res) => {
-    const discounts = await Discounts.findAll({
+  app.post('/check-discount', authShop, async (req, res) => {
+    const discounts = await Discount.findAll({
       where: {
         [Sequelize.Op.and]: [
           { status: 'active' },
@@ -14,7 +12,7 @@ module.exports = function(app) {
             Sequelize.fn('lower', req.body.code)
           )
         ],
-        shopId: req.shopId
+        shopId: req.shop.id
       }
     })
 
@@ -31,37 +29,37 @@ module.exports = function(app) {
     res.json({})
   })
 
-  app.get('/discounts', authenticated, shopGate, async (req, res) => {
-    const discounts = await Discounts.findAll({
-      where: { shopId: req.shopId },
+  app.get('/discounts', authSellerAndShop, async (req, res) => {
+    const discounts = await Discount.findAll({
+      where: { shopId: req.shop.id },
       order: [['createdAt', 'desc']]
     })
     res.json(discounts)
   })
 
-  app.get('/discounts/:id', authenticated, shopGate, async (req, res) => {
-    const discount = await Discounts.findOne({
+  app.get('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.findOne({
       where: {
         id: req.params.id,
-        shopId: req.shopId
+        shopId: req.shop.id
       }
     })
     res.json(discount)
   })
 
-  app.post('/discounts', authenticated, shopGate, async (req, res) => {
-    const discount = await Discounts.create({
-      shopId: req.shopId,
+  app.post('/discounts', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.create({
+      shopId: req.shop.id,
       ...req.body
     })
     res.json({ success: true, discount })
   })
 
-  app.put('/discounts/:id', authenticated, shopGate, async (req, res) => {
-    const result = await Discounts.update(req.body, {
+  app.put('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const result = await Discount.update(req.body, {
       where: {
         id: req.params.id,
-        shopId: req.shopId
+        shopId: req.shop.id
       }
     })
 
@@ -69,7 +67,7 @@ module.exports = function(app) {
       return res.json({ success: false })
     }
 
-    const discount = await Discounts.findOne({
+    const discount = await Discount.findOne({
       where: {
         id: req.params.id,
         shopId: req.shopId
@@ -79,11 +77,11 @@ module.exports = function(app) {
     res.json({ success: true, discount })
   })
 
-  app.delete('/discounts/:id', authenticated, shopGate, async (req, res) => {
-    const discount = await Discounts.destroy({
+  app.delete('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.destroy({
       where: {
         id: req.params.id,
-        shopId: req.shopId
+        shopId: req.shop.id
       }
     })
     res.json({ success: true, discount })

@@ -15,6 +15,7 @@ import Promotions from 'pages/growth/Promotions'
 import FollowOrigin from 'pages/growth/FollowOrigin'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import PartnerReferralAction from 'components/growth/PartnerReferralAction'
+import BrowserExtensionInstallAction from 'components/growth/BrowserExtensionInstallAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
@@ -25,7 +26,7 @@ import ToastNotification from 'pages/user/ToastNotification'
 import CompletedActionGroups from './CompletedActionGroups'
 
 const GrowthEnum = require('Growth$FbtEnum')
-const maxProgressBarTokens = 2500
+const maxProgressBarTokens = 15
 
 const GrowthTranslation = ({ stringKey }) => {
   return (
@@ -146,6 +147,11 @@ function Campaign(props) {
     action => action.type === 'PartnerReferral'
   )
 
+  const extensionAction = find(
+    actions,
+    action => action.type === 'BrowserExtensionInstall'
+  )
+
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
@@ -214,6 +220,11 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
       />
 
+      <BrowserExtensionInstallAction
+        action={extensionAction}
+        decimalDivision={decimalDivision}
+      />
+
       <ActionGroupList
         campaign={campaign}
         actions={actions}
@@ -222,7 +233,7 @@ function Campaign(props) {
       />
       {
         <CompletedActionGroups
-          actions={[mobileAction, partnerAction]}
+          actions={[mobileAction, partnerAction, extensionAction]}
           decimalDivision={decimalDivision}
         />
       }

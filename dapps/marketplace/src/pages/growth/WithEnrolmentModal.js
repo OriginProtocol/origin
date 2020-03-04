@@ -28,6 +28,10 @@ const sessionStore = store('sessionStorage')
 
 const GrowthEnum = require('Growth$FbtEnum')
 
+// List of country codes for which the citizenship confirmation
+// is done on the TOS page rather than on a separate modal.
+const optimizedRestrictedUiWhitelist = []
+
 const GrowthTranslation = key => {
   return (
     <fbt desc="growth">
@@ -149,9 +153,11 @@ function withEnrolmentModal(WrappedComponent) {
       const termsAccepted = e.target.checked
       this.setState({ termsAccepted })
       const { notCitizenChecked } = this.state
-      // If we detected country as US based on IP, user must certify they
-      // are not US citizen/resident before we enable the signup button.
-      if (this.countryCode === 'US') {
+      // If the user is part of a restricted country and the country
+      // is on the whitelist for the optimized UI, we need to have them
+      // certify they are not citizen/resident of that country before we
+      // enable the signup button.
+      if (optimizedRestrictedUiWhitelist.includes(this.countryCode)) {
         this.setState({
           enableSignupButton: notCitizenChecked && termsAccepted
         })
@@ -337,20 +343,7 @@ function withEnrolmentModal(WrappedComponent) {
                 least 1 year from the date of earning your tokens.
               </fbt>
             </div>
-            <div className="terms">
-              <fbt desc="EnrollmentModal.termsBody">
-                OGN are being issued in a transaction originally exempt from
-                registration under the U.S. Securities Act of 1933, as amended
-                (the “Securities Act”), and may not be transferred in the United
-                States to, or for the account or benefit of, any U.S. person
-                except pursuant to an available exemption from the registration
-                requirements of the Securities Act and all applicable state
-                securities laws. Terms used above have the meanings given to
-                them in Regulation S under the Securities Act and all applicable
-                laws and regulations.
-              </fbt>
-            </div>
-            {this.countryCode === 'US' && (
+            {optimizedRestrictedUiWhitelist.includes(this.countryCode) && (
               <div className="mt-1 d-flex country-check-label justify-content-left pb-3">
                 <label className="checkbox-holder">
                   <input
@@ -360,7 +353,8 @@ function withEnrolmentModal(WrappedComponent) {
                     value="confirm-not-us-citizen"
                   />
                   <span className="checkmark" />
-                  &nbsp;
+                  &nbsp; /* TODO: country name should be dynamic based on
+                  this.countryCode */
                   <fbt desc="EnrollmentModal.notAUsCitizen">
                     I am not a citizen or resident of the United States of
                     America
@@ -515,7 +509,7 @@ function withEnrolmentModal(WrappedComponent) {
               eligibility = countryOverride.eligibility
             }
 
-            // Note: US is restricted but as opposed to other restricted countries,
+            // Note: For countries restricted but whitelisted for the optimized restricted UI,
             // we have the user answer the citizenship question on the
             // terms acceptance page rather than on a separate modal in order
             // to streamline the flow.
@@ -523,7 +517,8 @@ function withEnrolmentModal(WrappedComponent) {
             if (
               eligibility === 'Eligible' ||
               (eligibility === 'Restricted' && notCitizenConfirmed) ||
-              (eligibility === 'Restricted' && this.countryCode === 'US')
+              (eligibility === 'Restricted' &&
+                optimizedRestrictedUiWhitelist.includes(this.countryCode))
             ) {
               return this.renderTermsModal()
             } else if (

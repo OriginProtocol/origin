@@ -8,9 +8,9 @@ public/*
 !/data/example*
 scripts/output*
 scripts/conv.sh
-backend/db/*.db
-backend/tstEmail.js
-backend/.git
-backend/public
+backend-old/db/*.db
+backend-old/tstEmail.js
+backend-old/.git
+backend-old/public
 TODO
 .env*

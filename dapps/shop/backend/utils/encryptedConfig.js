@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const dotenv = require('dotenv')
 const { promisify } = require('bluebird')
 const { ENCRYPTION_KEY } = require('./const')
-const { Shops } = require('../data/db')
+const { Shop } = require('../models')
 
 const readFileAsync = promisify(fs.readFile)
 
@@ -105,7 +105,7 @@ function decryptJSON(iv, enc) {
 async function create(name, configObj) {
   const iv = getIV()
   const encryptedConf = encryptJSON(iv, configObj)
-  const record = await Shops.create({
+  const record = await Shop.create({
     name,
     config: [iv, encryptedConf].join(':')
   })
@@ -128,7 +128,7 @@ async function create(name, configObj) {
 async function createConfig(shopId, configObj) {
   const iv = getIV()
   const encryptedConf = encryptJSON(iv, configObj)
-  const record = await Shops.update(
+  const record = await Shop.update(
     {
       config: [iv, encryptedConf].join(':')
     },
@@ -169,7 +169,7 @@ function clear(shopId) {
  * @returns {Object} - Shop model instance
  */
 async function save(shopId) {
-  const record = await Shops.findOne({ where: { id: shopId } })
+  const record = await Shop.findOne({ where: { id: shopId } })
   if (!record) throw new Error('Shop does not exist')
 
   // Skip if we don't have any config
@@ -195,7 +195,7 @@ async function save(shopId) {
  * @returns {Object} - Shop model instance
  */
 async function load(shopId, force = false) {
-  const record = await Shops.findOne({ where: { id: shopId } })
+  const record = await Shop.findOne({ where: { id: shopId } })
   if (!force && typeof loadedConfigs[shopId] !== 'undefined') return record
   if (!record.config) {
     await createConfig(shopId, {})

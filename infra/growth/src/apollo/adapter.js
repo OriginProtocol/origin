@@ -36,7 +36,8 @@ const ruleIdToActionType = {
   TelegramAttestation: 'Telegram',
   TelegramFollow: 'TelegramFollow',
   FacebookLike: 'FacebookLike',
-  PartnerReferral: 'PartnerReferral'
+  PartnerReferral: 'PartnerReferral',
+  BrowserExtensionInstall: 'BrowserExtensionInstall'
 }
 
 /**
