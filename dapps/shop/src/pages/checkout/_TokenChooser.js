@@ -127,7 +127,6 @@ const TokenChooser = ({ price, value, onChange, onTokenReady, from }) => {
 
 export default TokenChooser
 
-
 require('react-styl')(`
   .crypto-chooser
     .tokens
