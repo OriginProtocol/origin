@@ -70,7 +70,10 @@ const OrderDetails = ({ cart }) => {
           <div className="col-md-6">
             <h5>Billing address</h5>
             <div className="value">
-              {formatAddress(cart.userInfo).map((line, idx) => (
+              {formatAddress(
+                cart.userInfo,
+                cart.userInfo.billingDifferent ? 'billing' : null
+              ).map((line, idx) => (
                 <div key={idx}>{line}</div>
               ))}
             </div>

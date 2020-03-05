@@ -1,34 +1,38 @@
-function formatAddress(data) {
+const upperFirst = require('lodash/upperFirst')
+
+function formatAddress(data, prefix) {
+  const field = name => (prefix ? `${prefix}${upperFirst(name)}` : name)
+
   if (!data) return []
   const address = []
   let name = ''
-  if (data.firstName) {
-    name += data.firstName
+  if (data[field('firstName')]) {
+    name += data[field('firstName')]
   }
-  if (data.lastName) {
-    name += `${name.length ? ' ' : ''}${data.lastName}`
+  if (data[field('lastName')]) {
+    name += `${name.length ? ' ' : ''}${data[field('lastName')]}`
   }
   if (name.length) {
     address.push(name)
   }
-  if (data.address1) {
-    address.push(data.address1)
+  if (data[field('address1')]) {
+    address.push(data[field('address1')])
   }
   let line3 = ''
-  if (data.city) {
-    line3 += data.city
+  if (data[field('city')]) {
+    line3 += data[field('city')]
   }
-  if (data.province) {
-    line3 += `${line3.length ? ' ' : ''}${data.province}`
+  if (data[field('province')]) {
+    line3 += `${line3.length ? ' ' : ''}${data[field('province')]}`
   }
-  if (data.zip) {
-    line3 += `${line3.length ? ' ' : ''}${data.zip}`
+  if (data[field('zip')]) {
+    line3 += `${line3.length ? ' ' : ''}${data[field('zip')]}`
   }
   if (line3.length) {
     address.push(line3)
   }
-  if (data.country) {
-    address.push(data.country)
+  if (data[field('country')]) {
+    address.push(data[field('country')])
   }
   return address
 }

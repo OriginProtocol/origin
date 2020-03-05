@@ -126,11 +126,7 @@ module.exports = function(app) {
     res.json({ success: true, shop })
   })
 
-  app.delete('/shop', async (req, res) => {
-    if (!req.session.sellerId) {
-      return res.json({ success: false })
-    }
-
+  app.delete('/shop', authSellerAndShop, async (req, res) => {
     await Shop.destroy({
       where: {
         id: req.body.id,

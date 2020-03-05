@@ -20,7 +20,6 @@ const BODYPARSER_EXCLUDES = ['/webhook']
 app.set('trust proxy', true)
 
 const sessionStore = new SequelizeStore({ db: sequelize })
-// sessionStore.sync()
 
 app.use(
   cors({
