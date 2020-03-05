@@ -31,8 +31,7 @@ function validateShop(shop) {
  */
 function validateConfig(config) {
   // TODO
-  console.log(config)
-  return true
+  return !!config
 }
 
 module.exports = {
