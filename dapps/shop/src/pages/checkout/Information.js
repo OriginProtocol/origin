@@ -4,12 +4,9 @@ import { useHistory } from 'react-router-dom'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
-import { Countries, CountriesDefaultInfo } from 'data/Countries'
 
 import Link from 'components/Link'
-import CountrySelect from 'components/CountrySelect'
-import ProvinceSelect from 'components/ProvinceSelect'
-import get from 'lodash/get'
+import ShippingForm from './_ShippingForm'
 
 import BetaWarning from './_BetaWarning'
 
@@ -54,8 +51,6 @@ const CheckoutInfo = () => {
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
 
-  const country = Countries[state.country || 'United States']
-
   return (
     <div className="checkout-information">
       <div className="d-none d-md-block">
@@ -95,67 +90,9 @@ const CheckoutInfo = () => {
         <div className="mt-4 mb-3">
           <b>Shipping Address</b>
         </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <input placeholder="First Name" {...input('firstName')} />
-            {Feedback('firstName')}
-          </div>
-          <div className="form-group col-md-6">
-            <input placeholder="Last Name" {...input('lastName')} />
-            {Feedback('lastName')}
-          </div>
-        </div>
-        <div className="form-group">
-          <input placeholder="Address" {...input('address1')} />
-          {Feedback('address1')}
-        </div>
-        <div className="form-group">
-          <input
-            placeholder="Appartment, suite, etc. (optional)"
-            {...input('address2')}
-          />
-          {Feedback('address2')}
-        </div>
-        <div className="form-group">
-          <input placeholder="City" {...input('city')} />
-          {Feedback('city')}
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md">
-            <CountrySelect
-              className="form-control"
-              value={state.country}
-              onChange={e => {
-                const provinces = get(Countries[e.target.value], 'provinces')
-                setState({
-                  country: e.target.value,
-                  province: provinces ? Object.keys(provinces)[0] : ''
-                })
-              }}
-            />
-          </div>
-          {!country.provinces ? null : (
-            <div className="form-group col-md">
-              <ProvinceSelect
-                className="form-control"
-                country={country}
-                {...input('province')}
-              />
-            </div>
-          )}
-          <div className="form-group col-md">
-            <input
-              type="text"
-              className="form-control"
-              placeholder={get(
-                country,
-                'labels.zip',
-                CountriesDefaultInfo.labels.zip
-              )}
-              {...input('zip')}
-            />
-          </div>
-        </div>
+
+        <ShippingForm {...{ state, setState, input, Feedback }} />
+
         <div className="actions">
           <Link to="/cart">&laquo; Return to cart</Link>
           <button type="submit" className="btn btn-primary btn-lg">

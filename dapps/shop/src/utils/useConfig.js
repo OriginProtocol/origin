@@ -5,6 +5,17 @@ import dataUrl from 'utils/dataUrl'
 const { NETWORK } = process.env
 const NetID = NETWORK === 'mainnet' ? '1' : NETWORK === 'rinkeby' ? '4' : '999'
 
+const DefaultPaymentMethods = [
+  {
+    id: 'crypto',
+    label: 'Crypto Currency'
+  },
+  {
+    id: 'stripe',
+    label: 'Credit Card'
+  }
+]
+
 let config
 
 function useConfig() {
@@ -20,7 +31,9 @@ function useConfig() {
         const raw = await fetch(url)
         if (raw.ok) {
           config = await raw.json()
-
+          if (!config.paymentMethods) {
+            config.paymentMethods = DefaultPaymentMethods
+          }
           let supportEmailPlain = config.supportEmail
           if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
             supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]

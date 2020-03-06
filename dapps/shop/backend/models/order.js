@@ -2,6 +2,9 @@ module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define(
     'Order',
     {
+      shopId: {
+        type: DataTypes.INTEGER
+      },
       networkId: {
         type: DataTypes.INTEGER
       },
@@ -20,9 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER
       },
       updatedBlock: {
-        type: DataTypes.INTEGER
-      },
-      shopId: {
         type: DataTypes.INTEGER
       },
       status: {
