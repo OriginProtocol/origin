@@ -70,7 +70,10 @@ const OrderDetails = ({ cart }) => {
           <div className="col-md-6">
             <h5>Billing address</h5>
             <div className="value">
-              {formatAddress(cart.userInfo).map((line, idx) => (
+              {formatAddress(
+                cart.userInfo,
+                cart.userInfo.billingDifferent ? 'billing' : null
+              ).map((line, idx) => (
                 <div key={idx}>{line}</div>
               ))}
             </div>
@@ -129,6 +132,7 @@ const Order = () => {
   }, [])
 
   if (error) {
+    console.error(error)
     return (
       <div className="checkout">
         <h3 className="d-md-none my-4 ml-4">{config.title}</h3>

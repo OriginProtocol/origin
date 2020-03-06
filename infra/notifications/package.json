@@ -37,6 +37,7 @@
     "firebase-admin": "^8.0.0",
     "lodash-es": "^4.17.11",
     "logplease": "^1.2.15",
+    "mjml": "^4.5.1",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
@@ -51,7 +52,7 @@
     "chai": "4.2.0",
     "eslint": "6.8.0",
     "json-stable-stringify": "1.0.1",
-    "mocha": "7.0.0",
+    "mocha": "7.0.1",
     "nodemon": "2.0.2",
     "prettier": "1.19.1"
   },

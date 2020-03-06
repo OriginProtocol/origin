@@ -1,11 +1,9 @@
-const { Sequelize, Discounts } = require('../data/db')
-
-const auth = require('./_basicAuth')
-const bodyParser = require('body-parser')
+const { Sequelize, Discount } = require('../models')
+const { authShop, authSellerAndShop } = require('./_auth')
 
 module.exports = function(app) {
-  app.post('/check-discount', bodyParser.json(), async (req, res) => {
-    const discounts = await Discounts.findAll({
+  app.post('/check-discount', authShop, async (req, res) => {
+    const discounts = await Discount.findAll({
       where: {
         [Sequelize.Op.and]: [
           { status: 'active' },
@@ -13,7 +11,8 @@ module.exports = function(app) {
             Sequelize.fn('lower', Sequelize.col('code')),
             Sequelize.fn('lower', req.body.code)
           )
-        ]
+        ],
+        shopId: req.shop.id
       }
     })
 
@@ -30,35 +29,61 @@ module.exports = function(app) {
     res.json({})
   })
 
-  app.get('/discounts', auth, async (req, res) => {
-    const discounts = await Discounts.findAll({
+  app.get('/discounts', authSellerAndShop, async (req, res) => {
+    const discounts = await Discount.findAll({
+      where: { shopId: req.shop.id },
       order: [['createdAt', 'desc']]
     })
     res.json(discounts)
   })
 
-  app.get('/discounts/:id', auth, async (req, res) => {
-    const discount = await Discounts.findOne({
-      where: { id: req.params.id }
+  app.get('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.findOne({
+      where: {
+        id: req.params.id,
+        shopId: req.shop.id
+      }
     })
     res.json(discount)
   })
 
-  app.post('/discounts', auth, bodyParser.json(), async (req, res) => {
-    const discount = await Discounts.create(req.body)
+  app.post('/discounts', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.create({
+      shopId: req.shop.id,
+      ...req.body
+    })
     res.json({ success: true, discount })
   })
 
-  app.put('/discounts/:id', auth, bodyParser.json(), async (req, res) => {
-    const discount = await Discounts.update(req.body, {
-      where: { id: req.params.id }
+  app.put('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const result = await Discount.update(req.body, {
+      where: {
+        id: req.params.id,
+        shopId: req.shop.id
+      }
+    })
+
+    if (!result || result[0] < 1) {
+      return res.json({ success: false })
+    }
+
+    const discount = await Discount.findOne({
+      where: {
+        id: req.params.id,
+        shopId: req.shopId
+      }
     })
 
     res.json({ success: true, discount })
   })
 
-  app.delete('/discounts/:id', auth, bodyParser.json(), async (req, res) => {
-    const discount = await Discounts.destroy({ where: { id: req.params.id } })
+  app.delete('/discounts/:id', authSellerAndShop, async (req, res) => {
+    const discount = await Discount.destroy({
+      where: {
+        id: req.params.id,
+        shopId: req.shop.id
+      }
+    })
     res.json({ success: true, discount })
   })
 }

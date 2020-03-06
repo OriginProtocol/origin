@@ -36,7 +36,8 @@ const ruleIdToActionType = {
   TelegramAttestation: 'Telegram',
   TelegramFollow: 'TelegramFollow',
   FacebookLike: 'FacebookLike',
-  PartnerReferral: 'PartnerReferral'
+  PartnerReferral: 'PartnerReferral',
+  BrowserExtensionInstall: 'BrowserExtensionInstall'
 }
 
 /**
@@ -81,7 +82,7 @@ class ApolloAdapter {
     return await GrowthInvite.getReferralsInfo(
       data.ethAddress,
       data.campaign.id,
-      data.reward.value,
+      data.reward ? data.reward.value : null,
       data.rewards
     )
   }

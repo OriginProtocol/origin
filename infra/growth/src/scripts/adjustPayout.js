@@ -169,9 +169,16 @@ class AdjustPayout {
       txnHash = null
     }
 
-    // Update the status of the payout row.
+    // Update the status of the payout row and record the activity in the admin table.
     try {
       await payout.update({ status, txnHash })
+      if (status === enums.GrowthPayoutStatuses.Paid) {
+        await db.GrowthAdminActivity.create({
+          ethAddress,
+          action: enums.GrowthAdminActivityActions.Pay,
+          data: { amount, payoutId: payout.id }
+        })
+      }
     } catch (e) {
       logger.error(`IMPORTANT: failed updating payout id ${payout.id} status.`)
       logger.error(`Need manual intervention.`)

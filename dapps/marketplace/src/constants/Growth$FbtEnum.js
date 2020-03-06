@@ -25,6 +25,8 @@ const Growth$FbtEnum = {
   'growth.dec2019.short_name': 'December 2019',
   'growth.jan2020.name': 'January 2020 Campaign',
   'growth.jan2020.short_name': 'January 2020',
+  'growth.feb2020.short_name': 'February 2020',
+  'growth.mar2020.short_name': 'March 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
@@ -353,7 +355,53 @@ const Growth$FbtEnum = {
 
   'growth.share.content34.title': 'Creating the New Sharing Economy',
   'growth.share.content34.details': `Origin has built a decentralized marketplace protocol on the ethereum mainnet that replaces middlemen & connects buyers and sellers with a smart contract.`,
-  'growth.share.content34.link': 'Follow Origin'
+  'growth.share.content34.link': 'Follow Origin',
+
+  // Feb 2020 campaign
+  'growth.share.content35.title': `Origin Founders on TV with HKB News in Korea`,
+  'growth.share.content35.details': `Origin’s co-founders were interviewed by HKB News, one of the top blockchain media outlets in Korea.`,
+  'growth.share.content35.link': 'Read the article',
+
+  'growth.share.content36.title': `Origin Tokens (OGN) Now Trading on Binance`,
+  'growth.share.content36.details': `The Origin 1.0 Platform is live! Origin Tokens (OGN) are now actively trading on Binance. `,
+  'growth.share.content36.link': 'Read the article',
+
+  'growth.share.content37.title': `Buy or Sell Using Origin Tokens (OGN)`,
+  'growth.share.content37.details': `You can now use OGN to buy, sell, and promote listings on Origin's flagship marketplace application.`,
+  'growth.share.content37.link': 'Read the article',
+
+  'growth.share.content38.title': `Origin Commissions: Promote Listings with OGN`,
+  'growth.share.content38.details': `Origin Commissions: A new way for sellers to boost their sales & DApp developers and affiliates to earn OGN.`,
+  'growth.share.content38.link': 'Read the article',
+
+  'growth.share.content39.title': `Origin was Hunted on Product Hunt`,
+  'growth.share.content39.details': `A member of our community hunted us on Product Hunt!`,
+  'growth.share.content39.link': 'Read the article',
+
+  'growth.share.content40.title': `Evan Tana from 122 West Ventures Explains Why He Invested in Origin`,
+  'growth.share.content40.details': `Learn about the 3 reasons Evan decided to invest in Origin, and why he’s excited about the future of decentralized marketplaces.`,
+  'growth.share.content40.link': 'Watch the video',
+
+  // Mar 2020 campaign
+  'growth.share.content41.title': `Origin Marketplace App Now Available on Samsung Blockchain Wallet`,
+  'growth.share.content41.details': `Putting real-world use cases for decentralized applications in the hands of people everywhere, through mobile.`,
+  'growth.share.content41.link': 'Read the article',
+
+  'growth.share.content42.title': `OGN Lists on Korean Exchanges Coinone and GOPAX`,
+  'growth.share.content42.details': `OGN is now listed on GOPAX and Coinone, two of the most reputable exchanges in South Korea.`,
+  'growth.share.content42.link': 'Read the article',
+
+  'growth.share.content43.title': `Gumi’s Ray Zhang on Origin’s World-Class Team`,
+  'growth.share.content43.details': `Ray Zhang, Managing Director at Gumi, discusses Origin’s world-class team.`,
+  'growth.share.content43.link': 'Watch the video',
+
+  'growth.share.content44.title': `KryptoSeoul’s Erica Kang on Origin’s User Experience`,
+  'growth.share.content44.details': `Erica Kang, founder of KryptoSeoul, shares her experience using the Origin Marketplace app.`,
+  'growth.share.content44.link': 'Watch the video',
+
+  'growth.share.content45.title': `Install the New Origin Browser Extension and Earn OGN`,
+  'growth.share.content45.details': `Origin Browser Extension Now Available for Chrome, Firefox and Brave.`,
+  'growth.share.content45.link': 'Read the article'
 }
 
 module.exports = Growth$FbtEnum

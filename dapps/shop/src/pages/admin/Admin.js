@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Switch, Route, useLocation } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
@@ -12,16 +12,22 @@ import Discounts from './discounts/Discounts'
 import EditDiscount from './discounts/EditDiscount'
 import Order from './order/Order'
 import Login from './Login'
-
-const Settings = () => (
-  <div>
-    <h3>Settings</h3>
-  </div>
-)
+import Settings from './Settings'
+import Events from './Events'
 
 const Admin = () => {
   const { config } = useConfig()
   const { pathname } = useLocation()
+  useEffect(() => {
+    fetch(`${config.backend}/auth`, { credentials: 'include' }).then(
+      async response => {
+        if (response.status === 200) {
+          const data = await response.json()
+          dispatch({ type: 'setAuth', auth: data.email })
+        }
+      }
+    )
+  }, [])
 
   const [{ admin }, dispatch] = useStateValue()
   if (!admin) {
@@ -57,9 +63,20 @@ const Admin = () => {
               >
                 <Link to="/admin/discounts">Discounts</Link>
               </li>
-              {/* <li className={pathname === '/admin/settings' ? 'active' : ''}>
+              <li
+                className={
+                  pathname.indexOf('/admin/settings') === 0 ? 'active' : ''
+                }
+              >
                 <Link to="/admin/settings">Settings</Link>
-              </li> */}
+              </li>
+              <li
+                className={
+                  pathname.indexOf('/admin/events') === 0 ? 'active' : ''
+                }
+              >
+                <Link to="/admin/events">Events</Link>
+              </li>
               <li className="db">
                 <a
                   href="#logout"
@@ -81,6 +98,7 @@ const Admin = () => {
             <Route path="/admin/products" component={Products} />
             <Route path="/admin/collections" component={Collections} />
             <Route path="/admin/settings" component={Settings} />
+            <Route path="/admin/events" component={Events} />
             <Route path="/admin/orders/:id" component={Order} />
             <Route path="/admin/orders" component={Orders} />
             <Redirect to="/admin/orders" />

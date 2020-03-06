@@ -15,6 +15,7 @@ import Promotions from 'pages/growth/Promotions'
 import FollowOrigin from 'pages/growth/FollowOrigin'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import PartnerReferralAction from 'components/growth/PartnerReferralAction'
+import BrowserExtensionInstallAction from 'components/growth/BrowserExtensionInstallAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
@@ -25,7 +26,7 @@ import ToastNotification from 'pages/user/ToastNotification'
 import CompletedActionGroups from './CompletedActionGroups'
 
 const GrowthEnum = require('Growth$FbtEnum')
-const maxProgressBarTokens = 2500
+const maxProgressBarTokens = 15
 
 const GrowthTranslation = ({ stringKey }) => {
   return (
@@ -146,6 +147,11 @@ function Campaign(props) {
     action => action.type === 'PartnerReferral'
   )
 
+  const extensionAction = find(
+    actions,
+    action => action.type === 'BrowserExtensionInstall'
+  )
+
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
@@ -192,6 +198,18 @@ function Campaign(props) {
         progress={tokenEarnProgress}
         showIndicators={false}
       />
+      {nameKey === 'growth.feb2020.name' && (
+        <a
+          className="swag align-self-center"
+          href="http://www.originprotocol.com/en/reward/swag/fabruary_2020"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {isMobile && <img src="/images/growth/rewardsSwag@2x.png" />}
+          {!isMobile && <img src="/images/growth/rewardsSwagDesktop@2x.png" />}
+        </a>
+      )}
+
       <MobileDownloadAction
         action={mobileAction}
         decimalDivision={decimalDivision}
@@ -199,6 +217,11 @@ function Campaign(props) {
 
       <PartnerReferralAction
         action={partnerAction}
+        decimalDivision={decimalDivision}
+      />
+
+      <BrowserExtensionInstallAction
+        action={extensionAction}
         decimalDivision={decimalDivision}
       />
 
@@ -210,7 +233,7 @@ function Campaign(props) {
       />
       {
         <CompletedActionGroups
-          actions={[mobileAction, partnerAction]}
+          actions={[mobileAction, partnerAction, extensionAction]}
           decimalDivision={decimalDivision}
         />
       }
@@ -417,7 +440,9 @@ class GrowthCampaigns extends Component {
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         <div
-          className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}
+          className={`container growth-campaigns ${
+            isMobile ? 'mobile' : ''
+          } d-flex flex-column`}
         >
           <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus, loading }) => {
@@ -605,6 +630,11 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .swag
+      img
+        width: 100%
+        max-width: 350px
+        margin-top: 10px
     .campaign-list
       .select-bar
         background-color: var(--clear-blue)
@@ -688,5 +718,10 @@ require('react-styl')(`
         .total-earned img
           width: 1rem
           height: 1rem
-
+  @media (min-width: 768px)
+    .growth-campaigns
+      .swag
+        img
+          max-width: 450px
+          margin-top: 20px
 `)

@@ -14,6 +14,8 @@ import sortProducts from 'utils/sortProducts'
 import ProductList from 'components/ProductList'
 import SortBy from 'components/SortBy'
 
+import CreateMug from 'components/custom/CreateMug'
+
 const Products = () => {
   const location = useLocation()
   const opts = useSearchQuery()
@@ -73,7 +75,10 @@ const Products = () => {
           </div>
         </div>
       ) : (
-        <div className="collection" />
+        <>
+          <div className="collection" />
+          <CreateMug />
+        </>
       )}
 
       {error ? (
@@ -125,6 +130,11 @@ require('react-styl')(`
         .price
           font-weight: bold
           margin-top: 0.25rem
+          span.shipping
+            opacity: 0.6
+            font-weight: normal
+            margin-left: 0.5rem
+            font-size: 0.75rem
 
   @media (max-width: 767.98px)
     .products

@@ -106,6 +106,7 @@ require('react-styl')(`
       justify-content: space-between
       border-bottom: 1px solid #eee
       padding: 1rem 0
+      align-items: center
       &:last-of-type
         border: 0
       .label

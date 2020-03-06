@@ -7,6 +7,8 @@ import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
 import { useStateValue } from 'data/state'
 
+const { BACKEND_AUTH_TOKEN } = process.env
+
 const times = Array(48)
   .fill(0)
   .map((o, idx) => {
@@ -78,7 +80,7 @@ const AdminEditDiscount = () => {
           setState(newState)
           if (valid) {
             const headers = new Headers({
-              authorization: admin,
+              authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
               'content-type': 'application/json'
             })
             let url = `${config.backend}/discounts`
@@ -87,6 +89,7 @@ const AdminEditDiscount = () => {
             }
             const myRequest = new Request(url, {
               headers,
+              credentials: 'include',
               method: discount && discount.id ? 'PUT' : 'POST',
               body: JSON.stringify({
                 discountType: newState.discountType,
@@ -98,7 +101,8 @@ const AdminEditDiscount = () => {
                 code: newState.code,
                 status: newState.status,
                 maxUses: newState.maxUses ? Number(newState.maxUses) : null,
-                onePerCustomer: newState.onePerCustomer ? true : false
+                onePerCustomer: newState.onePerCustomer ? true : false,
+                excludeShipping: newState.excludeShipping ? true : false
               })
             })
             const raw = await fetch(myRequest)
@@ -169,6 +173,17 @@ const AdminEditDiscount = () => {
             )}
           </div>
           {Feedback('value')}
+        </div>
+        <div className="form-check mb-3">
+          <label className="form-check-label">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              checked={state.excludeShipping ? true : false}
+              onChange={e => setState({ excludeShipping: e.target.checked })}
+            />
+            Exclude shipping price from discount
+          </label>
         </div>
         <div className="form-group" style={{ maxWidth: '15rem' }}>
           <label>Max Uses</label>

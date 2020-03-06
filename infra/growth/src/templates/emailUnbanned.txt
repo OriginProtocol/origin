@@ -1,0 +1,5 @@
+Great news! Your Origin Rewards account ${ethAddress} has been restored.
+
+You can open the Origin Marketplace app or visit ShopOrigin.com to see any Origin Tokens (OGN) that you have earned.
+
+Thanks for being an early supporter of Origin. Remember to check back every month for more ways to earn Origin Rewards.

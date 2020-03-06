@@ -322,6 +322,7 @@ require('react-styl')(`
               bottom: 0
               right: 12px
               transform: rotateZ(90deg)
+              pointer-events: none
           .footer-dropdown
             cursor: pointer
             margin-left: 12px

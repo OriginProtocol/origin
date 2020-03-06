@@ -461,6 +461,7 @@ class Messaging {
    * Adds any of my keys to the conversation
    */
   processKeys(content, convObj) {
+    convObj.messageCount += 0
     for (const v of content.keys) {
       if (v.address == this.account_key) {
         let key
@@ -890,6 +891,7 @@ class Messaging {
             await this.getRoom(conv.id, { keys: true })
             const convObj = await this.getRoom(conv.id)
             convObj.unreadCount = conv.unread || 0
+            convObj.nextIndex = conv.count || 0
 
             this.convs[conv.id] = convObj
 
@@ -1109,7 +1111,20 @@ class Messaging {
     return this.account && this.account_key
   }
 
-  async addRoomMsg(conversationId, conversationIndex, content) {
+  async addRoomMsg(conversationId, content) {
+    let conversationIndex = 0
+
+    const nextIndexResponse = await fetch(
+      `${this.globalKeyServer}/messages/${conversationId}/next`
+    )
+
+    if (!nextIndexResponse.ok) {
+      console.error('Failed to fetch next index from server')
+    } else {
+      const respJSON = await nextIndexResponse.json()
+      conversationIndex = respJSON.nextConversationIndex
+    }
+
     const data = stringify({ conversationId, conversationIndex, content })
     const signature = this.account.sign(data).signature
     const response = await fetch(
@@ -1168,7 +1183,7 @@ class Messaging {
       }
       const result = await this.addRoomMsg(
         roomId,
-        conversationIndex,
+        // conversationIndex,
         keysContent
       )
 
@@ -1270,7 +1285,7 @@ class Messaging {
     if (
       await this.addRoomMsg(
         roomId,
-        convObj.lastConversationIndex + 1,
+        // convObj.lastConversationIndex + 1,
         encryptedContent
       )
     ) {
@@ -1281,6 +1296,8 @@ class Messaging {
       this._sending_message = false
       throw new Error('Failed to add message to conversation')
     }
+
+    this._sending_message = false
 
     this.markConversationRead(remoteEthAddress)
 

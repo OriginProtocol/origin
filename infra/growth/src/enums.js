@@ -46,7 +46,8 @@ const GrowthActionType = new Enum(
   'FacebookLike',
   'FacebookShare',
   'TelegramFollow',
-  'PartnerReferral'
+  'PartnerReferral',
+  'BrowserExtensionInstall'
 )
 
 // Active: account is active.
@@ -89,6 +90,8 @@ const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 // currently Completed state is not used in the database.
 const GrowthInviteStatuses = new Enum('Sent', 'Completed')
 
+const GrowthAdminActivityActions = new Enum('Ban', 'Unban', 'Close', 'Pay')
+
 module.exports = {
   GrowthCampaignRewardStatuses,
   GrowthEventStatuses,
@@ -102,5 +105,6 @@ module.exports = {
   GrowthInviteStatuses,
   GrowthCampaignStatuses,
   GrowthActionStatus,
-  GrowthActionType
+  GrowthActionType,
+  GrowthAdminActivityActions
 }

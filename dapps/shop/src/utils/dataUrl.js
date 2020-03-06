@@ -14,8 +14,15 @@ export default function dataUrl() {
   let dir
   if (pathname.indexOf('/ipfs/') === 0 && CONTENT_HASH) {
     dir = `/ipfs/${CONTENT_HASH}/`
-  } else {
+  } else if (CDN[origin]) {
     dir = `${CDN[origin] || ''}${DATA_DIR || ''}/`
+  } else if (CONTENT_CDN) {
+    dir = `${CONTENT_CDN}${DATA_DIR || ''}/`
+  } else {
+    dir = `${DATA_DIR || ''}`
+    if (!dir.endsWith('/')) {
+      dir += '/'
+    }
   }
   return dir
 }
