@@ -176,7 +176,10 @@ module.exports = function(app) {
   })
 
   app.get('/password', authShop, async (req, res) => {
-    if (req.session.authedShop === req.shop.id) {
+    const password = await encConf.get(req.shop.id, 'password')
+    if (!password) {
+      return res.json({ success: true })
+    } else if (req.session.authedShop === req.shop.id) {
       return res.json({ success: true })
     }
     res.json({ success: false })

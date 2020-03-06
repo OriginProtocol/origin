@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
+import get from 'lodash/get'
 
 import Main from './Main'
 import Checkout from './checkout/Loader'
@@ -15,7 +16,10 @@ const { BACKEND_AUTH_TOKEN } = process.env
 
 const App = ({ location }) => {
   const { loading, config } = useConfig()
+  const [passwordLoading, setPasswordLoading] = useState(false)
   const [{ passwordAuthed }, dispatch] = useStateValue()
+  const isAdmin = location.pathname.indexOf('/admin') === 0
+  const isOrder = location.pathname.indexOf('/order') === 0
 
   // Redirect to HTTPS if URL is not local
   useEffect(() => {
@@ -35,9 +39,10 @@ const App = ({ location }) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (!config || !config.passwordProtected || passwordAuthed) {
+    if (!get(config, 'passwordProtected') || passwordAuthed) {
       return
     }
+    setPasswordLoading(true)
     fetch(`${config.backend}/password`, {
       headers: {
         'content-type': 'application/json',
@@ -45,12 +50,13 @@ const App = ({ location }) => {
       },
       credentials: 'include'
     }).then(async response => {
+      setPasswordLoading(false)
       if (response.status === 200) {
         const data = await response.json()
         dispatch({ type: 'setPasswordAuthed', authed: data.success })
       }
     })
-  }, [config])
+  }, [config, location.pathname])
 
   // Add custom CSS
   useEffect(() => {
@@ -68,11 +74,11 @@ const App = ({ location }) => {
     }
   }, [config])
 
-  if (loading) {
+  if (loading || passwordLoading) {
     return null
   }
 
-  if (config.passwordProtected && !passwordAuthed) {
+  if (config.passwordProtected && !passwordAuthed && !isAdmin && !isOrder) {
     return <Password />
   }
 
