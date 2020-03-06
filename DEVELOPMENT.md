@@ -26,7 +26,7 @@ start the DApp:
        yarn start
 
 This will start a `webpack-dev-server` with hot reloading on
-`http://localhost:3000`. When you open it you should some sample listings.
+`http://localhost:3000`. When you open it you should see some sample listings.
 
 ## Option 2: Running Docker Compose
 
