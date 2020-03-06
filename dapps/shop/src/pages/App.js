@@ -4,13 +4,18 @@ import { Switch, Route, withRouter } from 'react-router-dom'
 import Main from './Main'
 import Checkout from './checkout/Loader'
 import Order from './OrderLoader'
+import Password from './Password'
 import Admin from './admin/Admin'
 
 import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
+import { useStateValue } from 'data/state'
+
+const { BACKEND_AUTH_TOKEN } = process.env
 
 const App = ({ location }) => {
   const { loading, config } = useConfig()
+  const [{ passwordAuthed }, dispatch] = useStateValue()
 
   // Redirect to HTTPS if URL is not local
   useEffect(() => {
@@ -28,6 +33,24 @@ const App = ({ location }) => {
       window.scrollTo(0, 0)
     }
   }, [location.pathname])
+
+  useEffect(() => {
+    if (!config || !config.passwordProtected || passwordAuthed) {
+      return
+    }
+    fetch(`${config.backend}/password`, {
+      headers: {
+        'content-type': 'application/json',
+        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+      },
+      credentials: 'include'
+    }).then(async response => {
+      if (response.status === 200) {
+        const data = await response.json()
+        dispatch({ type: 'setPasswordAuthed', authed: data.success })
+      }
+    })
+  }, [config])
 
   // Add custom CSS
   useEffect(() => {
@@ -49,11 +72,16 @@ const App = ({ location }) => {
     return null
   }
 
+  if (config.passwordProtected && !passwordAuthed) {
+    return <Password />
+  }
+
   return (
     <Switch>
       <Route path="/admin" component={Admin}></Route>
       <Route path="/order/:tx" component={Order}></Route>
       <Route path="/checkout" component={Checkout}></Route>
+      <Route path="/password" component={Password}></Route>
       <Route component={Main}></Route>
     </Switch>
   )

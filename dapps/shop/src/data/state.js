@@ -114,6 +114,8 @@ const reducer = (state, action) => {
   } else if (action.type === 'setAuth') {
     sessionStorage.admin = action.auth
     newState = set(newState, `admin`, action.auth)
+  } else if (action.type === 'setPasswordAuthed') {
+    newState = set(newState, `passwordAuthed`, action.authed)
   } else if (action.type === 'logout') {
     delete sessionStorage.admin
     newState = set(newState, 'admin', '')
