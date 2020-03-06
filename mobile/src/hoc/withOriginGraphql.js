@@ -11,14 +11,17 @@ import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
+import { ethers } from 'ethers'
 
 import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import { tokenBalanceFromGql } from 'utils/currencies'
 
-// Update account balance frequency
-// TODO make this reactive to contract calls that will change balance
-const BALANCE_UPDATE_INTERVAL = 10000
+// Frequency to check for a receipt for a transaction
+const RECEIPT_INTERVAL = 10000
+
+// Don't issue a balance update if these data structures are returned
+const NO_UPDATE_STRUCTURES = ['data.web3.account', 'data.identity']
 
 // Update identity frequency
 // TODO make this reactive to identity changes
@@ -41,14 +44,17 @@ const withOriginGraphql = WrappedComponent => {
           'graphqlResult',
           this._handleGraphqlResult
         ),
-        DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
+        DeviceEventEmitter.addListener(
+          'graphqlError',
+          this._handleGraphqlError
+        ),
+        DeviceEventEmitter.addListener('updateBalance', this.updateBalance),
+        DeviceEventEmitter.addListener(
+          'transactionSent',
+          this._handleTransactionSent
+        )
       ]
 
-      // Update balance periodically
-      this.balanceUpdater = setInterval(
-        this.updateBalance,
-        BALANCE_UPDATE_INTERVAL
-      )
       // Update identity periodically for all accounts
       const updateAllIdentities = () => {
         return this.props.wallet.accounts.map(account =>
@@ -117,6 +123,10 @@ const withOriginGraphql = WrappedComponent => {
       if (this.state.deferredPromises[id]) {
         this.state.deferredPromises[id].resolve(response)
       }
+      // Update on graphql queries/mutations but not the regular polers
+      if (!NO_UPDATE_STRUCTURES.some(struc => !!get(response, struc))) {
+        DeviceEventEmitter.emit('updateBalance')
+      }
     }
 
     _handleGraphqlError = ({ id, error }) => {
@@ -125,6 +135,24 @@ const withOriginGraphql = WrappedComponent => {
       if (this.state.deferredPromises[id]) {
         this.state.deferredPromises[id].reject(error)
       }
+      DeviceEventEmitter.emit('updateBalance')
+    }
+
+    _handleTransactionSent = transactionHash => {
+      const rpcProvider = this.props.settings.network.provider
+      const provider = new ethers.providers.JsonRpcProvider(rpcProvider)
+      const fetchInProgress = {}
+
+      const interval = setInterval(async () => {
+        if (fetchInProgress[transactionHash]) return
+        fetchInProgress[transactionHash] = true
+        const receipt = await provider.getTransactionReceipt(transactionHash)
+        if (receipt && receipt.blockNumber) {
+          DeviceEventEmitter.emit('updateBalance')
+          clearInterval(interval)
+        }
+        fetchInProgress[transactionHash] = false
+      }, RECEIPT_INTERVAL)
     }
 
     getBalance = ethAddress => {

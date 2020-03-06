@@ -14,7 +14,7 @@
     "@origin/contracts": "^0.8.6",
     "@origin/ip2geo": "^0.1.0",
     "@origin/web3-provider": "^0.1.0",
-    "@sentry/node": "5.12.0",
+    "@sentry/node": "5.12.4",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
@@ -26,7 +26,7 @@
     "pg": "7.18.1",
     "prom-client": "11.5.3",
     "redis": "2.8.0",
-    "sequelize": "5.21.3",
+    "sequelize": "5.21.4",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },

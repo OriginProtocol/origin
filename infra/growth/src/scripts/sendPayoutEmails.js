@@ -14,6 +14,10 @@ const { naturalUnitsToToken } = require('../../src/util/token')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('sendPayoutEmails', { showTimestamp: false })
 
+const sleep = milliseconds => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 class SendPayoutEmails {
   constructor(config) {
     this.config = config
@@ -61,6 +65,7 @@ class SendPayoutEmails {
     })
     logger.info(`Sending payout email to ${payouts.length} lucky recipients`)
 
+    let i = 0
     for (const payout of payouts) {
       logger.info(`Sending email for payout id ${payout.id}`)
       if (payout.currency !== 'OGN') {
@@ -73,6 +78,11 @@ class SendPayoutEmails {
         logger.info(
           `Would send email to account ${payout.toAddress}, amount ${amount}, txnHash ${payout.txnHash}`
         )
+      }
+      // Sleep for 1 sec every 50 emails sent to avoid hitting SendGrid's rate limiting.
+      i++
+      if (i % 50 === 0) {
+        sleep(1000) // 1 sec
       }
       this.stats.numEmailsSent++
     }

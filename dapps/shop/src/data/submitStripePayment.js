@@ -1,3 +1,5 @@
+const { BACKEND_AUTH_TOKEN } = process.env
+
 async function submitStripePayment({
   backend,
   stripe,
@@ -6,7 +8,10 @@ async function submitStripePayment({
   listingId
 }) {
   const res = await fetch(`${backend}/pay`, {
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+    },
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify({
@@ -16,27 +21,36 @@ async function submitStripePayment({
     })
   })
   const json = await res.json()
+  const { userInfo } = cart
+  const shippingAddress = {
+    line1: userInfo.address1,
+    city: userInfo.city,
+    state: userInfo.province,
+    postal_code: userInfo.zip
+  }
+  const shippingName = `${userInfo.firstName} ${userInfo.lastName}`
+  let billingAddress = shippingAddress
+  let billingName = shippingName
+  if (userInfo.billingDifferent) {
+    billingAddress = {
+      line1: userInfo.billingAddress1,
+      city: userInfo.billingCity,
+      state: userInfo.billingProvince,
+      postal_code: userInfo.billingZip
+    }
+    billingName = `${userInfo.billingFirstName} ${userInfo.billingLastName}`
+  }
 
   return stripe.handleCardPayment(json.client_secret, {
+    shipping: {
+      name: shippingName,
+      address: shippingAddress
+    },
     payment_method_data: {
       billing_details: {
-        name: `${cart.userInfo.firstName} ${cart.userInfo.lastName}`,
+        name: billingName,
         email: cart.userInfo.email,
-        address: {
-          line1: cart.userInfo.address1,
-          city: cart.userInfo.city,
-          state: cart.userInfo.province,
-          postal_code: cart.userInfo.zip
-        }
-      }
-    },
-    shipping: {
-      name: `${cart.userInfo.firstName} ${cart.userInfo.lastName}`,
-      address: {
-        line1: cart.userInfo.address1,
-        city: cart.userInfo.city,
-        state: cart.userInfo.province,
-        postal_code: cart.userInfo.zip
+        address: billingAddress
       }
     }
   })

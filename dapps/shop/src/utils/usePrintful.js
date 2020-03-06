@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react'
-import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
+
+const { BACKEND_AUTH_TOKEN } = process.env
 
 function usePrintful(orderId) {
   const { config } = useConfig()
   const [order, setOrder] = useState()
-  const [{ admin }] = useStateValue()
 
   useEffect(() => {
     async function fetchOrder() {
       const url = `${config.backend}/orders/${orderId}/printful`
-      const headers = new Headers({ authorization: admin })
-      const myRequest = new Request(url, { headers })
+      const headers = new Headers({
+        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+      })
+      const myRequest = new Request(url, {
+        credentials: 'include',
+        headers
+      })
       const raw = await fetch(myRequest)
       if (raw.ok) {
         const order = await raw.json()
