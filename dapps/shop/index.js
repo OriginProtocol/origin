@@ -55,7 +55,7 @@ async function start() {
   )
   let backend
   if (process.env.BACKEND !== 'false') {
-    console.log(`Starting backend with local contract #{localContractAddress}`)
+    console.log(`Starting backend with local contract ${localContractAddress}`)
     backend = spawn('node', ['backend'], {
       stdio: 'inherit',
       env: {

@@ -15,6 +15,7 @@ metadata:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/limit-rps: "10"
 spec:

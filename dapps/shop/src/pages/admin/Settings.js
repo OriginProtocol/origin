@@ -17,6 +17,7 @@ function validate(state) {
 }
 
 const defaultValues = {
+  listener: false,
   dataUrl: '',
   publicUrl: '',
   printful: '',
@@ -39,10 +40,37 @@ const defaultValues = {
   awsAccessSecret: ''
 }
 
+async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
+  if (!pgpPrivateKey) {
+    return 'No private key'
+  }
+  const pubKeyObj = await openpgp.key.readArmored(pgpPublicKey)
+  const encrypted = await openpgp.encrypt({
+    message: openpgp.message.fromText(msg),
+    publicKeys: pubKeyObj.keys
+  })
+
+  const privateKey = await openpgp.key.readArmored(pgpPrivateKey)
+  if (privateKey.err && privateKey.err.length) {
+    throw privateKey.err[0]
+  }
+  const privateKeyObj = privateKey.keys[0]
+  await privateKeyObj.decrypt(pass)
+
+  const message = await openpgp.message.readArmored(encrypted.data)
+  const options = { message, privateKeys: [privateKeyObj] }
+
+  const plaintext = await openpgp.decrypt(options)
+
+  return plaintext.data === msg ? '✅' : '❌'
+}
+
 const AdminSettings = () => {
   const { config } = useConfig()
   const { shopConfig } = useShopConfig()
+  const [saving, setSaving] = useState()
   const [state, setStateRaw] = useState(defaultValues)
+  const [keyValid, setKeyValid] = useState(false)
   const setState = newState => setStateRaw({ ...state, ...newState })
 
   useEffect(() => {
@@ -52,6 +80,23 @@ const AdminSettings = () => {
       setStateRaw(defaultValues)
     }
   }, [shopConfig])
+
+  useEffect(() => {
+    async function doTest() {
+      try {
+        const result = await testKey({
+          pgpPublicKey: config.pgpPublicKey,
+          pgpPrivateKey: state.pgpPrivateKey,
+          pass: state.pgpPrivateKeyPass,
+          msg: 'Test'
+        })
+        setKeyValid(result)
+      } catch (e) {
+        setKeyValid(e.message)
+      }
+    }
+    doTest()
+  }, [config.pgpPublicKey, state.pgpPrivateKey, state.pgpPrivateKeyPass])
 
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
@@ -76,15 +121,34 @@ const AdminSettings = () => {
               method: 'POST',
               body: JSON.stringify(newState)
             })
+            setSaving('saving')
             const raw = await fetch(myRequest)
             if (raw.ok) {
-              console.log('Saved')
+              setSaving('ok')
+              setTimeout(() => setSaving(null), 3000)
             }
           } else {
             window.scrollTo(0, 0)
           }
         }}
       >
+        <div className="form-group">
+          <label>Listener</label>
+          <div className="btn-group d-block">
+            <button
+              className={`btn btn-${state.listener ? '' : 'outline-'}primary`}
+              onClick={() => setState({ listener: true })}
+            >
+              On
+            </button>
+            <button
+              className={`btn btn-${!state.listener ? '' : 'outline-'}primary`}
+              onClick={() => setState({ listener: false })}
+            >
+              Off
+            </button>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
@@ -190,11 +254,6 @@ const AdminSettings = () => {
               {Feedback('stripeWebhookSecret')}
             </div>
             <div className="form-group">
-              <label>Stripe Webhook Secret</label>
-              <input type="text" {...input('stripeWebhookSecret')} />
-              {Feedback('stripeWebhookSecret')}
-            </div>
-            <div className="form-group">
               <label>Printful API Key</label>
               <input type="text" {...input('printful')} />
               {Feedback('printful')}
@@ -205,9 +264,13 @@ const AdminSettings = () => {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label>PGP Public Key</label>
-              <textarea rows="5" {...input('pgpPublicKey')} />
-              {Feedback('pgpPublicKey')}
+              <label>PGP Public Key (from config.json)</label>
+              <textarea
+                className="form-control"
+                value={config.pgpPublicKey}
+                rows={5}
+                readOnly
+              />
             </div>
           </div>
           <div className="col-md-6">
@@ -223,7 +286,7 @@ const AdminSettings = () => {
           <input
             className="form-control"
             readOnly
-            value={state.pgpPublicKey.replace(/\n/g, '\\n')}
+            value={config.pgpPublicKey.replace(/\n/g, '\\n')}
           />
         </div>
         <div className="form-group">
@@ -231,10 +294,18 @@ const AdminSettings = () => {
           <input type="text" {...input('pgpPrivateKeyPass')} />
           {Feedback('pgpPrivateKeyPass')}
         </div>
+        <div className="form-group">{`Keys match: ${keyValid}`}</div>
         <div className="actions">
           <button type="submit" className="btn btn-primary">
             Save
           </button>
+          <span className="ml-2">
+            {saving === 'saving'
+              ? 'Saving...'
+              : saving === 'ok'
+              ? 'Saved OK ✅'
+              : null}
+          </span>
         </div>
       </form>
     </>

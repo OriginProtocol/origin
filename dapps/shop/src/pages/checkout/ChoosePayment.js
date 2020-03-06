@@ -9,27 +9,58 @@ import {
   injectStripe
 } from 'react-stripe-elements'
 
-import { formFeedback } from 'utils/formHelpers'
+import { formInput, formFeedback } from 'utils/formHelpers'
 import formatPrice from 'utils/formatPrice'
 import getWalletStatus from 'utils/walletStatus'
 import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import submitStripePayment from 'data/submitStripePayment'
-import PaymentMethods from 'data/PaymentMethods'
 import addData from 'data/addData'
 
 import WalletStatus from 'queries/WalletStatus'
 import MakeOffer from 'mutations/MakeOffer'
-import AllowToken from 'mutations/AllowToken'
 
 import Price from 'components/Price'
 import Link from 'components/Link'
-import WithPrices from 'components/WithPrices'
+import LoadingButton from 'components/LoadingButton'
 
+import ShippingForm from './_ShippingForm'
+import TokenChooser from './_TokenChooser'
 import CryptoWallet from './CryptoWallet'
 import WaitForTransaction from '../../components/WaitForTransaction'
 
-const MarketplaceContract = process.env.MARKETPLACE_CONTRACT
+function validate(state) {
+  if (!state.billingDifferent) {
+    Object.keys(state).forEach(k => {
+      if (k.indexOf('Error') > 0) {
+        delete state[k]
+      }
+    })
+    return { valid: true, newState: state }
+  }
+
+  const newState = {}
+
+  if (!state.billingFirstName) {
+    newState.billingFirstNameError = 'Enter a first name'
+  }
+  if (!state.billingLastName) {
+    newState.billingLastNameError = 'Enter a last name'
+  }
+  if (!state.billingAddress1) {
+    newState.billingAddress1Error = 'Enter an address'
+  }
+  if (!state.billingCity) {
+    newState.billingCityError = 'Enter a city'
+  }
+  if (!state.billingZip) {
+    newState.billingZipError = 'Enter a ZIP / postal code'
+  }
+
+  const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+  return { valid, newState: { ...state, ...newState } }
+}
 
 const CreditCardForm = injectStripe(({ stripe }) => {
   // const [paymentMethod, setPaymentMethod] = useState()
@@ -38,6 +69,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   const { config } = useConfig()
   const [token, setToken] = useState('token-ETH')
   const [tokenStatus, setTokenStatus] = useState({})
+  const [submit, setSubmit] = useState()
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
   const [paymentReq, setPaymentReq] = useState()
@@ -47,6 +79,22 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   const [offerTx, setOfferTx] = useState()
   const history = useHistory()
   const paymentMethod = get(cart, 'paymentMethod.id')
+  const [state, setStateRaw] = useState({
+    ...cart.userInfo,
+    billingCountry: cart.userInfo.billingCountry || 'United States',
+    billingProvince: cart.userInfo.billingProvince || 'Alabama'
+  })
+  const setState = newState => setStateRaw({ ...state, ...newState })
+  const input = formInput(state, newState => setState(newState))
+
+  const paymentMethods = get(config, 'paymentMethods', [])
+  const hasCrypto = paymentMethods.find(o => o.id === 'crypto')
+
+  useEffect(() => {
+    if (paymentMethods.length === 1) {
+      dispatch({ type: 'updatePaymentMethod', method: paymentMethods[0] })
+    }
+  }, [paymentMethods.length])
 
   const { data: walletStatusData, loading: walletLoading } = useQuery(
     WalletStatus,
@@ -106,7 +154,62 @@ const CreditCardForm = injectStripe(({ stripe }) => {
     }
   }, [stripe, paymentMethod])
 
+  useEffect(() => {
+    async function go() {
+      setLoading(true)
+      setSubmit(false)
+
+      const encryptedData = await addData(cart, config)
+      const { auth, hash } = encryptedData
+
+      if (paymentMethod === 'stripe') {
+        const { backend } = config
+        submitStripePayment({
+          backend,
+          backendAuthToken: config.backendAuthToken,
+          stripe,
+          cart,
+          encryptedData,
+          listingId: listingID
+        })
+          .then(result => {
+            if (result.error) {
+              setFormData({ ...formData, cardError: result.error.message })
+              setLoading(false)
+            } else {
+              history.push(`/order/${hash}?auth=${auth}`)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            setFormData({
+              ...formData,
+              cardError: 'Payment server error. Please try again later.'
+            })
+            setLoading(false)
+          })
+      } else if (paymentMethod === 'crypto') {
+        const variables = {
+          listingID,
+          value: tokenStatus.tokenValue,
+          currency: token,
+          from: get(walletStatusData, 'web3.metaMaskAccount.id'),
+          quantity: 1,
+          autoswap: true,
+          encryptedData: hash
+        }
+        setApproveOfferTx(true)
+        setAuth(auth)
+        makeOffer({ variables })
+      }
+    }
+    if (submit) {
+      go()
+    }
+  }, [submit])
+
   const Feedback = formFeedback(formData)
+  const FeedbackAddress = formFeedback(state)
 
   const price = {
     currency: { id: 'fiat-USD' },
@@ -136,90 +239,61 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         if (disabled) {
           return
         }
-
-        setLoading(true)
-        const encryptedData = await addData(cart, config)
-        const { auth, hash } = encryptedData
-
-        if (paymentMethod === 'stripe') {
-          const { backend } = config
-          submitStripePayment({
-            backend,
-            backendAuthToken: config.backendAuthToken,
-            stripe,
-            cart,
-            encryptedData,
-            listingId: listingID
-          })
-            .then(result => {
-              if (result.error) {
-                setFormData({ ...formData, cardError: result.error.message })
-                setLoading(false)
-              } else {
-                history.push(`/order/${hash}?auth=${auth}`)
-              }
-            })
-            .catch(err => {
-              console.log(err)
-              setFormData({
-                ...formData,
-                cardError: 'Payment server error. Please try again later.'
-              })
-              setLoading(false)
-            })
-        } else if (paymentMethod === 'crypto') {
-          const variables = {
-            listingID,
-            value: tokenStatus.tokenValue,
-            currency: token,
-            from: get(walletStatusData, 'web3.metaMaskAccount.id'),
-            quantity: 1,
-            autoswap: true,
-            encryptedData: hash
-          }
-          setApproveOfferTx(true)
-          setAuth(auth)
-          makeOffer({ variables })
+        const { valid, newState } = validate(state)
+        setState(newState)
+        if (!valid) {
+          return
         }
+        dispatch({ type: 'updateUserInfo', info: newState })
+        setSubmit(true)
       }}
     >
       <div className="checkout-payment-method">
-        <label
-          className={`radio${paymentMethod === 'crypto' ? '' : ' inactive'}`}
-        >
-          <input
-            type="radio"
-            name="paymentMethod"
-            checked={paymentMethod === 'crypto'}
-            onChange={() =>
-              dispatch({
-                type: 'updatePaymentMethod',
-                method: PaymentMethods.find(m => m.id === 'crypto')
-              })
-            }
-          />
-          Crypto Currency
-        </label>
-        {paymentMethod === 'crypto' && (
-          <div className="pl-4 pt-2">
-            {walletStatus === 'ready' ? (
-              <CryptoChooser
-                from={get(walletStatusData, 'web3.metaMaskAccount.id')}
-                value={token}
-                onChange={token => setToken(token)}
-                onTokenReady={(ready, tokenValue) =>
-                  setTokenStatus({ ready, tokenValue })
-                }
-                price={price}
+        {!hasCrypto ? null : (
+          <>
+            <label
+              className={`radio${
+                paymentMethod === 'crypto' ? '' : ' inactive'
+              }`}
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                checked={paymentMethod === 'crypto'}
+                onChange={() => {
+                  setState({ billingDifferent: false })
+                  dispatch({
+                    type: 'updatePaymentMethod',
+                    method: config.paymentMethods.find(m => m.id === 'crypto')
+                  })
+                }}
               />
-            ) : (
-              <CryptoWallet walletStatus={walletStatus} />
+              Crypto Currency
+            </label>
+            {paymentMethod === 'crypto' && (
+              <div className="pl-4 pt-2">
+                {walletStatus === 'ready' ? (
+                  <TokenChooser
+                    from={get(walletStatusData, 'web3.metaMaskAccount.id')}
+                    value={token}
+                    onChange={token => setToken(token)}
+                    onTokenReady={(ready, tokenValue) =>
+                      setTokenStatus({ ready, tokenValue })
+                    }
+                    price={price}
+                  />
+                ) : (
+                  <CryptoWallet walletStatus={walletStatus} />
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
         {!config.stripe ? null : (
           <label
-            className={`radio${paymentMethod === 'stripe' ? '' : ' inactive'}`}
+            className={`radio align-items-center${
+              paymentMethod === 'stripe' ? '' : ' inactive'
+            }`}
           >
             <input
               type="radio"
@@ -228,15 +302,22 @@ const CreditCardForm = injectStripe(({ stripe }) => {
               onChange={() =>
                 dispatch({
                   type: 'updatePaymentMethod',
-                  method: PaymentMethods.find(m => m.id === 'stripe')
+                  method: config.paymentMethods.find(m => m.id === 'stripe')
                 })
               }
             />
             Credit Card
+            <div className="cards">
+              <div className="visa" />
+              <div className="master" />
+              <div className="amex" />
+              <div className="discover" />
+              and more...
+            </div>
           </label>
         )}
         {paymentMethod === 'stripe' && (
-          <div className="pl-4 pb-3 pt-2">
+          <div className="pl-4 pb-3 pt-3">
             {/*applePay && (
               <div className="one-click-pay">
                 <PaymentRequestButtonElement
@@ -247,7 +328,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
                   }}
                 />
               </div>
-                )*/}
+            )*/}
             <div className="form-row">
               <CardElement
                 className="form-control"
@@ -258,11 +339,60 @@ const CreditCardForm = injectStripe(({ stripe }) => {
           </div>
         )}
       </div>
+      {paymentMethod !== 'stripe' ? null : (
+        <>
+          <div className="mt-4 mb-3">
+            <b>Billing Address</b>
+            <div>
+              Select the address that matches your card or payment method.
+            </div>
+          </div>
+          <div className="checkout-payment-method">
+            <label
+              className={`radio ${
+                state.billingDifferent ? 'inactive' : 'active'
+              }`}
+            >
+              <input
+                type="radio"
+                name="billingDifferent"
+                checked={state.billingDifferent ? false : true}
+                onChange={() => setState({ billingDifferent: false })}
+              />
+              <div>
+                <div>Same as shipping address</div>
+              </div>
+            </label>
+            <label
+              className={`radio ${
+                state.billingDifferent ? 'active mb-3' : 'inactive'
+              }`}
+            >
+              <input
+                type="radio"
+                name="billingDifferent"
+                checked={state.billingDifferent ? true : false}
+                onChange={() => setState({ billingDifferent: true })}
+              />
+              <div>
+                <div>Use a different billing address</div>
+              </div>
+            </label>
+            {!state.billingDifferent ? null : (
+              <ShippingForm
+                prefix="billing"
+                {...{ state, setState, input, Feedback: FeedbackAddress }}
+              />
+            )}
+          </div>
+        </>
+      )}
       <div className="actions">
         <Link to="/checkout/shipping">&laquo; Return to shipping</Link>
-        <button
+        <LoadingButton
           type="submit"
           className={`btn btn-primary btn-lg ${disabled ? ' disabled' : ''}`}
+          loading={loading}
           children={
             offerTx ? (
               <WaitForTransaction hash={offerTx}>
@@ -298,135 +428,9 @@ const Execute = ({ exec, children }) => {
   return children
 }
 
-const DefaultTokens = [
-  { id: 'token-OGN', name: 'OGN' },
-  { id: 'token-DAI', name: 'DAI' },
-  { id: 'token-ETH', name: 'ETH' }
-]
-
-const CryptoChooser = ({ price, value, onChange, onTokenReady, from }) => {
-  const { config } = useConfig()
-  const [approveUnlockTx, setApproveUnlockTx] = useState()
-  const [unlockTx, setUnlockTx] = useState()
-  const [allowToken] = useMutation(AllowToken, {
-    onCompleted: arg => {
-      setUnlockTx(arg.updateTokenAllowance.id)
-    },
-    onError: errorData => {
-      console.log(errorData)
-      setApproveUnlockTx(false)
-    }
-  })
-  const acceptedTokens = config.acceptedTokens || DefaultTokens
-  const selectedToken =
-    acceptedTokens.find(t => t.id === value) || acceptedTokens[0]
-  const acceptedTokenIds = acceptedTokens.map(t => t.id)
-
-  return (
-    <WithPrices
-      price={price}
-      targets={[...acceptedTokenIds, 'fiat-USD']}
-      allowanceTarget={config.marketplaceContract || MarketplaceContract}
-    >
-      {({ tokenStatus, refetchBalances }) => {
-        // console.log({ tokenStatus, suggestedToken })
-        const token = tokenStatus[value]
-        useEffect(() => {
-          if (token) {
-            const ready = token.hasBalance && token.hasAllowance
-            onTokenReady(ready, token.value)
-          }
-        }, [value, from, get(token, 'hasBalance'), get(token, 'hasAllowance')])
-        return (
-          <div className="crypto-chooser">
-            <div className="tokens">
-              {acceptedTokens.map(token => (
-                <div
-                  key={token.id}
-                  className={value === token.id ? 'active' : ''}
-                  onClick={() => onChange(token.id)}
-                >
-                  <div>{`Pay with ${token.name}`}</div>
-                  <div>
-                    <Price price={price} target={token.id} />
-                  </div>
-                  <div className="sm">
-                    <Price
-                      prefix={`1 ${token.name} = `}
-                      price={{ currency: token.id, amount: '1' }}
-                      target="fiat-USD"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            {!token ? null : !token.hasBalance ? (
-              <div className="alert alert-danger mt-3 mb-0">
-                Insufficient balance
-              </div>
-            ) : !token.hasAllowance ? (
-              <div className="alert alert-info mt-3 mb-0 d-flex align-items-center">
-                {`Please unlock your ${selectedToken.name} to continue`}
-                <button
-                  className={`btn btn-primary btn-sm ml-3${
-                    approveUnlockTx ? ' disabled' : ''
-                  }`}
-                  onClick={() => {
-                    if (approveUnlockTx) {
-                      return false
-                    }
-                    setApproveUnlockTx(true)
-                    allowToken({
-                      variables: {
-                        to: config.marketplaceContract || MarketplaceContract,
-                        token: value,
-                        from,
-                        value: token.value
-                      }
-                    })
-                  }}
-                >
-                  {unlockTx ? (
-                    <WaitForTransaction hash={unlockTx}>
-                      {() => <Execute exec={refetchBalances}>Done!</Execute>}
-                    </WaitForTransaction>
-                  ) : approveUnlockTx ? (
-                    'Awaiting approval...'
-                  ) : (
-                    'Unlock'
-                  )}
-                </button>
-              </div>
-            ) : null}
-          </div>
-        )
-      }}
-    </WithPrices>
-  )
-}
-
 export default CreditCardForm
 
 require('react-styl')(`
-  .crypto-chooser
-    .tokens
-      display: flex
-      > div
-        border: 1px solid #eee
-        padding: 1rem
-        border-radius: 0.5rem
-        margin-right: 1rem
-        cursor: pointer
-        text-align: center
-        opacity: 0.75
-        &:hover
-          opacity: 1
-        &.active
-          opacity: 1
-          border-color: #007bff
-        .sm
-          font-size: 0.75rem
-          margin-top: 0.25rem
   .checkout-payment-method
     border: 1px solid #eee
     border-radius: 0.5rem
@@ -449,11 +453,26 @@ require('react-styl')(`
       align-items: baseline
       input
         margin-right: 0.5rem
-  @media (max-width: 767.98px)
-    .crypto-chooser
-      .tokens
-        flex-direction: column
-        > div:not(:last-child)
-          margin-bottom: 1rem
+        margin-bottom: 3px
+      .cards
+        margin-left: auto
+        display: flex
+        font-size: 12px
+        color: #737373
+        align-items: center
+        > div
+          width: 38px
+          height: 24px
+          margin-right: 4px
+          &.visa
+            background: url(images/visa.svg)
+          &.master
+            background: url(images/master.svg)
+          &.amex
+            background: url(images/amex.svg)
+          &.discover
+            background: url(images/discover.svg)
+          &:last-child
+            margin-right: 8px
 
 `)

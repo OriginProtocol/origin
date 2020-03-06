@@ -116,7 +116,6 @@ class GrowthWelcome extends Component {
     )
 
     // This is semi legit ¯\_(ツ)_/¯
-    const rewardValue = '3,000'
     const isIOS =
       navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
     const appStoreUrl =
@@ -192,8 +191,7 @@ class GrowthWelcome extends Component {
                       {!personalised && (
                         <p className="avatar-text">
                           <fbt desc="GrowthWelcome.joinToEarnChance">
-                            Join Origin Rewards and make a purchase for a chance
-                            to win OGN prizes.
+                            Join Origin Rewards to earn OGN.
                           </fbt>
                         </p>
                       )}
@@ -210,16 +208,6 @@ class GrowthWelcome extends Component {
                         </>
                       )}
                     </div>
-                  </section>
-                  <hr />
-                  <section id="callout">
-                    <div className="callout-title">
-                      <fbt desc="GrowthWelcome.topPrize">Top Prize</fbt>
-                    </div>
-                    <p>
-                      <span className="value">{rewardValue}</span>
-                      <fbt desc="GrowthWelcome.originTokens">Origin Tokens</fbt>
-                    </p>
                   </section>
                   <hr />
                   {isOriginWallet && (
