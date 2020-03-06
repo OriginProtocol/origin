@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import FlexSearch from 'flexsearch'
 
-import PaymentMethods from './PaymentMethods'
-
 import get from 'lodash/get'
 import set from 'lodash/set'
 import pick from 'lodash/pick'
@@ -14,7 +12,6 @@ const defaultState = {
   products: [],
   collections: [],
   shippingZones: [],
-  paymentMethods: PaymentMethods,
   orders: [],
   discounts: [],
 
@@ -87,15 +84,24 @@ const reducer = (state, action) => {
       `cart.userInfo`,
       pick(
         action.info,
+        'email',
         'firstName',
         'lastName',
-        'email',
         'address1',
         'address2',
         'city',
         'province',
         'country',
-        'zip'
+        'zip',
+        'billingDifferent',
+        'billingFirstName',
+        'billingLastName',
+        'billingAddress1',
+        'billingAddress2',
+        'billingCity',
+        'billingProvince',
+        'billingCountry',
+        'billingZip'
       )
     )
   } else if (action.type === 'updateShipping') {

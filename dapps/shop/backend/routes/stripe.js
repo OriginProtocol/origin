@@ -55,6 +55,7 @@ module.exports = function(app) {
       currency: 'usd',
       metadata: {
         shopId,
+        listingId: req.shop.listingId,
         encryptedData: req.body.data
       }
     })
@@ -73,13 +74,12 @@ module.exports = function(app) {
     if (!WEB3_PK) {
       return res.sendStatus(400)
     }
-    // Need to get the shopId before the stripe library processes the incoming
-    // buffer
-    let jasonBody, shopId
+
+    let jasonBody, shopId, shop
     try {
       jasonBody = JSON.parse(req.body.toString())
-      const listingId = get(jasonBody, 'data.object.metadata.listingId')
-      const shop = await Shop.findOne({ where: { listingId } })
+      shopId = get(jasonBody, 'data.object.metadata.shopId')
+      shop = await Shop.findOne({ where: { id: shopId } })
       if (shop) {
         shopId = shop.id
       }
@@ -101,8 +101,8 @@ module.exports = function(app) {
     const stripe = Stripe(stripeBackend || '')
 
     const webhookSecret = await encConf.get(shopId, 'stripeWebhookSecret')
-    const siteConfig = await config.getSiteConfig(dataURL)
-    const lid = ListingID.fromFQLID(siteConfig.listingId)
+    const siteConfig = await config.getSiteConfig(dataURL, shop.networkId)
+    const lid = ListingID.fromFQLID(shop.listingId)
     let event
     const signature = req.headers['stripe-signature']
     try {
@@ -121,7 +121,7 @@ module.exports = function(app) {
     console.log(JSON.stringify(event, null, 4))
 
     const encryptedData = get(event, 'data.object.metadata.encryptedData')
-    const contractAddr = lid.address()
+    const contractAddr = siteConfig.marketplaceContract
 
     if (!contractAddr) {
       console.error(

@@ -112,6 +112,26 @@ async function sendMail(shopId, cart, skip) {
     publicURL += '/#'
   }
 
+  const { userInfo } = cart
+
+  const shippingAddress = [
+    `${userInfo.firstName} ${userInfo.lastName}`,
+    `${userInfo.address1}`,
+    `${userInfo.city} ${userInfo.province || ''} ${userInfo.zip}`,
+    `${userInfo.country}`
+  ]
+  let billingAddress = shippingAddress
+  if (userInfo.billingDifferent) {
+    billingAddress = [
+      `${userInfo.billingFirstName} ${userInfo.billingLastName}`,
+      `${userInfo.billingAddress1}`,
+      `${userInfo.billingCity} ${userInfo.billingProvince || ''} ${
+        userInfo.billingZip
+      }`,
+      `${userInfo.billingCountry}`
+    ]
+  }
+
   const vars = {
     head,
     siteName: data.fullTitle || data.title,
@@ -133,18 +153,8 @@ async function sendMail(shopId, cart, skip) {
     discount: formatPrice(cart.discount),
     shipping: formatPrice(cart.shipping.amount),
     total: formatPrice(cart.total),
-    shippingAddress: [
-      `${cart.userInfo.firstName} ${cart.userInfo.lastName}`,
-      `${cart.userInfo.address1}`,
-      `${cart.userInfo.city} ${cart.userInfo.province} ${cart.userInfo.zip}`,
-      `${cart.userInfo.country}`
-    ],
-    billingAddress: [
-      `${cart.userInfo.firstName} ${cart.userInfo.lastName}`,
-      `${cart.userInfo.address1}`,
-      `${cart.userInfo.city} ${cart.userInfo.province} ${cart.userInfo.zip}`,
-      `${cart.userInfo.country}`
-    ],
+    shippingAddress,
+    billingAddress,
     shippingMethod: cart.shipping.label,
     paymentMethod: cart.paymentMethod.label
   }
