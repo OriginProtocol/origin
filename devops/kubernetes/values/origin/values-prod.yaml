@@ -69,7 +69,7 @@ ipfsLoadBalancerIP: 35.233.189.126
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '86503ee'
+t3ClientImageTag: '2a06e0e'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
