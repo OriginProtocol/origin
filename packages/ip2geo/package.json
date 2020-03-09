@@ -11,7 +11,7 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
-    "geoip-lite": "^1.3.7",
+    "geoip-lite": "^1.4.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
