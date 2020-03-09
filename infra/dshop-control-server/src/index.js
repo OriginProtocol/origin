@@ -41,7 +41,7 @@ const ingest = async (req, res, datadir) => {
   const isShopify = datadir === null
 
   if (isShopify) {
-    console.log('Fetching Shopify data for')
+    console.log('Fetching Shopify data')
 
     // Disable eslint because can't destructure to different variable types,
     // i.e. let and const
@@ -61,7 +61,7 @@ const ingest = async (req, res, datadir) => {
       datadir
     })
   } else {
-    console.log('Fetching dShop data for')
+    console.log('Fetching dShop data')
 
     // eslint-disable-next-line
     let [collections, products, config] = await Promise.all([
