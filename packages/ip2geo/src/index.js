@@ -1,6 +1,10 @@
 'use strict'
 
 const fetch = require('node-fetch')
+
+// The global.geodatadir is used to overwrite the default location for data files
+// loaded by the geoip-lite library.
+global.geodatadir = __dirname + '/../data/'
 const geoip = require('geoip-lite')
 
 const logger = require('./logger')
