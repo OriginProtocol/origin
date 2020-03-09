@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'b26c15a'
+bridgeImageTag: '2aa3dbe'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -26,7 +26,7 @@ discoveryImageTag: '01c08a5'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '3a69c4e'
+growthImageTag: '2aa3dbe'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -63,7 +63,7 @@ adminImageTag: 'c17256b'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'c17256b'
+relayerImageTag: '2aa3dbe'
 
 # origin-graphql
 graphqlImage: origin-graphql
@@ -71,7 +71,7 @@ graphqlImageTag: 'c17256b'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: 'c17256b'
+t3ClientImageTag: '2aa3dbe'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
