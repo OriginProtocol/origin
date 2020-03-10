@@ -1,6 +1,6 @@
 const omit = require('lodash/omit')
 const { Seller, Shop } = require('../models')
-const { checkPassword } = require('./_auth')
+const { checkPassword, authShop } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const { IS_PROD } = require('../utils/const')
 const encConf = require('../utils/encryptedConfig')
@@ -173,5 +173,24 @@ module.exports = function(app) {
 
     const config = await encConf.dump(id)
     return res.json({ success: true, config })
+  })
+
+  app.get('/password', authShop, async (req, res) => {
+    const password = await encConf.get(req.shop.id, 'password')
+    if (!password) {
+      return res.json({ success: true })
+    } else if (req.session.authedShop === req.shop.id) {
+      return res.json({ success: true })
+    }
+    res.json({ success: false })
+  })
+
+  app.post('/password', authShop, async (req, res) => {
+    const password = await encConf.get(req.shop.id, 'password')
+    if (req.body.password === password) {
+      req.session.authedShop = req.shop.id
+      return res.json({ success: true })
+    }
+    res.json({ success: false })
   })
 }

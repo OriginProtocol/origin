@@ -83,3 +83,11 @@ Export key pair in base64 with no newlines:
     gpg --list-keys
     gpg --armor --export KEY_ID | base64 -w0
     gpg --armor --export-secret-key KEY_ID | base64 -w0
+
+## Migrations
+
+[Sequelize migrations docs](https://sequelize.org/master/manual/migrations.html)
+
+Add new migration:
+
+    npx sequelize migration:generate --name migrationName --migrations-path=./data/migrations
