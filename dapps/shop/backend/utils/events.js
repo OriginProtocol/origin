@@ -1,13 +1,13 @@
-const { PROVIDER } = require('./const')
+// const { PROVIDER } = require('./const')
 const Web3 = require('web3')
-const web3 = new Web3(PROVIDER)
+const w3 = new Web3()
 
 const { getIpfsHashFromBytes32 } = require('./_ipfs')
 
 const { Event } = require('../models')
 
 const abi = require('./_abi')
-const Marketplace = new web3.eth.Contract(abi)
+const Marketplace = new w3.eth.Contract(abi)
 
 function getEventObj(event) {
   let decodedLog = {},
@@ -16,7 +16,7 @@ function getEventObj(event) {
     i => i.signature === event.topics[0]
   )
   if (eventAbi) {
-    decodedLog = web3.eth.abi.decodeLog(
+    decodedLog = w3.eth.abi.decodeLog(
       eventAbi.inputs,
       event.data,
       event.topics.slice(1)
@@ -24,7 +24,7 @@ function getEventObj(event) {
   }
   return {
     ...event,
-    blockNumber: web3.utils.toDecimal(event.blockNumber),
+    blockNumber: w3.utils.toDecimal(event.blockNumber),
     topic1: event.topics[0],
     topic2: event.topics[1],
     topic3: event.topics[2],
@@ -37,7 +37,7 @@ function getEventObj(event) {
   }
 }
 
-async function upsertEvent({ event, shopId, networkId }) {
+async function upsertEvent({ web3, event, shopId, networkId }) {
   const eventObj = { ...getEventObj(event), shopId, networkId }
   const block = await web3.eth.getBlock(eventObj.blockNumber)
   eventObj.timestamp = block.timestamp
@@ -55,9 +55,9 @@ async function upsertEvent({ event, shopId, networkId }) {
   return record
 }
 
-async function storeEvents({ events, shopId, networkId }) {
+async function storeEvents({ web3, events, shopId, networkId }) {
   for (const event of events) {
-    await upsertEvent({ event, shopId, networkId })
+    await upsertEvent({ web3, event, shopId, networkId })
     // await handleLog(event)
   }
 }

@@ -42,9 +42,13 @@ const handleLog = async ({
       networkId,
       transactionHash,
       blockNumber: web3.utils.hexToNumber(blockNumber)
-    }).then(res => {
-      console.log(`Created tx ${res.dataValues.id}`)
     })
+      .then(res => {
+        console.log(`Created tx ${res.dataValues.id}`)
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   const eventObj = getEventObj({
@@ -63,6 +67,7 @@ const handleLog = async ({
   }
 
   const event = await upsertEvent({
+    web3,
     shopId: shop.id,
     networkId,
     event: {
@@ -73,15 +78,19 @@ const handleLog = async ({
     }
   })
 
+  await insertOrderFromEvent({ offerId, event, shop })
+}
+
+async function insertOrderFromEvent({ offerId, event, shop }) {
   console.log(`${event.eventName} - ${event.offerId} by ${event.party}`)
   console.log(`IPFS Hash: ${event.ipfsHash}`)
 
   try {
     const dataUrl = await encConf.get(shop.id, 'dataUrl')
-    const ipfsGateway = await getIPFSGateway(dataUrl, networkId)
+    const ipfsGateway = await getIPFSGateway(dataUrl, event.networkId)
     console.log('IPFS Gateway', ipfsGateway)
 
-    const offerData = await getText(ipfsGateway, eventObj.ipfsHash, 10000)
+    const offerData = await getText(ipfsGateway, event.ipfsHash, 10000)
     const offer = JSON.parse(offerData)
     console.log('Offer:', offer)
 
@@ -106,12 +115,12 @@ const handleLog = async ({
     const plaintext = await openpgp.decrypt(options)
     const cart = JSON.parse(plaintext.data)
     cart.offerId = offerId
-    cart.tx = transactionHash
+    cart.tx = event.transactionHash
 
-    console.log(cart)
+    // console.log(cart)
 
     const order = await Order.create({
-      networkId,
+      networkId: event.networkId,
       shopId: shop.id,
       orderId: offerId,
       data: JSON.stringify(cart)
@@ -126,4 +135,7 @@ const handleLog = async ({
   }
 }
 
-module.exports = handleLog
+module.exports = {
+  handleLog,
+  insertOrderFromEvent
+}
