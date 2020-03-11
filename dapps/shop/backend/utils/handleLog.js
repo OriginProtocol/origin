@@ -32,24 +32,24 @@ const handleLog = async ({
     return
   }
 
-  console.log('fetch existing...', transactionHash)
-  const existingTx = await Transaction.findOne({ where: { transactionHash } })
-  if (existingTx) {
-    console.log('Already handled tx')
-    return
-  } else {
-    Transaction.create({
-      networkId,
-      transactionHash,
-      blockNumber: web3.utils.hexToNumber(blockNumber)
-    })
-      .then(res => {
-        console.log(`Created tx ${res.dataValues.id}`)
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
+  // console.log('fetch existing...', transactionHash)
+  // const existingTx = await Transaction.findOne({ where: { transactionHash } })
+  // if (existingTx) {
+  //   console.log('Already handled tx')
+  //   return
+  // } else {
+  //   Transaction.create({
+  //     networkId,
+  //     transactionHash,
+  //     blockNumber: web3.utils.hexToNumber(blockNumber)
+  //   })
+  //     .then(res => {
+  //       console.log(`Created tx ${res.dataValues.id}`)
+  //     })
+  //     .catch(err => {
+  //       console.error(err)
+  //     })
+  // }
 
   const eventObj = getEventObj({
     data,
@@ -85,6 +85,27 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
   console.log(`${event.eventName} - ${event.offerId} by ${event.party}`)
   console.log(`IPFS Hash: ${event.ipfsHash}`)
 
+  let order = await Order.findOne({
+    where: {
+      networkId: event.networkId,
+      shopId: shop.id,
+      orderId: offerId
+    }
+  })
+
+  if (event.eventName.indexOf('Offer') < 0) {
+    console.log(`Ignoring event ${event.eventName}`)
+    return
+  }
+
+  if (order) {
+    console.log(`Order ${order.orderId} exists in DB.`)
+    // if (event.eventName !== 'OfferCreated') {
+      await order.update({ status: event.eventName })
+    // }
+    return
+  }
+
   try {
     const dataUrl = await encConf.get(shop.id, 'dataUrl')
     const ipfsGateway = await getIPFSGateway(dataUrl, event.networkId)
@@ -96,7 +117,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
 
     const encrypedHash = offer.encryptedData
     if (!encrypedHash) {
-      return handleError(event, 'No encrypted data found')
+      throw new Error('No encrypted data found')
     }
 
     const encryptedDataJson = await getText(ipfsGateway, encrypedHash, 10000)
@@ -113,25 +134,52 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
     const options = { message, privateKeys: [privateKeyObj] }
 
     const plaintext = await openpgp.decrypt(options)
-    const cart = JSON.parse(plaintext.data)
-    cart.offerId = offerId
-    cart.tx = event.transactionHash
+    const data = JSON.parse(plaintext.data)
+    data.offerId = offerId
+    data.tx = event.transactionHash
 
-    // console.log(cart)
+    const fields = {
+      data: JSON.stringify(data),
+      status: event.eventName,
+      updatedBlock: event.blockNumber
+    }
+    if (event.eventName === 'OfferCreated') {
+      fields.createdBlock = event.blockNumber
+      fields.ipfsHash = event.ipfsHash
+      fields.encryptedIpfsHash = encrypedHash
+    }
+    // console.log(data)
+    if (order) {
+      await order.update(fields)
+      console.log(`Updated order ${order.orderId}.`)
+    } else {
+      order = await Order.create({
+        networkId: event.networkId,
+        shopId: shop.id,
+        orderId: offerId,
+        ...fields
+      })
+      console.log(`Saved order ${order.orderId} to DB.`)
+    }
 
-    const order = await Order.create({
-      networkId: event.networkId,
-      shopId: shop.id,
-      orderId: offerId,
-      data: JSON.stringify(cart)
-    })
-
-    console.log(`Saved order ${order.id} to DB.`)
-    console.log('sendMail', cart)
-    sendMail(shop.id, cart)
+    console.log('sendMail', data)
+    sendMail(shop.id, data)
   } catch (e) {
     console.error(e)
-    handleError(event, e.message)
+    const fields = {
+      status: 'error',
+      data: JSON.stringify({ error: e.message })
+    }
+    if (order) {
+      await order.update(fields)
+    } else {
+      order = await Order.create({
+        networkId: event.networkId,
+        shopId: shop.id,
+        orderId: offerId,
+        ...fields
+      })
+    }
   }
 }
 

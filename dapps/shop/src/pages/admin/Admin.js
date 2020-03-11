@@ -12,7 +12,7 @@ import Discounts from './discounts/Discounts'
 import EditDiscount from './discounts/EditDiscount'
 import Order from './order/Order'
 import Login from './Login'
-import Settings from './Settings'
+import Settings from './settings/Settings'
 import Events from './Events'
 
 const Admin = () => {

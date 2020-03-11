@@ -6,9 +6,7 @@ const Sequelize = require('sequelize')
 const basename = path.basename(__filename)
 const db = {}
 
-const { NETWORK } = require('../utils/const')
-
-const SqliteURI = `sqlite:${__dirname}/../data/net_${NETWORK}.db`
+const SqliteURI = `sqlite:${__dirname}/../data/dshop.db`
 const URI = process.env.DATABASE_URL || SqliteURI
 const sequelize = new Sequelize(URI, {
   logging: false,
