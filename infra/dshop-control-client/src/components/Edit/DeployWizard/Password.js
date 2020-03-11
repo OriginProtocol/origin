@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useStoreState } from 'pullstate'
-import axios from 'axios'
+import axios from 'utils/axiosWithCredentials'
 
 import store from '@/store'
 import Loading from 'components/Loading'

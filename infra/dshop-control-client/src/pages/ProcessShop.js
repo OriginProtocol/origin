@@ -4,21 +4,35 @@ import axios from 'axios'
 
 import store from '@/store'
 
-const API_URL = process.env.API_URL || 'http://localhost:3000'
+const API_URL = process.env.API_URL || 'http://localhost:9011'
 
 const ProcessShop = () => {
   const [redirectTo, setRedirectTo] = useState(false)
-  const { url, datadir } = useParams()
+  const { url, dataurl } = useParams()
 
   useEffect(() => {
     const fetchData = async () => {
-      const shopUrl = `${API_URL}/ingest/${url}`
+      let shopUrl
+      if (dataurl) {
+        // If we have the config URL
+        shopUrl = `${API_URL}/slurp/${dataurl}`
+      } else {
+        // If we have the shop URL
+        shopUrl = `${API_URL}/ingest/${url}`
+      }
       const response = await axios.get(shopUrl)
+      const { datadir, products, collections, config } = response.data
+      if (datadir) {
+        // Update the known shop config URL
+        store.update(s => {
+          s.dataURL = datadir
+        })
+      }
       store.update(s => {
-        s.products = response.data.products
-        s.collections = response.data.collections
-        if (response.data.config) {
-          s.settings = response.data.config
+        s.products = products
+        s.collections = collections
+        if (config) {
+          s.settings = config
         }
         setRedirectTo('/edit')
       })
@@ -37,9 +51,7 @@ const ProcessShop = () => {
           <span className="sr-only">Loading...</span>
         </div>
       </div>
-      {datadir
-        ? 'Grabbing your DShop data...'
-        : 'Grabbing your Shopify data...'}
+      Grabbing your shop data...
     </div>
   )
 }

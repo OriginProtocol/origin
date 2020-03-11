@@ -8,6 +8,7 @@ import Manage from './Manage'
 import Landing from './Landing'
 import ProcessShop from './ProcessShop'
 import SignIn from './SignIn'
+import SignOut from './SignOut'
 
 const App = ({ location }) => {
   const [loading, setLoading] = useState(true)
@@ -57,10 +58,12 @@ const App = ({ location }) => {
           <Switch>
             <Route path="/edit" component={Edit}></Route>
             <Route path="/manage" component={Manage}></Route>
+            <Route path="/process/:url" component={ProcessShop}></Route>
             <Route
-              path="/process/:url/:datadir?"
+              path="/process-config/:dataurl"
               component={ProcessShop}
             ></Route>
+            <Route path="/signout" component={SignOut}></Route>
             <Route path="/signin" component={SignIn}></Route>
             <Route component={Landing}></Route>
           </Switch>

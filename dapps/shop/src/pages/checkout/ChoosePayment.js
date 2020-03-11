@@ -166,6 +166,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         const { backend } = config
         submitStripePayment({
           backend,
+          backendAuthToken: config.backendAuthToken,
           stripe,
           cart,
           encryptedData,

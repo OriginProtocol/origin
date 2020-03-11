@@ -7,8 +7,6 @@ import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
 import { useStateValue } from 'data/state'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const times = Array(48)
   .fill(0)
   .map((o, idx) => {
@@ -80,7 +78,7 @@ const AdminEditDiscount = () => {
           setState(newState)
           if (valid) {
             const headers = new Headers({
-              authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
+              authorization: `bearer ${config.backendAuthToken}`,
               'content-type': 'application/json'
             })
             let url = `${config.backend}/discounts`
