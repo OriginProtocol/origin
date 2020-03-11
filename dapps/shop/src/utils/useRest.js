@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import useConfig from 'utils/useConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function useRest(url, opts = {}) {
   const { config } = useConfig()
   const [data, setData] = useState({})
@@ -14,7 +12,7 @@ function useRest(url, opts = {}) {
       setLoading(true)
       try {
         const headers = new Headers({
-          authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+          authorization: `bearer ${config.backendAuthToken}`
         })
         const myRequest = new Request(`${config.backend}${url}`, {
           credentials: 'include',

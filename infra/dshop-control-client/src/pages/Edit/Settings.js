@@ -8,7 +8,13 @@ import store from '@/store'
 const Settings = () => {
   const { addToast } = useToasts()
 
+  const ethNetworkId = Number(web3.currentProvider.chainId)
   const settings = useStoreState(store, s => s.settings)
+
+  const networkSettings =
+    settings.networks && settings.networks[ethNetworkId]
+      ? settings.networks[ethNetworkId]
+      : null
 
   const [title, setTitle] = useState(settings.title || '')
   const [fullTitle, setFullTitle] = useState(settings.fullTitle || '')
@@ -29,6 +35,13 @@ const Settings = () => {
 
   const [backend, setBackend] = useState(
     settings.backend || 'https://backend.ogn.app'
+  )
+
+  // Auth token could be root config or network specific, I guess
+  const [backendAuthToken, setBackendAuthToken] = useState(
+    networkSettings && networkSettings.backendAuthToken
+      ? networkSettings.backendAuthToken
+      : settings.backendAuthToken || ''
   )
   const [discountCodes, setDiscountCodesEnabled] = useState(
     settings.discountCodes
@@ -57,6 +70,7 @@ const Settings = () => {
           pgpPublicKey,
 
           backend,
+          backendAuthToken,
           discountCodes,
           stripeKey
         }
@@ -226,6 +240,14 @@ const Settings = () => {
                   onChange={e => setBackend(e.target.value)}
                   value={backend}
                   placeholder="eg https://backend.ogn.app"
+                />
+              </div>
+              <div className="form-group">
+                <label>Backend Auth Code</label>
+                <input
+                  className="form-control"
+                  onChange={e => setBackendAuthToken(e.target.value)}
+                  value={backendAuthToken}
                 />
               </div>
               <div className="form-group">

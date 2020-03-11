@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import useConfig from 'utils/useConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function usePrintful(orderId) {
   const { config } = useConfig()
   const [order, setOrder] = useState()
@@ -11,7 +9,7 @@ function usePrintful(orderId) {
     async function fetchOrder() {
       const url = `${config.backend}/orders/${orderId}/printful`
       const headers = new Headers({
-        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+        authorization: `bearer ${config.backendAuthToken}`
       })
       const myRequest = new Request(url, {
         credentials: 'include',

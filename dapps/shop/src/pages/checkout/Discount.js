@@ -4,8 +4,6 @@ import get from 'lodash/get'
 import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const OrderDiscount = ({ cart }) => {
   const { config } = useConfig()
   const [error, setError] = useState()
@@ -23,7 +21,7 @@ const OrderDiscount = ({ cart }) => {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
-            authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+            authorization: `bearer ${config.backendAuthToken}`
           },
           body: JSON.stringify({ code })
         })

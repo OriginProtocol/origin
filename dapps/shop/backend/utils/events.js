@@ -33,7 +33,9 @@ function getEventObj(event) {
     party: decodedLog.party,
     listingId: decodedLog.listingID,
     offerId: decodedLog.offerID,
-    ipfsHash: getIpfsHashFromBytes32(decodedLog.ipfsHash)
+    ipfsHash: decodedLog.ipfsHash
+      ? getIpfsHashFromBytes32(decodedLog.ipfsHash)
+      : ''
   }
 }
 

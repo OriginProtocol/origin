@@ -19,7 +19,7 @@ if (isProduction) {
 const API_URL =
   process.env.API_URL || isProduction
     ? 'https://origin-dshop-control-server.herokuapp.com'
-    : 'http://localhost:3000'
+    : 'http://localhost:9011'
 const IPFS_API_URL =
   process.env.IPFS_API_URL || isProduction
     ? 'https://ipfs.ogn.app'
@@ -93,7 +93,7 @@ const webpackConfig = {
     fs: 'empty'
   },
   devServer: {
-    port: 8081,
+    port: process.env.PORT || 9001,
     host: '0.0.0.0',
     headers: {
       'Access-Control-Allow-Origin': '*'
