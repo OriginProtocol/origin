@@ -71,7 +71,7 @@ t3ClientImageTag: 'a227cad'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'a227cad'
+t3ServerImageTag: '424604f'
 
 # origin-auth
 authImage: origin-auth
