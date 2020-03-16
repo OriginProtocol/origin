@@ -39,6 +39,7 @@ function getEventObj(event) {
 }
 
 async function upsertEvent({ web3, event, shopId, networkId }) {
+  console.log('Upsert event...')
   const eventObj = { ...getEventObj(event), shopId, networkId }
   const block = await web3.eth.getBlock(eventObj.blockNumber)
   eventObj.timestamp = block.timestamp
@@ -46,6 +47,7 @@ async function upsertEvent({ web3, event, shopId, networkId }) {
 
   const exists = await Event.findOne({ where: { transactionHash } })
   if (exists) {
+    console.log('Event exists')
     return exists
   }
 

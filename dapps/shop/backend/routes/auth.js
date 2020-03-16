@@ -40,14 +40,14 @@ module.exports = function(app) {
 
   const logoutHandler = (req, res) => {
     if (req.session.sellerId) {
-      req.logout()
-      res.json({ success: true })
+      req.session.destroy(function() {
+        res.json({ success: true })
+      })
     } else {
       res.json({ success: false })
     }
   }
 
-  app.get('/auth/logout', logoutHandler)
   app.post('/auth/logout', logoutHandler)
 
   // TODO: Should this at least use API key auth?

@@ -224,7 +224,7 @@ const Product = ({ history, location, match }) => {
             )}
           </div>
           <div
-            className="mt-4"
+            className="mt-4 description"
             dangerouslySetInnerHTML={{ __html: productData.description }}
           />
         </div>
@@ -278,6 +278,8 @@ require('react-styl')(`
     .actions
       *
         margin-right: 0.5rem
+    .description
+      white-space: pre-line
   @media (max-width: 767.98px)
     .product-detail
       h3,.price,.actions

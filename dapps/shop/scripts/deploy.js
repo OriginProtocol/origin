@@ -3,13 +3,13 @@ const deploy = require('ipfs-deploy')
 const fs = require('fs')
 const { exec } = require('child_process')
 
-const dataDir = process.env.DATA_DIR
+const dataDir = process.argv[2]
 if (!dataDir) {
-  console.log('No DATA_DIR specified')
+  console.log('Usage: node deploy.js [data_dir]')
   process.exit()
 }
 if (!fs.existsSync(`${__dirname}/../data/${dataDir}`)) {
-  console.log('DATA_DIR not found')
+  console.log(`data/${dataDir} not found`)
   process.exit()
 }
 
@@ -40,7 +40,7 @@ async function go() {
   await deploy({
     remotePinners: ['pinata'],
     // dnsProviders: argv.dns,
-    siteDomain: process.env.DATA_DIR,
+    siteDomain: dataDir,
     credentials: {
       // cloudflare: {
       //   apiKey: argv.cloudflare && argv.cloudflare.apiKey,

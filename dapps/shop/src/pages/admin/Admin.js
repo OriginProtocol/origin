@@ -82,7 +82,15 @@ const Admin = () => {
                   href="#logout"
                   onClick={e => {
                     e.preventDefault()
-                    dispatch({ type: 'logout' })
+
+                    fetch(`${config.backend}/auth/logout`, {
+                      method: 'POST',
+                      credentials: 'include'
+                    }).then(async response => {
+                      if (response.status === 200) {
+                        dispatch({ type: 'logout' })
+                      }
+                    })
                   }}
                 >
                   Logout

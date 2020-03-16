@@ -19,6 +19,7 @@ function handleError(event, error) {
 }
 
 const handleLog = async ({
+  web3,
   networkId,
   contractVersion,
   data,

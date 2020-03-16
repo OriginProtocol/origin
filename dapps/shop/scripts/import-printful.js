@@ -189,11 +189,11 @@ async function matchPrintfulToExisting({ OutputDir }) {
 async function start() {
   // await downloadProductData()
   // await downloadVariantData()
-  // await writeProductData({ OutputDir })
+  await writeProductData({ OutputDir })
   // NOT // await writeProductData({ OutputDir })
   // await matchPrintfulToExisting({ OutputDir })
   // await downloadPrintfulMockups({ OutputDir })
-  await resizePrintfulMockups({ OutputDir })
+  // await resizePrintfulMockups({ OutputDir })
   // await writeInternalData({ OutputDir })
   // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })
   // await writeShopifyToPrintful()

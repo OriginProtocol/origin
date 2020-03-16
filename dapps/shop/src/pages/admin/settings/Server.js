@@ -4,8 +4,6 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function validate(state) {
   const newState = {}
 
@@ -71,9 +69,14 @@ const AdminSettings = () => {
   const { config } = useConfig()
   const { shopConfig } = useShopConfig()
   const [saving, setSaving] = useState()
+  const [keyFromDb, setKeyFromDb] = useState()
   const [state, setStateRaw] = useState(defaultValues)
   const [keyValid, setKeyValid] = useState(false)
   const setState = newState => setStateRaw({ ...state, ...newState })
+
+  const pgpPublicKey = keyFromDb
+    ? shopConfig.pgpPublicKey || ''
+    : config.pgpPublicKey || ''
 
   useEffect(() => {
     if (shopConfig) {
@@ -87,7 +90,7 @@ const AdminSettings = () => {
     async function doTest() {
       try {
         const result = await testKey({
-          pgpPublicKey: config.pgpPublicKey,
+          pgpPublicKey,
           pgpPrivateKey: state.pgpPrivateKey,
           pass: state.pgpPrivateKeyPass,
           msg: 'Test'
@@ -98,7 +101,7 @@ const AdminSettings = () => {
       }
     }
     doTest()
-  }, [config.pgpPublicKey, state.pgpPrivateKey, state.pgpPrivateKeyPass])
+  }, [pgpPublicKey, state.pgpPrivateKey, state.pgpPrivateKeyPass])
 
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
@@ -112,7 +115,7 @@ const AdminSettings = () => {
         setState(newState)
         if (valid) {
           const headers = new Headers({
-            authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
+            authorization: `bearer ${config.backendAuthToken}`,
             'content-type': 'application/json'
           })
           const myRequest = new Request(`${config.backend}/config`, {
@@ -272,10 +275,35 @@ const AdminSettings = () => {
       <div className="row">
         <div className="col-md-6">
           <div className="form-group">
-            <label>PGP Public Key (from config.json)</label>
+            <label className="d-flex justify-content-between">
+              <div>PGP Public Key</div>
+              <div>
+                <a
+                  href="#"
+                  className={keyFromDb ? '' : 'font-weight-bold'}
+                  onClick={e => {
+                    e.preventDefault()
+                    setKeyFromDb(false)
+                  }}
+                >
+                  config.json
+                </a>
+                {' | '}
+                <a
+                  href="#"
+                  className={keyFromDb ? 'font-weight-bold' : ''}
+                  onClick={e => {
+                    e.preventDefault()
+                    setKeyFromDb(true)
+                  }}
+                >
+                  DB
+                </a>
+              </div>
+            </label>
             <textarea
               className="form-control"
-              value={config.pgpPublicKey}
+              value={pgpPublicKey}
               rows={5}
               readOnly
             />
@@ -294,7 +322,7 @@ const AdminSettings = () => {
         <input
           className="form-control"
           readOnly
-          value={config.pgpPublicKey.replace(/\n/g, '\\n')}
+          value={pgpPublicKey.replace(/\n/g, '\\n')}
         />
       </div>
       <div className="form-group">

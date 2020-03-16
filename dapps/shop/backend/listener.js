@@ -8,7 +8,7 @@ const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
 
 const { Op, Network, Shop } = require('./models')
-const handleLog = require('./utils/handleLog')
+const { handleLog } = require('./utils/handleLog')
 const { CONTRACTS, PROVIDER, PROVIDER_WS } = require('./utils/const')
 
 const web3 = new Web3(PROVIDER)
@@ -135,10 +135,10 @@ async function connectWS() {
     } else if (data.id === 3) {
       console.log(`Got ${data.result.length} unhandled logs`)
       data.result.map(result =>
-        handleLog({ ...result, address, networkId, contractVersion })
+        handleLog({ ...result, web3, address, networkId, contractVersion })
       )
     } else if (get(data, 'params.subscription') === logs) {
-      handleLog({ ...data.params.result, networkId, address, contractVersion })
+      handleLog({ ...data.params.result, web3, networkId, address, contractVersion })
     } else if (get(data, 'params.subscription') === heads) {
       const number = handleNewHead(data.params.result, networkId)
       const blockDiff = number - lastBlock
