@@ -1,8 +1,10 @@
 import moment from 'moment'
 
 import {
-  earnOgnEnabled,
+  earlyLockupBonusRate,
+  earlyLockupsEnabled,
   lockupBonusRate,
+  lockupsEnabled,
   otcRequestEnabled
 } from '@origin/token-transfer-server/src/shared'
 
@@ -38,7 +40,9 @@ if (process.env.NODE_ENV === 'production') {
 
 export {
   apiUrl,
-  earnOgnEnabled,
+  earlyLockupBonusRate,
+  earlyLockupsEnabled,
+  lockupsEnabled,
   lockupBonusRate,
   otcRequestEnabled,
   pageTitle,

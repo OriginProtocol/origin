@@ -5,7 +5,12 @@
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
 
-const { vestedAmount, toMoment, momentizeGrant } = require('./lib/vesting')
+const {
+  vestingSchedule,
+  vestedAmount,
+  toMoment,
+  momentizeGrant
+} = require('./lib/vesting')
 const enums = require('./enums')
 
 /* Convert the dates of a lockup object to moments.
@@ -91,6 +96,33 @@ function calculateLocked(lockups) {
   }, BigNumber(0))
 }
 
+/* Calculate tokens from the next vest that are locked due to early lockups.
+ * @param lockups
+ */
+function calculateNextVestLocked(lockups) {
+  return lockups.reduce((total, lockup) => {
+    if (lockup.start > moment.utc()) {
+      // Lockup starts in the future
+      return total.plus(BigNumber(lockup.amount))
+    }
+    return total
+  }, BigNumber(0))
+}
+
+/* Get the next vest for a user.
+ * @param grants
+ * @param user
+ */
+function getNextVest(grants, user) {
+  const allGrantVestingSchedule = user.Grants.flatMap(grant => {
+    return vestingSchedule(user, grant.get({ plain: true }))
+  })
+  const sortedUnvested = allGrantVestingSchedule
+    .filter(v => !v.vested)
+    .sort((a, b) => a.date - b.date)
+  return sortedUnvested.length > 0 ? sortedUnvested[0] : null
+}
+
 /* Calculate the amount of tokens that have been withdrawn or are in flight in
  * a withdrawal.
  * @param transfers
@@ -109,6 +141,8 @@ function calculateWithdrawn(transfers) {
   return transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
       if (
+        // Handle the case where a transfer is still awaiting email confirmation
+        // but has expired
         transfer.status === enums.TransferStatuses.WaitingEmailConfirm &&
         transferHasExpired(transfer)
       ) {
@@ -121,6 +155,9 @@ function calculateWithdrawn(transfers) {
   }, BigNumber(0))
 }
 
+// Helper function to determine if a transfer has expired, i.e. the user did
+// not click the email link within process.env.TRANSFER_CONFIRMATION_TIMEOUT
+// minutes
 function transferHasExpired(transfer) {
   return (
     moment().diff(moment(transfer.createdAt), 'minutes') >=
@@ -128,6 +165,9 @@ function transferHasExpired(transfer) {
   )
 }
 
+// Helper function to determine if a transfer has expired, i.e. the user did
+// not click the email link within process.env.LOCKUP_CONFIRMATION_TIMEOUT
+// minutes
 function lockupHasExpired(lockup) {
   return (
     moment().diff(moment(lockup.createdAt), 'minutes') >=
@@ -136,18 +176,30 @@ function lockupHasExpired(lockup) {
 }
 
 // Lockup bonus rate as a percentage
-const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
+const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 15
+
+// Early lockup bons rate as a percentage
+const earlyLockupBonusRate = process.env.EARLY_LOCKUP_BONUS_RATE || 30
 
 // Lockup duration in months
 const lockupDuration = process.env.LOCKUP_DURATION || 12
 
-const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
+// Whether lockups are enabled
+const lockupsEnabled = process.env.LOCKUPS_ENABLED || false
 
+// Whether early lockups are enabled
+const earlyLockupsEnabled = process.env.EARLY_LOCKUPS_ENABLED || false
+
+// Length of time in minutes user has to confirm a transfer by clicking the email
+// link
 const transferConfirmationTimeout =
   process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
 
+// Length of time in minutes user has to confirm a lockup by clicking the email
+// link
 const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
+// Whether OTC requests are enabled
 const otcRequestEnabled = process.env.OTC_REQUEST_ENABLED || false
 
 module.exports = {
@@ -156,13 +208,17 @@ module.exports = {
   calculateUnlockedEarnings,
   calculateEarnings,
   calculateLocked,
+  calculateNextVestLocked,
   calculateWithdrawn,
-  earnOgnEnabled,
+  lockupsEnabled,
+  earlyLockupsEnabled,
+  getNextVest,
   toMoment,
   momentizeLockup,
   momentizeGrant,
   otcRequestEnabled,
   lockupHasExpired,
+  earlyLockupBonusRate,
   lockupBonusRate,
   lockupDuration,
   lockupConfirmationTimeout,

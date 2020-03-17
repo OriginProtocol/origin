@@ -8,7 +8,8 @@ const moment = require('moment')
 
 const {
   asyncMiddleware,
-  getEarnOgnEnabled,
+  getEarlyLockupsEnabled,
+  getLockupsEnabled,
   getUnlockDate
 } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
@@ -57,7 +58,15 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    if (!getEarnOgnEnabled()) {
+    const { amount, early } = req.body
+
+    if (!getLockupsEnabled()) {
+      // Lockups are disabled
+      return res.status(404).end()
+    }
+
+    if (early && !getEarlyLockupsEnabled()) {
+      // Early lockups are disabled
       return res.status(404).end()
     }
 
@@ -72,14 +81,13 @@ router.post(
       return
     }
 
-    const { amount } = req.body
-
     let lockup
     try {
       await lock.acquire(req.user.id, async () => {
         lockup = await addLockup(
           req.user.id,
           amount,
+          early,
           await getFingerprintData(req)
         )
       })

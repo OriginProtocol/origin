@@ -18,7 +18,11 @@ const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
-const { lockupConfirmationTimeout } = require('../../src/shared')
+const {
+  earlyLockupBonusRate,
+  lockupBonusRate,
+  lockupConfirmationTimeout
+} = require('../../src/config')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -90,8 +94,14 @@ describe('Lockup HTTP API', () => {
     })
     this.mockApp.use(app)
 
-    const earnOgnFake = sinon.fake.returns(true)
-    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+    const lockupsEnabledFake = sinon.fake.returns(true)
+    lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
+
+    const earlyLockupsEnabledFake = sinon.fake.returns(true)
+    lockupController.__Rewire__(
+      'getEarlyLockupsEnabled',
+      earlyLockupsEnabledFake
+    )
   })
 
   it('should return the lockups', async () => {
@@ -107,13 +117,40 @@ describe('Lockup HTTP API', () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     lockupController.__Rewire__('getUnlockDate', unlockFake)
 
-    await request(this.mockApp)
+    const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 1000,
         code: totp.gen(this.otpKey)
       })
       .expect(201)
+
+    expect(Number(response.body.bonusRate)).to.equal(lockupBonusRate)
+
+    expect(
+      (await request(this.mockApp).get('/api/lockups')).body.length
+    ).to.equal(3)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+  })
+
+  it('should add a early lockup', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1000,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+
+    expect(Number(response.body.bonusRate)).to.equal(earlyLockupBonusRate)
 
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
@@ -161,8 +198,8 @@ describe('Lockup HTTP API', () => {
   })
 
   it('should not add a lockup if earn ogn flag is disabled', async () => {
-    const earnOgnFake = sinon.fake.returns(false)
-    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+    const lockupsEnabledFake = sinon.fake.returns(false)
+    lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
 
     await request(this.mockApp)
       .post('/api/lockups')
@@ -171,8 +208,37 @@ describe('Lockup HTTP API', () => {
         code: totp.gen(this.otpKey)
       })
       .expect(404)
+  })
 
-    process.env.EARN_OGN_ENABLED = true
+  it('should not add a early lockup if earn ogn flag is disabled', async () => {
+    const lockupsEnabledFake = sinon.fake.returns(false)
+    lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(404)
+  })
+
+  it('should not add a early lockup if early lockup flag is disabled', async () => {
+    const earlyLockupsEnabledFake = sinon.fake.returns(false)
+    lockupController.__Rewire__(
+      'getEarlyLockupsEnabled',
+      earlyLockupsEnabledFake
+    )
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(404)
   })
 
   it('should not add a lockup if unlock date has not passed', async () => {
@@ -413,6 +479,14 @@ describe('Lockup HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/greater/)
+  })
+
+  it('should not add an early lockup if not enough tokens in next vest', async () => {
+    throw new Error('Todo')
+  })
+
+  it('should not add an early lockup if no next vest', async () => {
+    throw new Error('Todo')
   })
 
   it('should confirm a lockup', async () => {

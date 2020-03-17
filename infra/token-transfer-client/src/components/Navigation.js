@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import get from 'lodash.get'
 
 import { apiUrl } from '@/constants'
-import { earnOgnEnabled } from '@/constants'
+import { lockupsEnabled } from '@/constants'
 import agent from '@/utils/agent'
 import NavLink from '@/components/NavLink'
 import Logo from '@/assets/origin-logo.svg'
@@ -26,7 +26,7 @@ const Navigation = props => {
   }
 
   const isEmployee = !!get(props.user, 'employee')
-  const displayBonusLink = earnOgnEnabled && !isEmployee
+  const displayBonusLink = lockupsEnabled && !isEmployee
 
   return (
     <nav

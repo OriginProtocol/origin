@@ -2,11 +2,13 @@ const BigNumber = require('bignumber.js')
 
 const { Grant, Lockup, Transfer, User } = require('../models')
 const {
-  calculateVested,
-  calculateUnlockedEarnings,
-  calculateWithdrawn,
+  calculateEarnings,
   calculateLocked,
-  calculateEarnings
+  calculateNextVestLocked,
+  calculateUnlockedEarnings,
+  calculateVested,
+  calculateWithdrawn,
+  getNextVest
 } = require('../shared')
 const logger = require('../logger')
 
@@ -76,7 +78,42 @@ async function hasBalance(userId, amount, currentTransferId = null) {
   return user
 }
 
+async function hasNextVestBalance(userId, amount) {
+  const user = await User.findOne({
+    where: {
+      id: userId
+    },
+    include: [{ model: Grant }, { model: Transfer }, { model: Lockup }]
+  })
+  // Load the user and check there enough tokens available to fulfill the
+  // transfer request
+  if (!user) {
+    throw new Error(`Could not find specified user id ${userId}`)
+  }
+
+  const nextVest = getNextVest(user.Grants, user)
+  if (!nextVest) {
+    throw new RangeError(`No more vest events for ${user.email}`)
+  }
+
+  // Sum locked by lockups
+  const nextVestLockedAmount = calculateNextVestLocked(user.Lockups)
+  logger.debug(
+    `User ${user.email} tokens from their next vest in lockup`,
+    nextVestLockedAmount.toString()
+  )
+
+  const available = nextVest.amount.minus(nextVestLockedAmount)
+
+  if (BigNumber(amount).gt(available)) {
+    throw new RangeError(
+      `Amount of ${amount} OGN exceeds the ${available} available in the next vest for ${user.email}`
+    )
+  }
+}
+
 module.exports = {
   calculateEarnings,
-  hasBalance
+  hasBalance,
+  hasNextVestBalance
 }

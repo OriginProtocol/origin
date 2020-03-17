@@ -36,7 +36,7 @@ import BonusCard from '@/components/BonusCard'
 import BonusModal from '@/components/BonusModal'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
-import { earnOgnEnabled } from '@/constants'
+import { lockupsEnabled } from '@/constants'
 
 const Dashboard = props => {
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
@@ -69,7 +69,7 @@ const Dashboard = props => {
     .minus(props.lockupTotals.locked)
   const isLocked = !unlockDate || moment.utc() < unlockDate
   const isEmployee = !!get(props.user, 'employee')
-  const displayBonusCard = earnOgnEnabled && !isEmployee
+  const displayBonusCard = lockupsEnabled && !isEmployee
 
   return (
     <>

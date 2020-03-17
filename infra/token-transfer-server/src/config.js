@@ -1,7 +1,11 @@
 const moment = require('moment')
 
 const logger = require('./logger')
-const { lockupBonusRate, lockupDuration } = require('./shared')
+const {
+  earlyLockupBonusRate,
+  lockupBonusRate,
+  lockupDuration
+} = require('./shared')
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL || null
 
@@ -56,6 +60,7 @@ const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
 module.exports = {
   discordWebhookUrl,
   encryptionSecret,
+  earlyLockupBonusRate,
   lockupBonusRate,
   lockupDuration,
   networkId,

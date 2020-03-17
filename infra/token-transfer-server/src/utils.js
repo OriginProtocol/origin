@@ -1,7 +1,11 @@
 const { ip2geo } = require('@origin/ip2geo')
 
 const { unlockDate } = require('./config')
-const { earnOgnEnabled, otcRequestEnabled } = require('./shared')
+const {
+  earlyLockupsEnabled,
+  lockupsEnabled,
+  otcRequestEnabled
+} = require('./shared')
 
 /**
  * Allows use of async functions for an Express route.
@@ -16,8 +20,13 @@ const getUnlockDate = () => {
 }
 
 // Use a function so that this value can be mocked in tests
-const getEarnOgnEnabled = () => {
-  return earnOgnEnabled
+const getLockupsEnabled = () => {
+  return lockupsEnabled
+}
+
+// Use a function so that this value can be mocked in tests
+const getEarlyLockupsEnabled = () => {
+  return earlyLockupsEnabled
 }
 
 // Use a function so that this value can be mocked in tests
@@ -48,7 +57,8 @@ const getFingerprintData = async req => {
 
 module.exports = {
   asyncMiddleware,
-  getEarnOgnEnabled,
+  getLockupsEnabled,
+  getEarlyLockupsEnabled,
   getFingerprintData,
   getOtcRequestEnabled,
   getUnlockDate
