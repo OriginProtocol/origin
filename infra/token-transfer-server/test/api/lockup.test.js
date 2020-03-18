@@ -501,18 +501,20 @@ describe('Lockup HTTP API', () => {
   })
 
   it('should not add an early lockup if no next vest', async () => {
-    const clock = sinon.useFakeTimers(moment.utc(this.grants[0].end))
+    const clock = sinon.useFakeTimers(moment.utc(this.grants[1].end).valueOf())
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     lockupController.__Rewire__('getUnlockDate', unlockFake)
 
-    await request(this.mockApp)
+    const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 1000,
         early: true,
         code: totp.gen(this.otpKey)
       })
-      .expect(201)
+      .expect(422)
+
+    expect(response.text).to.match(/No more vest events/)
 
     clock.restore()
   })
