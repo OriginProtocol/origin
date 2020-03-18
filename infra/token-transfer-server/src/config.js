@@ -4,6 +4,7 @@ const logger = require('./logger')
 const {
   earlyLockupBonusRate,
   lockupBonusRate,
+  lockupConfirmationTimeout,
   lockupDuration
 } = require('./shared')
 
@@ -62,6 +63,7 @@ module.exports = {
   encryptionSecret,
   earlyLockupBonusRate,
   lockupBonusRate,
+  lockupConfirmationTimeout,
   lockupDuration,
   networkId,
   otcPartnerEmails,
