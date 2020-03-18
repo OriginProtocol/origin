@@ -61,7 +61,7 @@ async function addLockup(userId, amount, early, data = {}) {
   try {
     lockup = await Lockup.create({
       userId: userId,
-      start: moment.utc(),
+      start: moment.utc(), // TODO? If early lockup this should be the vest date
       end: moment.utc().add(lockupDuration, 'months'),
       bonusRate: early ? earlyLockupBonusRate : lockupBonusRate,
       amount,
