@@ -69,25 +69,21 @@ const Main = () => {
   }
   if (isMobile) {
     return (
-      <>
-        <div className="container">
-          <header>
-            <Link to="/" onClick={() => setMenu(false)}>
-              <h1>
-                {config.logo ? (
-                  <img src={`${dataUrl()}${config.logo}`} />
-                ) : null}
-                {config.title}
-              </h1>
-            </Link>
-            <button className="btn" onClick={() => setMenu(!menu)}>
-              <Bars />
-            </button>
-          </header>
-          <MobileMenu open={menu} onClose={() => setMenu(false)} />
-          <Content />
-        </div>
-      </>
+      <div className="container">
+        <header>
+          <Link to="/" onClick={() => setMenu(false)}>
+            <h1>
+              {config.logo ? <img src={`${dataUrl()}${config.logo}`} /> : null}
+              {config.title}
+            </h1>
+          </Link>
+          <button className="btn" onClick={() => setMenu(!menu)}>
+            <Bars />
+          </button>
+        </header>
+        <MobileMenu open={menu} onClose={() => setMenu(false)} />
+        <Content />
+      </div>
     )
   }
   return (

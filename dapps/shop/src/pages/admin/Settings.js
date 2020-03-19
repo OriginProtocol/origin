@@ -4,8 +4,6 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function validate(state) {
   const newState = {}
 
@@ -114,7 +112,7 @@ const AdminSettings = () => {
           setState(newState)
           if (valid) {
             const headers = new Headers({
-              authorization: `bearer ${BACKEND_AUTH_TOKEN}`,
+              authorization: `bearer ${config.backendAuthToken}`,
               'content-type': 'application/json'
             })
             const myRequest = new Request(`${config.backend}/config`, {
@@ -134,21 +132,31 @@ const AdminSettings = () => {
           }
         }}
       >
-        <div className="form-group">
-          <label>Listener</label>
-          <div className="btn-group d-block">
-            <button
-              className={`btn btn-${state.listener ? '' : 'outline-'}primary`}
-              onClick={() => setState({ listener: true })}
-            >
-              On
-            </button>
-            <button
-              className={`btn btn-${!state.listener ? '' : 'outline-'}primary`}
-              onClick={() => setState({ listener: false })}
-            >
-              Off
-            </button>
+        <div className="row">
+          <div className="form-group col-md-6">
+            <label>Listener</label>
+            <div className="btn-group d-block">
+              <button
+                className={`btn btn-${state.listener ? '' : 'outline-'}primary`}
+                onClick={() => setState({ listener: true })}
+              >
+                On
+              </button>
+              <button
+                className={`btn btn-${
+                  !state.listener ? '' : 'outline-'
+                }primary`}
+                onClick={() => setState({ listener: false })}
+              >
+                Off
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group col-md-6">
+            <label>Password protect site</label>
+            <input type="text" {...input('password')} />
+            {Feedback('password')}
           </div>
         </div>
         <div className="row">

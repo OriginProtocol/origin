@@ -3,8 +3,6 @@ import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
 import sortBy from 'lodash/sortBy'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 function useOrders() {
   const { config } = useConfig()
   const [loading, setLoading] = useState(false)
@@ -14,7 +12,7 @@ function useOrders() {
     async function fetchOrders() {
       setLoading(true)
       const headers = new Headers({
-        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+        authorization: `bearer ${config.backendAuthToken}`
       })
       const myRequest = new Request(`${config.backend}/orders`, {
         credentials: 'include',
