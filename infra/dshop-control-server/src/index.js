@@ -26,7 +26,10 @@ const app = express()
 
 app.use(
   cors({
-    origin: '*'
+    origin: (origin, cb) => {
+      cb(null, origin || '*')
+    },
+    credentials: true
   })
 )
 
@@ -34,17 +37,11 @@ app.use(
 app.use(bodyParser.json({ limit: '100mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/ingest/:url', async (req, res) => {
-  const { url } = req.params
-
-  let datadir = await fetchDataDir(url)
-  if (datadir && !datadir.startsWith('http')) {
-    datadir = path.join(url, datadir)
-  }
+const ingest = async (req, res, datadir) => {
   const isShopify = datadir === null
 
   if (isShopify) {
-    console.log('Fetching Shopify data for', url)
+    console.log('Fetching Shopify data')
 
     // Disable eslint because can't destructure to different variable types,
     // i.e. let and const
@@ -60,10 +57,11 @@ app.get('/ingest/:url', async (req, res) => {
 
     return res.json({
       collections,
-      products
+      products,
+      datadir
     })
   } else {
-    console.log('Fetching dShop data for', `${url}`)
+    console.log('Fetching dShop data')
 
     // eslint-disable-next-line
     let [collections, products, config] = await Promise.all([
@@ -79,9 +77,26 @@ app.get('/ingest/:url', async (req, res) => {
     return res.json({
       collections,
       products,
-      config
+      config,
+      datadir
     })
   }
+}
+
+app.get('/slurp/:datadir', async (req, res) => {
+  const { datadir } = req.params
+  return ingest(req, res, datadir)
+})
+
+app.get('/ingest/:url', async (req, res) => {
+  const { url } = req.params
+
+  let datadir = await fetchDataDir(url)
+  if (datadir && !datadir.startsWith('http')) {
+    datadir = path.join(url, datadir)
+  }
+
+  return ingest(req, res, datadir)
 })
 
 app.post('/deploy', async (req, res) => {
@@ -128,11 +143,15 @@ app.post('/deploy', async (req, res) => {
             .substring(imgUrl.lastIndexOf('/') + 1)
             .split(/[?#]/)[0]
           const format = filename.substring(filename.lastIndexOf('.') + 1)
-          const response = await axios.get(imgUrl, {
-            responseType: 'arraybuffer'
-          })
-          imgBuffer = response.data
-          imgFilename = `img-${index}.${format}`
+          try {
+            const response = await axios.get(imgUrl, {
+              responseType: 'arraybuffer'
+            })
+            imgBuffer = response.data
+            imgFilename = `img-${index}.${format}`
+          } catch (err) {
+            console.error(`Failed to fetch image ${imgUrl}`)
+          }
         }
 
         const imgLocation = `${imgPath}/${imgFilename}`
@@ -200,13 +219,13 @@ app.post('/deploy', async (req, res) => {
     `${tmpDir.name}/config.json`,
     Buffer.from(JSON.stringify(req.body.settings))
   )
-
+  console.debug('linking...', process.env.IPFS_ROOT_HASH)
   // Write data dir to IPFS
   const hash = await linkDir(process.env.IPFS_ROOT_HASH, tmpDir.name, 'data')
 
   res.send(hash)
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 9011
 
 app.listen(port, () => console.log(`Origin dShop server running on ${port}!`))

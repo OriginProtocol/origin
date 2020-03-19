@@ -7,9 +7,15 @@ export const defaultState = {
   backend: {},
   orders: [],
   discounts: [],
-  needsDeploy: false
+  shops: {},
+  selectedShopIndex: 0,
+  needsDeploy: false,
+  dataURL: null,
+  hasAuthenticated: false
 }
 
 const store = new Store(defaultState)
+
+if (process.env.NODE_ENV !== 'production') window._store = store
 
 export default store

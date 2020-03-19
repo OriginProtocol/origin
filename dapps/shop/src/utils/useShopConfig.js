@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react'
 import memoize from 'lodash/memoize'
 import useConfig from 'utils/useConfig'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const getShopConfig = memoize(
-  async function fetchOrder(backend) {
+  async function fetchOrder(backend, authToken) {
     const headers = new Headers({
-      authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+      authorization: `bearer ${authToken}`
     })
     const myRequest = new Request(`${backend}/config`, {
       credentials: 'include',
@@ -29,7 +27,10 @@ function useShopConfig() {
   useEffect(() => {
     async function fetchConfig() {
       setLoading(true)
-      const shopConfig = await getShopConfig(config.backend)
+      const shopConfig = await getShopConfig(
+        config.backend,
+        config.backendAuthToken
+      )
       setLoading(false)
       setShopConfig(shopConfig)
     }

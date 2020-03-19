@@ -1,6 +1,6 @@
 'use strict'
 
-import axios from 'axios'
+import axios from 'utils/axiosWithCredentials'
 import UploadIcon from 'react-svg-loader!../../assets/upload-icon.svg'
 
 import React, { useState } from 'react'

@@ -91,4 +91,9 @@
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   font-size: 14px;
 }
+
+.navbar .sep {
+  background: rgba(255, 255, 255, 0.5);
+  height: 1px;
+}
  

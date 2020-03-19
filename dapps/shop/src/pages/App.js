@@ -1,16 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
+import get from 'lodash/get'
 
 import Main from './Main'
 import Checkout from './checkout/Loader'
 import Order from './OrderLoader'
+import Password from './Password'
 import Admin from './admin/Admin'
 
 import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
+import { useStateValue } from 'data/state'
+
+const { BACKEND_AUTH_TOKEN } = process.env
 
 const App = ({ location }) => {
   const { loading, config } = useConfig()
+  const [passwordLoading, setPasswordLoading] = useState(false)
+  const [{ passwordAuthed }, dispatch] = useStateValue()
+  const isAdmin = location.pathname.indexOf('/admin') === 0
+  const isOrder = location.pathname.indexOf('/order') === 0
 
   // Redirect to HTTPS if URL is not local
   useEffect(() => {
@@ -29,6 +38,26 @@ const App = ({ location }) => {
     }
   }, [location.pathname])
 
+  useEffect(() => {
+    if (!get(config, 'passwordProtected') || passwordAuthed) {
+      return
+    }
+    setPasswordLoading(true)
+    fetch(`${config.backend}/password`, {
+      headers: {
+        'content-type': 'application/json',
+        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+      },
+      credentials: 'include'
+    }).then(async response => {
+      setPasswordLoading(false)
+      if (response.status === 200) {
+        const data = await response.json()
+        dispatch({ type: 'setPasswordAuthed', authed: data.success })
+      }
+    })
+  }, [config, location.pathname])
+
   // Add custom CSS
   useEffect(() => {
     if (config && config.css) {
@@ -45,8 +74,12 @@ const App = ({ location }) => {
     }
   }, [config])
 
-  if (loading) {
+  if (loading || passwordLoading) {
     return null
+  }
+
+  if (config.passwordProtected && !passwordAuthed && !isAdmin && !isOrder) {
+    return <Password />
   }
 
   return (
@@ -54,6 +87,7 @@ const App = ({ location }) => {
       <Route path="/admin" component={Admin}></Route>
       <Route path="/order/:tx" component={Order}></Route>
       <Route path="/checkout" component={Checkout}></Route>
+      <Route path="/password" component={Password}></Route>
       <Route component={Main}></Route>
     </Switch>
   )
