@@ -384,7 +384,7 @@ class GrowthCampaign extends Component {
               <fbt desc="EventDescription.checkBlogPost">
                 Read our{' '}
                 <fbt:param name="blog post">
-                  <a href="https://medium.com/originprotocol/holiday-rewards-campaign-ending-soon-as-origins-community-grows-by-100k-members-358cd22da43d">
+                  <a href="https://medium.com/originprotocol/march-origin-rewards-campaign-ending-early-due-to-overwhelming-response-83b0a55297cd">
                     blog post
                   </a>
                 </fbt:param>
