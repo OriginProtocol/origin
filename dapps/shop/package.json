@@ -11,7 +11,8 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"{src,test}/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "shop:create": "node backend/scripts/createShop"
   },
   "author": "Nick Poulden <nick@originprotocol.com>",
   "license": "MIT",

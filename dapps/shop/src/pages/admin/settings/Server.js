@@ -37,7 +37,9 @@ const defaultValues = {
   mailgunSmtpPassword: '',
   awsRegion: '',
   awsAccessKey: '',
-  awsAccessSecret: ''
+  awsAccessSecret: '',
+  upholdClient: '',
+  upholdSecret: ''
 }
 
 async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
@@ -254,20 +256,34 @@ const AdminSettings = () => {
           )}
         </div>
         <div className="col-md-6">
-          <div className="form-group">
-            <label>Stripe Backend</label>
-            <input type="text" {...input('stripeBackend')} />
-            {Feedback('stripeBackend')}
-          </div>
-          <div className="form-group">
-            <label>Stripe Webhook Secret</label>
-            <input type="text" {...input('stripeWebhookSecret')} />
-            {Feedback('stripeWebhookSecret')}
+          <div className="row">
+            <div className="form-group col-md-6">
+              <label>Stripe Backend</label>
+              <input type="text" {...input('stripeBackend')} />
+              {Feedback('stripeBackend')}
+            </div>
+            <div className="form-group col-md-6">
+              <label>Webhook Secret</label>
+              <input type="text" {...input('stripeWebhookSecret')} />
+              {Feedback('stripeWebhookSecret')}
+            </div>
           </div>
           <div className="form-group">
             <label>Printful API Key</label>
             <input type="text" {...input('printful')} />
             {Feedback('printful')}
+          </div>
+          <div className="row">
+            <div className="form-group col-md-6">
+              <label>Uphold Client</label>
+              <input type="text" {...input('upholdClient')} />
+              {Feedback('upholdClient')}
+            </div>
+            <div className="form-group col-md-6">
+              <label>Uphold Secret</label>
+              <input type="text" {...input('upholdSecret')} />
+              {Feedback('upholdSecret')}
+            </div>
           </div>
         </div>
       </div>

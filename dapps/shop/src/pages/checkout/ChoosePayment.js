@@ -13,6 +13,7 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import formatPrice from 'utils/formatPrice'
 import getWalletStatus from 'utils/walletStatus'
 import useConfig from 'utils/useConfig'
+import useIsMobile from 'utils/useIsMobile'
 import { useStateValue } from 'data/state'
 import submitStripePayment from 'data/submitStripePayment'
 import addData from 'data/addData'
@@ -27,6 +28,7 @@ import LoadingButton from 'components/LoadingButton'
 import ShippingForm from './_ShippingForm'
 import TokenChooser from './_TokenChooser'
 import CryptoWallet from './CryptoWallet'
+import Uphold from './_Uphold'
 import WaitForTransaction from '../../components/WaitForTransaction'
 
 function validate(state) {
@@ -67,11 +69,13 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   // const [applePay, setApplePay] = useState(false)
 
   const { config } = useConfig()
+  const isMobile = useIsMobile()
   const [token, setToken] = useState('token-ETH')
   const [tokenStatus, setTokenStatus] = useState({})
   const [submit, setSubmit] = useState()
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
+  const [upholdCard, setUpholdCard] = useState()
   const [paymentReq, setPaymentReq] = useState()
   const [{ cart }, dispatch] = useStateValue()
   const [approveOfferTx, setApproveOfferTx] = useState()
@@ -201,6 +205,36 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         setApproveOfferTx(true)
         setAuth(auth)
         makeOffer({ variables })
+      } else if (paymentMethod === 'uphold') {
+        fetch(`${config.backend}/uphold/pay`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            Authorization: `bearer ${config.backendAuthToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            card: upholdCard,
+            data: hash,
+            amount: cart.total / 100
+          })
+        })
+          .then(result => {
+            if (result.error) {
+              setFormData({ ...formData, cardError: result.error.message })
+              setLoading(false)
+            } else {
+              history.push(`/order/${hash}?auth=${auth}`)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            setFormData({
+              ...formData,
+              cardError: 'Payment server error. Please try again later.'
+            })
+            setLoading(false)
+          })
       }
     }
     if (submit) {
@@ -307,13 +341,15 @@ const CreditCardForm = injectStripe(({ stripe }) => {
               }
             />
             Credit Card
-            <div className="cards">
-              <div className="visa" />
-              <div className="master" />
-              <div className="amex" />
-              <div className="discover" />
-              and more...
-            </div>
+            {isMobile ? null : (
+              <div className="cards">
+                <div className="visa" />
+                <div className="master" />
+                <div className="amex" />
+                <div className="discover" />
+                and more...
+              </div>
+            )}
           </label>
         )}
         {paymentMethod === 'stripe' && (
@@ -338,6 +374,8 @@ const CreditCardForm = injectStripe(({ stripe }) => {
             </div>
           </div>
         )}
+
+        <Uphold value={upholdCard} onChange={card => setUpholdCard(card)} />
       </div>
       {paymentMethod !== 'stripe' ? null : (
         <>

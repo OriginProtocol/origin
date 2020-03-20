@@ -102,7 +102,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
   if (order) {
     console.log(`Order ${order.orderId} exists in DB.`)
     // if (event.eventName !== 'OfferCreated') {
-      await order.update({ status: event.eventName })
+      await order.update({ statusStr: event.eventName })
     // }
     return
   }
@@ -141,7 +141,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
 
     const fields = {
       data: JSON.stringify(data),
-      status: event.eventName,
+      statusStr: event.eventName,
       updatedBlock: event.blockNumber
     }
     if (event.eventName === 'OfferCreated') {
@@ -168,7 +168,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
   } catch (e) {
     console.error(e)
     const fields = {
-      status: 'error',
+      statusStr: 'error',
       data: JSON.stringify({ error: e.message })
     }
     if (order) {
