@@ -40,35 +40,35 @@ const userQuestions = [
 ]
 
 async function go() {
-  // const userAnswers = await inquirer.prompt(userQuestions)
+  const userAnswers = await inquirer.prompt(userQuestions)
 
-  // let seller = await findSeller(userAnswers.email)
-  const seller = await findSeller('nick@originprotocol.com')
+  let seller = await findSeller(userAnswers.email)
+  // const seller = await findSeller('nick@originprotocol.com')
 
-  // if (seller) {
-  //   const authed = await authSeller(userAnswers.email, userAnswers.password)
-  //   if (!authed) {
-  //     console.log('Seller exists. Incorrect password.')
-  //     return
-  //   }
-  //   console.log('User authenticated OK.')
-  // } else {
-  //   const nameAnswer = await inquirer.prompt({
-  //     type: 'input',
-  //     name: 'name',
-  //     message: 'Seller name',
-  //     validate
-  //   })
-  //   const sellerResponse = await createSeller({ ...userAnswers, ...nameAnswer })
-  //   seller = sellerResponse.seller
+  if (seller) {
+    const authed = await authSeller(userAnswers.email, userAnswers.password)
+    if (!authed) {
+      console.log('Seller exists. Incorrect password.')
+      return
+    }
+    console.log('User authenticated OK.')
+  } else {
+    const nameAnswer = await inquirer.prompt({
+      type: 'input',
+      name: 'name',
+      message: 'Seller name',
+      validate
+    })
+    const sellerResponse = await createSeller({ ...userAnswers, ...nameAnswer })
+    seller = sellerResponse.seller
 
-  //   if (seller) {
-  //     console.log(`Created seller ${seller.id}`)
-  //   } else {
-  //     console.log(`Error creating seller: ${sellerResponse.error}`)
-  //     return
-  //   }
-  // }
+    if (seller) {
+      console.log(`Created seller ${seller.id}`)
+    } else {
+      console.log(`Error creating seller: ${sellerResponse.error}`)
+      return
+    }
+  }
 
   const taskQuestions1 = [
     {

@@ -8,15 +8,11 @@ const abi = require('./_abi')
 const sendMail = require('./emailer')
 const { upsertEvent, getEventObj } = require('./events')
 const encConf = require('./encryptedConfig')
-const { Transaction, Order, Shop } = require('../models')
+const { Order, Shop } = require('../models')
 
 const web3 = new Web3()
 const Marketplace = new web3.eth.Contract(abi)
 const MarketplaceABI = Marketplace._jsonInterface
-
-function handleError(event, error) {
-  console.log(error)
-}
 
 const handleLog = async ({
   web3,
@@ -102,7 +98,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
   if (order) {
     console.log(`Order ${order.orderId} exists in DB.`)
     // if (event.eventName !== 'OfferCreated') {
-      await order.update({ statusStr: event.eventName })
+    await order.update({ statusStr: event.eventName })
     // }
     return
   }

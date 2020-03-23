@@ -173,8 +173,6 @@ async function fetchEvents(listingIdFull) {
   }
 }
 
-// fetchEvents(program.listing)
-
 async function handleEvents(listingIdFull) {
   const { shop } = await extractVars(listingIdFull)
 
@@ -191,4 +189,11 @@ async function handleEvents(listingIdFull) {
   }
 }
 
-handleEvents(program.listing)
+function go() {
+  fetchEvents(program.listing)
+  handleEvents(program.listing)
+}
+
+module.exports = {
+  go, fetchEvents, handleEvents
+}
