@@ -1,10 +1,18 @@
 const fs = require('fs')
 
+function getVariant({ OutputDir, id }) {
+  const variantRaw = fs.readFileSync(
+    `${OutputDir}/data-printful/variant-${id}.json`
+  )
+  return JSON.parse(variantRaw)
+}
+
 async function writeProductData({ OutputDir }) {
   const productsRaw = fs.readFileSync(`${OutputDir}/printful-products.json`)
   const products = JSON.parse(productsRaw)
   const productsOut = []
   const downloadImages = []
+  const allImages = {}
   for (const row of products) {
     const productRaw = fs.readFileSync(
       `${OutputDir}/data-printful/product-${row.id}.json`
@@ -27,10 +35,63 @@ async function writeProductData({ OutputDir }) {
       handle = `${origHandle}-${n}`
     }
 
-    const img = product.sync_variants[0].files.find(f => f.type === 'preview')
-      .preview_url
+    const colors = [],
+      sizes = [],
+      images = [],
+      variantImages = {}
+    product.sync_variants.forEach((variant, idx) => {
+      const v = getVariant({ OutputDir, id: variant.product.variant_id })
+      const color = v.variant.color
+      const size = v.variant.size
+      if (color && colors.indexOf(color) < 0) {
+        colors.push(color)
+      }
+      if (size && sizes.indexOf(size) < 0) {
+        sizes.push(size)
+      }
+      const img = variant.files.find(f => f.type === 'preview')
+      if (allImages[img.preview_url] === undefined) {
+        downloadImages.push({
+          id: `${handle}`,
+          file: `img-${images.length}.png`,
+          url: img.preview_url
+        })
+        allImages[img.preview_url] = `img-${images.length}.png`
+        images.push(`img-${images.length}.png`)
+      }
+      variantImages[idx] = allImages[img.preview_url]
+    })
 
-    downloadImages.push({ id: `${handle}`, file: `img-0.png`, url: img })
+    const options = []
+    if (colors.length > 1) {
+      options.push('Color')
+    }
+    if (sizes.length > 1) {
+      options.push('Size')
+    }
+
+    const variants = product.sync_variants.map((variant, idx) => {
+      const v = getVariant({ OutputDir, id: variant.product.variant_id })
+      const options = []
+      if (colors.length > 1) {
+        options.push(v.variant.color)
+      }
+      if (sizes.length > 1) {
+        options.push(v.variant.size)
+      }
+      return {
+        id: idx,
+        title: variant.name,
+        option1: options[0] || null,
+        option2: options[1] || null,
+        option3: null,
+        image: variantImages[idx],
+        available: true,
+        name: variant.name,
+        options,
+        price: Number(variant.retail_price.replace('.', ''))
+      }
+    })
 
     const out = {
       id: handle,
@@ -38,28 +99,10 @@ async function writeProductData({ OutputDir }) {
       description: variant.product.description.replace(/\r\n/g, '<br/>'),
       price: Number(product.sync_variants[0].retail_price.replace('.', '')),
       available: true,
-      options: ['Color', 'Size'],
-      images: ['img-0.png'],
+      options,
+      images: images.map((img, idx) => `img-${idx}.png`),
       image: 'img-0.png',
-      variants: product.sync_variants.map((variant, idx) => {
-        const optionsRaw = variant.product.name.match(/\((.*)\)/)
-        let options = []
-        if (optionsRaw && optionsRaw.length) {
-          options = optionsRaw[1].split(' / ')
-        }
-        return {
-          id: idx,
-          title: variant.name,
-          option1: options[0] || null,
-          option2: options[1] || null,
-          option3: null,
-          image: 'img-0.png',
-          available: true,
-          name: variant.name,
-          options: [options[0], options[1]],
-          price: Number(variant.retail_price.replace('.', ''))
-        }
-      })
+      variants
     }
 
     productsOut.push({

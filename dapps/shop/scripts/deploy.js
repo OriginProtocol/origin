@@ -2,14 +2,20 @@ require('dotenv').config()
 const deploy = require('ipfs-deploy')
 const fs = require('fs')
 const { exec } = require('child_process')
+const Bottleneck = require('bottleneck')
+const https = require('https')
+const { resolve } = require('path')
 
-const dataDir = process.env.DATA_DIR
+const limiter = new Bottleneck({ maxConcurrent: 10 })
+const { readdir } = fs.promises
+
+const dataDir = process.argv[2]
 if (!dataDir) {
-  console.log('No DATA_DIR specified')
+  console.log('Usage: node deploy.js [data_dir]')
   process.exit()
 }
 if (!fs.existsSync(`${__dirname}/../data/${dataDir}`)) {
-  console.log('DATA_DIR not found')
+  console.log(`data/${dataDir} not found`)
   process.exit()
 }
 
@@ -21,6 +27,34 @@ if (!process.env.PINATA_KEY) {
 if (!process.env.PINATA_SECRET) {
   console.log('No PINATA_SECRET in .env')
   process.exit()
+}
+
+async function getFiles(dir) {
+  const dirents = await readdir(dir, { withFileTypes: true })
+  const files = await Promise.all(
+    dirents.map(dirent => {
+      const res = resolve(dir, dirent.name)
+      return dirent.isDirectory() ? getFiles(res) : res
+    })
+  )
+  return Array.prototype.concat(...files)
+}
+
+async function download(url) {
+  await new Promise(resolve => {
+    const f = fs.createWriteStream('/dev/null').on('finish', resolve)
+    console.log(`Priming ${url}`)
+    https.get(url, response => response.pipe(f))
+  })
+}
+
+async function prime(urlPrefix) {
+  const filesWithPath = await getFiles(`${__dirname}/../public`)
+  const files = filesWithPath.map(f => f.split('public/')[1])
+  for (const file of files) {
+    const url = `${urlPrefix}/${file}`
+    limiter.schedule(url => download(url), url)
+  }
 }
 
 async function go() {
@@ -37,10 +71,10 @@ async function go() {
     })
   })
 
-  await deploy({
+  const hash = await deploy({
     remotePinners: ['pinata'],
     // dnsProviders: argv.dns,
-    siteDomain: process.env.DATA_DIR,
+    siteDomain: dataDir,
     credentials: {
       // cloudflare: {
       //   apiKey: argv.cloudflare && argv.cloudflare.apiKey,
@@ -55,6 +89,8 @@ async function go() {
       }
     }
   })
+
+  await prime(`https://gateway.pinata.cloud/ipfs/${hash}`)
 
   await new Promise((resolve, reject) => {
     exec(`rm -rf public/${dataDir}`, (error, stdout) => {
