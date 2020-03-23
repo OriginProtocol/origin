@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const moment = require('moment')
 
 const logger = require('./logger')
@@ -66,7 +68,7 @@ const earlyLockupBonusRate = process.env.EARLY_LOCKUP_BONUS_RATE || 35
 const lockupDuration = process.env.LOCKUP_DURATION || 12
 
 // Whether lockups are enabled
-const lockupsEnabled = process.env.LOCKUPS_ENABLED || false
+const lockupsEnabled = process.env.LOCKUPS_ENABLED || true
 
 // Whether early lockups are enabled
 const earlyLockupsEnabled = process.env.EARLY_LOCKUPS_ENABLED || false
