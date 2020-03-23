@@ -21,7 +21,7 @@ process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
-const { transferConfirmationTimeout } = require('../../src/shared')
+const { transferConfirmationTimeout } = require('../../src/config')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 

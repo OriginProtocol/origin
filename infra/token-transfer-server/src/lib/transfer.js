@@ -12,8 +12,13 @@ const {
 } = require('../constants/events')
 const { Event, Transfer, User, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
-const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
-const { clientUrl, encryptionSecret, gasPriceMultiplier } = require('../config')
+const { transferHasExpired } = require('../shared')
+const {
+  clientUrl,
+  encryptionSecret,
+  gasPriceMultiplier,
+  transferConfirmationTimeout
+} = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
 

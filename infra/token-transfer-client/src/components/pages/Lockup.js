@@ -4,6 +4,11 @@ import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { fetchConfig } from '@/actions/config'
+import {
+  getConfig,
+  getIsLoading as getConfigIsLoading
+} from '@/reducers/config'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
@@ -21,18 +26,21 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
 const Lockup = props => {
   useEffect(() => {
-    props.fetchGrants(), props.fetchLockups(), props.fetchTransfers()
+    props.fetchConfig(),
+      props.fetchGrants(),
+      props.fetchLockups(),
+      props.fetchTransfers()
   }, [])
 
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
   if (
     props.accountIsLoading ||
+    props.configIsLoading ||
     props.transferIsLoading ||
     props.grantIsLoading ||
     props.lockupIsLoading
@@ -44,7 +52,8 @@ const Lockup = props => {
     )
   }
 
-  const isLocked = !unlockDate || moment.utc() < unlockDate
+  const isLocked =
+    !props.config.unlockDate || moment.utc() < props.config.unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
@@ -128,8 +137,10 @@ const Lockup = props => {
   )
 }
 
-const mapStateToProps = ({ grant, lockup, transfer, user }) => {
+const mapStateToProps = ({ config, grant, lockup, transfer, user }) => {
   return {
+    config: getConfig(config),
+    configIsLoading: getConfigIsLoading(config),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(user, grant),
@@ -145,6 +156,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       confirmLockup: confirmLockup,
+      fetchConfig: fetchConfig,
       fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
       fetchTransfers: fetchTransfers

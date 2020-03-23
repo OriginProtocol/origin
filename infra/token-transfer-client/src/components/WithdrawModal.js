@@ -19,7 +19,6 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
-import { otcRequestEnabled } from '@/constants'
 import OtcDesk from '@/assets/otc-desk.svg'
 
 class WithdrawModal extends Component {
@@ -202,7 +201,7 @@ class WithdrawModal extends Component {
               </li>
             </ul>
           </div>
-          {otcRequestEnabled && (
+          {this.props.otcRequestEnabled && (
             <div className="col-5">
               <div
                 className="card text-left p-4 mt-3 mr-3"

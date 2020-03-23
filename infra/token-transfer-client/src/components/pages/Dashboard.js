@@ -9,6 +9,11 @@ import {
   getAccounts,
   getIsLoading as getAccountIsLoading
 } from '@/reducers/account'
+import { fetchConfig } from '@/actions/config'
+import {
+  getConfig,
+  getIsLoading as getConfigIsLoading
+} from '@/reducers/config'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
@@ -26,7 +31,6 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
 import VestingCard from '@/components/VestingCard'
@@ -36,7 +40,6 @@ import BonusCard from '@/components/BonusCard'
 import BonusModal from '@/components/BonusModal'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
-import { lockupsEnabled } from '@/constants'
 
 const Dashboard = props => {
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
@@ -45,6 +48,7 @@ const Dashboard = props => {
 
   useEffect(() => {
     props.fetchAccounts(),
+      props.fetchConfig(),
       props.fetchGrants(),
       props.fetchLockups(),
       props.fetchTransfers()
@@ -52,6 +56,7 @@ const Dashboard = props => {
 
   if (
     props.accountIsLoading ||
+    props.configIsLoading ||
     props.transferIsLoading ||
     props.grantIsLoading ||
     props.lockupIsLoading
@@ -67,15 +72,17 @@ const Dashboard = props => {
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
-  const isLocked = !unlockDate || moment.utc() < unlockDate
+  const isLocked =
+    !props.config.unlockDate || moment.utc() < props.config.unlockDate
   const isEmployee = !!get(props.user, 'employee')
-  const displayBonusCard = lockupsEnabled && !isEmployee
+  const displayBonusCard = props.config.lockupsEnabled && !isEmployee
 
   return (
     <>
       {displayBonusModal && (
         <BonusModal
           balance={balanceAvailable}
+          lockupBonusRate={props.config.lockupBonusRate}
           onModalClose={() => setDisplayBonusModal(false)}
         />
       )}
@@ -84,6 +91,7 @@ const Dashboard = props => {
           balance={balanceAvailable}
           accounts={props.accounts}
           isLocked={props.isLocked}
+          otcRequestEnabled={props.config.otcRequestEnabled}
           onCreateOtcRequest={() => setDisplayOtcRequestModal(true)}
           onModalClose={() => setDisplayWithdrawModal(false)}
         />
@@ -100,8 +108,9 @@ const Dashboard = props => {
             balance={balanceAvailable}
             accounts={props.accounts}
             locked={props.lockupTotals.locked}
+            lockupsEnabled={props.config.lockupsEnabled}
             isLocked={isLocked}
-            unlockDate={unlockDate}
+            unlockDate={props.config.unlockDate}
             onDisplayBonusModal={() => setDisplayBonusModal(true)}
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
@@ -155,10 +164,19 @@ const Dashboard = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, lockup, transfer, user }) => {
+const mapStateToProps = ({
+  account,
+  config,
+  grant,
+  lockup,
+  transfer,
+  user
+}) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
+    config: getConfig(config),
+    configIsLoading: getConfigIsLoading(config),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(user.user, grant),
@@ -174,6 +192,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchAccounts: fetchAccounts,
+      fetchConfig: fetchConfig,
       fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
       fetchTransfers: fetchTransfers

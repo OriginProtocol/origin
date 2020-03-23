@@ -156,8 +156,7 @@ function calculateWithdrawn(transfers) {
 }
 
 // Helper function to determine if a transfer has expired, i.e. the user did
-// not click the email link within process.env.TRANSFER_CONFIRMATION_TIMEOUT
-// minutes
+// not click the email link within the configured timeout
 function transferHasExpired(transfer) {
   return (
     moment().diff(moment(transfer.createdAt), 'minutes') >=
@@ -166,29 +165,13 @@ function transferHasExpired(transfer) {
 }
 
 // Helper function to determine if a transfer has expired, i.e. the user did
-// not click the email link within process.env.LOCKUP_CONFIRMATION_TIMEOUT
-// minutes
+// not click the email link within the configured timeout
 function lockupHasExpired(lockup) {
   return (
     moment().diff(moment(lockup.createdAt), 'minutes') >=
     lockupConfirmationTimeout
   )
 }
-
-// Lockup bonus rate as a percentage
-const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 15
-
-// Early lockup bons rate as a percentage
-const earlyLockupBonusRate = process.env.EARLY_LOCKUP_BONUS_RATE || 30
-
-// Lockup duration in months
-const lockupDuration = process.env.LOCKUP_DURATION || 12
-
-// Whether lockups are enabled
-const lockupsEnabled = process.env.LOCKUPS_ENABLED || false
-
-// Whether early lockups are enabled
-const earlyLockupsEnabled = process.env.EARLY_LOCKUPS_ENABLED || false
 
 // Length of time in minutes user has to confirm a transfer by clicking the email
 // link
@@ -199,9 +182,6 @@ const transferConfirmationTimeout =
 // link
 const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
-// Whether OTC requests are enabled
-const otcRequestEnabled = process.env.OTC_REQUEST_ENABLED || false
-
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -210,18 +190,12 @@ module.exports = {
   calculateLocked,
   calculateNextVestLocked,
   calculateWithdrawn,
-  lockupsEnabled,
-  earlyLockupsEnabled,
   getNextVest,
   toMoment,
   momentizeLockup,
   momentizeGrant,
-  otcRequestEnabled,
   lockupHasExpired,
-  earlyLockupBonusRate,
-  lockupBonusRate,
-  lockupDuration,
-  lockupConfirmationTimeout,
   transferHasExpired,
+  lockupConfirmationTimeout,
   transferConfirmationTimeout
 }

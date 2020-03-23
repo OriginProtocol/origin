@@ -1,12 +1,9 @@
-import moment from 'moment'
-
-import {
-  earlyLockupBonusRate,
-  earlyLockupsEnabled,
-  lockupBonusRate,
-  lockupsEnabled,
-  otcRequestEnabled
-} from '@origin/token-transfer-server/src/shared'
+let pageTitle
+if (window.location.hostname.includes('team')) {
+  pageTitle = 'Origin Team Portal'
+} else {
+  pageTitle = 'Origin Investor Portal'
+}
 
 let apiUrl
 if (process.env.NODE_ENV === 'production') {
@@ -19,32 +16,4 @@ if (process.env.NODE_ENV === 'production') {
   apiUrl = 'http://localhost:5000'
 }
 
-let pageTitle
-if (window.location.hostname.includes('team')) {
-  pageTitle = 'Origin Team Portal'
-} else {
-  pageTitle = 'Origin Investor Portal'
-}
-
-let unlockDate
-if (process.env.NODE_ENV === 'production') {
-  if (
-    window.location.hostname.includes('team') &&
-    moment(process.env.TEAM_UNLOCK_DATE, 'YYYY-MM-DD').isValid()
-  ) {
-    unlockDate = moment.utc(process.env.TEAM_UNLOCK_DATE)
-  } else if (moment(process.env.INVESTOR_UNLOCK_DATE, 'YYYY-MM-DD').isValid()) {
-    unlockDate = moment.utc(process.env.INVESTOR_UNLOCK_DATE)
-  }
-}
-
-export {
-  apiUrl,
-  earlyLockupBonusRate,
-  earlyLockupsEnabled,
-  lockupsEnabled,
-  lockupBonusRate,
-  otcRequestEnabled,
-  pageTitle,
-  unlockDate
-}
+export { apiUrl, pageTitle }

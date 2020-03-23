@@ -1,11 +1,11 @@
 const { ip2geo } = require('@origin/ip2geo')
 
-const { unlockDate } = require('./config')
 const {
   earlyLockupsEnabled,
   lockupsEnabled,
-  otcRequestEnabled
-} = require('./shared')
+  otcRequestEnabled,
+  unlockDate
+} = require('./config')
 
 /**
  * Allows use of async functions for an Express route.

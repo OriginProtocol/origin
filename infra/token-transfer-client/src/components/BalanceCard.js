@@ -4,7 +4,6 @@ import { Doughnut } from 'react-chartjs-2'
 import Dropdown from 'react-bootstrap/Dropdown'
 import moment from 'moment'
 
-import { lockupsEnabled } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
 import DropdownDotsToggle from '@/components/DropdownDotsToggle'
 
@@ -69,7 +68,7 @@ const BalanceCard = props => {
         </div>
       </div>
       <div className="row">
-        {lockupsEnabled && (props.balance > 0 || props.locked > 0) && (
+        {props.lockupsEnabled && (props.balance > 0 || props.locked > 0) && (
           <div
             className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
             style={{ minWidth: '200px' }}
@@ -101,7 +100,7 @@ const BalanceCard = props => {
                 ></Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  {lockupsEnabled && (
+                  {props.lockupsEnabled && (
                     <Dropdown.Item onClick={props.onDisplayBonusModal}>
                       Earn Bonus Tokens
                     </Dropdown.Item>
@@ -116,7 +115,7 @@ const BalanceCard = props => {
               </Dropdown>
             </div>
           </div>
-          {lockupsEnabled && (
+          {props.lockupsEnabled && (
             <div className="row" style={{ fontSize: '24px' }}>
               <div className="col">
                 <div className="status-circle status-circle-info mr-3"></div>

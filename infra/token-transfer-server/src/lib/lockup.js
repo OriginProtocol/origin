@@ -11,10 +11,11 @@ const { Event, Lockup, User, sequelize } = require('../models')
 const {
   earlyLockupBonusRate,
   lockupBonusRate,
-  lockupDuration
+  lockupDuration,
+  lockupConfirmationTimeout
 } = require('../config')
 const { hasBalance, hasNextVestBalance } = require('./balance')
-const { lockupConfirmationTimeout, lockupHasExpired } = require('../shared')
+const { lockupHasExpired } = require('../shared')
 const logger = require('../logger')
 
 const { encryptionSecret, clientUrl } = require('../config')

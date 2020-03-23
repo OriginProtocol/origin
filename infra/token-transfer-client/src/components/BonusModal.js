@@ -13,7 +13,6 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
-import { lockupBonusRate } from '@/constants'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -157,14 +156,14 @@ class BonusModal extends Component {
                 <div className="col">
                   <strong>Bonus Tokens Earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
-                    ({lockupBonusRate}% of lockup)
+                    ({this.props.lockupBonusRate}% of lockup)
                   </span>
                 </div>
                 <div className="col-4 text-right">
                   <strong>
                     {Number(
                       BigNumber(
-                        this.state.amount * (lockupBonusRate / 100)
+                        this.state.amount * (this.props.lockupBonusRate / 100)
                       ).toFixed(0, BigNumber.ROUND_HALF_UP)
                     ).toLocaleString()}
                   </strong>{' '}
@@ -222,8 +221,8 @@ class BonusModal extends Component {
         <h1 className="mb-2">Earn Bonus Tokens</h1>
         <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
-            Earn {lockupBonusRate}% bonus tokens immediately by locking up your
-            vested OGN tokens.
+            Earn {this.props.lockupBonusRate}% bonus tokens immediately by
+            locking up your vested OGN tokens.
           </li>
           <li className="mt-1">
             Locked and bonus tokens will be available for withdrawal after 1

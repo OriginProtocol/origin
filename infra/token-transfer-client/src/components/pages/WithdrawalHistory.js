@@ -7,6 +7,11 @@ import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
+import { fetchConfig } from '@/actions/config'
+import {
+  getConfig,
+  getIsLoading as getConfigIsLoading
+} from '@/reducers/config'
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
@@ -24,17 +29,20 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
 const WithdrawalHistory = props => {
   useEffect(() => {
-    props.fetchAccounts(), props.fetchTransfers(), props.fetchGrants()
+    props.fetchConfig(),
+      props.fetchAccounts(),
+      props.fetchTransfers(),
+      props.fetchGrants()
   }, [])
 
   if (
     props.accountIsLoading ||
+    props.configIsLoading ||
     props.transferIsLoading ||
     props.grantIsLoading
   ) {
@@ -45,7 +53,8 @@ const WithdrawalHistory = props => {
     )
   }
 
-  const isLocked = !unlockDate || moment.utc() < unlockDate
+  const isLocked =
+    !props.config.unlockDate || moment.utc() < props.config.unlockDate
 
   const accountNicknameMap = {}
   props.accounts.forEach(account => {
@@ -177,10 +186,12 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer, user }) => {
+const mapStateToProps = ({ account, config, grant, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
+    config: getConfig(config),
+    configIsLoading: getConfigIsLoading(config),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(user.user, grant),
@@ -193,6 +204,7 @@ const mapStateToProps = ({ account, grant, transfer, user }) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      fetchConfig: fetchConfig,
       fetchAccounts: fetchAccounts,
       fetchGrants: fetchGrants,
       fetchTransfers: fetchTransfers
