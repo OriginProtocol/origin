@@ -13,6 +13,15 @@ const {
 } = require('./lib/vesting')
 const enums = require('./enums')
 
+// Length of time in minutes user has to confirm a transfer by clicking the email
+// link
+const transferConfirmationTimeout =
+  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
+
+// Length of time in minutes user has to confirm a lockup by clicking the email
+// link
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
+
 /* Convert the dates of a lockup object to moments.
  */
 function momentizeLockup(lockup) {
@@ -114,8 +123,8 @@ function calculateNextVestLocked(lockups) {
  * @param user
  */
 function getNextVest(grants, user) {
-  const allGrantVestingSchedule = user.Grants.flatMap(grant => {
-    return vestingSchedule(user, grant.get({ plain: true }))
+  const allGrantVestingSchedule = grants.flatMap(grant => {
+    return vestingSchedule(user, grant)
   })
   const sortedUnvested = allGrantVestingSchedule
     .filter(v => !v.vested)
@@ -172,15 +181,6 @@ function lockupHasExpired(lockup) {
     lockupConfirmationTimeout
   )
 }
-
-// Length of time in minutes user has to confirm a transfer by clicking the email
-// link
-const transferConfirmationTimeout =
-  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
-
-// Length of time in minutes user has to confirm a lockup by clicking the email
-// link
-const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
 module.exports = {
   calculateGranted,
