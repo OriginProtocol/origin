@@ -1,3 +1,5 @@
+const AsyncLock = require('async-lock')
+
 const { ip2geo } = require('@origin/ip2geo')
 
 const {
@@ -6,6 +8,8 @@ const {
   otcRequestEnabled,
   unlockDate
 } = require('./config')
+
+const lock = new AsyncLock()
 
 /**
  * Allows use of async functions for an Express route.
@@ -61,5 +65,6 @@ module.exports = {
   getEarlyLockupsEnabled,
   getFingerprintData,
   getOtcRequestEnabled,
-  getUnlockDate
+  getUnlockDate,
+  lock
 }
