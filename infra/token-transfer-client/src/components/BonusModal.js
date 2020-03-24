@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import BigNumber from 'bignumber.js'
 import get from 'lodash.get'
 import ReactGA from 'react-ga'
+import moment from 'moment'
 
 import { addLockup } from '@/actions/lockup'
 import {
@@ -218,7 +219,11 @@ class BonusModal extends Component {
   renderDisclaimer() {
     return (
       <>
-        <h1 className="mb-2">Earn Bonus Tokens</h1>
+        <h1 className="mb-2">
+          {this.props.isEarly
+            ? 'Earn Bonus Tokens'
+            : `Special offer for ${moment(this.props.nextVest.date).format('MMMM')} unlock` }
+        </h1>
         <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
             Earn {this.props.lockupBonusRate}% bonus tokens immediately by
@@ -227,10 +232,6 @@ class BonusModal extends Component {
           <li className="mt-1">
             Locked and bonus tokens will be available for withdrawal after 1
             year.
-          </li>
-          <li className="mt-1">
-            This program is only available to our existing Advisor, Strategic,
-            and CoinList investors. Thank you for your early support of Origin.
           </li>
         </ul>
         <div className="form-check">

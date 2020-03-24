@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import get from 'lodash.get'
 
+import { getNextVest } from '@origin/token-transfer-server/src/shared'
+
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
@@ -38,6 +40,7 @@ import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
 import BonusModal from '@/components/BonusModal'
+import BonusCta from '@/components/BonusCta'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
 
@@ -67,22 +70,37 @@ const Dashboard = props => {
       </div>
     )
   }
-
   const { vestedTotal, unvestedTotal } = props.grantTotals
+
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
+
   const isLocked =
     !props.config.unlockDate || moment.utc() < props.config.unlockDate
+
   const isEmployee = !!get(props.user, 'employee')
-  const displayBonusCard = props.config.lockupsEnabled && !isEmployee
+
+  const nextVest = getNextVest(props.grants, props.user)
+
+  const displayBonusCard =
+    props.config.lockupsEnabled && nextVest && !isEmployee
+  const displayBonusCta = displayBonusCard
+  const fullWidthBonusCta = props.config.earlyLockupsEnabled
+  const isEarlyLockup = displayBonusModal === 'early'
 
   return (
     <>
       {displayBonusModal && (
         <BonusModal
           balance={balanceAvailable}
-          lockupBonusRate={props.config.lockupBonusRate}
+          nextVest={nextVest}
+          isEarlyLockup={isEarlyLockup}
+          lockupBonusRate={
+            isEarlyLockup
+              ? props.config.earlyLockupBonusRate
+              : props.config.lockupBonusRate
+          }
           onModalClose={() => setDisplayBonusModal(false)}
         />
       )}
@@ -102,6 +120,17 @@ const Dashboard = props => {
         />
       )}
 
+      {displayBonusCta && fullWidthBonusCta && (
+        <div className="row">
+          <div className="col mb-4">
+            <BonusCta
+              lockupRate={props.config.earlyLockupBonusRate}
+              fullWidth={fullWidthBonusCta}
+              onDisplayBonusModal={() => setDisplayBonusModal('early')}
+            />
+          </div>
+        </div>
+      )}
       <div className="row">
         <div className="col mb-4">
           <BalanceCard
@@ -115,6 +144,11 @@ const Dashboard = props => {
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
+        {displayBonusCta && !fullWidthBonusCta && (
+          <div className="col mb-4">
+            <BonusCta />
+          </div>
+        )}
       </div>
       <div className="row">
         <div className="col-12 col-xl-6 mb-4">

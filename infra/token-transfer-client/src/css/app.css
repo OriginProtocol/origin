@@ -163,6 +163,11 @@ input, select {
   font-size: 14px;
 }
 
+.card-wrapper.blue {
+  background-color: #007cff;
+  color: white;
+}
+
 .shadowed {
   box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1)
 }
@@ -418,6 +423,10 @@ input, select {
 .ogn {
   color: #007cff;
   font-weight: bold;
+}
+
+.icon-white > path {
+  fill: #fff;
 }
 
 .dropdown-menu .icon > path {

@@ -6,11 +6,13 @@ const { asyncMiddleware } = require('../utils')
 const {
   lockupBonusRate,
   earlyLockupBonusRate,
-  lockupsEnabled,
-  earlyLockupsEnabled,
-  pageTitle,
-  unlockDate
 } = require('../config')
+const {
+  getLockupsEnabled,
+  getEarlyLockupsEnabled,
+  getUnlockDate,
+  getOtcRequestEnabled
+} = require('../utils')
 
 /**
  * Returns important config variables required by the client
@@ -22,10 +24,10 @@ router.get(
     res.json({
       lockupBonusRate,
       earlyLockupBonusRate,
-      lockupsEnabled,
-      earlyLockupsEnabled,
-      pageTitle,
-      unlockDate
+      lockupsEnabled: getLockupsEnabled(),
+      earlyLockupsEnabled: getEarlyLockupsEnabled(),
+      unlockDate: getUnlockDate(),
+      otcRequestEnabled: getOtcRequestEnabled()
     })
   })
 )

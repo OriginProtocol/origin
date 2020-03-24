@@ -87,7 +87,10 @@ const BonusCard = ({
       </div>
       <div className="row">
         <div className="col text-center">
-          <button className="btn btn-lg btn-dark" onClick={onDisplayBonusModal}>
+          <button
+            className="btn btn-lg btn-primary"
+            onClick={onDisplayBonusModal}
+          >
             <Earn
               className="icon"
               style={{
