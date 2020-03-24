@@ -166,6 +166,10 @@ input, select {
 .card-wrapper.blue {
   background-color: #007cff;
   color: white;
+  background-image: url(/tokens.svg);
+  background-position-y: bottom;
+  background-position-x: right;
+  background-repeat: no-repeat;
 }
 
 .shadowed {
