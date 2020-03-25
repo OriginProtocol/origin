@@ -14,6 +14,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@2x.jpg'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -51,8 +52,7 @@ class BonusModal extends Component {
 
   getInitialState = () => {
     const initialState = {
-      acceptedTerms: false,
-      amount: '',
+      amount: this.props.balance ? Number(this.props.balance) : 0,
       amountError: null,
       code: '',
       codeError: null,
@@ -122,146 +122,159 @@ class BonusModal extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <>
-        <h1 className="mb-2">Earn Bonus Tokens</h1>
+      <div className="text-left">
+        <h1 className="mb-2">{this.renderTitle()}</h1>
+        <hr />
         <form onSubmit={this.handleFormSubmit}>
-          <div className="form-group">
-            <label htmlFor="amount">Number of Tokens to Lock Up</label>
-            <div className="input-group">
-              <input {...input('amount')} type="number" />
-              <div className="input-group-append">
-                <a
-                  href="#"
-                  onClick={this.onMaxAmount}
-                  className="mr-2"
-                  style={{
-                    color: '#007cff',
-                    fontSize: '14px',
-                    textDecoration: 'none',
-                    cursor: 'pointer'
-                  }}
+          <div className="row">
+            <div className="col-7">
+              {this.props.isEarlyLockup && (
+                <div className="form-group">
+                  <label htmlFor="amount">Eligible tokens</label>
+                  <div className="faux-input form-control form-control-lg">
+                    <strong>
+                      {Number(this.props.nextVest.amount).toLocaleString()} OGN
+                    </strong>{' '}
+                    vest on {moment(this.props.nextVest.date).format('L')}
+                  </div>
+                </div>
+              )}
+              <div className="form-group">
+                <label htmlFor="amount">Amount of tokens to lock Up</label>
+                <div className="input-group">
+                  <input {...input('amount')} type="number" />
+                  <div className="input-group-append">
+                    <a
+                      href="#"
+                      onClick={this.onMaxAmount}
+                      className="mr-2"
+                      style={{
+                        color: '#007cff',
+                        fontSize: '14px',
+                        textDecoration: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Max Amount
+                    </a>
+                    <span className="badge badge-secondary">OGN</span>
+                  </div>
+                </div>
+                <div
+                  className={this.state.amountError ? 'input-group-fix' : ''}
                 >
-                  Max Amount
-                </a>
-                <span className="badge badge-secondary">OGN</span>
+                  {Feedback('amount')}
+                </div>
               </div>
             </div>
-            <div className={this.state.amountError ? 'input-group-fix' : ''}>
-              {Feedback('amount')}
-            </div>
+
+            <div className="col-5"></div>
           </div>
 
-          {this.state.amount && this.state.amount >= 100 ? (
-            <div className="text-left">
-              <div className="row">
-                <div className="col">
-                  <strong>Bonus Tokens Earned</strong>{' '}
-                  <span style={{ fontSize: '14px' }}>
-                    ({this.props.lockupBonusRate}% of lockup)
-                  </span>
-                </div>
-                <div className="col-4 text-right">
-                  <strong>
-                    {Number(
-                      BigNumber(
-                        this.state.amount * (this.props.lockupBonusRate / 100)
-                      ).toFixed(0, BigNumber.ROUND_HALF_UP)
-                    ).toLocaleString()}
-                  </strong>{' '}
-                  <span className="ogn">OGN</span>
-                </div>
+          <div className="actions">
+            <div className="row">
+              <div className="col-6">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={() => this.setState({ modalState: 'Disclaimer' })}
+                >
+                  Back
+                </button>
               </div>
-              <div className="row">
-                <div className="col">
-                  <strong>Tokens Locked Up</strong>
-                </div>
-                <div className="col-4 text-right">
-                  <strong>{Number(this.state.amount).toLocaleString()}</strong>{' '}
-                  <span className="ogn">OGN</span>
-                </div>
+              <div className="col-6 text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={
+                    !this.state.amount ||
+                    this.state.amount < 100 ||
+                    this.props.lockupIsAdding
+                  }
+                >
+                  {this.props.lockupIsAdding ? (
+                    <>
+                      <span className="spinner-grow spinner-grow-sm"></span>
+                      Loading...
+                    </>
+                  ) : (
+                    <span>Continue</span>
+                  )}
+                </button>
               </div>
             </div>
-          ) : (
-            <>
-              <div className="p-3 mx-2 text-muted text-center">
-                Please enter the number of tokens (minimum 100 OGN) to lock up
-                for one year. Bonus tokens will be calculated based on this
-                amount. Locked up and bonus tokens will be unavailable for
-                withdrawal during the one-year lockup.
-              </div>
-              <hr />
-            </>
-          )}
-
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={
-              !this.state.amount ||
-              this.state.amount < 100 ||
-              this.props.lockupIsAdding
-            }
-          >
-            {this.props.lockupIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Continue</span>
-            )}
-          </button>
+          </div>
         </form>
-      </>
+      </div>
     )
   }
 
+  renderTitle() {
+    const nextVestMonth = moment(this.props.nextVest.date).format('MMMM')
+    if (this.props.isEarlyLockup) {
+      return `Special offer for ${nextVestMonth} vesting`
+    } else {
+      return 'Earn Bonus Tokens'
+    }
+  }
+
   renderDisclaimer() {
+    const nextVestMonth = moment(this.props.nextVest.date).format('MMMM')
     return (
-      <>
-        <h1 className="mb-2">
-          {this.props.isEarly
-            ? 'Earn Bonus Tokens'
-            : `Special offer for ${moment(this.props.nextVest.date).format('MMMM')} unlock` }
-        </h1>
-        <ul className="my-4 mx-2 text-left">
-          <li className="mt-1">
-            Earn {this.props.lockupBonusRate}% bonus tokens immediately by
-            locking up your vested OGN tokens.
-          </li>
-          <li className="mt-1">
-            Locked and bonus tokens will be available for withdrawal after 1
-            year.
-          </li>
-        </ul>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            value=""
-            id="acceptCheck"
-            onClick={e => this.setState({ acceptedTerms: e.target.checked })}
-          />
-          <label className="form-check-label mt-0" htmlFor="acceptCheck">
-            I certify that I am an{' '}
-            <a
-              href="https://www.investor.gov/additional-resources/news-alerts/alerts-bulletins/updated-investor-bulletin-accredited-investors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              accredited investor
-            </a>
-            .
-          </label>
+      <div className="text-left">
+        <h1 className="mb-2">{this.renderTitle()}</h1>
+        <hr />
+        <div>
+          {this.props.isEarlyLockup ? (
+            <>
+              Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
+              immediately by locking up your {nextVestMonth} vest.
+            </>
+          ) : (
+            <>
+              Earn <strong>${this.props.lockupBonusRate}%</strong> bonus tokens
+              immediately by locking up your vested OGN tokens.`
+            </>
+          )}
         </div>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={() => this.setState({ modalState: 'Form' })}
-          disabled={!this.state.acceptedTerms}
-        >
-          Continue
-        </button>
-      </>
+        <hr />
+        <div>
+          All tokens will be available for withdrawal after{' '}
+          <strong>1 year</strong>
+        </div>
+        <hr />
+        <div>
+          <strong>{Number(this.props.nextVest.amount).toLocaleString()}</strong>{' '}
+          OGN are scheduled to vest in {nextVestMonth}
+        </div>
+        <hr />
+        <div>
+          This offer expires in <strong>30d 23h 12m</strong>
+        </div>
+        <div className="actions">
+          <div className="row">
+            <div className="col-7 align-self-center">
+              <small>
+                By continuing you certify that you are an{' '}
+                <a
+                  href="https://www.investor.gov/additional-resources/news-alerts/alerts-bulletins/updated-investor-bulletin-accredited-investors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  accredited investor
+                </a>
+              </small>
+            </div>
+            <div className="col-5 text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => this.setState({ modalState: 'Form' })}
+              >
+                Get started
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -275,31 +288,50 @@ class BonusModal extends Component {
 
     return (
       <>
-        <h1 className="mb-2">2-Step Verification</h1>
-        <p>
-          Please use Google Authenticator to confirm your lockup and earn more
-          OGN.
+        <img
+          src={GoogleAuthenticatorIcon}
+          className="mb-2"
+          width="74"
+          height="74"
+        />
+        <h1 className="mb-2">Enter your verification code</h1>
+        <p className="text-muted">
+          Enter the code generated by your authenticator app
         </p>
         <form onSubmit={this.handleTwoFactorFormSubmit}>
           <div className="form-group">
-            <label htmlFor="code">Code</label>
-            <input {...input('code')} type="number" />
+            <label htmlFor="code">Verification code</label>
+            <input {...input('code')} placeholder="Enter code" type="number" />
             {Feedback('code')}
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.lockupIsAdding}
-          >
-            {this.props.lockupIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Verify</span>
-            )}
-          </button>
+          <div className="actions">
+            <div className="row">
+              <div className="col-6 text-left">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={() => this.setState({ modalState: 'Form' })}
+                >
+                  Back
+                </button>
+              </div>
+              <div className="col-6 text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={this.props.lockupIsAdding}
+                >
+                  {this.props.lockupIsAdding ? (
+                    <>
+                      <span className="spinner-grow spinner-grow-sm"></span>
+                      Loading...
+                    </>
+                  ) : (
+                    <span>Verify</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </>
     )
@@ -308,17 +340,25 @@ class BonusModal extends Component {
   renderCheckEmail() {
     return (
       <>
-        <h1 className="mb-2">Check Your Email</h1>
-        <p>Please click the link in the email we just sent you.</p>
-        <div className="mt-5">
+        <div className="mt-5 mb-3">
           <img src={EmailIcon} />
         </div>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={this.handleModalClose}
-        >
-          Done
-        </button>
+        <h1 className="mb-2">Please check your email</h1>
+        <p className="text-muted">
+          Click the link in the email we just sent you
+        </p>
+        <div className="actions">
+          <div className="row">
+            <div className="col text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={this.handleModalClose}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       </>
     )
   }

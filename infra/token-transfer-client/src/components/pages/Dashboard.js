@@ -72,16 +72,20 @@ const Dashboard = props => {
   }
   const { vestedTotal, unvestedTotal } = props.grantTotals
 
-  const balanceAvailable = vestedTotal
-    .minus(props.withdrawnAmount)
-    .minus(props.lockupTotals.locked)
-
   const isLocked =
     !props.config.unlockDate || moment.utc() < props.config.unlockDate
 
   const isEmployee = !!get(props.user, 'employee')
 
   const nextVest = getNextVest(props.grants, props.user)
+
+  // Calculate balances
+  const balanceAvailable = vestedTotal
+    .minus(props.withdrawnAmount)
+    .minus(props.lockupTotals.locked)
+  const nextVestBalanceAvailable = nextVest.amount.minus(
+    props.lockupTotals.locked
+  )
 
   const displayBonusCard =
     props.config.lockupsEnabled && nextVest && !isEmployee
@@ -93,7 +97,7 @@ const Dashboard = props => {
     <>
       {displayBonusModal && (
         <BonusModal
-          balance={balanceAvailable}
+          balance={isEarlyLockup ? nextVestBalanceAvailable : balanceAvailable}
           nextVest={nextVest}
           isEarlyLockup={isEarlyLockup}
           lockupBonusRate={

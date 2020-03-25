@@ -55,8 +55,8 @@ body {
 }
 
 h1 {
-  font-size: 30px;
-  font-weight: bold;
+  font-size: 28px;
+  font-family: 'Poppins';
   margin-bottom: 2.5rem;
 }
 
@@ -65,8 +65,12 @@ h2 {
   font-weight: bold;
 }
 
+small {
+  font-size: 70%;
+}
+
 .text-muted {
-  color: #8fa7b7 !important;
+  color: #345d7a !important;
 }
 
 a:not([href]):not([tabindex]):focus,
@@ -77,10 +81,6 @@ a:not([href]):not([tabindex]):hover {
 /*
  * Forms
  */
-
-form {
-  padding: 1rem 1rem 0 1rem;
-}
 
 label {
   margin-top: 20px;
@@ -107,25 +107,38 @@ input, select {
 }
 
 .form-control, .form-control:focus {
-  background-color: #e9f0f3;
+  background-color: #eff6f9;
   border: none;
   box-shadow: none;
 }
 
 .form-control-lg {
+  font-size: 1.125rem;
   height: calc(1.5em + 1.5rem + 2px);
 }
 
-.input-group {
-  border-radius: 10px;
-  margin: 0 auto;
-  background-color: #e9f0f3;
+.faux-input {
+  background-color: #eff6f9;
+  line-height: 1.8;
   border: none;
 }
 
+.input-group {
+  margin: 0 auto;
+  background-color: white;
+}
+
+.input-group > .form-control {
+  background-color: white;
+  border: 1px solid #bdcbd5;
+  border-right: 1px solid white;
+}
+
 .input-group-append {
-  padding: 12px;
+  padding: 10px;
   display: block;
+  border: 1px solid #bdcbd5;
+  border-radius: 0 10px 10px 0;
 }
 
 .input-group-fix .invalid-feedback {
