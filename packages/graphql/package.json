@@ -97,6 +97,6 @@
     "@babel/preset-react": "7.9.4",
     "@babel/runtime": "7.9.2",
     "debug": "4.1.1",
-    "webpack": "4.41.5"
+    "webpack": "4.42.1"
   }
 }
