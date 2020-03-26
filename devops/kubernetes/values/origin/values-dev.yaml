@@ -71,7 +71,7 @@ t3ClientImageTag: '39bdba5'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '39bdba5'
+t3ServerImageTag: '4893ccf'
 
 # origin-auth
 authImage: origin-auth
