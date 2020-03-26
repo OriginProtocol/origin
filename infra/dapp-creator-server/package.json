@@ -38,7 +38,7 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "express": "^4.17.1",
-    "ipfs-http-client": "^41.0.0",
+    "ipfs-http-client": "^42.0.0",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "raven": "^2.6.4",

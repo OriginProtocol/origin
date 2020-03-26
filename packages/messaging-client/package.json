@@ -13,7 +13,7 @@
   "dependencies": {
     "ajv": "^6.10.0",
     "bottleneck": "^2.19.1",
-    "crypto-js": "^3.1.9-1",
+    "crypto-js": "^4.0.0",
     "crypto-random-string": "^3.0.0",
     "debug": "^4.1.1",
     "eth-ecies": "^1.0.3",
@@ -53,6 +53,6 @@
     "debug": "4.1.1",
     "mocha": "7.0.1",
     "eslint": "6.8.0",
-    "prettier": "1.19.1"
+    "prettier": "2.0.2"
   }
 }

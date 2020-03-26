@@ -54,7 +54,7 @@
     "json-stable-stringify": "1.0.1",
     "mocha": "7.0.1",
     "nodemon": "2.0.2",
-    "prettier": "1.19.1"
+    "prettier": "2.0.2"
   },
   "prettier": {
     "semi": false,

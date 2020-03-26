@@ -51,7 +51,7 @@
     "passport-http-bearer": "^1.0.1",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.0",
     "qrcode": "^1.4.2",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
@@ -60,7 +60,7 @@
     "redux": "^4.0.2",
     "sequelize": "^5.9.4",
     "sequelize-cli": "^5.5.0",
-    "sinon": "^8.0.0",
+    "sinon": "^9.0.0",
     "superagent": "^5.1.0",
     "thirty-two": "^1.0.2",
     "web3": "1.0.0-beta.34"

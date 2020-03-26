@@ -20,12 +20,12 @@
     "envkey": "1.2.7",
     "ethereumjs-util": "6.2.0",
     "express": "4.17.1",
-    "express-prom-bundle": "5.1.5",
+    "express-prom-bundle": "6.0.0",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.18.1",
-    "prom-client": "11.5.3",
-    "redis": "2.8.0",
+    "prom-client": "12.0.0",
+    "redis": "3.0.2",
     "sequelize": "5.21.4",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
@@ -34,7 +34,7 @@
     "chalk": "3.0.0",
     "mocha": "7.0.1",
     "nodemon": "2.0.2",
-    "prettier": "1.19.1"
+    "prettier": "2.0.2"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",
