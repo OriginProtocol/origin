@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 import NavLink from '@/components/NavLink'
-import Logo from '@/assets/origin-logo.svg'
+// import Logo from '@/assets/origin-logo.svg'
 import Earn from '-!react-svg-loader!@/assets/earn-icon.svg'
 import Dashboard from '-!react-svg-loader!@/assets/dashboard-icon.svg'
 import History from '-!react-svg-loader!@/assets/history-icon.svg'
@@ -37,49 +37,49 @@ const Navigation = props => {
       >
         <div></div>
       </div>
-      <img src={Logo} className="brand my-3" />
+      {/*<img src={Logo} className="brand my-3" />*/}
       <div
-        className={`mt-4 ml-3 ${
+        className={`mt-5 ml-2 ${
           props.expandSidebar ? '' : 'd-none d-md-block'
         }`}
       >
         <ul className="navbar-nav">
-          <li className="nav-item mb-3">
+          <li className="nav-item mb-5">
             <NavLink to="/dashboard" exact className="nav-link text">
               <Dashboard className="icon" />
-              Dashboard
+              {props.expandSidebar && 'Dashboard'}
             </NavLink>
           </li>
-          <li className="nav-item mb-3">
+          <li className="nav-item mb-5">
             <NavLink to="/news" className="nav-link text">
               <News className="icon" />
-              News
+              {props.expandSidebar && 'News'}
             </NavLink>
           </li>
-          <li className="nav-item mb-3">
+          <li className="nav-item mb-5">
             <NavLink to="/lockup" className="nav-link text">
               <Earn
                 className="icon"
                 style={{ transform: 'rotate(-90deg)', marginTop: '-10px' }}
               />
-              Bonus Tokens
+              {props.expandSidebar && 'Bonus Tokens'}
             </NavLink>
           </li>
-          <li className="nav-item mb-3">
+          <li className="nav-item mb-5">
             <NavLink to="/withdrawal" className="nav-link text">
               <History className="icon" />
-              Withdrawal History
+              {props.expandSidebar && 'Withdrawal History'}
             </NavLink>
           </li>
-          <li className="nav-item mb-3">
+          <li className="nav-item mb-5">
             <NavLink to="/security" className="nav-link text">
               <Security className="icon" />
-              Security
+              {props.expandSidebar && 'Security'}
             </NavLink>
           </li>
         </ul>
         <ul className="navbar-nav small-links mt-4 d-md-none">
-          <li className="mt-4 mb-3">
+          <li className="mt-4 mb-5">
             <a href="mailto:investor-relations@originprotocol.com">
               Contact Support
             </a>

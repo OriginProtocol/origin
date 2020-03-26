@@ -37,12 +37,12 @@ body {
 
 @media (min-width: 768px) {
   #sidebar {
-    width: 280px
+    width: 70px
   }
 
   #main {
     padding: 70px;
-    width: calc(100% - 280px)
+    width: calc(100% - 70px)
   }
 
   .logged-in {
@@ -442,6 +442,21 @@ input, select {
   font-weight: bold;
 }
 
+/* Icoms
+ */
+
+.icon {
+  width:Gk
+}
+
+.icon-lg {
+  width: 40px;
+}
+
+.icon-xl {
+  width: 56px;
+}
+
 .icon-white > path {
   fill: #fff;
 }
@@ -481,4 +496,84 @@ input, select {
 
 .dropdown-toggle-buttons:hover {
   text-decoration: none;
+}
+
+/* Bonus visualisation
+ */
+
+.bonus-graph-wrapper {
+  position: relative;
+  border-bottom: 1px solid #98a7b4;
+  padding-left: 15px;
+  margin-top: 20px;
+}
+
+.bonus-graph-legend {
+  font-size: 10px;
+}
+
+.bonus-graph-amount {
+  position: absolute;
+  left: -25px;
+  top: -10px;
+  width: 50px;
+  height: 20px;
+  border-radius: 11px;
+  font-size: 11px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+}
+
+.bonus-graph-lock {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: -10px;
+  right: 20px;
+  border-radius: 11px;
+}
+
+.bonus-graph-blue {
+  position: relative;
+  background-color: rgba(0, 124, 255, 0.1);
+  border-top: 2px dashed #1a82ff;
+  padding: 25%;
+}
+
+.bonus-graph-blue .bonus-graph-amount, .bonus-graph-blue .bonus-graph-lock {
+  background-color: #1a82ff;
+}
+
+.bonus-graph-purple {
+  position: relative;
+  border-top: 2px dashed #6e3bea;
+  background-color: rgba(137, 0, 253, 0.1);
+  padding: 10%;
+}
+
+.bonus-graph-purple .bonus-graph-amount, .bonus-graph-purple .bonus-graph-lock {
+  background-color: #6e3bea;
+}
+
+.bonus-graph-label {
+  position: absolute;
+  font-size: 10px;
+}
+
+.bonus-graph-y-label {
+ transform: rotate(-90deg);
+ top: 50px;
+ left: -25px;
+}
+
+.bonus-graph-start-label {
+  left: 5px;
+  bottom: -20px;
+}
+
+.bonus-graph-end-label {
+  right: 20px;
+  bottom: -20px;
 }

@@ -261,7 +261,7 @@
 .pl-modal-content .actions {
   box-shadow: 0 -1px 0 0 #dbe6eb;
   background-color: #f7f9fb;
-  margin: 3rem -2rem -2rem -2rem;
+  margin: 1.5rem -2rem -2rem -2rem;
   padding: 1.5rem;
 }
 
@@ -275,6 +275,11 @@
   border-radius: 50%;
   text-shadow: none;
   line-height: 35px;
+}
+
+.large-header .close {
+  right: 2rem;
+  top: 2.5rem;
 }
 
 @media (max-width: 767.98px) {

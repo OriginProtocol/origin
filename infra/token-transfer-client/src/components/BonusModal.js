@@ -13,8 +13,15 @@ import {
 } from '@/reducers/lockup'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
+import BonusGraph from '@/components/BonusGraph'
+
 import EmailIcon from '@/assets/email-icon.svg'
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@2x.jpg'
+import OgnIcon from '@/assets/ogn-icon.svg'
+import YieldIcon from '@/assets/yield-icon.svg'
+import TokensIcon from '@/assets/tokens-icon.svg'
+import ClockIcon from '@/assets/clock-icon.svg'
+import CalendarIcon from '@/assets/calendar-icon.svg'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -56,7 +63,7 @@ class BonusModal extends Component {
       amountError: null,
       code: '',
       codeError: null,
-      modalState: 'Disclaimer'
+      modalState: 'Form'
     }
     return initialState
   }
@@ -108,7 +115,12 @@ class BonusModal extends Component {
 
   render() {
     return (
-      <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
+      <Modal
+        appendToId="main"
+        onClose={this.handleModalClose}
+        closeBtn={true}
+        className="large-header"
+      >
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
         {this.state.modalState === 'Form' && this.renderForm()}
         {this.state.modalState === 'TwoFactor' && this.renderTwoFactor()}
@@ -123,7 +135,7 @@ class BonusModal extends Component {
 
     return (
       <div className="text-left">
-        <h1 className="mb-2">{this.renderTitle()}</h1>
+        {this.renderTitle()}
         <hr />
         <form onSubmit={this.handleFormSubmit}>
           <div className="row">
@@ -168,7 +180,12 @@ class BonusModal extends Component {
               </div>
             </div>
 
-            <div className="col-5"></div>
+            <div className="col-5 py-2">
+              <BonusGraph
+                lockupAmount={this.state.amount}
+                bonusRate={this.props.lockupBonusRate}
+              />
+            </div>
           </div>
 
           <div className="actions">
@@ -209,47 +226,83 @@ class BonusModal extends Component {
   }
 
   renderTitle() {
-    const nextVestMonth = moment(this.props.nextVest.date).format('MMMM')
+    let titleText
     if (this.props.isEarlyLockup) {
-      return `Special offer for ${nextVestMonth} vesting`
+      titleText = `Special offer for ${moment(this.props.nextVest.date).format(
+        'MMMM'
+      )} vesting`
     } else {
-      return 'Earn Bonus Tokens'
+      titleText = 'Earn Bonus Tokens'
     }
+    return (
+      <div className="row">
+        <div className="col">
+          <h1 className="mb-2">
+            <img src={OgnIcon} className="mx-3 icon-xl" />
+            {titleText}
+          </h1>
+        </div>
+      </div>
+    )
   }
 
   renderDisclaimer() {
-    const nextVestMonth = moment(this.props.nextVest.date).format('MMMM')
     return (
       <div className="text-left">
-        <h1 className="mb-2">{this.renderTitle()}</h1>
+        {this.renderTitle()}
+
         <hr />
-        <div>
-          {this.props.isEarlyLockup ? (
-            <>
-              Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
-              immediately by locking up your {nextVestMonth} vest.
-            </>
-          ) : (
-            <>
-              Earn <strong>${this.props.lockupBonusRate}%</strong> bonus tokens
-              immediately by locking up your vested OGN tokens.`
-            </>
-          )}
+
+        <div className="row">
+          <div className="col">
+            <img src={YieldIcon} className="mx-3" />
+            {this.props.isEarlyLockup ? (
+              <>
+                Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
+                immediately by locking up your{' '}
+                {moment(this.props.nextVest.date).format('MMMM')} vest.
+              </>
+            ) : (
+              <>
+                Earn <strong>${this.props.lockupBonusRate}%</strong> bonus
+                tokens immediately by locking up your vested OGN tokens.`
+              </>
+            )}
+          </div>
         </div>
+
         <hr />
-        <div>
-          All tokens will be available for withdrawal after{' '}
-          <strong>1 year</strong>
+
+        <div className="row my-4">
+          <div className="col">
+            <img src={CalendarIcon} className="mx-3 icon-lg" />
+            All tokens will be available for withdrawal after{' '}
+            <strong>1 year</strong>
+          </div>
         </div>
+
         <hr />
-        <div>
-          <strong>{Number(this.props.nextVest.amount).toLocaleString()}</strong>{' '}
-          OGN are scheduled to vest in {nextVestMonth}
+
+        <div className="row my-4">
+          <div className="col">
+            <img src={TokensIcon} className="mx-3 icon-lg" />
+            <strong>
+              {Number(this.props.nextVest.amount).toLocaleString()}
+            </strong>{' '}
+            OGN are scheduled to vest in{' '}
+            {moment(this.props.nextVest.date).format('MMMM')}
+          </div>
         </div>
+
         <hr />
-        <div>
-          This offer expires in <strong>30d 23h 12m</strong>
+
+        <div className="row my-4">
+          <div className="col">
+            <img src={ClockIcon} className="mx-3 icon-lg" />
+            This offer expires in <strong>30d 23h 12m</strong>
+          </div>
         </div>
+
         <div className="actions">
           <div className="row">
             <div className="col-7 align-self-center">
