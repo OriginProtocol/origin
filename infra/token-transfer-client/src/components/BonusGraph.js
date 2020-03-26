@@ -40,9 +40,7 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
         </div>
 
         <div className="bonus-graph-purple">
-          <div className="bonus-graph-amount">
-            {formatToken(bonusAmount)}
-          </div>
+          <div className="bonus-graph-amount">{formatToken(bonusAmount)}</div>
           <div className="bonus-graph-lock"></div>
         </div>
 

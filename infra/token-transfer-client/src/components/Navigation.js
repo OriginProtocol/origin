@@ -10,6 +10,7 @@ import Dashboard from '-!react-svg-loader!@/assets/dashboard-icon.svg'
 import History from '-!react-svg-loader!@/assets/history-icon.svg'
 import News from '-!react-svg-loader!@/assets/news-icon.svg'
 import Security from '-!react-svg-loader!@/assets/security-icon.svg'
+import OLogo from '-!react-svg-loader!@/assets/0-rigin-logo.svg'
 
 const Navigation = props => {
   const [redirectTo, setRedirectTo] = useState(null)
@@ -29,6 +30,9 @@ const Navigation = props => {
       className="navbar"
       style={{ height: props.expandSidebar ? '100vh' : '' }}
     >
+      <div className="nav-logo text-center">
+        <OLogo />
+      </div>
       <div
         className={`nav-icon d-md-none ${
           props.expandSidebar ? 'nav-icon-open' : ''
