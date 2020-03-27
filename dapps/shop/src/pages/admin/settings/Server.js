@@ -115,6 +115,17 @@ const AdminSettings = () => {
         e.preventDefault()
         const { valid, newState } = validate(state)
         setState(newState)
+
+        const cfgOk = await new Promise(resolve => {
+          fetch(`${state.dataUrl}config.json`)
+            .then(res => resolve(res.ok ? true : false))
+            .catch(() => resolve(false))
+        })
+        if (!cfgOk) {
+          setState({ dataUrlError: 'Could not fetch config.json' })
+          return
+        }
+
         if (valid) {
           const headers = new Headers({
             authorization: `bearer ${config.backendAuthToken}`,

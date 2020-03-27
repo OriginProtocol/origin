@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import get from 'lodash/get'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
+import { Countries } from 'data/Countries'
 
 import Link from 'components/Link'
 import ShippingForm from './_ShippingForm'
@@ -30,6 +32,10 @@ function validate(state) {
   if (!state.city) {
     newState.cityError = 'Enter a city'
   }
+  const provinces = get(Countries, `${state.country}.provinces`, {})
+  if (!state.province && Object.keys(provinces).length) {
+    newState.provinceError = 'Enter a state / province'
+  }
   if (!state.zip) {
     newState.zipError = 'Enter a ZIP / postal code'
   }
@@ -44,7 +50,7 @@ const CheckoutInfo = () => {
   const history = useHistory()
   const [{ cart }, dispatch] = useStateValue()
   const [state, setStateRaw] = useState(
-    cart.userInfo || { country: 'United States', province: 'Alabama' }
+    cart.userInfo || { country: 'United States' }
   )
   const setState = newState => setStateRaw({ ...state, ...newState })
 

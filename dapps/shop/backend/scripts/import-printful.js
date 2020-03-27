@@ -8,10 +8,8 @@ const sharp = require('sharp')
 
 const getProducts = require('./printful/getProducts')
 const getProduct = require('./printful/getProduct')
-const getVariant = require('./printful/getVariant')
 const getMockups = require('./printful/getMockups')
 const downloadProductData = require('./printful/downloadProductData')
-const downloadVariantData = require('./printful/downloadVariantData')
 const downloadPrintfulMockups = require('./printful/downloadPrintfulMockups')
 const resizePrintfulMockups = require('./printful/resizePrintfulMockups')
 const getProductIds = require('./printful/getProductIds')
@@ -128,7 +126,6 @@ async function matchPrintfulToExisting({ OutputDir }) {
 
 async function start() {
   // await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-  // await downloadVariantData({ OutputDir, PrintfulURL, apiAuth })
   await writeProductData({ OutputDir })
   // await downloadPrintfulMockups({ OutputDir })
   // await resizePrintfulMockups({ OutputDir })

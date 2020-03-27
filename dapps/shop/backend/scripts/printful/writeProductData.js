@@ -1,32 +1,29 @@
 const fs = require('fs')
-
-function getVariant({ OutputDir, id }) {
-  const variantRaw = fs.readFileSync(
-    `${OutputDir}/data-printful/variant-${id}.json`
-  )
-  return JSON.parse(variantRaw)
-}
+const sortBy = require('lodash/sortBy')
 
 async function writeProductData({ OutputDir }) {
   const productsRaw = fs.readFileSync(`${OutputDir}/printful-products.json`)
-  const products = JSON.parse(productsRaw)
-  const productsOut = []
+  const products = JSON.parse(productsRaw).reverse()
+  let productsOut = []
   const downloadImages = []
   const allImages = {}
+
   for (const row of products) {
+    const syncProductRaw = fs.readFileSync(
+      `${OutputDir}/data-printful/sync-product-${row.id}.json`
+    )
+    const syncProduct = JSON.parse(syncProductRaw)
+    const productId = syncProduct.sync_variants[0].product.product_id
+
     const productRaw = fs.readFileSync(
-      `${OutputDir}/data-printful/product-${row.id}.json`
+      `${OutputDir}/data-printful/product-${productId}.json`
     )
     const product = JSON.parse(productRaw)
-    const firstVariantId = product.sync_variants[0].product.variant_id
-    const variantRaw = fs.readFileSync(
-      `${OutputDir}/data-printful/variant-${firstVariantId}.json`
-    )
-    const variant = JSON.parse(variantRaw)
 
-    let handle = product.sync_product.name
+    let handle = syncProduct.sync_product.name
       .toLowerCase()
-      .replace(/[^0-9a-z]/g, '-')
+      .replace(/[^0-9a-z -]/g, '')
+      .replace(/ +/g, '-')
       .replace(/^-+/, '')
       .replace(/--+/g, '-')
     const origHandle = handle
@@ -39,27 +36,30 @@ async function writeProductData({ OutputDir }) {
       sizes = [],
       images = [],
       variantImages = {}
-    product.sync_variants.forEach((variant, idx) => {
-      const v = getVariant({ OutputDir, id: variant.product.variant_id })
-      const color = v.variant.color
-      const size = v.variant.size
+    syncProduct.sync_variants.forEach((syncVariant, idx) => {
+      const vId = syncVariant.product.variant_id
+      const v = product.variants.find(v => v.id === vId)
+      const color = v.color
+      const size = v.size
       if (color && colors.indexOf(color) < 0) {
         colors.push(color)
       }
       if (size && sizes.indexOf(size) < 0) {
         sizes.push(size)
       }
-      const img = variant.files.find(f => f.type === 'preview')
-      if (allImages[img.preview_url] === undefined) {
-        downloadImages.push({
-          id: `${handle}`,
-          file: `img-${images.length}.png`,
-          url: img.preview_url
-        })
-        allImages[img.preview_url] = `img-${images.length}.png`
-        images.push(`img-${images.length}.png`)
+      const img = syncVariant.files.find(f => f.type === 'preview')
+      if (img) {
+        if (allImages[img.preview_url] === undefined) {
+          downloadImages.push({
+            id: `${handle}`,
+            file: `img-${images.length}.png`,
+            url: img.preview_url
+          })
+          allImages[img.preview_url] = `img-${images.length}.png`
+          images.push(`img-${images.length}.png`)
+        }
+        variantImages[idx] = allImages[img.preview_url]
       }
-      variantImages[idx] = allImages[img.preview_url]
     })
 
     const options = []
@@ -70,17 +70,18 @@ async function writeProductData({ OutputDir }) {
       options.push('Size')
     }
 
-    const variants = product.sync_variants.map((variant, idx) => {
-      const v = getVariant({ OutputDir, id: variant.product.variant_id })
+    const variants = syncProduct.sync_variants.map((variant, idx) => {
+      const id = variant.product.variant_id
+      const v = product.variants.find(v => v.id === id)
       const options = []
       if (colors.length > 1) {
-        options.push(v.variant.color)
+        options.push(v.color)
       }
       if (sizes.length > 1) {
-        options.push(v.variant.size)
+        options.push(v.size)
       }
       return {
-        id: idx,
+        id,
         title: variant.name,
         option1: options[0] || null,
         option2: options[1] || null,
@@ -95,9 +96,9 @@ async function writeProductData({ OutputDir }) {
 
     const out = {
       id: handle,
-      title: product.sync_product.name,
-      description: variant.product.description.replace(/\r\n/g, '<br/>'),
-      price: Number(product.sync_variants[0].retail_price.replace('.', '')),
+      title: syncProduct.sync_product.name,
+      description: product.product.description.replace(/\r\n/g, '<br/>'),
+      price: Number(syncProduct.sync_variants[0].retail_price.replace('.', '')),
       available: true,
       options,
       images: images.map((img, idx) => `img-${idx}.png`),
@@ -118,25 +119,67 @@ async function writeProductData({ OutputDir }) {
       JSON.stringify(out, null, 2)
     )
   }
-  if (!fs.existsSync(`${OutputDir}/data/products.json`)) {
-    fs.writeFileSync(
-      `${OutputDir}/data/products.json`,
-      JSON.stringify(productsOut, null, 2)
+
+  // Keep original products.json order
+  try {
+    const existingProductsRaw = fs.readFileSync(
+      `${OutputDir}/data/products.json`
     )
+    const existingProductIds = JSON.parse(existingProductsRaw).map(p => p.id)
+
+    if (existingProductIds.length) {
+      productsOut = sortBy(productsOut, p => {
+        const idx = existingProductIds.indexOf(p.id)
+        return idx < 0 ? Infinity : idx
+      })
+    }
+  } catch (e) {
+    /* Ignore */
   }
-  if (!fs.existsSync(`${OutputDir}/data/collections.json`)) {
-    const collections = [
+
+  fs.writeFileSync(
+    `${OutputDir}/data/products.json`,
+    JSON.stringify(productsOut, null, 2)
+  )
+
+  let collections = []
+  const collectionsPath = `${OutputDir}/data/collections.json`
+  try {
+    const existingCollections = JSON.parse(fs.readFileSync(collectionsPath))
+    const productIds = productsOut.map(p => p.id)
+    let productsInCollection = []
+    collections = existingCollections.map(c => {
+      const products = c.products.filter(p => productIds.indexOf(p) >= 0)
+      productsInCollection = [...productsInCollection, ...c.products]
+      return { ...c, products }
+    })
+    if (productsInCollection.length) {
+      const newProductIds = productIds.filter(
+        p => productsInCollection.indexOf(p) < 0
+      )
+      const other = collections.find(c => c.id === 'other')
+      if (other) {
+        other.products = [...other.products, ...newProductIds]
+      } else if (newProductIds.length) {
+        collections.push({
+          id: 'other',
+          title: 'Other',
+          products: newProductIds
+        })
+      }
+    }
+  } catch (e) {
+    collections = [
       {
         id: 'all',
         title: 'All',
         products: productsOut.map(p => p.id)
       }
     ]
-    fs.writeFileSync(
-      `${OutputDir}/data/collections.json`,
-      JSON.stringify(collections, null, 2)
-    )
   }
+
+  fs.writeFileSync(collectionsPath, JSON.stringify(collections, null, 2))
+
   fs.writeFileSync(
     `${OutputDir}/printful-images.json`,
     JSON.stringify(downloadImages, null, 4)

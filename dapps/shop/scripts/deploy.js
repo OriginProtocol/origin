@@ -91,6 +91,8 @@ async function go() {
   })
 
   await prime(`https://gateway.pinata.cloud/ipfs/${hash}`)
+  await prime(`https://gateway.ipfs.io/ipfs/${hash}`)
+  await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`)
 
   await new Promise((resolve, reject) => {
     exec(`rm -rf public/${dataDir}`, (error, stdout) => {
