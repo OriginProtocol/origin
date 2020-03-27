@@ -41,7 +41,7 @@ const NewsHeadlinesCard = props => {
   }
 
   return (
-    <BorderedCard shadowed={true} onClick={onCardClick}>
+    <BorderedCard onClick={onCardClick}>
       <div className="row">
         <div className="col">
           <h2>News</h2>

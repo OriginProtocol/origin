@@ -97,7 +97,7 @@ class WithdrawalDetail extends Component {
           )}
         <div className="row">
           <div className="col-12 col-xl-6 mt-3">
-            <BorderedCard shadowed={true}>
+            <BorderedCard>
               <div className="row mb-3">
                 <div className="col">
                   <strong>Amount</strong>

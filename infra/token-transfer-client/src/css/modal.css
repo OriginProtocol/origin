@@ -254,15 +254,15 @@
   font-weight: normal;
 }
 
-.pl-modal-content .actions .btn {
-  margin: 0;
-}
-
 .pl-modal-content .actions {
-  box-shadow: 0 -1px 0 0 #dbe6eb;
-  background-color: #f7f9fb;
+  box-shadow: 0 -1px 0 0 var(--border-accent);
+  background-color: var(--highlight);
   margin: 2rem -2rem -2rem -2rem;
   padding: 1.5rem;
+}
+
+.pl-modal-content .actions .btn {
+  margin: 0;
 }
 
 .close {
@@ -271,7 +271,7 @@
   top: 1rem;
   width: 36px;
   height: 36px;
-  background-color: #dbe6eb;
+  background-color: var(--border-accent);
   border-radius: 50%;
   text-shadow: none;
   line-height: 35px;

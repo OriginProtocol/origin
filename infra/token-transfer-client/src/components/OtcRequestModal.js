@@ -110,7 +110,7 @@ class OtcRequestModal extends Component {
               <label
                 className={`btn btn-lg ${
                   this.state.action === 'Buy'
-                    ? 'btn-secondary'
+                    ? 'btn-primary'
                     : 'btn-outline-secondary'
                 }`}
               >
@@ -123,7 +123,7 @@ class OtcRequestModal extends Component {
               <label
                 className={`btn btn-lg ${
                   this.state.action === 'Sell'
-                    ? 'btn-secondary'
+                    ? 'btn-primary'
                     : 'btn-outline-secondary'
                 }`}
               >

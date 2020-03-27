@@ -66,7 +66,7 @@ const SessionTable = props => {
                         {moment(event.createdAt).diff(moment(), 'minutes') >
                         -30 ? (
                           <>
-                            <div className="status-circle status-circle-success mr-2"></div>
+                            <div className="status-circle bg-green mr-2"></div>
                             Active
                           </>
                         ) : (

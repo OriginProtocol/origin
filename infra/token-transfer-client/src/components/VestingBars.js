@@ -118,7 +118,7 @@ const VestingBars = props => {
               onClick={event => handleTogglePopover(event, grant.id)}
             >
               <div
-                className="progress-bar bg-success"
+                className="progress-bar bg-green"
                 role="progressbar"
                 style={{ width: `${complete}%`, zIndex: 10 }}
               />
@@ -183,7 +183,7 @@ const VestingBars = props => {
         style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}
       >
         <div className="col">
-          <div className="status-circle status-circle-success mr-2"></div>
+          <div className="status-circle bg-green mr-2"></div>
           {Number(props.vested).toLocaleString()} OGN{' '}
           <span className=" text-muted">vested</span>
         </div>

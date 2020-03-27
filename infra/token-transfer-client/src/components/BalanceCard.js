@@ -30,7 +30,7 @@ const BalanceCard = props => {
   if (props.isLocked) {
     const now = moment.utc()
     return (
-      <BorderedCard shadowed={true}>
+      <BorderedCard>
         <div className="row">
           {moment.isMoment(props.unlockDate) ? (
             <>
@@ -61,7 +61,7 @@ const BalanceCard = props => {
   }
 
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row header mb-3">
         <div className="col">
           <h2>My Vested Tokens</h2>
@@ -85,7 +85,7 @@ const BalanceCard = props => {
         <div className="col" style={{ alignSelf: 'center' }}>
           <div className="row mb-2" style={{ fontSize: '24px' }}>
             <div className="col">
-              <div className="status-circle status-circle-success mr-3"></div>
+              <div className="status-circle bg-green mr-3"></div>
               Available
             </div>
             <div className="col-6 text-right">
@@ -118,7 +118,7 @@ const BalanceCard = props => {
           {props.lockupsEnabled && (
             <div className="row" style={{ fontSize: '24px' }}>
               <div className="col">
-                <div className="status-circle status-circle-info mr-3"></div>
+                <div className="status-circle bg-blue mr-3"></div>
                 Locked Tokens
               </div>
               <div className="col-6 text-right">

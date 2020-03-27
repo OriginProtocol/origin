@@ -8,8 +8,9 @@ const WithdrawalSummaryCard = props => {
   const total = Number(props.vested)
   const withdrawnPercent = (Number(props.withdrawnAmount) / total) * 100
   const remainingPercent = 100 - withdrawnPercent
+
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row mb-2">
         <div className="col">
           <h2>Withdrawals</h2>
@@ -27,8 +28,7 @@ const WithdrawalSummaryCard = props => {
       </div>
       <div className="row mb-2">
         <div className="col">
-          <div className="status-circle status-circle-error mr-2"></div>Total
-          Withdrawn
+          <div className="status-circle bg-red mr-2"></div>Total Withdrawn
         </div>
         <div className="col text-right">
           <strong>{Number(props.withdrawnAmount).toLocaleString()} </strong>
@@ -37,8 +37,7 @@ const WithdrawalSummaryCard = props => {
       </div>
       <div className="row mb-2">
         <div className="col">
-          <div className="status-circle status-circle-success mr-2"></div>Total
-          Remaining
+          <div className="status-circle bg-green mr-2"></div>Total Remaining
         </div>
         <div className="col text-right">
           <strong>
@@ -49,7 +48,7 @@ const WithdrawalSummaryCard = props => {
       </div>
       <div className="progress mt-4" style={{ height: '5px' }}>
         <div
-          className="progress-bar bg-success"
+          className="progress-bar bg-green"
           role="progressbar"
           style={{ width: `${remainingPercent}%` }}
         ></div>

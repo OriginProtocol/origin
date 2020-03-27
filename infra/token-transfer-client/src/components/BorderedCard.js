@@ -1,10 +1,8 @@
 import React from 'react'
 
-const BorderedCard = ({ children, shadowed, blue = false, ...rest }) => (
+const BorderedCard = ({ children, className, blue = false, ...rest }) => (
   <div
-    className={`card-wrapper ${shadowed ? 'shadowed' : 'bordered'} ${
-      blue ? 'blue' : ''
-    }`}
+    className={`card-wrapper bordered ${blue ? 'blue' : ''} ${className}`}
     {...rest}
   >
     {children}

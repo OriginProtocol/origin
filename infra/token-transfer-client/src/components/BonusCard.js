@@ -26,7 +26,7 @@ const BonusCard = ({
 
   if (isLocked) {
     return (
-      <BorderedCard shadowed={true}>
+      <BorderedCard>
         <div className="text-center">
           <OgnTokens />
           <h1 className="mt-3 mb-1">Coming Soon</h1>
@@ -40,7 +40,7 @@ const BonusCard = ({
   }
 
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row mb-2">
         <div className="col">
           <h2>Bonus Tokens</h2>

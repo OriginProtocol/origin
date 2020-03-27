@@ -9,7 +9,7 @@ const LockupCard = ({ lockup }) => {
   const now = moment.utc()
 
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div
         className="row text-center text-lg-left"
         style={{ alignItems: 'center' }}
@@ -33,7 +33,7 @@ const LockupCard = ({ lockup }) => {
         </div>
         <div className="col-12 col-lg mb-3 mx-auto">
           <div
-            className="status-circle status-circle-info"
+            className="status-circle bg-blue"
             style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
           ></div>{' '}
           Lockup Amount

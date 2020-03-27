@@ -30,7 +30,7 @@ const OtpExplain = () => {
         app installed.
       </p>
       <button
-        className="btn btn-secondary btn-lg mt-5"
+        className="btn btn-primary btn-lg mt-5"
         onClick={() => setRedirectTo('/otp/setup')}
       >
         <span>Continue</span>

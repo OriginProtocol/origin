@@ -45,7 +45,7 @@ const BonusCta = ({
   }
 
   return (
-    <BorderedCard shadowed={true} blue={true}>
+    <BorderedCard blue={true}>
       {fullWidth ? renderFullWidth() : renderStandardWidth()}
     </BorderedCard>
   )

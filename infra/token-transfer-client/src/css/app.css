@@ -1,9 +1,34 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~typeface-lato';
 @import '~typeface-poppins';
-@import 'bootstrap.css';
 @import 'navbar.css';
 @import 'modal.css';
+
+:root {
+  --bg-color: #f7fbfd;
+  --sidebar-bg-color: #ffffff;
+  --card-bg-color: #ffffff;
+  --highlight: #eff6f9;
+  --accent: #e9f0f3;
+  --border-accent: #dbe6eb;
+  --dark-border-accent: #bdcbd5;
+  --muted-text: #638298;
+  --secondary-text: #8fa7b7;
+  --text: #212529;
+  --blue: #007cff;
+  --green: #00db8d;
+  --purple: #6e3bea;
+  --red: #ff0000;
+  --orange: #ffc000;
+}
+
+[data-theme="dark"] {
+  --bg-color: #244159;
+  --card-bg-color: #244159;
+  --sidebar-bg-color: #19364f;
+  --border-accent: #061d2a;
+  --text: white;
+}
 
 html {
   font-size: 16px;
@@ -15,43 +40,8 @@ body {
   font-size: 1.125rem;
   line-height: 1.5;
   background-color: white;
-  font-family: 'Lato'
-}
-
-#main {
-  padding: 20px;
-  width: 100%;
-}
-
-.logged-in {
-  background-color: #f7fbfd;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.not-logged-in {
-  min-height: 100vh;
-  padding-bottom: 50px;
-}
-
-@media (min-width: 768px) {
-  #sidebar {
-    width: 70px
-  }
-
-  #main {
-    padding: 40px;
-    width: calc(100% - 70px)
-  }
-
-  .logged-in {
-    flex-direction: row;
-  }
-
-  .not-logged-in {
-    background-color: #007cff;
-  }
+  font-family: 'Lato';
+  color: var(--text);
 }
 
 h1 {
@@ -69,8 +59,43 @@ small {
   font-size: 70%;
 }
 
+#main {
+  padding: 30px;
+  width: 100%;
+}
+
+.logged-in, .not-logged-in {
+  min-height: 100vh;
+}
+
+.logged-in {
+  background-color: var(--bg-color);
+  flex-direction: column;
+}
+
+.not-logged-in {
+  padding-bottom: 50px;
+  background-color: var(--blue);
+}
+
+/* Modifications for desktop
+ */
+@media (min-width: 768px) {
+  #sidebar {
+    width: 70px
+  }
+
+  #main {
+    width: calc(100% - 70px)
+  }
+
+  .logged-in {
+    flex-direction: row;
+  }
+}
+
 .text-muted {
-  color: #345d7a !important;
+  color: var(--muted-text) !important;
 }
 
 a:not([href]):not([tabindex]):focus,
@@ -93,7 +118,7 @@ input, select {
 }
 
 .custom-select {
-  background-color: #e9f0f3;
+  background-color: var(--accent);
   border: none;
   box-shadow: none;
 }
@@ -107,8 +132,6 @@ input, select {
 }
 
 .form-control, .form-control:focus {
-  background-color: #eff6f9;
-  border: none;
   box-shadow: none;
 }
 
@@ -118,7 +141,7 @@ input, select {
 }
 
 .faux-input {
-  background-color: #eff6f9;
+  background-color: var(--highlight);
   line-height: 1.8;
   border: none;
 }
@@ -130,14 +153,14 @@ input, select {
 
 .input-group > .form-control {
   background-color: white;
-  border: 1px solid #bdcbd5;
-  border-right: 1px solid white;
+  border: 1px solid var(--border-accent);
+  border-right: 1px solid var(--card-bg-color);
 }
 
 .input-group-append {
   padding: 10px;
   display: block;
-  border: 1px solid #bdcbd5;
+  border: 1px solid var(--border-accent);
   border-radius: 0 10px 10px 0;
 }
 
@@ -150,7 +173,7 @@ input, select {
  */
 
 .spinner-grow {
-  color: #8fa7b7
+  color: var(--secondary-text);
 }
 
 .spinner-grow-sm {
@@ -166,14 +189,14 @@ input, select {
  */
 
 .card-wrapper {
-  background-color: white;
+  background-color: var(--card-bg-color);
   padding: 30px;
   border-radius: 10px;
   font-size: 14px;
 }
 
 .card-wrapper.blue {
-  background-color: #007cff;
+  background-color: var(--blue);
   color: white;
   background-image: url(/tokens.svg);
   background-position-y: bottom;
@@ -181,12 +204,8 @@ input, select {
   background-repeat: no-repeat;
 }
 
-.shadowed {
-  box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1)
-}
-
-.bordered {
-  border: 1px solid #dbe6eb
+.card-wrapper.bordered {
+  border: 1px solid var(--border-accent);
 }
 
 .card-wrapper .header .link {
@@ -236,6 +255,10 @@ input, select {
   color: white;
 }
 
+.table {
+  color: var(--text);
+}
+
 .table-card .table thead th {
   border-bottom: none;
 }
@@ -261,7 +284,7 @@ input, select {
 }
 
 ::-webkit-scrollbar-thumb  {
-  background-color: #bdcbd5;
+  background-color: var(--dark-grey-accent)
 }
 
 /*
@@ -271,15 +294,14 @@ input, select {
 .table {
   font-size: 14px;
   padding-top: 20px;
-  border-bottom: 1px solid #dbe6eb;
+  border-bottom: 1px solid var(--border-accent);
 }
 
 
 .table thead th {
   font-weight: normal;
-  color: #638298;
   border-top: 0;
-  border-bottom: 1px solid #dbe6eb !important;
+  border-bottom: 1px solid var(--border-accent) !important;
 }
 
 .table td {
@@ -299,9 +321,9 @@ input, select {
   cursor: pointer;
 }
 
-.table-empty-cell {
+.empty, .table-empty-cell {
   text-align: center;
-  color: #8fa7b7;
+  color: var(--secondary-text);
   padding: 2rem 0 !important;
 }
 
@@ -311,57 +333,16 @@ input, select {
 
 .status-circle {
   display: inline-block;
+  background-color: var(--accent);
+  border: 1px solid var(--dark-border-accent);
+  vertical-align: middle;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: #bdcbd5;
-  vertical-align: middle;
-}
-
-.status-circle-warning {
-  background-color: #ffc000;
-}
-
-.status-circle-success {
-}
-
-.status-circle-info {
-  background-color: #007cff !important;
-}
-
-.empty {
-  text-align: center;
-  color: #8fa7b7;
-  padding: 5rem 0;
-}
-
-/*
- * Status circle indicators
- */
-
-.status-circle {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #bdcbd5;
-  vertical-align: middle;
-}
-
-.status-circle-warning {
-  background-color: #ffc000;
-}
-
-.status-circle-success {
-  background-color: #00db8d;
-}
-
-.status-circle-error {
-  background-color: #ff0000;
 }
 
 .status-circle-secondary {
-  background-color: #8900fd;
+  background-color: var(--dark-border-accent);
 }
 
 .alert-danger {
@@ -370,7 +351,7 @@ input, select {
 
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
-  border: 1px solid #ffcc00;
+  border: 1px solid var(--orange) !important;
   color: black;
 }
 
@@ -414,18 +395,18 @@ input, select {
 }
 
 .terms-wrapper {
+  background-color: var(--accent);
   border-radius: 10px;
   height: 300px;
-  overflow-y: scroll;
-  background-color: #e9f0f3;
-  font-size: 14px;
   padding: 20px;
-  text-align: left;
   margin: 40px 0;
+  font-size: 14px;
+  overflow-y: scroll;
+  text-align: left;
 }
 
 .ogn {
-  color: #007cff;
+  color: var(--secondary-text);
   font-weight: bold;
 }
 
@@ -453,7 +434,7 @@ input, select {
 }
 
 .dropdown-menu .icon > path {
-  fill: #007cff;
+  fill: var(--blue);
 }
 
 .btn-outline-dark .icon > path {
@@ -484,6 +465,14 @@ input, select {
   font-size: 0.6rem;
 }
 
+/* Progress bars
+ */
+.progress {
+  border-radius: 10px;
+  background-color: var(--accent);
+  border: 1px solid var(--dark-border-accent);
+}
+
 /* Misc
  */
 
@@ -494,13 +483,25 @@ input, select {
 }
 
 .bluebox {
-  border-color: #dbe6eb;
-  background-color: #eff6f9;
-  color: #007cff;
+  border-color: var(--border-accent);
+  background-color: var(--blue);
+  color: var(--blue);
   font-size: 40px;
   font-weight: 500;
   border-radius: 8px;
   font-family: 'Poppins';
+}
+
+.bg-blue {
+  background-color: var(--blue);
+}
+
+.bg-red {
+  background-color: var(--red);
+}
+
+.bg-green {
+  background-color: var(--green) !important;
 }
 
 .dropdown-toggle-buttons:hover {
@@ -512,7 +513,7 @@ input, select {
 
 .bonus-graph-wrapper {
   position: relative;
-  border-bottom: 1px solid #98a7b4;
+  border-bottom: 1px solid var(--dark-border-accent);
   padding-left: 15px;
   margin-top: 20px;
   min-width: 240px;
@@ -532,11 +533,11 @@ input, select {
 }
 
 .bonus-graph-legend-blue {
-  background-color: #1a82ff;
+  background-color: var(--blue);
 }
 
 .bonus-graph-legend-purple {
-  background-color: #6e3bea;
+  background-color: var(--purple);
 }
 
 .bonus-graph-amount {
@@ -565,23 +566,23 @@ input, select {
 .bonus-graph-blue {
   position: relative;
   background-color: rgba(0, 124, 255, 0.1);
-  border-top: 2px dashed #1a82ff;
+  border-top: 2px dashed var(--blue);
   padding: 25%;
 }
 
 .bonus-graph-blue .bonus-graph-amount, .bonus-graph-blue .bonus-graph-lock {
-  background-color: #1a82ff;
+  background-color: var(--blue);
 }
 
 .bonus-graph-purple {
   position: relative;
-  border-top: 2px dashed #6e3bea;
+  border-top: 2px dashed var(--purple);
   background-color: rgba(137, 0, 253, 0.1);
   padding: 10%;
 }
 
 .bonus-graph-purple .bonus-graph-amount, .bonus-graph-purple .bonus-graph-lock {
-  background-color: #6e3bea;
+  background-color: var(--purple);
 }
 
 .bonus-graph-label {

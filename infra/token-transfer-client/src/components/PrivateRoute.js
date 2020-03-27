@@ -44,7 +44,7 @@ const PrivateRoute = ({
         {...rest}
         render={props => {
           return (
-            <div className="logged-in">
+            <div className="logged-in d-flex">
               {isLoading || !user ? (
                 <div id="main" style={{ width: '100%' }}>
                   <div className="spinner-grow" role="status">

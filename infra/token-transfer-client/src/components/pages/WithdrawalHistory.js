@@ -131,7 +131,7 @@ const WithdrawalHistory = props => {
                             </>
                           ) : (
                             <>
-                              <div className="status-circle status-circle-warning mr-2"></div>
+                              <div className="status-circle bg-orange mr-2"></div>
                               Email Confirmation
                             </>
                           ))}
@@ -141,25 +141,25 @@ const WithdrawalHistory = props => {
                           enums.TransferStatuses.Processing
                         ].includes(transfer.status) && (
                           <>
-                            <div className="status-circle status-circle-warning mr-2"></div>
+                            <div className="status-circle bg-orange mr-2"></div>
                             Processing
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Paused && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Paused
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Success && (
                           <>
-                            <div className="status-circle status-circle-success mr-2"></div>
+                            <div className="status-circle bg-green mr-2"></div>
                             Confirmed
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Failed && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Failed
                           </>
                         )}

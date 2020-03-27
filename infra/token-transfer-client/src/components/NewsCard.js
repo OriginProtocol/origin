@@ -1,10 +1,9 @@
 import React from 'react'
 
+import BorderedCard from './BorderedCard'
+
 const NewsCard = props => (
-  <div
-    className="mb-5 bordered"
-    style={{ backgroundColor: 'white', borderRadius: '10px' }}
-  >
+  <BorderedCard className="p-0 my-3 mx-2">
     {props.feature && (
       <div className="p-4">
         <strong style={{ fontSize: '40px' }}>{props.title}</strong>
@@ -34,7 +33,7 @@ const NewsCard = props => (
         Read More
       </a>
     </div>
-  </div>
+  </BorderedCard>
 )
 
 export default NewsCard

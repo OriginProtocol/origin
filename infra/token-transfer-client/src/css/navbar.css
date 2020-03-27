@@ -1,9 +1,9 @@
 .navbar {
   align-items: unset;
   justify-content: start;
-  background-color: white;
-  box-shadow: 1px 0 1px 0 #dbe6eb;
-  font-family: lato;
+  background-color: var(--sidebar-bg-color);
+  box-shadow: 1px 0 1px 0 var(--border-accent);
+  font-family: "Lato, Sans-Serif";
   -ms-flex-direction: column;
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
@@ -11,7 +11,7 @@
 }
 
 .navbar .nav-logo {
-  background: #007cff;
+  background: var(--blue);
   margin: -0.5rem -1rem;
   padding: 1rem;
 }
@@ -31,7 +31,7 @@
 .navbar .nav-icon:after,
 .navbar .nav-icon:before,
 .navbar .nav-icon div {
-  background-color: #007cff;
+  background-color: var(--blue);
   border-radius: 3px;
   content: '';
   display: block;
@@ -74,12 +74,12 @@
 
 .navbar .nav-item a.nav-link .icon > path {
   transform: scale(0.8);
-  fill: #8fa7b7;
+  fill: var(--secondary-text);
   fill-opacity: 1;
 }
 
 .navbar .nav-item a.nav-link.active .icon > path {
-  fill: #061d2a;
+  fill: var(--text);
   fill-opacity: 1;
 }
 

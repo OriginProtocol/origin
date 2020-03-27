@@ -4,7 +4,7 @@ import BorderedCard from '@/components/BorderedCard'
 
 const WithdrawalHistoryCard = props => {
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row">
         <div className="col mb-2" style={{ fontSize: '18px' }}>
           Available Balance{' '}

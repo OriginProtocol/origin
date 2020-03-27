@@ -22,7 +22,7 @@ const VestingHistory = props => {
         <td className="pl-0">
           <div
             className={`status-circle ${
-              momentDate < moment.now() ? `status-circle-success` : ''
+              momentDate < moment.now() ? `bg-green` : ''
             }`}
           ></div>
         </td>
