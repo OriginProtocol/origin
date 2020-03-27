@@ -20,6 +20,8 @@
   --purple: #6e3bea;
   --red: #ff0000;
   --orange: #ffc000;
+  --light-border: 1px solid var(--border-accent);
+  --dark-border: 1px solid var(--dark-border-accent);
 }
 
 [data-theme="dark"] {
@@ -28,6 +30,8 @@
   --sidebar-bg-color: #19364f;
   --border-accent: #061d2a;
   --text: white;
+  --accent: #8fa7b7;
+  --dark-border: none;
 }
 
 html {
@@ -197,6 +201,7 @@ input, select {
 
 .card-wrapper.blue {
   background-color: var(--blue);
+  font-size: 18px;
   color: white;
   background-image: url(/tokens.svg);
   background-position-y: bottom;
@@ -334,7 +339,7 @@ input, select {
 .status-circle {
   display: inline-block;
   background-color: var(--accent);
-  border: 1px solid var(--dark-border-accent);
+  border: var(--dark-border);
   vertical-align: middle;
   width: 14px;
   height: 14px;
@@ -449,16 +454,13 @@ input, select {
  */
 
 .btn {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  border-radius: 2rem;
 }
 
 .btn.btn-lg {
-  font-weight: 800;
-  border-radius: 2rem;
+  font-weight: bold;
+  font-size: 18px;
   padding: 0.4rem 3rem 0.5rem 3rem;
-  min-width: 10rem;
-  font-size: 20px;
 }
 
 .btn-xs {
@@ -470,7 +472,7 @@ input, select {
 .progress {
   border-radius: 10px;
   background-color: var(--accent);
-  border: 1px solid var(--dark-border-accent);
+  border: var(--dark-border);
 }
 
 /* Misc

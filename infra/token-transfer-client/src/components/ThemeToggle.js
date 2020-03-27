@@ -29,7 +29,7 @@ const ThemeToggle = () => {
     <div className="btn-group mr-4" role="group" aria-label="Mode toggle">
       <button
         type="button"
-        className={`btn btn-xs my-2 ${
+        className={`btn btn-xs rounded-sm my-2 ${
           theme === 'dark' ? 'btn-primary' : 'btn-light'
         }`}
         onClick={onDark}
@@ -38,7 +38,7 @@ const ThemeToggle = () => {
       </button>
       <button
         type="button"
-        className={`btn btn-xs my-2 ${
+        className={`btn btn-xs rounded-sm my-2 ${
           theme === 'light' ? 'btn-primary' : 'btn-light'
         }`}
         onClick={onLight}

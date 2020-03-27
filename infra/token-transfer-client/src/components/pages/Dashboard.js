@@ -90,7 +90,7 @@ const Dashboard = props => {
   const displayBonusCard =
     props.config.lockupsEnabled && nextVest && !isEmployee
   const displayBonusCta = displayBonusCard
-  const fullWidthBonusCta = props.config.earlyLockupsEnabled
+  const fullWidthBonusCta = props.lockups.length > 0
   const isEarlyLockup = displayBonusModal === 'early'
 
   return (
@@ -128,6 +128,7 @@ const Dashboard = props => {
         <div className="row">
           <div className="col mb-4">
             <BonusCta
+              nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
               fullWidth={fullWidthBonusCta}
               onDisplayBonusModal={() => setDisplayBonusModal('early')}
@@ -150,7 +151,12 @@ const Dashboard = props => {
         </div>
         {displayBonusCta && !fullWidthBonusCta && (
           <div className="col mb-4">
-            <BonusCta />
+            <BonusCta
+              nextVest={nextVest}
+              lockupRate={props.config.earlyLockupBonusRate}
+              fullWidth={fullWidthBonusCta}
+              onDisplayBonusModal={() => setDisplayBonusModal('early')}
+            />
           </div>
         )}
       </div>

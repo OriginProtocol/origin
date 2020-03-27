@@ -91,7 +91,9 @@ const VestingBars = props => {
     <div className="mb-5">
       <h2 style={{ marginBottom: '2.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', right: 0, marginTop: '-1.5rem' }}>
+        <div
+          style={{ position: 'absolute', right: '10px', marginTop: '-1.5rem' }}
+        >
           <strong>{Number(total).toLocaleString()}</strong>{' '}
           <span className="ogn">OGN</span>
         </div>
