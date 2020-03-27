@@ -134,6 +134,11 @@ const Product = ({ history, location, match }) => {
       )
       if (variant !== undefined) {
         setState({ options: pick(variant, 'option1', 'option2', 'option3') })
+        history.replace(
+          `${urlPrefix}/products/${match.params.id}${
+            variant ? `?variant=${variant.id}` : ''
+          }`
+        )
       }
     }
   }

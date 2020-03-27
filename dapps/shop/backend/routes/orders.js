@@ -1,7 +1,7 @@
 const get = require('lodash/get')
 const fetch = require('node-fetch')
 
-const { authSellerAndShop } = require('./_auth')
+const { authSellerAndShop, authShop } = require('./_auth')
 const { Order } = require('../models')
 const encConf = require('../utils/encryptedConfig')
 const { PRINTFUL_URL } = require('../utils/const')
@@ -132,4 +132,62 @@ module.exports = function(app) {
       res.json({ success: true })
     }
   )
+
+  app.post('/shipping', authShop, async (req, res) => {
+    // console.log(req.body)
+    const apiKey = await encConf.get(req.shop.id, 'printful')
+    if (!apiKey) {
+      return res.status(500).json({
+        success: false,
+        message: 'Service Unavailable'
+      })
+    }
+    const apiAuth = Buffer.from(apiKey).toString('base64')
+
+    const { recipient, items } = req.body
+
+    const shippingRatesResponse = await fetch(`${PrintfulURL}/shipping/rates`, {
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Basic ${apiAuth}`
+      },
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify({
+        recipient: {
+          address1: recipient.address1,
+          city: recipient.city,
+          country_code: recipient.countryCode,
+          state_code: recipient.provinceCode,
+          zip: recipient.zip
+        },
+        items: items.map(i => {
+          return {
+            quantity: i.quantity,
+            variant_id: i.variant
+          }
+        })
+      })
+    })
+    const json = await shippingRatesResponse.json()
+    if (json.result) {
+      // console.log(json.result)
+      res.json(
+        json.result.map(rate => {
+          const [, label] = rate.name.match(/^(.*) \((.*)\)/)
+          const min = rate.minDeliveryDays + 1
+          const max = rate.maxDeliveryDays + 2
+          return {
+            id: rate.id,
+            label,
+            detail: `${min}-${max} business days`,
+            amount: Number(rate.rate) * 100,
+            countries: [recipient.countryCode]
+          }
+        })
+      )
+    } else {
+      res.json({ success: false })
+    }
+  })
 }

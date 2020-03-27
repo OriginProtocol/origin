@@ -16,7 +16,6 @@ const encryptedConfig = require('../utils/encryptedConfig')
 const { Network, Shop } = require('../models')
 
 const downloadProductData = require('./printful/downloadProductData')
-const downloadVariantData = require('./printful/downloadVariantData')
 const downloadPrintfulMockups = require('./printful/downloadPrintfulMockups')
 const resizePrintfulMockups = require('./printful/resizePrintfulMockups')
 const writeProductData = require('./printful/writeProductData')
@@ -40,33 +39,52 @@ const userQuestions = [
 ]
 
 async function go() {
-  const userAnswers = await inquirer.prompt(userQuestions)
+  const networks = await Network.findAll({ raw: true })
+  if (!networks.length) {
+    console.log('No networks found in DB')
+    return
+  }
 
-  let seller = await findSeller(userAnswers.email)
-  // const seller = await findSeller('nick@originprotocol.com')
-
-  if (seller) {
-    const authed = await authSeller(userAnswers.email, userAnswers.password)
-    if (!authed) {
-      console.log('Seller exists. Incorrect password.')
-      return
+  let seller
+  if (process.env.AUTO_LOGIN) {
+    seller = await findSeller(process.env.AUTO_LOGIN)
+    if (seller) {
+      console.log(`Auto-logged in ${seller.email}`)
+    } else {
+      console.log('Auto-login failed')
     }
-    console.log('User authenticated OK.')
-  } else {
-    const nameAnswer = await inquirer.prompt({
-      type: 'input',
-      name: 'name',
-      message: 'Seller name',
-      validate
-    })
-    const sellerResponse = await createSeller({ ...userAnswers, ...nameAnswer })
-    seller = sellerResponse.seller
+  }
+
+  if (!seller) {
+    const userAnswers = await inquirer.prompt(userQuestions)
+    seller = await findSeller(userAnswers.email)
 
     if (seller) {
-      console.log(`Created seller ${seller.id}`)
+      const authed = await authSeller(userAnswers.email, userAnswers.password)
+      if (!authed) {
+        console.log('Seller exists. Incorrect password.')
+        return
+      }
+      console.log('User authenticated OK.')
     } else {
-      console.log(`Error creating seller: ${sellerResponse.error}`)
-      return
+      const nameAnswer = await inquirer.prompt({
+        type: 'input',
+        name: 'name',
+        message: 'Seller name',
+        validate
+      })
+      const sellerResponse = await createSeller({
+        ...userAnswers,
+        ...nameAnswer
+      })
+      seller = sellerResponse.seller
+
+      if (seller) {
+        console.log(`Created seller ${seller.id}`)
+      } else {
+        console.log(`Error creating seller: ${sellerResponse.error}`)
+        return
+      }
     }
   }
 
@@ -99,7 +117,8 @@ async function go() {
       validate
     },
     {
-      type: 'input',
+      type: 'password',
+      mask: '*',
       name: 'pk',
       message: 'Private Key (defaults to candy maple acct 2)',
       when: ({ listing }) => listing === 'create'
@@ -270,7 +289,6 @@ async function go() {
     const apiAuth = Buffer.from(printfulApi).toString('base64')
 
     await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-    await downloadVariantData({ OutputDir, PrintfulURL, apiAuth })
     await writeProductData({ OutputDir })
     await downloadPrintfulMockups({ OutputDir })
     await resizePrintfulMockups({ OutputDir })
