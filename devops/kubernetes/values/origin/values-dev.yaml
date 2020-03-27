@@ -67,7 +67,7 @@ graphqlImageTag: '4893ccf'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '1abdf08'
+t3ClientImageTag: '18bb9e6'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
