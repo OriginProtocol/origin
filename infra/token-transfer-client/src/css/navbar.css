@@ -2,11 +2,18 @@
   align-items: unset;
   justify-content: start;
   background-color: white;
+  box-shadow: 1px 0 1px 0 #dbe6eb;
   font-family: lato;
   -ms-flex-direction: column;
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
   flex-direction: column;
+}
+
+.navbar .nav-logo {
+  background: #007cff;
+  margin: -0.5rem -1rem;
+  padding: 1rem;
 }
 
 .navbar .nav-icon {

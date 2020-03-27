@@ -41,7 +41,7 @@ body {
   }
 
   #main {
-    padding: 70px;
+    padding: 40px;
     width: calc(100% - 70px)
   }
 
@@ -153,10 +153,6 @@ input, select {
   color: #8fa7b7
 }
 
-.action-card > .spinner-grow {
-  margin: 10rem 0;
-}
-
 .spinner-grow-sm {
   margin: 2px 4px !important;
 }
@@ -205,6 +201,10 @@ input, select {
   text-align: center;
   max-width: 685px;
   margin: 0 auto;
+}
+
+.action-card > .spinner-grow {
+  margin: 10rem 0;
 }
 
 .action-card.wide {
@@ -364,19 +364,6 @@ input, select {
   background-color: #8900fd;
 }
 
-.btn {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.btn.btn-lg {
-  font-weight: 800;
-  border-radius: 2rem;
-  padding: 0.4rem 3rem 0.5rem 3rem;
-  min-width: 10rem;
-  font-size: 20px;
-}
-
 .alert-danger {
   color: black;
 }
@@ -446,7 +433,7 @@ input, select {
  */
 
 .icon {
-  width:Gk
+  width: 30px;
 }
 
 .icon-lg {
@@ -457,6 +444,10 @@ input, select {
   width: 56px;
 }
 
+.icon > path {
+  fill-opacity: 1;
+}
+
 .icon-white > path {
   fill: #fff;
 }
@@ -465,18 +456,36 @@ input, select {
   fill: #007cff;
 }
 
-.btn .icon > path {
-  fill-opacity: 1;
-}
-
 .btn-outline-dark .icon > path {
-  fill-opacity: 1;
   fill: #000;
 }
 
 .btn-outline-dark:hover .icon > path {
   fill: #fff;
 }
+
+/* Buttons
+ */
+
+.btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.btn.btn-lg {
+  font-weight: 800;
+  border-radius: 2rem;
+  padding: 0.4rem 3rem 0.5rem 3rem;
+  min-width: 10rem;
+  font-size: 20px;
+}
+
+.btn-xs {
+  font-size: 0.6rem;
+}
+
+/* Misc
+ */
 
 .lockup-graph canvas {
   background-image: url('../assets/dotted-lines.svg');
@@ -506,10 +515,28 @@ input, select {
   border-bottom: 1px solid #98a7b4;
   padding-left: 15px;
   margin-top: 20px;
+  min-width: 240px;
 }
 
 .bonus-graph-legend {
   font-size: 10px;
+}
+
+.bonus-graph-legend-blue, .bonus-graph-legend-purple {
+  width: 15px;
+  height: 3px;
+  float: left;
+  margin-right: 6px;
+  line-height: 20px;
+  margin-top: 6px;
+}
+
+.bonus-graph-legend-blue {
+  background-color: #1a82ff;
+}
+
+.bonus-graph-legend-purple {
+  background-color: #6e3bea;
 }
 
 .bonus-graph-amount {

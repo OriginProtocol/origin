@@ -63,8 +63,9 @@ class BonusModal extends Component {
       amountError: null,
       code: '',
       codeError: null,
-      modalState: 'Form'
+      modalState: 'Disclaimer'
     }
+
     return initialState
   }
 
@@ -139,7 +140,7 @@ class BonusModal extends Component {
         <hr />
         <form onSubmit={this.handleFormSubmit}>
           <div className="row">
-            <div className="col-7">
+            <div className="col-7 pr-4">
               {this.props.isEarlyLockup && (
                 <div className="form-group">
                   <label htmlFor="amount">Eligible tokens</label>
@@ -152,7 +153,7 @@ class BonusModal extends Component {
                 </div>
               )}
               <div className="form-group">
-                <label htmlFor="amount">Amount of tokens to lock Up</label>
+                <label htmlFor="amount">Amount of tokens to lock up</label>
                 <div className="input-group">
                   <input {...input('amount')} type="number" />
                   <div className="input-group-append">
@@ -180,7 +181,7 @@ class BonusModal extends Component {
               </div>
             </div>
 
-            <div className="col-5 py-2">
+            <div className="col-5 pl-3 pt-4">
               <BonusGraph
                 lockupAmount={this.state.amount}
                 bonusRate={this.props.lockupBonusRate}
@@ -253,19 +254,19 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row">
+        <div className="row my-3">
           <div className="col">
             <img src={YieldIcon} className="mx-3" />
             {this.props.isEarlyLockup ? (
               <>
                 Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
                 immediately by locking up your{' '}
-                {moment(this.props.nextVest.date).format('MMMM')} vest.
+                {moment(this.props.nextVest.date).format('MMMM')} vest
               </>
             ) : (
               <>
-                Earn <strong>${this.props.lockupBonusRate}%</strong> bonus
-                tokens immediately by locking up your vested OGN tokens.`
+                Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
+                immediately by locking up vested tokens
               </>
             )}
           </div>
@@ -273,7 +274,7 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-4">
+        <div className="row my-3">
           <div className="col">
             <img src={CalendarIcon} className="mx-3 icon-lg" />
             All tokens will be available for withdrawal after{' '}
@@ -283,7 +284,7 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-4">
+        <div className="row my-3">
           <div className="col">
             <img src={TokensIcon} className="mx-3 icon-lg" />
             <strong>
@@ -296,7 +297,7 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-4">
+        <div className="row my-3">
           <div className="col">
             <img src={ClockIcon} className="mx-3 icon-lg" />
             This offer expires in <strong>30d 23h 12m</strong>

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import LockIcon from '-!react-svg-loader!@/assets/lock-icon.svg'
+
 const BonusGraph = ({ lockupAmount, bonusRate }) => {
   const formatToken = n => {
     if (n < 1e3) return n
@@ -15,7 +17,8 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
     <div>
       <div className="bonus-graph-legend">
         <div className="row">
-          <div className="col">
+          <div className="col-7">
+            <div className="bonus-graph-legend-blue">&nbsp;</div>
             <strong>Lock up amount</strong>
           </div>
           <div className="col text-right">
@@ -24,7 +27,8 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
         </div>
 
         <div className="row">
-          <div className="col">
+          <div className="col-7">
+            <div className="bonus-graph-legend-purple">&nbsp;</div>
             <strong>Bonus Tokens</strong> ({bonusRate}%)
           </div>
           <div className="col text-right">
@@ -36,12 +40,22 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
       <div className="bonus-graph-wrapper">
         <div className="bonus-graph-blue">
           <div className="bonus-graph-amount">{formatToken(lockupAmount)}</div>
-          <div className="bonus-graph-lock"></div>
+          <div className="bonus-graph-lock">
+            <LockIcon
+              className="icon-white"
+              style={{ transform: 'scale(0.4)', marginTop: '-8px' }}
+            />
+          </div>
         </div>
 
         <div className="bonus-graph-purple">
           <div className="bonus-graph-amount">{formatToken(bonusAmount)}</div>
-          <div className="bonus-graph-lock"></div>
+          <div className="bonus-graph-lock">
+            <LockIcon
+              className="icon-white"
+              style={{ transform: 'scale(0.4)', marginTop: '-8px' }}
+            />
+          </div>
         </div>
 
         <div className="bonus-graph-label bonus-graph-y-label">OGN Amount</div>

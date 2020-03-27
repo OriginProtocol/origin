@@ -25,8 +25,8 @@ const BonusCta = ({
           <h5 className="mb-1">Offer expires in</h5>
           <h5 className="mb-0">
             <ClockIcon
-              className="icon icon-white mx-2"
-              style={{ transform: 'scale(1.2)' }}
+              className="icon-white mx-2"
+              style={{ transform: 'scale(0.8)' }}
             />
             <strong>30d 23h 12m</strong>
           </h5>
