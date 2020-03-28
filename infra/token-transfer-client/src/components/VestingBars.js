@@ -182,17 +182,19 @@ const VestingBars = props => {
       </div>
       <div
         className="row"
-        style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}
+        style={{ marginTop: `${3 + 0.5 * grants.length}rem` }}
       >
-        <div className="col">
+        <div className="col-12 col-sm-6">
           <div className="status-circle bg-green mr-2"></div>
-          {Number(props.vested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">vested</span>
+          <span className=" text-muted">
+            {Number(props.vested).toLocaleString()} OGN vested
+          </span>
         </div>
-        <div className="col">
-          <div className="status-circle ml-3 mr-2"></div>
-          {Number(props.unvested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">unvested</span>
+        <div className="col-12 col-sm-6">
+          <div className="status-circle mr-2"></div>
+          <span className=" text-muted">
+            {Number(props.unvested).toLocaleString()} OGN unvested
+          </span>
         </div>
       </div>
     </div>

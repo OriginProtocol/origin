@@ -87,10 +87,8 @@ const Dashboard = props => {
     props.lockupTotals.locked
   )
 
-  const displayBonusCard =
-    props.config.lockupsEnabled && nextVest && !isEmployee
-  const displayBonusCta = displayBonusCard
-  const fullWidthBonusCta = props.lockups.length > 0
+  const hasLockups = props.lockups.length > 0
+  const displayBonusCta = props.config.lockupsEnabled
   const isEarlyLockup = displayBonusModal === 'early'
 
   return (
@@ -124,13 +122,13 @@ const Dashboard = props => {
         />
       )}
 
-      {displayBonusCta && fullWidthBonusCta && (
+      {displayBonusCta && hasLockups && (
         <div className="row">
           <div className="col mb-4">
             <BonusCta
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
-              fullWidth={fullWidthBonusCta}
+              fullWidth={true}
               onDisplayBonusModal={() => setDisplayBonusModal('early')}
             />
           </div>
@@ -149,12 +147,11 @@ const Dashboard = props => {
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
-        {displayBonusCta && !fullWidthBonusCta && (
+        {displayBonusCta && !hasLockups && (
           <div className="col mb-4">
             <BonusCta
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
-              fullWidth={fullWidthBonusCta}
               onDisplayBonusModal={() => setDisplayBonusModal('early')}
             />
           </div>
@@ -172,7 +169,7 @@ const Dashboard = props => {
           />
         </div>
         <div className="col-12 col-xl-6 mb-4">
-          {displayBonusCard ? (
+          {hasLockups && (
             <BonusCard
               lockups={props.lockups}
               locked={props.lockupTotals.locked}
@@ -180,10 +177,8 @@ const Dashboard = props => {
               isLocked={isLocked}
               onDisplayBonusModal={() => setDisplayBonusModal(true)}
             />
-          ) : (
-            <NewsHeadlinesCard />
           )}
-          <div className="mt-4">
+          <div>
             <WithdrawalSummaryCard
               vested={vestedTotal}
               unvested={unvestedTotal}
@@ -192,16 +187,14 @@ const Dashboard = props => {
               onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
             />
           </div>
-        </div>
-      </div>
-      <div className="row">
-        {!isEmployee && (
-          <div className="col-12 col-lg-6 mb-5">
-            <GrantDetailCard grants={props.grants} user={props.user} />
+          <div className="mt-4">
+            <NewsHeadlinesCard />
           </div>
-        )}
-        <div className="col-12 col-lg-6 mb-4">
-          {displayBonusCard && <NewsHeadlinesCard />}
+          {!isEmployee && (
+            <div className="mt-4">
+              <GrantDetailCard grants={props.grants} user={props.user} />
+            </div>
+          )}
         </div>
       </div>
     </>

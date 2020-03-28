@@ -102,6 +102,10 @@ small {
   color: var(--muted-text) !important;
 }
 
+.text-dark {
+  color: var(--dark-border-accent) !important;
+}
+
 a:not([href]):not([tabindex]):focus,
 a:not([href]):not([tabindex]):hover {
   text-decoration: underline;
@@ -435,7 +439,7 @@ input, select {
 }
 
 .icon-white > path {
-  fill: #fff;
+  fill: white;
 }
 
 .dropdown-menu .icon > path {
@@ -443,11 +447,19 @@ input, select {
 }
 
 .btn-outline-dark .icon > path {
-  fill: #000;
+  fill: black;
 }
 
 .btn-outline-dark:hover .icon > path {
-  fill: #fff;
+  fill: white;
+}
+
+.btn-outline-primary .icon > path {
+  fill: var(--blue);
+}
+
+.btn-outline-primary:hover .icon > path {
+  fill: white;
 }
 
 /* Buttons

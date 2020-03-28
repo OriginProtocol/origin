@@ -20,14 +20,14 @@ const WithdrawalSummaryCard = props => {
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">Vested To Date</div>
+        <div className="col text-muted">Vested To Date</div>
         <div className="col text-right">
           <strong>{Number(props.vested).toLocaleString()} </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">
+        <div className="col text-nowrap text-muted">
           <div className="status-circle bg-red mr-2"></div>Total Withdrawn
         </div>
         <div className="col text-right">
@@ -36,7 +36,7 @@ const WithdrawalSummaryCard = props => {
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">
+        <div className="col text-nowrap text-muted">
           <div className="status-circle bg-green mr-2"></div>Total Remaining
         </div>
         <div className="col text-right">
@@ -59,10 +59,10 @@ const WithdrawalSummaryCard = props => {
         ></div>
       </div>
       {!props.isLocked && (
-        <div className="row mt-3">
+        <div className="row mt-5">
           <div className="col text-center">
             <button
-              className="btn btn-lg btn-outline-dark"
+              className="btn btn-lg btn-outline-primary"
               onClick={props.onDisplayWithdrawModal}
             >
               <Withdraw

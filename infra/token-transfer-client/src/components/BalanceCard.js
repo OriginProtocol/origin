@@ -70,29 +70,36 @@ const BalanceCard = props => {
       <div className="row">
         {props.lockupsEnabled && (props.balance > 0 || props.locked > 0) && (
           <div
-            className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
-            style={{ minWidth: '200px' }}
+            className="col-12 col-lg-4 mb-4 mb-lg-0 mx-auto"
+            style={{ maxWidth: '200px' }}
           >
             <div style={{ position: 'relative' }}>
               <Doughnut
+                height={100}
+                width={100}
                 data={doughnutData}
-                options={{ cutoutPercentage: 60 }}
+                options={{ cutoutPercentage: 70 }}
                 legend={{ display: false }}
               />
             </div>
           </div>
         )}
-        <div className="col" style={{ alignSelf: 'center' }}>
-          <div className="row mb-2" style={{ fontSize: '24px' }}>
-            <div className="col">
-              <div className="status-circle bg-green mr-3"></div>
-              Available
+        <div className="col">
+          <div className="row">
+            <div className="col-1 text-right">
+              <div className="status-circle bg-green"></div>
             </div>
-            <div className="col-6 text-right">
-              <strong className="text-nowrap">
+            <div className="col">
+              <div>Available</div>
+              <div
+                className="mr-1 mb-3 d-inline-block font-weight-bold"
+                style={{ fontSize: '32px' }}
+              >
                 {props.isLocked ? 0 : Number(props.balance).toLocaleString()}{' '}
-                <small className="ogn">OGN</small>
-              </strong>
+              </div>
+              <span className="ogn">OGN</span>
+            </div>
+            <div className="col-1 text-right">
               <Dropdown drop={'left'} style={{ display: 'inline' }}>
                 <Dropdown.Toggle
                   as={DropdownDotsToggle}
@@ -116,15 +123,21 @@ const BalanceCard = props => {
             </div>
           </div>
           {props.lockupsEnabled && (
-            <div className="row" style={{ fontSize: '24px' }}>
-              <div className="col">
-                <div className="status-circle bg-blue mr-3"></div>
-                Locked Tokens
+            <div className="row">
+              <div className="col-1 text-right">
+                <div className="status-circle bg-blue"></div>
               </div>
-              <div className="col-6 text-right">
-                <strong className="text-nowrap">
-                  {props.locked} <small className="ogn">OGN</small>
-                </strong>
+              <div className="col">
+                <div>Locked Bonus Tokens</div>
+                <div
+                  className="mr-1 mb-2 d-inline-block font-weight-bold"
+                  style={{ fontSize: '32px' }}
+                >
+                  {props.locked.toLocaleString()}
+                </div>
+                <span className="ogn">OGN</span>
+              </div>
+              <div className="col-1 text-right">
                 <Dropdown drop={'left'} style={{ display: 'inline' }}>
                   <Dropdown.Toggle
                     as={DropdownDotsToggle}

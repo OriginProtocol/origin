@@ -78,36 +78,28 @@ const Lockup = props => {
         />
       )}
 
-      <div className="row">
-        <div className="col-12 col-md-6 mt-4">
-          <h1 className="mb-0 mb-lg-4">Bonus Tokens</h1>
+      <div className="row align-items-center mb-4">
+        <div className="col-3">
+          <h1 className="mb-0">Bonus Tokens</h1>
+        </div>
+        <div className="col-6">
+          <small>
+            <strong className="ml-3 mr-2">Total Locked Up </strong>
+            {Number(props.lockupTotals.locked).toLocaleString()} OGN
+            <strong className="ml-3 mr-2">Total Earned </strong>
+            {Number(props.lockupTotals.earnings).toLocaleString()} OGN
+          </small>
         </div>
         {!isLocked && (
-          <div className="col-12 col-md-6 mb-3 mb-md-0 text-lg-right">
+          <div className="col text-right">
             <button
-              className="btn btn-lg btn-dark"
+              className="btn btn-lg btn-primary"
               onClick={() => setDisplayBonusModal(true)}
             >
-              Earn More
+              Start Earning
             </button>
           </div>
         )}
-      </div>
-      <div className="row">
-        <div className="col">
-          Total Locked Up{' '}
-          <strong className="ml-2">
-            {Number(props.lockupTotals.locked).toLocaleString()}
-          </strong>{' '}
-          <span className="ogn">OGN</span>
-        </div>
-        <div className="col">
-          Total Earned{' '}
-          <strong className="ml-2">
-            {Number(props.lockupTotals.earnings).toLocaleString()}
-          </strong>{' '}
-          <span className="ogn">OGN</span>
-        </div>
       </div>
       <hr />
       <div className="row">
@@ -119,14 +111,9 @@ const Lockup = props => {
               <div className="mb-3" style={{ fontSize: '28px' }}>
                 You don&apos;t have any OGN locked up.
               </div>
-              {isLocked ? (
+              {isLocked && (
                 <div style={{ fontSize: '18px' }}>
                   Tokens have not yet been unlocked. Check back soon!
-                </div>
-              ) : (
-                <div style={{ fontSize: '18px' }}>
-                  This program is only available to our existing Advisor,
-                  Strategic, and CoinList investors.
                 </div>
               )}
             </div>

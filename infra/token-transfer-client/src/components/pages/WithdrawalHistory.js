@@ -29,7 +29,6 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
 const WithdrawalHistory = props => {
@@ -64,17 +63,43 @@ const WithdrawalHistory = props => {
   return (
     <>
       <div className="row">
-        <div className="col">
-          <h1>Withdrawal History</h1>
+        <div className="col-12 col-md-4">
+          <h1>History</h1>
         </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <WithdrawalHistoryCard
-            isLocked={isLocked}
-            withdrawnAmount={props.withdrawnAmount}
-            {...props.grantTotals}
-          />
+        <div className="col-12 col-md-2">
+          <small>
+            <strong>Available </strong>
+            {isLocked
+              ? 0
+              : Number(
+                  props.grantTotals.vestedTotal.minus(props.withdrawnAmount)
+                ).toLocaleString()}{' '}
+            OGN
+          </small>
+        </div>
+        <div className="col-12 col-md-2">
+          <small>
+            <strong>Withdrawn </strong>
+            <span className="text-nowrap">
+              {Number(props.withdrawnAmount).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-2">
+          <small>
+            <strong>Unvested </strong>
+            <span className="text-nowrap">
+              {Number(props.grantTotals.unvestedTotal).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-2">
+          <small>
+            <strong>Total purchase </strong>
+            <span className="text-nowrap">
+              {Number(props.grantTotals.grantTotal).toLocaleString()} OGN
+            </span>
+          </small>
         </div>
       </div>
       <div className="row">

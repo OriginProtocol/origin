@@ -57,7 +57,7 @@ const NewsHeadlinesCard = props => {
               <div className="title my-2">
                 <strong style={{ fontSize: '20px' }}>{item.title}</strong>
               </div>
-              <p>
+              <p className="text-muted">
                 {item.description.substr(0, 120) + '...'}{' '}
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
                   [Read More]

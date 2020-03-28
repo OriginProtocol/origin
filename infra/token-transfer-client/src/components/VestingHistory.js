@@ -19,20 +19,22 @@ const VestingHistory = props => {
     const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
-        <td className="pl-0">
+        <td className="pl-0" width="10px">
           <div
             className={`status-circle ${
               momentDate < moment.now() ? `bg-green` : ''
             }`}
           ></div>
         </td>
-        <td>{Number(schedule[date]).toLocaleString()} OGN</td>
+        <td className="text-nowrap" width="130px">
+          {Number(schedule[date]).toLocaleString()} OGN
+        </td>
         <td className="d-none d-sm-block">
           <span className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}
           </span>
         </td>
-        <td>{momentDate.format('L')}</td>
+        <td className="text-right">{momentDate.format('L')}</td>
       </tr>
     )
   }
