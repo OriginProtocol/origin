@@ -3,7 +3,7 @@
   justify-content: start;
   background-color: var(--sidebar-bg-color);
   box-shadow: 1px 0 1px 0 var(--border-accent);
-  font-family: "Lato, Sans-Serif";
+  font-family: Lato;
   -ms-flex-direction: column;
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
@@ -68,8 +68,12 @@
   width: 28px;
 }
 
+.navbar.expanded .nav-item a.nav-link .icon {
+  margin-right: 1rem;
+}
+
 .navbar .nav-item a.nav-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--secondary-text);
 }
 
 .navbar .nav-item a.nav-link .icon > path {
@@ -78,24 +82,15 @@
   fill-opacity: 1;
 }
 
+.navbar .nav-item a.nav-link.active {
+  color: var(--text);
+}
+
 .navbar .nav-item a.nav-link.active .icon > path {
   fill: var(--text);
   fill-opacity: 1;
 }
 
-.navbar .nav-item a.nav-link.active {
-  color: rgba(255, 255, 255, 1);
-}
-
 .navbar .nav-item {
   font-size: 16px;
-}
-
-.navbar .small-links a {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.navbar .small-links {
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-  font-size: 14px;
 }

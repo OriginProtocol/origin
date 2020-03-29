@@ -27,7 +27,7 @@ const Navigation = props => {
   return (
     <nav
       id="sidebar"
-      className="navbar"
+      className={`navbar${props.expandSidebar ? ' expanded' : ''}`}
       style={{ height: props.expandSidebar ? '100vh' : '' }}
     >
       <div className="nav-logo text-center">
@@ -41,7 +41,6 @@ const Navigation = props => {
       >
         <div></div>
       </div>
-      {/*<img src={Logo} className="brand my-3" />*/}
       <div
         className={`mt-5 ml-2 ${
           props.expandSidebar ? '' : 'd-none d-md-block'
@@ -82,14 +81,21 @@ const Navigation = props => {
             </NavLink>
           </li>
         </ul>
-        <ul className="navbar-nav small-links mt-4 d-md-none">
-          <li className="mt-4 mb-5">
-            <a href="mailto:investor-relations@originprotocol.com">
+        <ul className="navbar-nav mt-4 d-md-none">
+          <li className="nav-item mt-4 mb-5">
+            <a
+              href="mailto:investor-relations@originprotocol.com"
+              className="nav-link"
+            >
               Contact Support
             </a>
           </li>
-          <li>
-            <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
+          <li className="nav-item">
+            <a
+              onClick={handleLogout}
+              style={{ cursor: 'pointer' }}
+              className="nav-link"
+            >
               Logout
             </a>
           </li>

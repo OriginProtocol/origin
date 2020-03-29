@@ -2,7 +2,6 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
-import Earn from '-!react-svg-loader!@/assets/earn-icon.svg'
 import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
 import OgnTokens from '-!react-svg-loader!@/assets/ogn-tokens.svg'
@@ -41,64 +40,56 @@ const BonusCard = ({
 
   return (
     <BorderedCard>
-      <div className="row mb-2">
+      <div className="hot-badge bg-red">
+        HOT
+      </div>
+      <div className="row">
         <div className="col">
           <h2>Bonus Tokens</h2>
-        </div>
-        <div className="col text-right">
-          <NavLink to="/lockup">Earn More &gt;</NavLink>
-        </div>
-      </div>
-      <div className="row mb-4">
-        <div className="col">
-          <strong style={{ fontSize: '24px' }}>
-            {earnings.toLocaleString()}
-          </strong>{' '}
-          <span className="ml-1 ogn">OGN</span>
-          <div>Earned</div>
-        </div>
-        <div className="col">
-          <strong style={{ fontSize: '24px' }}>
-            {locked.toLocaleString()}
-          </strong>{' '}
-          <span className="ml-1 ogn">OGN</span>
-          <div>Locked Up</div>
-        </div>
-      </div>
-      <div className="row mb-2">
-        <div className="col">
-          <h2>Recent Lockups</h2>
-        </div>
-        <div className="col text-right">
-          <NavLink to="/lockup">View Details &gt;</NavLink>
-        </div>
-      </div>
-      <div className="row">
-        {lockups && lockups.length > 0 ? (
-          renderLockupGraphs(lockups)
-        ) : (
-          <div className="col text-center text-muted p-4">
-            <div className="mb-3">
-              <Lock className="icon" />
-            </div>
-            You don&apos;t have any OGN locked up.
+          <div className="my-3">
+            <div>Earned</div>
+            <strong style={{ fontSize: '24px' }}>
+              {earnings.toLocaleString()}
+            </strong>{' '}
+            <span className="ml-1 ogn">OGN</span>
           </div>
-        )}
+          <div>
+            <div>Locked Up</div>
+            <strong style={{ fontSize: '24px' }}>
+              {locked.toLocaleString()}
+            </strong>{' '}
+            <span className="ml-1 ogn">OGN</span>
+          </div>
+        </div>
+        <div className="col">
+          <div className="row">
+            <div className="col">
+              <h2>Recent Lockups</h2>
+            </div>
+            <div className="col text-right">
+              <NavLink to="/lockup">Details &gt;</NavLink>
+            </div>
+            <div className="col-12">
+              {lockups && lockups.length > 0 ? (
+                renderLockupGraphs(lockups)
+              ) : (
+                <div className="col text-center text-muted p-4">
+                  <div className="mb-3">
+                    <Lock className="icon" />
+                  </div>
+                  You don&apos;t have any OGN locked up.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="row">
+      <div className="row mt-3">
         <div className="col text-center">
           <button
             className="btn btn-lg btn-primary"
             onClick={onDisplayBonusModal}
           >
-            <Earn
-              className="icon"
-              style={{
-                transform: 'scale(0.8) rotate(-90deg)',
-                marginTop: '-5px',
-                marginRight: '10px'
-              }}
-            />
             Earn OGN
           </button>
         </div>

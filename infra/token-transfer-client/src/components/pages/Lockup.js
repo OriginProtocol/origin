@@ -74,26 +74,31 @@ const Lockup = props => {
       {displayBonusModal && (
         <BonusModal
           balance={balanceAvailable}
+          lockupBonusRate={props.config.lockupBonusRate}
           onModalClose={() => setDisplayBonusModal(false)}
         />
       )}
 
       <div className="row align-items-center mb-4">
-        <div className="col-3">
-          <h1 className="mb-0">Bonus Tokens</h1>
+        <div className="col-12 col-md-4">
+          <h1>Bonus Tokens</h1>
         </div>
-        <div className="col-6">
+        <div className="col-12 col-md-2">
           <small>
-            <strong className="ml-3 mr-2">Total Locked Up </strong>
+            <strong className="mr-2">Total Locked Up </strong>
             {Number(props.lockupTotals.locked).toLocaleString()} OGN
-            <strong className="ml-3 mr-2">Total Earned </strong>
+          </small>
+        </div>
+        <div className="col-12 col-md-2">
+          <small>
+            <strong className="mr-2">Total Earned </strong>
             {Number(props.lockupTotals.earnings).toLocaleString()} OGN
           </small>
         </div>
         {!isLocked && (
-          <div className="col text-right">
+          <div className="col text-md-right">
             <button
-              className="btn btn-lg btn-primary"
+              className="btn btn-lg btn-primary mt-4 mt-md-0"
               onClick={() => setDisplayBonusModal(true)}
             >
               Start Earning

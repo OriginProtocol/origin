@@ -243,10 +243,12 @@ class BonusModal extends Component {
       titleText = 'Earn Bonus Tokens'
     }
     return (
-      <div className="row">
+      <div className="row text-center align-items-center text-sm-left mb-3">
+        <div className="col-12 col-sm-2 text-center">
+          <img src={OgnIcon} className="icon-xl" />
+        </div>
         <div className="col">
           <h1 className="mb-2">
-            <img src={OgnIcon} className="mx-3 icon-xl" />
             {titleText}
           </h1>
         </div>
@@ -261,9 +263,11 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-3">
-          <div className="col">
+        <div className="row text-center align-items-center text-sm-left my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
             <img src={YieldIcon} className="mx-3" />
+          </div>
+          <div className="col">
             {this.props.isEarlyLockup ? (
               <>
                 Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
@@ -281,9 +285,11 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-3">
-          <div className="col">
+        <div className="row text-center align-items-center text-sm-left my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
             <img src={CalendarIcon} className="mx-3 icon-lg" />
+          </div>
+          <div className="col">
             All tokens will be available for withdrawal after{' '}
             <strong>1 year</strong>
           </div>
@@ -291,25 +297,41 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row my-3">
-          <div className="col">
-            <img src={TokensIcon} className="mx-3 icon-lg" />
-            <strong>
-              {Number(this.props.nextVest.amount).toLocaleString()}
-            </strong>{' '}
-            OGN are scheduled to vest in{' '}
-            {moment(this.props.nextVest.date).format('MMMM')}
+        {this.props.isEarlyLockup ? (
+          <>
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+                <img src={TokensIcon} className="mx-3 icon-lg" />
+              </div>
+              <div className="col">
+                <strong>
+                  {Number(this.props.nextVest.amount).toLocaleString()}
+                </strong>{' '}
+                OGN are scheduled to vest in{' '}
+                {moment(this.props.nextVest.date).format('MMMM')}
+              </div>
+            </div>
+            <hr />
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+                <img src={ClockIcon} className="mx-3 icon-lg" />
+              </div>
+              <div className="col">
+                This offer expires in <strong>30d 23h 12m</strong>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="row text-center align-items-center text-sm-left my-3">
+            <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+              <img src={TokensIcon} className="mx-3 icon-lg" />
+            </div>
+            <div className="col">
+              This program is only available to our existing Advisor, Strategic,
+              and CoinList investors. Thank you for your early support of Origin.
+            </div>
           </div>
-        </div>
-
-        <hr />
-
-        <div className="row my-3">
-          <div className="col">
-            <img src={ClockIcon} className="mx-3 icon-lg" />
-            This offer expires in <strong>30d 23h 12m</strong>
-          </div>
-        </div>
+        )}
 
         <div className="actions">
           <div className="row">
@@ -415,7 +437,7 @@ class BonusModal extends Component {
           <div className="row">
             <div className="col"></div>
             <div className="col text-center">
-              <ModalStep steps={3} completedSteps={2} />
+              <ModalStep steps={3} completedSteps={3} />
             </div>
             <div className="col text-right">
               <button

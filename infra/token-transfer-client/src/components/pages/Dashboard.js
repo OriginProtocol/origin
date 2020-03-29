@@ -170,13 +170,14 @@ const Dashboard = props => {
         </div>
         <div className="col-12 col-xl-6 mb-4">
           {hasLockups && (
-            <BonusCard
-              lockups={props.lockups}
-              locked={props.lockupTotals.locked}
-              earnings={props.lockupTotals.earnings}
-              isLocked={isLocked}
-              onDisplayBonusModal={() => setDisplayBonusModal(true)}
-            />
+            <div className="mb-4">
+              <BonusCard
+                lockups={props.lockups}
+                locked={props.lockupTotals.locked}
+                earnings={props.lockupTotals.earnings}
+                isLocked={isLocked}
+                onDisplayBonusModal={() => setDisplayBonusModal(true)} />
+            </div>
           )}
           <div>
             <WithdrawalSummaryCard
