@@ -14,6 +14,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import BonusGraph from '@/components/BonusGraph'
+import ModalStep from '@/components/ModalStep'
 
 import EmailIcon from '@/assets/email-icon.svg'
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@2x.jpg'
@@ -85,6 +86,13 @@ class BonusModal extends Component {
         amountError: `Lock up amount is greater than your balance of ${Number(
           this.props.balance
         ).toLocaleString()} OGN`
+      })
+      return
+    }
+
+    if (BigNumber(this.state.amount).isLessThan(100)) {
+      this.setState({
+        amountError: `Lock up amount must be at least 100 OGN`
       })
       return
     }
@@ -191,7 +199,7 @@ class BonusModal extends Component {
 
           <div className="actions">
             <div className="row">
-              <div className="col-6">
+              <div className="col">
                 <button
                   className="btn btn-outline-primary btn-lg"
                   onClick={() => this.setState({ modalState: 'Disclaimer' })}
@@ -199,15 +207,14 @@ class BonusModal extends Component {
                   Back
                 </button>
               </div>
-              <div className="col-6 text-right">
+              <div className="col text-center">
+                <ModalStep steps={3} completedSteps={1} />
+              </div>
+              <div className="col text-right">
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg"
-                  disabled={
-                    !this.state.amount ||
-                    this.state.amount < 100 ||
-                    this.props.lockupIsAdding
-                  }
+                  disabled={!this.state.amount || this.props.lockupIsAdding}
                 >
                   {this.props.lockupIsAdding ? (
                     <>
@@ -360,7 +367,7 @@ class BonusModal extends Component {
           </div>
           <div className="actions">
             <div className="row">
-              <div className="col-6 text-left">
+              <div className="col text-left">
                 <button
                   className="btn btn-outline-primary btn-lg"
                   onClick={() => this.setState({ modalState: 'Form' })}
@@ -368,7 +375,10 @@ class BonusModal extends Component {
                   Back
                 </button>
               </div>
-              <div className="col-6 text-right">
+              <div className="col text-center">
+                <ModalStep steps={3} completedSteps={2} />
+              </div>
+              <div className="col text-right">
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg"
@@ -403,6 +413,10 @@ class BonusModal extends Component {
         </p>
         <div className="actions">
           <div className="row">
+            <div className="col"></div>
+            <div className="col text-center">
+              <ModalStep steps={3} completedSteps={2} />
+            </div>
             <div className="col text-right">
               <button
                 className="btn btn-primary btn-lg"

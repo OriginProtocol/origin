@@ -89,7 +89,7 @@ const BalanceCard = props => {
             <div className="col-1 text-right">
               <div className="status-circle bg-green"></div>
             </div>
-            <div className="col">
+            <div className="col text-nowrap">
               <div>Available</div>
               <div
                 className="mr-1 mb-3 d-inline-block font-weight-bold"
@@ -127,7 +127,7 @@ const BalanceCard = props => {
               <div className="col-1 text-right">
                 <div className="status-circle bg-blue"></div>
               </div>
-              <div className="col">
+              <div className="col text-nowrap">
                 <div>Locked Bonus Tokens</div>
                 <div
                   className="mr-1 mb-2 d-inline-block font-weight-bold"

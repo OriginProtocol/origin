@@ -446,6 +446,14 @@ input, select {
   fill: var(--blue);
 }
 
+.btn-primary path {
+  fill: white;
+}
+
+.btn-grey path {
+  fill: var(--secondary-text);
+}
+
 .btn-outline-dark .icon > path {
   fill: black;
 }
@@ -477,6 +485,12 @@ input, select {
 
 .btn-xs {
   font-size: 0.6rem;
+  padding: 0.175rem 0.75rem;
+}
+
+.btn-grey {
+  background-color: var(--border-accent);
+  border-color: var(--border-accent);
 }
 
 /* Progress bars
@@ -618,4 +632,12 @@ input, select {
 .bonus-graph-end-label {
   right: 20px;
   bottom: -20px;
+}
+
+.step {
+  width: 50px;
+  height: 6px;
+  background-color: var(--border-accent);
+  display: inline-block;
+  margin-left: 2px;
 }

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
+import SunIcon from '-!react-svg-loader!@/assets/sun-icon.svg'
+import MoonIcon from '-!react-svg-loader!@/assets/moon-icon.svg'
+
 const ThemeToggle = () => {
   const [theme, setTheme] = useState(window.localStorage.theme || 'light')
 
@@ -29,21 +32,21 @@ const ThemeToggle = () => {
     <div className="btn-group mr-4" role="group" aria-label="Mode toggle">
       <button
         type="button"
-        className={`btn btn-xs rounded-sm my-2 ${
-          theme === 'dark' ? 'btn-primary' : 'btn-light'
-        }`}
-        onClick={onDark}
-      >
-        Dark
-      </button>
-      <button
-        type="button"
-        className={`btn btn-xs rounded-sm my-2 ${
-          theme === 'light' ? 'btn-primary' : 'btn-light'
+        className={`btn btn-xs rounded-right rounded-sm my-2 ${
+          theme === 'light' ? 'btn-primary' : 'btn-grey'
         }`}
         onClick={onLight}
       >
-        Light
+        <SunIcon />
+      </button>
+      <button
+        type="button"
+        className={`btn btn-xs rounded-left rounded-sm my-2 ${
+          theme === 'dark' ? 'btn-primary' : 'btn-grey'
+        }`}
+        onClick={onDark}
+      >
+        <MoonIcon />
       </button>
     </div>
   )

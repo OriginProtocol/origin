@@ -275,6 +275,7 @@
   border-radius: 50%;
   text-shadow: none;
   line-height: 35px;
+  z-index: 2000;
 }
 
 .large-header .close {
