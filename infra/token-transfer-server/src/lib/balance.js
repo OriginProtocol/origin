@@ -91,13 +91,16 @@ async function hasNextVestBalance(userId, amount) {
     throw new Error(`Could not find specified user id ${userId}`)
   }
 
-  const nextVest = getNextVest(user.Grants, user)
+  const nextVest = getNextVest(
+    user.Grants.map(g => g.get({ plain: true })),
+    user
+  )
   if (!nextVest) {
     throw new RangeError(`No more vest events for ${user.email}`)
   }
 
   // Sum locked by lockups
-  const nextVestLockedAmount = calculateNextVestLocked(user.Lockups)
+  const nextVestLockedAmount = calculateNextVestLocked(nextVest, user.Lockups)
   logger.debug(
     `User ${user.email} tokens from their next vest in lockup`,
     nextVestLockedAmount.toString()

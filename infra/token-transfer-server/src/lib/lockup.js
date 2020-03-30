@@ -7,7 +7,7 @@ const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
 const { LOCKUP_CONFIRMED, LOCKUP_REQUEST } = require('../constants/events')
-const { Event, Lockup, User, sequelize } = require('../models')
+const { Event, Grant, Lockup, User, sequelize } = require('../models')
 const {
   earlyLockupBonusRate,
   lockupBonusRate,
@@ -15,7 +15,7 @@ const {
   lockupConfirmationTimeout
 } = require('../config')
 const { hasBalance, hasNextVestBalance } = require('./balance')
-const { lockupHasExpired } = require('../shared')
+const { getNextVest, lockupHasExpired } = require('../shared')
 const logger = require('../logger')
 
 const { encryptionSecret, clientUrl } = require('../config')
@@ -34,6 +34,23 @@ async function addLockup(userId, amount, early, data = {}) {
     // This is an early lockup for the next vest so call alternate balance
     // checking function
     await hasNextVestBalance(userId, amount)
+
+    const user = await User.findOne({
+      where: {
+        id: userId
+      },
+      include: [{ model: Grant }]
+    })
+
+    // Augment lockup data field with additional information about the future
+    // vesting event that this lockup is being created for
+    data = {
+      ...data,
+      vest: getNextVest(
+        user.Grants.map(g => g.get({ plain: true })),
+        user
+      )
+    }
   } else {
     // Standard balance check
     await hasBalance(userId, amount)

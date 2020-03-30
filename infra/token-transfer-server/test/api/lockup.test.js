@@ -205,7 +205,7 @@ describe('Lockup HTTP API', () => {
       .expect(404)
   })
 
-  it('should not add a early lockup if early lockup enabled var is false', async () => {
+  it('should not add a early lockup if early lockup enabled is false', async () => {
     const lockupsEnabledFake = sinon.fake.returns(false)
     lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
 
@@ -217,6 +217,42 @@ describe('Lockup HTTP API', () => {
         code: totp.gen(this.otpKey)
       })
       .expect(404)
+  })
+
+  it('should not add a early lockup if total early lockups exceed next vest amount', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    // Lockup the same size as the first vesting event
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 600000,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+
+    await Lockup.update(
+      { confirmed: true },
+      { where: { id: response.body.id } }
+    )
+
+    const failedResponse = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(failedResponse.text).to.match(
+      /Amount of 100 OGN exceeds the 0 available in the next vest/
+    )
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add a early lockup if early lockup flag is disabled', async () => {
@@ -275,6 +311,35 @@ describe('Lockup HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/Unconfirmed/)
+  })
+
+  it('should add a lockup if confirmed lockup exists', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    await Lockup.create({
+      userId: this.user.id,
+      amount: 1000,
+      start: moment()
+        .subtract(1, 'years')
+        .subtract(1, 'days'),
+      end: moment().subtract(1, 'years'),
+      code: totp.gen(this.otpKey),
+      bonusRate: 10.0,
+      confirmed: true
+    })
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        code: totp.gen(this.otpKey)
+      })
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add a lockup if not enough tokens (vested)', async () => {

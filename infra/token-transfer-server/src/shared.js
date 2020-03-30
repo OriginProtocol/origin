@@ -105,13 +105,21 @@ function calculateLocked(lockups) {
   }, BigNumber(0))
 }
 
+/* Determine if a lockup is a nearly lockup based
+ */
+const isEarlyLockup = lockup => {
+  return !!(lockup.data && lockup.data.vest && lockup.data.vest.grantId)
+}
+
 /* Calculate tokens from the next vest that are locked due to early lockups.
  * @param lockups
  */
-function calculateNextVestLocked(lockups) {
+function calculateNextVestLocked(nextVest, lockups) {
   return lockups.reduce((total, lockup) => {
-    if (lockup.start > moment.utc()) {
-      // Lockup starts in the future
+    if (
+      isEarlyLockup(lockup) &&
+      moment.utc(lockup.data.vest.date).isSame(nextVest.date, 'day')
+    ) {
       return total.plus(BigNumber(lockup.amount))
     }
     return total

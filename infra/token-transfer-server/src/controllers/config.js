@@ -3,10 +3,7 @@ const router = express.Router()
 
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
-const {
-  lockupBonusRate,
-  earlyLockupBonusRate,
-} = require('../config')
+const { lockupBonusRate, earlyLockupBonusRate } = require('../config')
 const {
   getLockupsEnabled,
   getEarlyLockupsEnabled,
@@ -25,6 +22,7 @@ router.get(
       lockupBonusRate,
       earlyLockupBonusRate,
       lockupsEnabled: getLockupsEnabled(),
+      earlyLockupsEnabledUntil: earlyLockupsEnabledUntil,
       earlyLockupsEnabled: getEarlyLockupsEnabled(),
       unlockDate: getUnlockDate(),
       otcRequestEnabled: getOtcRequestEnabled()
