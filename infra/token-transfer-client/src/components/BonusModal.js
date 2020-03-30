@@ -9,7 +9,7 @@ import moment from 'moment'
 import { addLockup } from '@/actions/lockup'
 import {
   getError as getLockupsError,
-  getIsAdding as getLockupIsAdding,
+  getIsAdding as getLockupIsAdding
 } from '@/reducers/lockup'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
@@ -49,7 +49,7 @@ class BonusModal extends Component {
     if (error && error.status === 422) {
       // Parse validation errors from API
       if (error.response.body && error.response.body.errors) {
-        error.response.body.errors.forEach((e) => {
+        error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       } else {
@@ -64,7 +64,7 @@ class BonusModal extends Component {
       amountError: null,
       code: '',
       codeError: null,
-      modalState: 'Disclaimer',
+      modalState: 'Disclaimer'
     }
 
     return initialState
@@ -85,14 +85,14 @@ class BonusModal extends Component {
       this.setState({
         amountError: `Lock up amount is greater than your balance of ${Number(
           this.props.balance
-        ).toLocaleString()} OGN`,
+        ).toLocaleString()} OGN`
       })
       return
     }
 
     if (BigNumber(this.state.amount).isLessThan(100)) {
       this.setState({
-        amountError: `Lock up amount must be at least 100 OGN`,
+        amountError: `Lock up amount must be at least 100 OGN`
       })
       return
     }
@@ -100,13 +100,13 @@ class BonusModal extends Component {
     this.setState({ modalState: 'TwoFactor' })
   }
 
-  handleTwoFactorFormSubmit = async (event) => {
+  handleTwoFactorFormSubmit = async event => {
     event.preventDefault()
 
     // Add the lockup
     const result = await this.props.addLockup({
       amount: this.state.amount,
-      code: this.state.code,
+      code: this.state.code
     })
 
     if (result.type === 'ADD_LOCKUP_SUCCESS') {
@@ -114,11 +114,11 @@ class BonusModal extends Component {
     }
   }
 
-  onMaxAmount = (event) => {
+  onMaxAmount = event => {
     event.preventDefault()
 
     this.setState({
-      amount: Number(this.props.balance),
+      amount: Number(this.props.balance)
     })
   }
 
@@ -139,7 +139,7 @@ class BonusModal extends Component {
   }
 
   renderForm() {
-    const input = formInput(this.state, (state) => this.setState(state))
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
@@ -173,7 +173,7 @@ class BonusModal extends Component {
                         color: '#007cff',
                         fontSize: '14px',
                         textDecoration: 'none',
-                        cursor: 'pointer',
+                        cursor: 'pointer'
                       }}
                     >
                       Max
@@ -360,7 +360,7 @@ class BonusModal extends Component {
   renderTwoFactor() {
     const input = formInput(
       this.state,
-      (state) => this.setState(state),
+      state => this.setState(state),
       'text-center w-auto'
     )
     const Feedback = formFeedback(this.state)
@@ -453,14 +453,14 @@ class BonusModal extends Component {
 const mapStateToProps = ({ lockup }) => {
   return {
     lockupError: getLockupsError(lockup),
-    lockupIsAdding: getLockupIsAdding(lockup),
+    lockupIsAdding: getLockupIsAdding(lockup)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      addLockup: addLockup,
+      addLockup: addLockup
     },
     dispatch
   )

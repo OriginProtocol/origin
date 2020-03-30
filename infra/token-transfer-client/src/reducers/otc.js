@@ -1,12 +1,12 @@
 import {
   SUBMIT_OTC_REQUEST_PENDING,
   SUBMIT_OTC_REQUEST_SUCCESS,
-  SUBMIT_OTC_REQUEST_ERROR,
+  SUBMIT_OTC_REQUEST_ERROR
 } from '../actions/otc'
 
 const initialState = {
   isAdding: false,
-  error: null,
+  error: null
 }
 
 export default function otcReducer(state = initialState, action) {
@@ -14,24 +14,24 @@ export default function otcReducer(state = initialState, action) {
     case SUBMIT_OTC_REQUEST_PENDING:
       return {
         ...state,
-        isAdding: true,
+        isAdding: true
       }
     case SUBMIT_OTC_REQUEST_SUCCESS:
       return {
         ...state,
         isAdding: false,
-        error: null,
+        error: null
       }
     case SUBMIT_OTC_REQUEST_ERROR:
       return {
         ...state,
         isAdding: false,
-        error: action.error,
+        error: action.error
       }
     default:
       return state
   }
 }
 
-export const getError = (state) => state.error
-export const getIsAdding = (state) => state.isAdding
+export const getError = state => state.error
+export const getIsAdding = state => state.isAdding

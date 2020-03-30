@@ -6,7 +6,7 @@ import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 import ThemeToggle from '@/components/ThemeToggle'
 
-const AccountActions = (props) => {
+const AccountActions = props => {
   const [redirectTo, setRedirectTo] = useState(false)
 
   const handleLogout = async () => {

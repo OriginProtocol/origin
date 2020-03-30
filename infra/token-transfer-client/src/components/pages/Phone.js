@@ -7,7 +7,7 @@ import get from 'lodash.get'
 import { editUser } from '@/actions/user'
 import {
   getError as getUserError,
-  getIsEditing as getUserIsEditing,
+  getIsEditing as getUserIsEditing
 } from '@/reducers/user'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import CountryCodes from '@/constants/countryCodes'
@@ -15,15 +15,15 @@ import { getNextOnboardingPage } from '@/utils'
 
 const TopCountries = ['us', 'gb', 'cn', 'kr', 'it', 'fr', 'es']
 const SortedCountryCodes = [
-  ...TopCountries.map((id) => CountryCodes.find((c) => c.code === id)),
-  ...CountryCodes.filter((c) => TopCountries.indexOf(c.code) < 0),
+  ...TopCountries.map(id => CountryCodes.find(c => c.code === id)),
+  ...CountryCodes.filter(c => TopCountries.indexOf(c.code) < 0)
 ]
 
 class Phone extends Component {
   state = {
     countryCode: 1,
     phone: '',
-    redirectTo: null,
+    redirectTo: null
   }
 
   componentDidUpdate(prevProps) {
@@ -37,7 +37,7 @@ class Phone extends Component {
     if (error && error.status === 422) {
       // Parse validation errors from API
       if (error.response.body && error.response.body.errors) {
-        error.response.body.errors.forEach((e) => {
+        error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       } else {
@@ -53,7 +53,7 @@ class Phone extends Component {
 
   handleSubmit = async () => {
     const result = await this.props.editUser({
-      phone: `${this.state.countryCode} ${this.state.phone}`,
+      phone: `${this.state.countryCode} ${this.state.phone}`
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
       this.setState({ redirectTo: getNextOnboardingPage(result.payload) })
@@ -61,7 +61,7 @@ class Phone extends Component {
   }
 
   render() {
-    const input = formInput(this.state, (state) => this.setState(state))
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     if (this.state.redirectTo) {
@@ -78,9 +78,9 @@ class Phone extends Component {
               <label htmlFor="country-code">Country Code</label>
               <select
                 className="custom-select custom-select-lg"
-                onChange={(e) => this.setState({ countryCode: e.target.value })}
+                onChange={e => this.setState({ countryCode: e.target.value })}
               >
-                {SortedCountryCodes.map((country) => (
+                {SortedCountryCodes.map(country => (
                   <option key={country.code} value={country.prefix}>
                     {country.name} (+{country.prefix})
                   </option>
@@ -117,14 +117,14 @@ class Phone extends Component {
 const mapStateToProps = ({ user }) => {
   return {
     userError: getUserError(user),
-    userIsEditing: getUserIsEditing(user),
+    userIsEditing: getUserIsEditing(user)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      editUser: editUser,
+      editUser: editUser
     },
     dispatch
   )

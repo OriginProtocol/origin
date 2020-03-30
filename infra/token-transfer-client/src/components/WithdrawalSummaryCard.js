@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
 
-const WithdrawalSummaryCard = (props) => {
+const WithdrawalSummaryCard = props => {
   const total = Number(props.vested)
   const withdrawnPercent = (Number(props.withdrawnAmount) / total) * 100
   const remainingPercent = 100 - withdrawnPercent

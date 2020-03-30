@@ -3,7 +3,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import BigNumber from 'bignumber.js'
 
-const VestingBars = (props) => {
+const VestingBars = props => {
   const [displayPopover, setDisplayPopover] = useState({})
 
   if (!props.grants || props.grants.length === 0) {
@@ -13,17 +13,17 @@ const VestingBars = (props) => {
   const now = moment()
 
   // Momentize all the dates
-  const grants = props.grants.map((grant) => {
+  const grants = props.grants.map(grant => {
     return {
       ...grant,
       start: moment(grant.start),
       end: moment(grant.end),
-      cancelled: grant.cancelled ? moment(grant.cancelled) : grant.cancelled,
+      cancelled: grant.cancelled ? moment(grant.cancelled) : grant.cancelled
     }
   })
 
-  const firstStartDate = moment(Math.min(...grants.map((g) => g.start)))
-  const lastEndDate = moment(Math.max(...grants.map((g) => g.end)))
+  const firstStartDate = moment(Math.min(...grants.map(g => g.start)))
+  const lastEndDate = moment(Math.max(...grants.map(g => g.end)))
   const totalDuration = lastEndDate - firstStartDate
 
   const generateMarkers = () => {
@@ -35,7 +35,7 @@ const VestingBars = (props) => {
     }
   }
 
-  const generateMonthMarkers = (maxMarkers) => {
+  const generateMonthMarkers = maxMarkers => {
     // Extract x points (months) across the duration to display between first
     // start date and last end date to display
     const interim = firstStartDate.clone()
@@ -55,19 +55,19 @@ const VestingBars = (props) => {
       )
     })
 
-    return months.map((month) => {
+    return months.map(month => {
       return {
         label: moment(month).format('MMM YYYY'),
-        left: ((moment(month) - firstStartDate) / totalDuration) * 100,
+        left: ((moment(month) - firstStartDate) / totalDuration) * 100
       }
     })
   }
 
-  const generateAmountMarkers = (maxMarkers) => {
-    return [...Array(maxMarkers + 1).keys()].map((i) => {
+  const generateAmountMarkers = maxMarkers => {
+    return [...Array(maxMarkers + 1).keys()].map(i => {
       return {
         label: numeral((grants[0].amount / maxMarkers) * i).format('0.0a'),
-        left: (100 / maxMarkers) * i,
+        left: (100 / maxMarkers) * i
       }
     })
   }
@@ -81,7 +81,7 @@ const VestingBars = (props) => {
       50
     setDisplayPopover({
       ...displayPopover,
-      [grantId]: displayPopover[grantId] ? false : event.clientX - leftOffset,
+      [grantId]: displayPopover[grantId] ? false : event.clientX - leftOffset
     })
   }
 
@@ -97,7 +97,7 @@ const VestingBars = (props) => {
           <strong>{Number(total).toLocaleString()}</strong>{' '}
           <span className="ogn">OGN</span>
         </div>
-        {grants.map((grant) => {
+        {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
           // upper bound of 100
           const complete = props.isLocked
@@ -117,7 +117,7 @@ const VestingBars = (props) => {
               className="progress mt-3 pointer"
               key={grant.id}
               style={{ width: `${width}%`, marginLeft: `${left}%` }}
-              onClick={(event) => handleTogglePopover(event, grant.id)}
+              onClick={event => handleTogglePopover(event, grant.id)}
             >
               <div
                 className="progress-bar bg-green"
@@ -131,7 +131,7 @@ const VestingBars = (props) => {
                 >
                   <div
                     className="cover"
-                    onClick={(event) => handleTogglePopover(event, grant.id)}
+                    onClick={event => handleTogglePopover(event, grant.id)}
                   />
                   <div>
                     <strong>Start</strong> {grant.start.format('L')}
@@ -155,14 +155,14 @@ const VestingBars = (props) => {
           )
         })}
 
-        {generateMarkers().map((marker) => {
+        {generateMarkers().map(marker => {
           const style = {
             position: 'absolute',
             left: `${marker.left}%`,
             top: 0,
             height: `${1 + 2 * grants.length}rem`,
             marginTop: '-1rem',
-            pointerEvents: 'none', // Stop absolute positioning from stealing clicks
+            pointerEvents: 'none' // Stop absolute positioning from stealing clicks
           }
           return (
             <div key={marker.label} style={style}>
@@ -170,7 +170,7 @@ const VestingBars = (props) => {
                 style={{
                   borderLeft: '1px solid #dbe6eb',
                   height: '100%',
-                  width: 0,
+                  width: 0
                 }}
               ></div>
               <div style={{ marginLeft: '-50%' }}>

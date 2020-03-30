@@ -1,19 +1,19 @@
 import {
   calculateGranted,
   calculateVested,
-  momentizeGrant,
+  momentizeGrant
 } from '@origin/token-transfer-server/src/shared'
 
 import {
   FETCH_GRANTS_PENDING,
   FETCH_GRANTS_SUCCESS,
-  FETCH_GRANTS_ERROR,
+  FETCH_GRANTS_ERROR
 } from '../actions/grant'
 
 const initialState = {
   isLoading: true,
   grants: [],
-  error: null,
+  error: null
 }
 
 export default function grantsReducer(state = initialState, action) {
@@ -21,29 +21,29 @@ export default function grantsReducer(state = initialState, action) {
     case FETCH_GRANTS_PENDING:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       }
     case FETCH_GRANTS_SUCCESS:
       return {
         ...state,
         isLoading: false,
         grants: action.payload,
-        error: null,
+        error: null
       }
     case FETCH_GRANTS_ERROR:
       return {
         ...state,
         isLoading: false,
-        error: action.error,
+        error: action.error
       }
     default:
       return state
   }
 }
 
-export const getGrants = (state) => state.grants.map(momentizeGrant)
-export const getError = (state) => state.error
-export const getIsLoading = (state) => state.isLoading
+export const getGrants = state => state.grants.map(momentizeGrant)
+export const getError = state => state.error
+export const getIsLoading = state => state.isLoading
 export const getTotals = (user, state) => {
   const grants = getGrants(state)
   const grantTotal = calculateGranted(grants)

@@ -1,13 +1,13 @@
 import {
   FETCH_EVENTS_PENDING,
   FETCH_EVENTS_SUCCESS,
-  FETCH_EVENTS_ERROR,
+  FETCH_EVENTS_ERROR
 } from '../actions/event'
 
 const initialState = {
   isLoading: true,
   events: [],
-  error: null,
+  error: null
 }
 
 export default function eventsReducer(state = initialState, action) {
@@ -15,26 +15,26 @@ export default function eventsReducer(state = initialState, action) {
     case FETCH_EVENTS_PENDING:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       }
     case FETCH_EVENTS_SUCCESS:
       return {
         ...state,
         isLoading: false,
         events: action.payload,
-        error: null,
+        error: null
       }
     case FETCH_EVENTS_ERROR:
       return {
         ...state,
         isLoading: false,
-        error: action.error,
+        error: action.error
       }
     default:
       return state
   }
 }
 
-export const getEvents = (state) => state.events
-export const getError = (state) => state.error
-export const getIsLoading = (state) => state.isLoading
+export const getEvents = state => state.events
+export const getError = state => state.error
+export const getIsLoading = state => state.isLoading

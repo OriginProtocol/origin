@@ -1,4 +1,4 @@
-export const getNextOnboardingPage = (user) => {
+export const getNextOnboardingPage = user => {
   if (user.otpVerified) {
     // Verified OTP can no longer perform any onboarding as OTP would be required
     // for any login action

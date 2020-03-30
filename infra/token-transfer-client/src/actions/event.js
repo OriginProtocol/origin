@@ -7,32 +7,32 @@ export const FETCH_EVENTS_ERROR = 'FETCH_EVENTS_ERROR'
 
 function fetchEventsPending() {
   return {
-    type: FETCH_EVENTS_PENDING,
+    type: FETCH_EVENTS_PENDING
   }
 }
 
 function fetchEventsSuccess(payload) {
   return {
     type: FETCH_EVENTS_SUCCESS,
-    payload,
+    payload
   }
 }
 
 function fetchEventsError(error) {
   return {
     type: FETCH_EVENTS_ERROR,
-    error,
+    error
   }
 }
 
 export function fetchEvents() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(fetchEventsPending())
 
     agent
       .get(`${apiUrl}/api/events`)
-      .then((response) => dispatch(fetchEventsSuccess(response.body)))
-      .catch((error) => {
+      .then(response => dispatch(fetchEventsSuccess(response.body)))
+      .catch(error => {
         dispatch(fetchEventsError(error))
         throw error
       })

@@ -12,7 +12,7 @@ import News from '-!react-svg-loader!@/assets/news-icon.svg'
 import Security from '-!react-svg-loader!@/assets/security-icon.svg'
 import OLogo from '-!react-svg-loader!@/assets/0-rigin-logo.svg'
 
-const Navigation = (props) => {
+const Navigation = props => {
   const [redirectTo, setRedirectTo] = useState(null)
 
   const handleLogout = async () => {

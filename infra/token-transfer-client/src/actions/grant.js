@@ -7,32 +7,32 @@ export const FETCH_GRANTS_ERROR = 'FETCH_GRANTS_ERROR'
 
 function fetchGrantsPending() {
   return {
-    type: FETCH_GRANTS_PENDING,
+    type: FETCH_GRANTS_PENDING
   }
 }
 
 function fetchGrantsSuccess(payload) {
   return {
     type: FETCH_GRANTS_SUCCESS,
-    payload,
+    payload
   }
 }
 
 function fetchGrantsError(error) {
   return {
     type: FETCH_GRANTS_ERROR,
-    error,
+    error
   }
 }
 
 export function fetchGrants() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(fetchGrantsPending())
 
     agent
       .get(`${apiUrl}/api/grants`)
-      .then((response) => dispatch(fetchGrantsSuccess(response.body)))
-      .catch((error) => {
+      .then(response => dispatch(fetchGrantsSuccess(response.body)))
+      .catch(error => {
         dispatch(fetchGrantsError(error))
         if (error.status !== 401) {
           throw error

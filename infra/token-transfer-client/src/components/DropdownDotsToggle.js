@@ -4,7 +4,7 @@ const DropdownDotsToggle = React.forwardRef(({ onClick }, ref) => (
   <a
     href=""
     ref={ref}
-    onClick={(e) => {
+    onClick={e => {
       e.preventDefault()
       onClick(e)
     }}

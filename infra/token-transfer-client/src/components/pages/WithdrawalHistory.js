@@ -10,28 +10,28 @@ import enums from '@origin/token-transfer-server/src/enums'
 import { fetchConfig } from '@/actions/config'
 import {
   getConfig,
-  getIsLoading as getConfigIsLoading,
+  getIsLoading as getConfigIsLoading
 } from '@/reducers/config'
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
-  getIsLoading as getAccountIsLoading,
+  getIsLoading as getAccountIsLoading
 } from '@/reducers/account'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
   getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals,
+  getTotals as getGrantTotals
 } from '@/reducers/grant'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getTransfers,
   getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount,
+  getWithdrawnAmount
 } from '@/reducers/transfer'
 import EthAddress from '@/components/EthAddress'
 
-const WithdrawalHistory = (props) => {
+const WithdrawalHistory = props => {
   useEffect(() => {
     props.fetchConfig(),
       props.fetchAccounts(),
@@ -56,7 +56,7 @@ const WithdrawalHistory = (props) => {
     !props.config.unlockDate || moment.utc() < props.config.unlockDate
 
   const accountNicknameMap = {}
-  props.accounts.forEach((account) => {
+  props.accounts.forEach(account => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
   })
 
@@ -125,7 +125,7 @@ const WithdrawalHistory = (props) => {
                     </td>
                   </tr>
                 ) : (
-                  props.transfers.map((transfer) => (
+                  props.transfers.map(transfer => (
                     <tr
                       key={transfer.id}
                       className="hoverable"
@@ -168,7 +168,7 @@ const WithdrawalHistory = (props) => {
                         {[
                           enums.TransferStatuses.Enqueued,
                           enums.TransferStatuses.WaitingConfirmation,
-                          enums.TransferStatuses.Processing,
+                          enums.TransferStatuses.Processing
                         ].includes(transfer.status) && (
                           <>
                             <div className="status-circle bg-orange mr-2"></div>
@@ -195,7 +195,7 @@ const WithdrawalHistory = (props) => {
                         )}
                         {[
                           enums.TransferStatuses.Expired,
-                          enums.TransferStatuses.Cancelled,
+                          enums.TransferStatuses.Cancelled
                         ].includes(transfer.status) && (
                           <>
                             <div className="status-circle bg-red mr-2"></div>
@@ -226,17 +226,17 @@ const mapStateToProps = ({ account, config, grant, transfer, user }) => {
     grantTotals: getGrantTotals(user.user, grant),
     transfers: getTransfers(transfer),
     transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchConfig: fetchConfig,
       fetchAccounts: fetchAccounts,
       fetchGrants: fetchGrants,
-      fetchTransfers: fetchTransfers,
+      fetchTransfers: fetchTransfers
     },
     dispatch
   )

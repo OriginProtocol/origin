@@ -11,10 +11,10 @@ const BonusCard = ({
   isLocked,
   locked,
   lockups,
-  onDisplayBonusModal,
+  onDisplayBonusModal
 }) => {
-  const renderLockupGraphs = (lockups) => {
-    const graphs = lockups.slice(0, 3).map((lockup) => {
+  const renderLockupGraphs = lockups => {
+    const graphs = lockups.slice(0, 3).map(lockup => {
       return (
         <div className="col" key={lockup.id}>
           <LockupGraph lockup={lockup} />

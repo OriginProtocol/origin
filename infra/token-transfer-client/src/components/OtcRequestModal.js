@@ -8,7 +8,7 @@ import { formInput, formFeedback } from '@/utils/formHelpers'
 import { submitOtcRequest } from '@/actions/otc'
 import {
   getError as getOtcError,
-  getIsAdding as getOtcIsAdding,
+  getIsAdding as getOtcIsAdding
 } from '@/reducers/otc'
 import Modal from '@/components/Modal'
 import SuccessIcon from '@/assets/success-icon.svg'
@@ -24,7 +24,7 @@ class OtcRequestModal extends Component {
       amount: '',
       amountError: null,
       modalState: 'Form',
-      action: 'Buy',
+      action: 'Buy'
     }
     return initialState
   }
@@ -47,7 +47,7 @@ class OtcRequestModal extends Component {
     if (error && error.status === 422) {
       // Parse validation errors from API
       if (error.response.body && error.response.body.errors) {
-        error.response.body.errors.forEach((e) => {
+        error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       } else {
@@ -56,13 +56,13 @@ class OtcRequestModal extends Component {
     }
   }
 
-  handleFormSubmit = async (event) => {
+  handleFormSubmit = async event => {
     event.preventDefault()
 
     try {
       await this.props.submitOtcRequest({
         amount: this.state.amount,
-        action: this.state.action,
+        action: this.state.action
       })
     } catch (error) {
       // Error will be displayed in form, don't continue to two factor input
@@ -71,7 +71,7 @@ class OtcRequestModal extends Component {
     this.setState({ modalState: 'Thanks' })
   }
 
-  handleRadioClick = (action) => {
+  handleRadioClick = action => {
     this.setState({ action })
   }
 
@@ -93,7 +93,7 @@ class OtcRequestModal extends Component {
   }
 
   renderForm() {
-    const input = formInput(this.state, (state) => this.setState(state))
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
@@ -202,14 +202,14 @@ class OtcRequestModal extends Component {
 const mapStateToProps = ({ otc }) => {
   return {
     otcError: getOtcError(otc),
-    otcIsAdding: getOtcIsAdding(otc),
+    otcIsAdding: getOtcIsAdding(otc)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      submitOtcRequest,
+      submitOtcRequest
     },
     dispatch
   )

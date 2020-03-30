@@ -6,11 +6,11 @@ import { fetchNews } from '@/actions/news'
 import {
   getNews,
   getIsLoaded as getNewsIsLoaded,
-  getIsLoading as getNewsIsLoading,
+  getIsLoading as getNewsIsLoading
 } from '@/reducers/news'
 import NewsCard from '@/components/NewsCard'
 
-const News = (props) => {
+const News = props => {
   useEffect(() => {
     if (!props.newsIsLoaded) {
       props.fetchNews()
@@ -23,7 +23,7 @@ const News = (props) => {
     <div>
       <h1>News</h1>
       <div className="row">
-        {props.news.slice(0, 9).map((item) => (
+        {props.news.slice(0, 9).map(item => (
           <div className="col-12 col-lg-6 col-xl-4" key={item.title}>
             <NewsCard
               {...item}
@@ -40,14 +40,14 @@ const mapStateToProps = ({ news }) => {
   return {
     news: getNews(news),
     newsIsLoading: getNewsIsLoading(news),
-    newsIsLoaded: getNewsIsLoaded(news),
+    newsIsLoaded: getNewsIsLoaded(news)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchNews: fetchNews,
+      fetchNews: fetchNews
     },
     dispatch
   )

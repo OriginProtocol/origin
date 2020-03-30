@@ -15,14 +15,14 @@ const LockupGraph = ({ lockup }) => {
         {
           label: 'Token Unlock',
           data: [percentage, 100 - percentage],
-          backgroundColor: ['#007cff', '#dbe6eb'],
+          backgroundColor: ['#007cff', '#dbe6eb']
         },
         {
           label: 'Bonus Token Unlock',
           data: [percentage, 100 - percentage],
-          backgroundColor: ['#8900fd', '#dbe6eb'],
-        },
-      ],
+          backgroundColor: ['#8900fd', '#dbe6eb']
+        }
+      ]
     }
   }
 
@@ -33,7 +33,7 @@ const LockupGraph = ({ lockup }) => {
         position: 'relative',
         width: '93px',
         height: '93px',
-        display: 'inline-block',
+        display: 'inline-block'
       }}
     >
       <Doughnut
@@ -41,7 +41,7 @@ const LockupGraph = ({ lockup }) => {
         options={{
           cutoutPercentage: 60,
           responsive: false,
-          tooltips: { enabled: false },
+          tooltips: { enabled: false }
         }}
         legend={{ display: false }}
         width={93}

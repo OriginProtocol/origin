@@ -9,11 +9,11 @@ import { fetchNews } from '@/actions/news'
 import {
   getNews,
   getIsLoaded as getNewsIsLoaded,
-  getIsLoading as getNewsIsLoading,
+  getIsLoading as getNewsIsLoading
 } from '@/reducers/news'
 import BorderedCard from '@/components/BorderedCard'
 
-const NewsHeadlinesCard = (props) => {
+const NewsHeadlinesCard = props => {
   useEffect(() => {
     if (!props.newsIsLoaded) {
       props.fetchNews()
@@ -29,12 +29,12 @@ const NewsHeadlinesCard = (props) => {
     pagination: {
       el: '.swiper-pagination',
       type: 'bullets',
-      clickable: true,
+      clickable: true
     },
-    loop: true,
+    loop: true
   }
 
-  const onCardClick = (event) => {
+  const onCardClick = event => {
     if (event.target.tagName !== 'A') {
       swiper.navigation.onNextClick(event)
     }
@@ -51,7 +51,7 @@ const NewsHeadlinesCard = (props) => {
         </div>
       </div>
       <Swiper {...swiperParams} getSwiper={setSwiper}>
-        {props.news.map((item) => {
+        {props.news.map(item => {
           return (
             <div key={item.title}>
               <div className="title my-2">
@@ -75,14 +75,14 @@ const mapStateToProps = ({ news }) => {
   return {
     news: getNews(news),
     newsIsLoading: getNewsIsLoading(news),
-    newsIsLoaded: getNewsIsLoaded(news),
+    newsIsLoaded: getNewsIsLoaded(news)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchNews: fetchNews,
+      fetchNews: fetchNews
     },
     dispatch
   )

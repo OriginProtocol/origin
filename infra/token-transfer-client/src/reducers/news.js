@@ -1,14 +1,14 @@
 import {
   FETCH_NEWS_PENDING,
   FETCH_NEWS_SUCCESS,
-  FETCH_NEWS_ERROR,
+  FETCH_NEWS_ERROR
 } from '../actions/news'
 
 const initialState = {
   isLoaded: false,
   isLoading: true,
   news: [],
-  error: null,
+  error: null
 }
 
 export default function newsReducer(state = initialState, action) {
@@ -16,7 +16,7 @@ export default function newsReducer(state = initialState, action) {
     case FETCH_NEWS_PENDING:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       }
     case FETCH_NEWS_SUCCESS:
       return {
@@ -24,27 +24,27 @@ export default function newsReducer(state = initialState, action) {
         isLoaded: true,
         isLoading: false,
         news: action.payload,
-        error: null,
+        error: null
       }
     case FETCH_NEWS_ERROR:
       return {
         ...state,
         isLoading: false,
-        error: action.error,
+        error: action.error
       }
     default:
       return state
   }
 }
 
-const convertHtmlEntities = (html) => {
+const convertHtmlEntities = html => {
   const textarea = document.createElement('textarea')
   textarea.innerHTML = html
   return textarea.value
 }
 
-export const getNews = (state) => {
-  return state.news.map((item) => {
+export const getNews = state => {
+  return state.news.map(item => {
     const tagIndex = item.description.indexOf('<img')
     const srcIndex =
       item.description.substring(tagIndex).indexOf('src=') + tagIndex
@@ -58,9 +58,9 @@ export const getNews = (state) => {
       title: convertHtmlEntities(item.title),
       description: convertHtmlEntities(description),
       image: imgSrc,
-      link: item.link,
+      link: item.link
     }
   })
 }
-export const getIsLoaded = (state) => state.isLoaded
-export const getIsLoading = (state) => state.isLoading
+export const getIsLoaded = state => state.isLoaded
+export const getIsLoading = state => state.isLoading

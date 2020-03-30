@@ -10,53 +10,53 @@ export const FETCH_USER_ERROR = 'FETCH_USER_ERROR'
 
 function editUserPending() {
   return {
-    type: EDIT_USER_PENDING,
+    type: EDIT_USER_PENDING
   }
 }
 
 function editUserSuccess(payload) {
   return {
     type: EDIT_USER_SUCCESS,
-    payload,
+    payload
   }
 }
 
 function editUserError(error) {
   return {
     type: EDIT_USER_ERROR,
-    error,
+    error
   }
 }
 
 function fetchUserPending() {
   return {
-    type: FETCH_USER_PENDING,
+    type: FETCH_USER_PENDING
   }
 }
 
 function fetchUserSuccess(payload) {
   return {
     type: FETCH_USER_SUCCESS,
-    payload,
+    payload
   }
 }
 
 function fetchUserError(error) {
   return {
     type: FETCH_USER_ERROR,
-    error,
+    error
   }
 }
 
 export function editUser({ phone, revisedScheduleAgreedAt, termsAgreedAt }) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(editUserPending())
 
     return agent
       .post(`${apiUrl}/api/user`)
       .send({ phone, revisedScheduleAgreedAt, termsAgreedAt })
-      .then((response) => dispatch(editUserSuccess(response.body)))
-      .catch((error) => {
+      .then(response => dispatch(editUserSuccess(response.body)))
+      .catch(error => {
         dispatch(editUserError(error))
         throw error
       })
@@ -64,13 +64,13 @@ export function editUser({ phone, revisedScheduleAgreedAt, termsAgreedAt }) {
 }
 
 export function fetchUser() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(fetchUserPending())
 
     agent
       .get(`${apiUrl}/api/user`)
-      .then((response) => dispatch(fetchUserSuccess(response.body)))
-      .catch((error) => {
+      .then(response => dispatch(fetchUserSuccess(response.body)))
+      .catch(error => {
         dispatch(fetchUserError(error))
         if (error.status !== 401) {
           throw error

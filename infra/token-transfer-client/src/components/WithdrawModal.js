@@ -9,12 +9,12 @@ import ReactGA from 'react-ga'
 import { addAccount } from '@/actions/account'
 import {
   getError as getAccountsError,
-  getIsAdding as getAccountIsAdding,
+  getIsAdding as getAccountIsAdding
 } from '@/reducers/account'
 import { addTransfer } from '@/actions/transfer'
 import {
   getError as getTransfersError,
-  getIsAdding as getTransferIsAdding,
+  getIsAdding as getTransferIsAdding
 } from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
@@ -52,7 +52,7 @@ class WithdrawModal extends Component {
     if (error && error.status === 422) {
       // Parse validation errors from API
       if (error.response.body && error.response.body.errors) {
-        error.response.body.errors.forEach((e) => {
+        error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       } else {
@@ -74,26 +74,26 @@ class WithdrawModal extends Component {
       modalState: 'Disclaimer',
       nickname: '',
       nicknameError: null,
-      pendingTransfer: null,
+      pendingTransfer: null
     }
     return initialState
   }
 
-  handleFormSubmit = async (event) => {
+  handleFormSubmit = async event => {
     event.preventDefault()
 
     if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
       this.setState({
         amountError: `Withdrawal amount is greater than your balance of ${Number(
           this.props.balance
-        ).toLocaleString()} OGN`,
+        ).toLocaleString()} OGN`
       })
       return
     }
 
     if (!web3Utils.isAddress(this.state.address)) {
       this.setState({
-        addressError: 'Not a valid Ethereum address',
+        addressError: 'Not a valid Ethereum address'
       })
       return
     }
@@ -103,7 +103,7 @@ class WithdrawModal extends Component {
       try {
         await this.props.addAccount({
           nickname: this.state.nickname,
-          address: this.state.address,
+          address: this.state.address
         })
       } catch (error) {
         // Error will be displayed in form, don't continue to two factor input
@@ -114,14 +114,14 @@ class WithdrawModal extends Component {
     this.setState({ modalState: 'TwoFactor' })
   }
 
-  handleTwoFactorFormSubmit = async (event) => {
+  handleTwoFactorFormSubmit = async event => {
     event.preventDefault()
 
     // Do the transfer
     const result = await this.props.addTransfer({
       amount: this.state.amount,
       address: this.state.address,
-      code: this.state.code,
+      code: this.state.code
     })
 
     if (result.type === 'ADD_TRANSFER_SUCCESS') {
@@ -137,14 +137,14 @@ class WithdrawModal extends Component {
     }
   }
 
-  handleAddAccount = (event) => {
+  handleAddAccount = event => {
     event.preventDefault()
     this.setState({
       ...this.getInitialState(),
       address: '',
       amount: this.state.amount,
       modalAddAccount: !this.state.modalAddAccount,
-      modalState: this.state.modalState,
+      modalState: this.state.modalState
     })
   }
 
@@ -153,7 +153,7 @@ class WithdrawModal extends Component {
       ...this.getInitialState(),
       amount: this.state.amount,
       modalAddAccount: !this.state.modalAddAccount,
-      modalState: this.state.modalState,
+      modalState: this.state.modalState
     })
   }
 
@@ -252,7 +252,7 @@ class WithdrawModal extends Component {
                 <strong>
                   <a
                     href="#"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.preventDefault()
                       this.handleModalClose()
                       this.props.onCreateOtcRequest()
@@ -287,7 +287,7 @@ class WithdrawModal extends Component {
   }
 
   renderForm() {
-    const input = formInput(this.state, (state) => this.setState(state))
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
@@ -314,9 +314,9 @@ class WithdrawModal extends Component {
                 <select
                   className="custom-select custom-select-lg"
                   value={this.state.address}
-                  onChange={(e) => this.setState({ address: e.target.value })}
+                  onChange={e => this.setState({ address: e.target.value })}
                 >
-                  {this.props.accounts.map((account) => (
+                  {this.props.accounts.map(account => (
                     <option key={account.address} value={account.address}>
                       {account.nickname}
                     </option>
@@ -392,7 +392,7 @@ class WithdrawModal extends Component {
   renderTwoFactor() {
     const input = formInput(
       this.state,
-      (state) => this.setState(state),
+      state => this.setState(state),
       'text-center w-auto'
     )
     const Feedback = formFeedback(this.state)
@@ -484,15 +484,15 @@ const mapStateToProps = ({ account, transfer }) => {
     accountError: getAccountsError(account),
     accountIsAdding: getAccountIsAdding(account),
     transferError: getTransfersError(transfer),
-    transferIsAdding: getTransferIsAdding(transfer),
+    transferIsAdding: getTransferIsAdding(transfer)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addAccount: addAccount,
-      addTransfer: addTransfer,
+      addTransfer: addTransfer
     },
     dispatch
   )

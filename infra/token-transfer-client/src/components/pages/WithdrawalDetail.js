@@ -11,7 +11,7 @@ import {
   getTransfers,
   getError as getTransferError,
   getIsLoading as getTransferIsLoading,
-  getIsConfirming as getTransferIsConfirming,
+  getIsConfirming as getTransferIsConfirming
 } from '@/reducers/transfer'
 import BorderedCard from '@/components/BorderedCard'
 import EthAddress from '@/components/EthAddress'
@@ -39,7 +39,7 @@ class WithdrawalDetail extends Component {
       const token = this.props.match.params.token
       if (token) {
         const transferToConfirm = this.props.transfers.find(
-          (t) => t.id == this.props.match.params.id
+          t => t.id == this.props.match.params.id
         )
         if (
           transferToConfirm &&
@@ -62,7 +62,7 @@ class WithdrawalDetail extends Component {
     }
 
     const transfer = this.props.transfers.find(
-      (t) => t.id == this.props.match.params.id
+      t => t.id == this.props.match.params.id
     )
 
     if (!transfer) {
@@ -72,10 +72,14 @@ class WithdrawalDetail extends Component {
     const now = moment.utc()
     const expires = moment.utc(transfer.createdAt)
     const expiryString = `${Math.max(
-      moment(transfer.createdAt).add(5, 'minutes').diff(now, 'minutes'),
+      moment(transfer.createdAt)
+        .add(5, 'minutes')
+        .diff(now, 'minutes'),
       0
     )}m ${Math.max(
-      moment(transfer.createdAt).add(5, 'minutes').diff(now, 'seconds') % 60,
+      moment(transfer.createdAt)
+        .add(5, 'minutes')
+        .diff(now, 'seconds') % 60,
       0
     )}s`
     const hasExpired =
@@ -200,15 +204,15 @@ const mapStateToProps = ({ transfer }) => {
     transfers: getTransfers(transfer),
     transferError: getTransferError(transfer),
     transferIsLoading: getTransferIsLoading(transfer),
-    transferIsConfirming: getTransferIsConfirming(transfer),
+    transferIsConfirming: getTransferIsConfirming(transfer)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchTransfers: fetchTransfers,
-      confirmTransfer: confirmTransfer,
+      confirmTransfer: confirmTransfer
     },
     dispatch
   )

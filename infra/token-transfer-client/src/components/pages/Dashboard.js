@@ -9,29 +9,29 @@ import { getNextVest } from '@origin/token-transfer-server/src/shared'
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
-  getIsLoading as getAccountIsLoading,
+  getIsLoading as getAccountIsLoading
 } from '@/reducers/account'
 import { fetchConfig } from '@/actions/config'
 import {
   getConfig,
-  getIsLoading as getConfigIsLoading,
+  getIsLoading as getConfigIsLoading
 } from '@/reducers/config'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
   getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals,
+  getTotals as getGrantTotals
 } from '@/reducers/grant'
 import { fetchLockups } from '@/actions/lockup'
 import {
   getLockups,
   getIsLoading as getLockupIsLoading,
-  getTotals as getLockupTotals,
+  getTotals as getLockupTotals
 } from '@/reducers/lockup'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount,
+  getWithdrawnAmount
 } from '@/reducers/transfer'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
@@ -44,7 +44,7 @@ import BonusCta from '@/components/BonusCta'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
 
-const Dashboard = (props) => {
+const Dashboard = props => {
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
   const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
   const [displayOtcRequestModal, setDisplayOtcRequestModal] = useState(false)
@@ -209,7 +209,7 @@ const mapStateToProps = ({
   grant,
   lockup,
   transfer,
-  user,
+  user
 }) => {
   return {
     accounts: getAccounts(account),
@@ -223,18 +223,18 @@ const mapStateToProps = ({
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
     transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchAccounts: fetchAccounts,
       fetchConfig: fetchConfig,
       fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
-      fetchTransfers: fetchTransfers,
+      fetchTransfers: fetchTransfers
     },
     dispatch
   )

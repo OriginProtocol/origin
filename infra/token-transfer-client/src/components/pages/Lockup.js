@@ -8,29 +8,29 @@ import BigNumber from 'bignumber.js'
 import { fetchConfig } from '@/actions/config'
 import {
   getConfig,
-  getIsLoading as getConfigIsLoading,
+  getIsLoading as getConfigIsLoading
 } from '@/reducers/config'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
   getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals,
+  getTotals as getGrantTotals
 } from '@/reducers/grant'
 import { confirmLockup, fetchLockups } from '@/actions/lockup'
 import {
   getLockups,
   getTotals as getLockupTotals,
-  getIsLoading as getLockupIsLoading,
+  getIsLoading as getLockupIsLoading
 } from '@/reducers/lockup'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount,
+  getWithdrawnAmount
 } from '@/reducers/transfer'
 import BonusModal from '@/components/BonusModal'
 import LockupGraph from '@/components/LockupGraph'
 
-const Lockup = (props) => {
+const Lockup = props => {
   useEffect(() => {
     props.fetchConfig(),
       props.fetchGrants(),
@@ -60,10 +60,10 @@ const Lockup = (props) => {
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
 
-  const renderLockups = (lockups) => {
+  const renderLockups = lockups => {
     const now = moment.utc()
 
-    const rows = lockups.map((lockup) => {
+    const rows = lockups.map(lockup => {
       return (
         <tr key={lockup.id}>
           <td>
@@ -195,18 +195,18 @@ const mapStateToProps = ({ config, grant, lockup, transfer, user }) => {
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
     transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       confirmLockup: confirmLockup,
       fetchConfig: fetchConfig,
       fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
-      fetchTransfers: fetchTransfers,
+      fetchTransfers: fetchTransfers
     },
     dispatch
   )

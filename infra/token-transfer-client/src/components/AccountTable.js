@@ -8,7 +8,7 @@ import {
   getAccounts,
   getError,
   getIsAdding,
-  getIsLoading,
+  getIsLoading
 } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
@@ -26,7 +26,7 @@ class AccountTable extends Component {
     if (prevProps.error !== this.props.error) {
       if (this.props.error && this.props.error.status === 422) {
         // Parse validation errors from API
-        this.props.error.response.body.errors.forEach((e) => {
+        this.props.error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       }
@@ -39,17 +39,17 @@ class AccountTable extends Component {
       nicknameError: '',
       address: '',
       addressError: '',
-      displayModal: false,
+      displayModal: false
     }
     return initialState
   }
 
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault()
 
     const result = await this.props.addAccount({
       nickname: this.state.nickname,
-      address: this.state.address,
+      address: this.state.address
     })
 
     if (result.type === 'ADD_ACCOUNT_SUCCESS') {
@@ -57,7 +57,7 @@ class AccountTable extends Component {
     }
   }
 
-  handleDeleteAccount = (id) => {
+  handleDeleteAccount = id => {
     const result = window.confirm(
       'Are you sure you want to delete that account?'
     )
@@ -89,7 +89,7 @@ class AccountTable extends Component {
           <div className="col-5 text-right">
             <a
               href="#"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault()
                 this.setState({ displayModal: true })
               }}
@@ -118,7 +118,7 @@ class AccountTable extends Component {
                       </td>
                     </tr>
                   ) : (
-                    this.props.accounts.map((account) => (
+                    this.props.accounts.map(account => (
                       <tr key={account.address}>
                         <td>{account.nickname}</td>
                         <td>
@@ -144,7 +144,7 @@ class AccountTable extends Component {
   }
 
   renderModal() {
-    const input = formInput(this.state, (state) => this.setState(state))
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
@@ -190,15 +190,15 @@ const mapStateToProps = ({ account }) => {
     accounts: getAccounts(account),
     isAdding: getIsAdding(account),
     isLoading: getIsLoading(account),
-    error: getError(account),
+    error: getError(account)
   }
 }
 
-const mapDispatchToProps = (dispatch) =>
+const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addAccount: addAccount,
-      deleteAccount: deleteAccount,
+      deleteAccount: deleteAccount
     },
     dispatch
   )
