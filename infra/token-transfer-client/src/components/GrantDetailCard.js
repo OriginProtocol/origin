@@ -3,7 +3,7 @@ import React from 'react'
 import BorderedCard from '@/components/BorderedCard'
 import GrantDetail from '@/components/GrantDetail'
 
-const GrantDetailCard = props => {
+const GrantDetailCard = (props) => {
   return (
     <BorderedCard>
       {props.grants.length > 0 ? (

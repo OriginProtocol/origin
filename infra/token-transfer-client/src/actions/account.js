@@ -13,73 +13,73 @@ export const FETCH_ACCOUNTS_ERROR = 'FETCH_ACCOUNTS_ERROR'
 
 function addAccountPending() {
   return {
-    type: ADD_ACCOUNT_PENDING
+    type: ADD_ACCOUNT_PENDING,
   }
 }
 
 function addAccountSuccess(payload) {
   return {
     type: ADD_ACCOUNT_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function addAccountError(error) {
   return {
     type: ADD_ACCOUNT_ERROR,
-    error
+    error,
   }
 }
 
 function deleteAccountPending() {
   return {
-    type: DELETE_ACCOUNT_PENDING
+    type: DELETE_ACCOUNT_PENDING,
   }
 }
 
 function deleteAccountSuccess(payload) {
   return {
     type: DELETE_ACCOUNT_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function deleteAccountError(error) {
   return {
     type: DELETE_ACCOUNT_ERROR,
-    error
+    error,
   }
 }
 
 function fetchAccountsPending() {
   return {
-    type: FETCH_ACCOUNTS_PENDING
+    type: FETCH_ACCOUNTS_PENDING,
   }
 }
 
 function fetchAccountsSuccess(payload) {
   return {
     type: FETCH_ACCOUNTS_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function fetchAccountsError(error) {
   return {
     type: FETCH_ACCOUNTS_ERROR,
-    error
+    error,
   }
 }
 
 export function addAccount(account) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(addAccountPending())
 
     return agent
       .post(`${apiUrl}/api/accounts`)
       .send(account)
-      .then(response => dispatch(addAccountSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(addAccountSuccess(response.body)))
+      .catch((error) => {
         dispatch(addAccountError(error))
         throw error
       })
@@ -87,13 +87,13 @@ export function addAccount(account) {
 }
 
 export function deleteAccount(id) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(deleteAccountPending())
 
     return agent
       .delete(`${apiUrl}/api/accounts/${id}`)
       .then(() => dispatch(deleteAccountSuccess(id)))
-      .catch(error => {
+      .catch((error) => {
         dispatch(deleteAccountError(error))
         throw error
       })
@@ -101,13 +101,13 @@ export function deleteAccount(id) {
 }
 
 export function fetchAccounts() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(fetchAccountsPending())
 
     return agent
       .get(`${apiUrl}/api/accounts`)
-      .then(response => dispatch(fetchAccountsSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(fetchAccountsSuccess(response.body)))
+      .catch((error) => {
         dispatch(fetchAccountsError(error))
         if (error.status !== 401) {
           throw error

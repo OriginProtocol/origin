@@ -3,33 +3,34 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import BigNumber from 'bignumber.js'
 
 import { fetchConfig } from '@/actions/config'
 import {
   getConfig,
-  getIsLoading as getConfigIsLoading
+  getIsLoading as getConfigIsLoading,
 } from '@/reducers/config'
 import { fetchGrants } from '@/actions/grant'
 import {
   getGrants,
   getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals
+  getTotals as getGrantTotals,
 } from '@/reducers/grant'
 import { confirmLockup, fetchLockups } from '@/actions/lockup'
 import {
   getLockups,
   getTotals as getLockupTotals,
-  getIsLoading as getLockupIsLoading
+  getIsLoading as getLockupIsLoading,
 } from '@/reducers/lockup'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount
+  getWithdrawnAmount,
 } from '@/reducers/transfer'
-import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
+import LockupGraph from '@/components/LockupGraph'
 
-const Lockup = props => {
+const Lockup = (props) => {
   useEffect(() => {
     props.fetchConfig(),
       props.fetchGrants(),
@@ -59,14 +60,68 @@ const Lockup = props => {
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
 
-  const renderLockups = lockups => {
-    return lockups.map(lockup => {
+  const renderLockups = (lockups) => {
+    const now = moment.utc()
+
+    const rows = lockups.map((lockup) => {
       return (
-        <div key={lockup.id} className="mb-3">
-          <LockupCard lockup={lockup} />
-        </div>
+        <tr key={lockup.id}>
+          <td>
+            <div className="d-flex align-items-center">
+              <div className="d-inline-block mr-4">
+                <LockupGraph lockup={lockup} />
+              </div>
+              <strong>
+                {Number(lockup.amount).toLocaleString()} OGN Lockup
+              </strong>
+            </div>
+          </td>
+          <td>{moment(lockup.createdAt).format('LL')}</td>
+          <td>
+            {moment(lockup.end).diff(now, 'days')}d{' '}
+            {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
+            {moment(lockup.end).diff(now, 'minutes') % 60}m
+          </td>
+          <td>
+            <div
+              className="status-circle bg-blue"
+              style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
+            ></div>{' '}
+            {Number(lockup.amount).toLocaleString()}{' '}
+            <span className="ogn">OGN</span>
+          </td>
+          <td>
+            <div
+              className="status-circle status-circle-secondary"
+              style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
+            ></div>{' '}
+            {Number(
+              BigNumber((lockup.amount * lockup.bonusRate) / 100).toFixed(
+                0,
+                BigNumber.ROUND_HALF_UP
+              )
+            ).toLocaleString()}{' '}
+            <span className="ogn">OGN</span>
+          </td>
+          <td>{lockup.bonusRate}%</td>
+        </tr>
       )
     })
+    return (
+      <table className="table table-borderless table-card-rows">
+        <thead>
+          <tr>
+            <th>Lock up name</th>
+            <th>Created</th>
+            <th>Unlocks</th>
+            <th>Lock up amount</th>
+            <th>Bonus tokens</th>
+            <th>Yield %</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    )
   }
 
   return (
@@ -79,9 +134,9 @@ const Lockup = props => {
         />
       )}
 
-      <div className="row align-items-center mb-4">
+      <div className="row align-items-center">
         <div className="col-12 col-md-4">
-          <h1>Bonus Tokens</h1>
+          <h1 className="mb-2">Bonus Tokens</h1>
         </div>
         <div className="col-12 col-md-2">
           <small>
@@ -140,18 +195,18 @@ const mapStateToProps = ({ config, grant, lockup, transfer, user }) => {
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
     transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer)
+    withdrawnAmount: getWithdrawnAmount(transfer),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       confirmLockup: confirmLockup,
       fetchConfig: fetchConfig,
       fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
-      fetchTransfers: fetchTransfers
+      fetchTransfers: fetchTransfers,
     },
     dispatch
   )

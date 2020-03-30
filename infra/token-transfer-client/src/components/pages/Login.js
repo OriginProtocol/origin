@@ -10,7 +10,7 @@ class Login extends Component {
     email: '',
     emailError: null,
     loading: false,
-    redirectTo: null
+    redirectTo: null,
   }
 
   handleSendEmailToken = async () => {
@@ -27,7 +27,7 @@ class Login extends Component {
     } catch (error) {
       this.setState({
         loading: false,
-        emailError: 'Failed to send email token. Try again shortly.'
+        emailError: 'Failed to send email token. Try again shortly.',
       })
       return
     }
@@ -38,7 +38,7 @@ class Login extends Component {
   render() {
     const input = formInput(
       this.state,
-      state => this.setState(state),
+      (state) => this.setState(state),
       'text-center'
     )
     const Feedback = formFeedback(this.state)

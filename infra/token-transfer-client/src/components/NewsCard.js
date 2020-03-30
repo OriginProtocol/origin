@@ -2,7 +2,7 @@ import React from 'react'
 
 import BorderedCard from './BorderedCard'
 
-const NewsCard = props => (
+const NewsCard = (props) => (
   <BorderedCard className="p-0 my-3 mx-2">
     {props.feature && (
       <div className="p-4">
@@ -17,7 +17,7 @@ const NewsCard = props => (
         backgroundRepeat: 'no-repeat',
         borderTopLeftRadius: props.feature ? 0 : '5px',
         borderTopRightRadius: props.feature ? 0 : '5px',
-        backgroundPosition: 'center bottom'
+        backgroundPosition: 'center bottom',
       }}
     ></div>
     {!props.feature && (

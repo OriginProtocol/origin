@@ -61,7 +61,7 @@ class Security extends Component {
                     backgroundImage: `url(${GoogleAuthenticatorIcon})`,
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
-                    margin: '-20px -10px -20px 0'
+                    margin: '-20px -10px -20px 0',
                   }}
                 ></div>
                 <div className="col-md-8">Google Authenticator</div>
@@ -87,10 +87,10 @@ class Security extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      fetchAccounts: fetchAccounts
+      fetchAccounts: fetchAccounts,
     },
     dispatch
   )

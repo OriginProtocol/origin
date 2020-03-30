@@ -5,18 +5,18 @@ import get from 'lodash.get'
 import Swiper from 'react-id-swiper'
 import 'swiper/css/swiper.css'
 
-const GrantDetail = props => {
+const GrantDetail = (props) => {
   const swiperParams = {
     autoHeight: true,
     slidesPerView: 1,
     pagination: {
       el: '.swiper-pagination',
       type: 'bullets',
-      clickable: true
-    }
+      clickable: true,
+    },
   }
 
-  const details = props.grants.map(grant => {
+  const details = props.grants.map((grant) => {
     return (
       <div key={grant.id}>
         <div className="row mt-4 mb-2">
@@ -33,9 +33,7 @@ const GrantDetail = props => {
           </div>
           {grant.purchaseDate && (
             <div className="col font-weigbt-bold text-right">
-              {moment(grant.purchaseDate)
-                .utc()
-                .format('LL')}
+              {moment(grant.purchaseDate).utc().format('LL')}
             </div>
           )}
         </div>
@@ -70,7 +68,7 @@ const GrantDetail = props => {
   return (
     <>
       <h2 className="mb-2">Investment Details</h2>
-      <div className="table-card" style={{ fontSize: '14px' }}>
+      <div>
         {details.length > 1 ? (
           <Swiper {...swiperParams}>{details}</Swiper>
         ) : (

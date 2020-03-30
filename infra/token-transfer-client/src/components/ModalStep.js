@@ -1,7 +1,7 @@
 import React from 'react'
 
 const ModalStep = ({ steps, completedSteps }) => {
-  const renderStep = i => {
+  const renderStep = (i) => {
     const isCompleted = i <= completedSteps - 1
     return (
       <div

@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 
 import { confirmLockup } from '@/actions/lockup'
 
-const LockupConfirm = props => {
+const LockupConfirm = (props) => {
   const [loading, setLoading] = useState(true)
   const [redirectTo, setRedirectTo] = useState(null)
   // API call to confirm a lockup if an id and token is present in the URL
@@ -61,10 +61,10 @@ const LockupConfirm = props => {
   )
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      confirmLockup: confirmLockup
+      confirmLockup: confirmLockup,
     },
     dispatch
   )

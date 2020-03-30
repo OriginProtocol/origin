@@ -9,7 +9,7 @@ export default class Modal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      anim: 'is-entering'
+      anim: 'is-entering',
     }
     this.portal = document.createElement('div')
   }
@@ -64,7 +64,7 @@ export default class Modal extends Component {
         />
         <div
           className={`${this.props.classNameOuter || ''} pl-modal`}
-          onMouseDown={e => !this.props.disableDismiss && this.onClose(e)}
+          onMouseDown={(e) => !this.props.disableDismiss && this.onClose(e)}
         >
           <div className="pl-modal-table">
             <div
@@ -80,7 +80,7 @@ export default class Modal extends Component {
                   <a
                     href="#"
                     className="close"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault()
                       this.doClose()
                     }}
@@ -118,7 +118,7 @@ export default class Modal extends Component {
     this.setState({ anim: 'is-leaving' })
     setTimeout(() => {
       this.setState({
-        anim: `is-leaving is-${this.props.submitted ? 'submitted' : 'closed'}`
+        anim: `is-leaving is-${this.props.submitted ? 'submitted' : 'closed'}`,
       })
     }, 10)
 

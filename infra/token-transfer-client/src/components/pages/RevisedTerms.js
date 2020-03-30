@@ -14,7 +14,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
 
   const handleSubmit = async () => {
     const result = await editUser({
-      revisedScheduleAgreedAt: moment()
+      revisedScheduleAgreedAt: moment(),
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
       setRedirectTo(getNextOnboardingPage(result.payload))
@@ -232,7 +232,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
             className="form-check-input"
             type="checkbox"
             id="acceptCheck"
-            onClick={e => setAccepted(e.target.checked)}
+            onClick={(e) => setAccepted(e.target.checked)}
             defaultChecked
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
@@ -253,14 +253,14 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
 
 const mapStateToProps = ({ user }) => {
   return {
-    userIsEditing: getUserIsEditing(user)
+    userIsEditing: getUserIsEditing(user),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      editUser: editUser
+      editUser: editUser,
     },
     dispatch
   )

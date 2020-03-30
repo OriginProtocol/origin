@@ -180,7 +180,7 @@ export default [
   {
     code: 'sh',
     name: 'Saint Helena, Ascension and Tristan da Cunha',
-    prefix: '290'
+    prefix: '290',
   },
   { code: 'si', name: 'Slovenia', prefix: '386' },
   { code: 'sk', name: 'Slovakia', prefix: '421' },
@@ -227,5 +227,5 @@ export default [
   { code: 'ye', name: 'Yemen', prefix: '967' },
   { code: 'za', name: 'South Africa', prefix: '27' },
   { code: 'zm', name: 'Zambia', prefix: '260' },
-  { code: 'zw', name: 'Zimbabwe', prefix: '263' }
+  { code: 'zw', name: 'Zimbabwe', prefix: '263' },
 ]

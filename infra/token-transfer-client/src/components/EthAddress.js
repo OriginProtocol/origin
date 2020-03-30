@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EthAddress = props => (
+const EthAddress = (props) => (
   <span className="eth-address">
     {props.long
       ? props.address

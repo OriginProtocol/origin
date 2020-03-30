@@ -7,7 +7,7 @@ import moment from 'moment'
 import BorderedCard from '@/components/BorderedCard'
 import DropdownDotsToggle from '@/components/DropdownDotsToggle'
 
-const BalanceCard = props => {
+const BalanceCard = (props) => {
   const [redirectTo, setRedirectTo] = useState(false)
 
   const doughnutData = () => {
@@ -17,9 +17,9 @@ const BalanceCard = props => {
         {
           data: [Number(props.balance), Number(props.locked)],
           backgroundColor: ['#00db8d', '#007cff'],
-          borderWidth: 0
-        }
-      ]
+          borderWidth: 0,
+        },
+      ],
     }
   }
 
@@ -123,7 +123,7 @@ const BalanceCard = props => {
             </div>
           </div>
           {props.lockupsEnabled && (
-            <div className="row">
+            <div className="row mt-2">
               <div className="col-1 text-right">
                 <div className="status-circle bg-blue"></div>
               </div>

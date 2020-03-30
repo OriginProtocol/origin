@@ -11,16 +11,17 @@ const BonusCard = ({
   isLocked,
   locked,
   lockups,
-  onDisplayBonusModal
+  onDisplayBonusModal,
 }) => {
-  const renderLockupGraphs = lockups => {
-    return lockups.slice(0, 3).map(lockup => {
+  const renderLockupGraphs = (lockups) => {
+    const graphs = lockups.slice(0, 3).map((lockup) => {
       return (
-        <div className="ml-2 my-2" key={lockup.id}>
+        <div className="col" key={lockup.id}>
           <LockupGraph lockup={lockup} />
         </div>
       )
     })
+    return <div className="row mt-3">{graphs}</div>
   }
 
   if (isLocked) {
@@ -40,13 +41,11 @@ const BonusCard = ({
 
   return (
     <BorderedCard>
-      <div className="hot-badge bg-red">
-        HOT
-      </div>
+      <div className="hot-badge bg-red">HOT</div>
       <div className="row">
         <div className="col">
           <h2>Bonus Tokens</h2>
-          <div className="my-3">
+          <div className="mt-3 mb-2">
             <div>Earned</div>
             <strong style={{ fontSize: '24px' }}>
               {earnings.toLocaleString()}

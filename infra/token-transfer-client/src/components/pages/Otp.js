@@ -10,7 +10,7 @@ class Otp extends Component {
     loading: false,
     otpCode: '',
     otpCodeError: null,
-    redirectToDashboard: false
+    redirectToDashboard: false,
   }
 
   handleVerifyOtpCode = async () => {
@@ -34,7 +34,7 @@ class Otp extends Component {
 
     const input = formInput(
       this.state,
-      state => this.setState(state),
+      (state) => this.setState(state),
       'text-center w-auto'
     )
     const Feedback = formFeedback(this.state)

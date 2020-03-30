@@ -13,73 +13,73 @@ export const FETCH_TRANSFERS_ERROR = 'FETCH_TRANSFERS_ERROR'
 
 function addTransferPending() {
   return {
-    type: ADD_TRANSFER_PENDING
+    type: ADD_TRANSFER_PENDING,
   }
 }
 
 function addTransferSuccess(payload) {
   return {
     type: ADD_TRANSFER_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function addTransferError(error) {
   return {
     type: ADD_TRANSFER_ERROR,
-    error
+    error,
   }
 }
 
 function confirmTransferPending() {
   return {
-    type: CONFIRM_TRANSFER_PENDING
+    type: CONFIRM_TRANSFER_PENDING,
   }
 }
 
 function confirmTransferSuccess(payload) {
   return {
     type: CONFIRM_TRANSFER_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function confirmTransferError(error) {
   return {
     type: CONFIRM_TRANSFER_ERROR,
-    error
+    error,
   }
 }
 
 function fetchTransfersPending() {
   return {
-    type: FETCH_TRANSFERS_PENDING
+    type: FETCH_TRANSFERS_PENDING,
   }
 }
 
 function fetchTransfersSuccess(payload) {
   return {
     type: FETCH_TRANSFERS_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function fetchTransfersError(error) {
   return {
     type: FETCH_TRANSFERS_ERROR,
-    error
+    error,
   }
 }
 
 export function addTransfer(transfer) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(addTransferPending())
 
     return agent
       .post(`${apiUrl}/api/transfers`)
       .send(transfer)
-      .then(response => dispatch(addTransferSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(addTransferSuccess(response.body)))
+      .catch((error) => {
         dispatch(addTransferError(error))
         throw error
       })
@@ -87,14 +87,14 @@ export function addTransfer(transfer) {
 }
 
 export function confirmTransfer(id, token) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(confirmTransferPending())
 
     return agent
       .post(`${apiUrl}/api/transfers/${id}`)
       .send({ token })
-      .then(response => dispatch(confirmTransferSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(confirmTransferSuccess(response.body)))
+      .catch((error) => {
         dispatch(confirmTransferError(error))
         throw error
       })
@@ -102,13 +102,13 @@ export function confirmTransfer(id, token) {
 }
 
 export function fetchTransfers() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(fetchTransfersPending())
 
     agent
       .get(`${apiUrl}/api/transfers`)
-      .then(response => dispatch(fetchTransfersSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(fetchTransfersSuccess(response.body)))
+      .catch((error) => {
         dispatch(fetchTransfersError(error))
         if (error.status !== 401) {
           throw error

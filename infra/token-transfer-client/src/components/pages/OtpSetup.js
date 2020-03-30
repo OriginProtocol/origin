@@ -10,7 +10,7 @@ class OtpSetup extends Component {
     otpQrUrl: null,
     otpKey: null,
     error: null,
-    redirectToVerify: false
+    redirectToVerify: false,
   }
 
   componentDidMount() {
@@ -34,7 +34,7 @@ class OtpSetup extends Component {
     this.setState({
       otpQrUrl: response.body.otpQrUrl,
       otpKey: response.body.otpKey,
-      loading: false
+      loading: false,
     })
   }
 

@@ -6,33 +6,33 @@ export const FETCH_NEWS_ERROR = 'FETCH_NEWS_ERROR'
 
 function fetchNewsPending() {
   return {
-    type: FETCH_NEWS_PENDING
+    type: FETCH_NEWS_PENDING,
   }
 }
 
 function fetchNewsSuccess(payload) {
   return {
     type: FETCH_NEWS_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function fetchNewsError(error) {
   return {
     type: FETCH_NEWS_ERROR,
-    error
+    error,
   }
 }
 
 export function fetchNews() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(fetchNewsPending())
 
     const mediumUrl = 'https://medium.com/feed/originprotocol'
     request
       .get(`https://api.rss2json.com/v1/api.json?rss_url=${mediumUrl}`)
-      .then(response => dispatch(fetchNewsSuccess(response.body.items)))
-      .catch(error => {
+      .then((response) => dispatch(fetchNewsSuccess(response.body.items)))
+      .catch((error) => {
         dispatch(fetchNewsError(error))
         throw error
       })

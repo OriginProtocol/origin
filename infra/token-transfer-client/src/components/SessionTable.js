@@ -7,10 +7,10 @@ import get from 'lodash.get'
 import { fetchEvents } from '@/actions/event'
 import { getEvents, getError, getIsLoading } from '@/reducers/event'
 
-const SessionTable = props => {
+const SessionTable = (props) => {
   useEffect(props.fetchEvents, [])
 
-  const loginEvents = props.events.filter(e => e.action === 'LOGIN')
+  const loginEvents = props.events.filter((e) => e.action === 'LOGIN')
 
   if (props.isLoading) {
     return (
@@ -49,7 +49,7 @@ const SessionTable = props => {
                     </td>
                   </tr>
                 ) : (
-                  loginEvents.map(event => (
+                  loginEvents.map((event) => (
                     <tr key={event.id}>
                       <td>{event.data.ip}</td>
                       <td>
@@ -91,14 +91,14 @@ const mapStateToProps = ({ event }) => {
   return {
     events: getEvents(event),
     isLoading: getIsLoading(event),
-    error: getError(event)
+    error: getError(event),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      fetchEvents: fetchEvents
+      fetchEvents: fetchEvents,
     },
     dispatch
   )

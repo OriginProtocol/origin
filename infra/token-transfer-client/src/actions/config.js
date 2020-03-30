@@ -7,32 +7,32 @@ export const FETCH_CONFIG_ERROR = 'FETCH_CONFIG_ERROR'
 
 function fetchConfigPending() {
   return {
-    type: FETCH_CONFIG_PENDING
+    type: FETCH_CONFIG_PENDING,
   }
 }
 
 function fetchConfigSuccess(payload) {
   return {
     type: FETCH_CONFIG_SUCCESS,
-    payload
+    payload,
   }
 }
 
 function fetchConfigError(error) {
   return {
     type: FETCH_CONFIG_ERROR,
-    error
+    error,
   }
 }
 
 export function fetchConfig() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(fetchConfigPending())
 
     agent
       .get(`${apiUrl}/api/config`)
-      .then(response => dispatch(fetchConfigSuccess(response.body)))
-      .catch(error => {
+      .then((response) => dispatch(fetchConfigSuccess(response.body)))
+      .catch((error) => {
         dispatch(fetchConfigError(error))
         throw error
       })

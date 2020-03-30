@@ -58,7 +58,7 @@ const Terms = ({ editUser, userIsEditing }) => {
             type="checkbox"
             value=""
             id="acceptCheck"
-            onClick={e => setAccepted(e.target.checked)}
+            onClick={(e) => setAccepted(e.target.checked)}
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
             I have read and agree to the above Terms of Use and the{' '}
@@ -94,14 +94,14 @@ const Terms = ({ editUser, userIsEditing }) => {
 
 const mapStateToProps = ({ user }) => {
   return {
-    userIsEditing: getUserIsEditing(user)
+    userIsEditing: getUserIsEditing(user),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      editUser: editUser
+      editUser: editUser,
     },
     dispatch
   )

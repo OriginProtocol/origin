@@ -42,7 +42,7 @@ const PrivateRoute = ({
     <>
       <Route
         {...rest}
-        render={props => {
+        render={(props) => {
           return (
             <div className="logged-in d-flex">
               {isLoading || !user ? (
@@ -92,15 +92,15 @@ const mapStateToProps = ({ session, user }) => {
   return {
     isLoading: getIsLoading(user),
     sessionExpired: getSessionExpired(session),
-    user: getUser(user)
+    user: getUser(user),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       fetchUser: fetchUser,
-      setSessionExpired: setSessionExpired
+      setSessionExpired: setSessionExpired,
     },
     dispatch
   )

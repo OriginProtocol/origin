@@ -26,7 +26,7 @@ const OnboardingRoute = ({
   return (
     <Route
       {...rest}
-      render={props => (
+      render={(props) => (
         <div className="not-logged-in">
           <div className="text-center" style={{ backgroundColor: '#007cff' }}>
             <img src={Logo} className="my-5" style={{ width: '160px' }} />
@@ -50,15 +50,15 @@ const mapStateToProps = ({ session, user }) => {
   return {
     isLoading: getIsLoading(user),
     sessionExpired: getSessionExpired(session),
-    user: getUser(user)
+    user: getUser(user),
   }
 }
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       fetchUser: fetchUser,
-      setSessionExpired: setSessionExpired
+      setSessionExpired: setSessionExpired,
     },
     dispatch
   )

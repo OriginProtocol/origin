@@ -5,7 +5,7 @@ import VestingBars from '@/components/VestingBars'
 import VestingHistory from '@/components/VestingHistory'
 import VestingSchedule from '@/assets/schedule@3x.png'
 
-const VestingCard = props => {
+const VestingCard = (props) => {
   return (
     <BorderedCard style={{ minHeight: '100%' }}>
       <VestingBars

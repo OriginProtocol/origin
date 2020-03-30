@@ -25,7 +25,7 @@ export default createStore(
     otc,
     session,
     transfer,
-    user
+    user,
   }),
   composeEnhancers(applyMiddleware(thunk))
 )

@@ -5,7 +5,7 @@ import { apiUrl } from '@/constants'
 import { getNextOnboardingPage } from '@/utils'
 import agent from '@/utils/agent'
 
-const HandleLogin = props => {
+const HandleLogin = (props) => {
   const [redirectTo, setRedirectTo] = useState(null)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const HandleLogin = props => {
     }
   }, [])
 
-  const handleLoginToken = async token => {
+  const handleLoginToken = async (token) => {
     let response
     try {
       response = await agent

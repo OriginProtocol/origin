@@ -77,7 +77,7 @@ function getModules() {
 
   return {
     additionalModulePaths: additionalModulePaths,
-    hasTsConfig
+    hasTsConfig,
   }
 }
 
