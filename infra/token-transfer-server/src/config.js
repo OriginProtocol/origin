@@ -65,14 +65,14 @@ const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 17.5
 const earlyLockupBonusRate = process.env.EARLY_LOCKUP_BONUS_RATE || 35
 
 // Date early lockups are enabled until
-const earlyLockupsEnabledUntil = process.env.EARLY_LOCKUP_ENABLED_UNTIL
+const earlyLockupsEnabledUntil = process.env.EARLY_LOCKUPS_ENABLED_UNTIL
 
 // Whether early lockups are enabled, derived from the date lockups are enakjbled until
 const earlyLockupsEnabled = moment(
   earlyLockupsEnabledUntil,
   'YYYY-MM-DD'
 ).isValid()
-  ? moment.utc(earlysLockupEnabledUntil) > moment.utc()
+  ? moment.utc(earlyLockupsEnabledUntil) > moment.utc()
   : false
 
 // Lockup duration in months
