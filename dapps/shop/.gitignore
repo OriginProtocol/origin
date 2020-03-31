@@ -6,11 +6,6 @@ public/*
 !public/favicon.ico
 /data/*
 !/data/example*
-scripts/output*
-scripts/conv.sh
-backend-old/db/*.db
-backend-old/tstEmail.js
-backend-old/.git
-backend-old/public
+backend/scripts/output*
 TODO
 .env*

@@ -24,9 +24,12 @@ async function downloadMockups({ OutputDir, id, taskJson }) {
   const prefix = `${OutputDir}/images-printful/product-${id}`
   for (const file of files) {
     fs.mkdirSync(prefix, { recursive: true })
-
-    const f = fs.createWriteStream(`${prefix}/${file.name}`)
-    https.get(file.url, response => response.pipe(f))
+    await new Promise(resolve => {
+      const f = fs
+        .createWriteStream(`${prefix}/${file.name}`)
+        .on('finish', resolve)
+      https.get(file.url, response => response.pipe(f))
+    })
   }
 }
 

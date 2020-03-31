@@ -29,7 +29,7 @@ const Checkout = () => {
     if (window.Stripe) {
       setStripe(window.Stripe(config.stripeKey))
     } else {
-      if (config.stripe) {
+      if (config.stripe && config.stripeKey) {
         const script = document.createElement('script')
         script.src = 'https://js.stripe.com/v3/'
         script.addEventListener('load', () => {
