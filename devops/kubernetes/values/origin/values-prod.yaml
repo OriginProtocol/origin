@@ -77,7 +77,7 @@ t3ServerImageTag: '13443c8'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: 'd67f8dc'
+authImageTag: 'c77fdce'
 
 # origin-ipfs-issuer
 ipfsIssuerIp: '35.247.86.209'
