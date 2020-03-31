@@ -178,7 +178,7 @@ class OtcRequestModal extends Component {
     return (
       <>
         <div className="my-3">
-          <img src={SuccessIcon} />
+          <SuccessIcon />
         </div>
         <h1 className="mb-2">Thank you!</h1>
         <p>Our OTC partner will be in touch.</p>

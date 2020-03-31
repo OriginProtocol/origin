@@ -179,7 +179,7 @@ class WithdrawModal extends Component {
     return (
       <div className="row text-center align-items-center text-sm-left mb-3">
         <div className="col-12 col-sm-2 text-center">
-          <img src={OgnIcon} className="icon-xl" />
+          <OgnIcon className="icon-xl" />
         </div>
         <div className="col">
           <h1 className="mb-2">Withdraw OGN</h1>
@@ -241,7 +241,7 @@ class WithdrawModal extends Component {
                 className="card text-left p-4 mt-3 mr-3"
                 style={{ backgroundColor: '#eff6f9' }}
               >
-                <img src={OtcDesk} className="mb-3" />
+                <OtcDesk className="mb-3" />
                 <strong className="mb-2">
                   Looking to sell a large quantity of OGN?
                 </strong>
@@ -452,7 +452,7 @@ class WithdrawModal extends Component {
     return (
       <>
         <div className="mt-5 mb-3">
-          <img src={EmailIcon} />
+          <EmailIcon />
         </div>
         <h1 className="mb-2">Please check your email</h1>
         <p className="text-muted">

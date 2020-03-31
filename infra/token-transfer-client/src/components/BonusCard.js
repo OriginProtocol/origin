@@ -2,9 +2,9 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
-import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
+import Lock from '@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
-import OgnTokens from '-!react-svg-loader!@/assets/ogn-tokens.svg'
+import OgnTokens from '@/assets/ogn-tokens.svg'
 
 const BonusCard = ({
   earnings,

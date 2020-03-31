@@ -126,6 +126,7 @@ const Dashboard = props => {
         <div className="row">
           <div className="col mb-4">
             <BonusCta
+              enabledUntil={props.config.earlyLockupsEnabledUntil}
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
               fullWidth={true}
@@ -150,6 +151,7 @@ const Dashboard = props => {
         {displayBonusCta && !hasLockups && (
           <div className="col mb-4">
             <BonusCta
+              enabledUntil={props.config.earlyLockupsEnabledUntil}
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
               onDisplayBonusModal={() => setDisplayBonusModal('early')}

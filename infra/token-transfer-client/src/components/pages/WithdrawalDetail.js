@@ -15,7 +15,7 @@ import {
 } from '@/reducers/transfer'
 import BorderedCard from '@/components/BorderedCard'
 import EthAddress from '@/components/EthAddress'
-import ClockIcon from '-!react-svg-loader!@/assets/clock-icon.svg'
+import ClockIcon from '@/assets/clock-icon.svg'
 
 class WithdrawalDetail extends Component {
   constructor(props) {

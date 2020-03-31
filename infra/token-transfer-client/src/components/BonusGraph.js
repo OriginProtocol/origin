@@ -1,6 +1,6 @@
 import React from 'react'
 
-import LockIcon from '-!react-svg-loader!@/assets/lock-icon.svg'
+import LockIcon from '@/assets/lock-icon.svg'
 
 const BonusGraph = ({ lockupAmount, bonusRate }) => {
   const formatToken = n => {

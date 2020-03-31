@@ -2,9 +2,15 @@ import React from 'react'
 import moment from 'moment'
 
 import BorderedCard from '@/components/BorderedCard'
-import ClockIcon from '-!react-svg-loader!@/assets/clock-icon.svg'
+import ClockIcon from '@/assets/clock-icon.svg'
 
-const BonusCta = ({ fullWidth, lockupRate, nextVest, onDisplayBonusModal }) => {
+const BonusCta = ({
+  enabledUntil,
+  fullWidth,
+  lockupRate,
+  nextVest,
+  onDisplayBonusModal
+}) => {
   const renderCountdown = () => {
     return (
       <>
@@ -37,8 +43,7 @@ const BonusCta = ({ fullWidth, lockupRate, nextVest, onDisplayBonusModal }) => {
             Earn <strong>{lockupRate}% bonus</strong> on your tokens that vest
             in {moment(nextVest.date).format('MMMM')}.
             <br />
-            Offer valid until earlyLockupEnabledUntil.
-            {fullWidth && renderCountdown()}
+            Offer valid until {enabledUntil}.{fullWidth && renderCountdown()}
           </p>
         </div>
 

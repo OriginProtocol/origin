@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import SunIcon from '-!react-svg-loader!@/assets/sun-icon.svg'
-import MoonIcon from '-!react-svg-loader!@/assets/moon-icon.svg'
+import SunIcon from '@/assets/sun-icon.svg'
+import MoonIcon from '@/assets/moon-icon.svg'
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useState(window.localStorage.theme || 'light')

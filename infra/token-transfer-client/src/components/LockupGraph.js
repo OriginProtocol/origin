@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 import { Doughnut } from 'react-chartjs-2'
-import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
+import Lock from '@/assets/lock-icon.svg'
 
 const LockupGraph = ({ lockup }) => {
   const totalDuration = moment(lockup.end).diff(moment(lockup.start))
