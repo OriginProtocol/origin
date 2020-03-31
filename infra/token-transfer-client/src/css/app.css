@@ -503,6 +503,10 @@ input, select {
   border-radius: 2rem;
 }
 
+.btn:focus {
+  box-shadow: none;
+}
+
 .btn.btn-lg {
   font-weight: bold;
   font-size: 18px;

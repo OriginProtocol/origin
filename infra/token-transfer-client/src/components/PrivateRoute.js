@@ -12,6 +12,7 @@ import { setSessionExpired } from '@/actions/session'
 import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 import Modal from '@/components/Modal'
+import { ThemeProvider } from '@/providers/theme'
 
 const PrivateRoute = ({
   component: Component,
@@ -53,19 +54,21 @@ const PrivateRoute = ({
                 </div>
               ) : (
                 <>
-                  <Navigation
-                    onExpandSidebar={toggleSidebar}
-                    expandSidebar={expandSidebar}
-                    user={user}
-                  />
-                  <div id="main" className={expandSidebar ? 'd-none' : ''}>
-                    <div className="d-none d-md-block">
-                      {user && <AccountActions user={user} />}
+                  <ThemeProvider>
+                    <Navigation
+                      onExpandSidebar={toggleSidebar}
+                      expandSidebar={expandSidebar}
+                      user={user}
+                    />
+                    <div id="main" className={expandSidebar ? 'd-none' : ''}>
+                      <div className="d-none d-md-block">
+                        {user && <AccountActions user={user} />}
+                      </div>
+                      <div className="mt-4">
+                        <Component {...props} user={user} />
+                      </div>
                     </div>
-                    <div className="mt-4">
-                      <Component {...props} user={user} />
-                    </div>
-                  </div>
+                  </ThemeProvider>
                 </>
               )}
             </div>

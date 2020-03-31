@@ -1,32 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import SunIcon from '@/assets/sun-icon.svg'
 import MoonIcon from '@/assets/moon-icon.svg'
+import { ThemeContext } from '@/providers/theme'
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState(window.localStorage.theme || 'light')
-
-  useEffect(() => {
-    if (window.localStorage.theme === 'dark') {
-      onDark()
-    } else {
-      onLight()
-    }
-  }, [])
-
-  useEffect(() => {
-    window.localStorage.theme = theme
-  }, [theme])
-
-  const onDark = () => {
-    document.documentElement.setAttribute('data-theme', 'dark')
-    setTheme('dark')
-  }
-
-  const onLight = () => {
-    document.documentElement.setAttribute('data-theme', 'light')
-    setTheme('light')
-  }
+  const { theme, setTheme } = useContext(ThemeContext)
 
   return (
     <div className="btn-group mr-4" role="group" aria-label="Mode toggle">
@@ -35,7 +14,7 @@ const ThemeToggle = () => {
         className={`btn btn-xs rounded-left my-2 ${
           theme === 'light' ? 'btn-primary' : 'btn-grey'
         }`}
-        onClick={onLight}
+        onClick={() => setTheme('light')}
       >
         <SunIcon />
       </button>
@@ -44,7 +23,7 @@ const ThemeToggle = () => {
         className={`btn btn-xs rounded-right my-2 ${
           theme === 'dark' ? 'btn-primary' : 'btn-grey'
         }`}
-        onClick={onDark}
+        onClick={() => setTheme('dark')}
       >
         <MoonIcon />
       </button>
