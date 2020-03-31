@@ -47,12 +47,19 @@ module.exports = function(app) {
 
     // Get API Key from config, and init Stripe
     const stripeBackend = await encConf.get(shopId, 'stripeBackend')
+    if (!stripeBackend) {
+      return res.status(400).send({
+        success: false,
+        message: 'CC payments unavailable'
+      })
+    }
     const stripe = Stripe(stripeBackend || '')
 
     console.log('Trying to make payment...')
     const paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: 'usd',
+      statement_descriptor: req.shop.name,
       metadata: {
         shopId,
         listingId: req.shop.listingId,

@@ -15,6 +15,7 @@ import getWalletStatus from 'utils/walletStatus'
 import useConfig from 'utils/useConfig'
 import useIsMobile from 'utils/useIsMobile'
 import { useStateValue } from 'data/state'
+import { Countries } from 'data/Countries'
 import submitStripePayment from 'data/submitStripePayment'
 import addData from 'data/addData'
 
@@ -58,6 +59,10 @@ function validate(state) {
   if (!state.billingZip) {
     newState.billingZipError = 'Enter a ZIP / postal code'
   }
+  const provinces = get(Countries, `${state.billingCountry}.provinces`, {})
+  if (!state.billingProvince && Object.keys(provinces).length) {
+    newState.billingProvinceError = 'Enter a state / province'
+  }
 
   const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
@@ -85,8 +90,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   const paymentMethod = get(cart, 'paymentMethod.id')
   const [state, setStateRaw] = useState({
     ...cart.userInfo,
-    billingCountry: cart.userInfo.billingCountry || 'United States',
-    billingProvince: cart.userInfo.billingProvince || 'Alabama'
+    billingCountry: cart.userInfo.billingCountry || 'United States'
   })
   const setState = newState => setStateRaw({ ...state, ...newState })
   const input = formInput(state, newState => setState(newState))

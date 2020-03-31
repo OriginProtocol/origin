@@ -59,6 +59,7 @@ const ShippingForm = ({ prefix = '', state, setState, input, Feedback }) => {
               country={country}
               {...input(field('province'))}
             />
+            {Feedback(field('province'))}
           </div>
         )}
         <div className="form-group col-md">
@@ -72,6 +73,7 @@ const ShippingForm = ({ prefix = '', state, setState, input, Feedback }) => {
             )}
             {...input(field('zip'))}
           />
+          {Feedback(field('zip'))}
         </div>
       </div>
     </>
