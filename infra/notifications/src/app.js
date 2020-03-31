@@ -24,6 +24,7 @@ const {
 } = require('@origin/growth-shared/src/resources/referral')
 
 const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
+const pushAppAuth = require('./middlewares/push-app-auth')
 
 const app = express()
 const port = 3456
@@ -460,6 +461,19 @@ app.post('/events', async (req, res) => {
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   res.status(200).send({ status: 'ok' })
+})
+
+app.post('/send_pn', pushAppAuth, async (req, res) => {
+  const { title, body, payload, address } = req.body
+
+  const mPush = new MobilePush(config)
+
+  const data = await mPush.sendToAddress(address, {
+    message: { title, body },
+    payload
+  })
+
+  res.send(data)
 })
 
 // Catch all

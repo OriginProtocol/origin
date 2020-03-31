@@ -187,10 +187,11 @@ class MobilePush {
         order: [['updatedAt', 'DESC']] // Most recently updated records first.
       })
       if (mobileRegisters.length === 0) {
-        logger.info(
-          `No device registered with notification enabled for ${ethAddress}`
-        )
-        return
+        const errorMsg = `No device registered with notification enabled for ${ethAddress}`
+        logger.info(errorMsg)
+        return {
+          error: errorMsg
+        }
       }
 
       for (const mobileRegister of mobileRegisters) {
@@ -203,7 +204,15 @@ class MobilePush {
         )
       }
     } catch (error) {
-      logger.error(`Push notification failure for ${ethAddress}: ${error}`)
+      const errorMsg = `Push notification failure for ${ethAddress}: ${error}`
+      logger.error(errorMsg)
+      return {
+        error: errorMsg
+      }
+    }
+
+    return {
+      ok: true
     }
   }
 
@@ -354,6 +363,20 @@ class MobilePush {
     for (const [ethAddress, notificationObj] of Object.entries(receivers)) {
       await this._sendToEthAddress(ethAddress, notificationObj, null)
     }
+  }
+
+  /**
+   * Wrapper for _sendToEthAddress
+   * @param {String} ethAddress Target address
+   * @param {{
+   *  message: { title, body },
+   *  payload
+   * }} Object Notification object
+   *
+   * @retuns An object with `ok: true` on success or an error message otherwise
+   */
+  async sendToAddress(ethAddress, notificationObj) {
+    return await this._sendToEthAddress(ethAddress, notificationObj, null)
   }
 }
 
