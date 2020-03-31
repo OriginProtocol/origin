@@ -21,7 +21,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 let theme = ''
 try {
-  const themePath = `${__dirname}/data/${process.env.THEME_DIR}/theme.scss`
+  const themePath = `${__dirname}/data/${process.env.DATA_DIR}/theme.scss`
   theme = fs.readFileSync(themePath).toString()
 } catch (e) {
   // Ignore

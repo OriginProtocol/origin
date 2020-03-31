@@ -8,14 +8,12 @@ import Order from './OrderLoader'
 import Password from './Password'
 import Admin from './admin/Admin'
 
-import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
 
 const { BACKEND_AUTH_TOKEN } = process.env
 
-const App = ({ location }) => {
-  const { loading, config } = useConfig()
+const App = ({ location, config }) => {
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [{ passwordAuthed }, dispatch] = useStateValue()
   const isAdmin = location.pathname.indexOf('/admin') === 0
@@ -74,7 +72,7 @@ const App = ({ location }) => {
     }
   }, [config])
 
-  if (loading || passwordLoading) {
+  if (passwordLoading) {
     return null
   }
 

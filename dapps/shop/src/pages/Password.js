@@ -4,8 +4,6 @@ import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const Password = () => {
   const { config } = useConfig()
   const [password, setPassword] = useState('')
@@ -40,7 +38,7 @@ const Password = () => {
             method: 'POST',
             headers: {
               'content-type': 'application/json',
-              authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+              authorization: `bearer ${config.backendAuthToken}`
             },
             body: JSON.stringify({ password }),
             credentials: 'include'

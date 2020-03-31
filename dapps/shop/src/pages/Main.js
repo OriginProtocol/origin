@@ -124,6 +124,7 @@ require('react-styl')(`
       font-size: 38px
       font-weight: 300
       align-items: center
+      margin: 0
       svg,img
         width: 2rem
         margin-right: 1rem
