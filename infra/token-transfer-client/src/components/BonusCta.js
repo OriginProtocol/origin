@@ -12,13 +12,18 @@ const BonusCta = ({
   onDisplayBonusModal
 }) => {
   const renderCountdown = () => {
+    const now = moment()
     return (
       <>
         <ClockIcon
           className="icon-white"
           style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
         />
-        <strong>30d 23h 12m</strong>
+        <strong>
+          {moment(enabledUntil).diff(now, 'days')}d{' '}
+          {moment(enabledUntil).diff(now, 'hours') % 24}h{' '}
+          {moment(enabledUntil).diff(now, 'minutes') % 60}m
+        </strong>
       </>
     )
   }
@@ -43,7 +48,8 @@ const BonusCta = ({
             Earn <strong>{lockupRate}% bonus</strong> on your tokens that vest
             in {moment(nextVest.date).format('MMMM')}.
             <br />
-            Offer valid until {enabledUntil}.{fullWidth && renderCountdown()}
+            Offer valid until {moment.utc(enabledUntil).format('DD MMMM')}.
+            {fullWidth && renderCountdown()}
           </p>
         </div>
 

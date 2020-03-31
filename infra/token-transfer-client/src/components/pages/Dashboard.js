@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import get from 'lodash.get'
 
-import { getNextVest } from '@origin/token-transfer-server/src/shared'
+import { calculateNextVestLocked, getNextVest } from '@origin/token-transfer-server/src/shared'
 
 import { fetchAccounts } from '@/actions/account'
 import {
@@ -77,15 +77,13 @@ const Dashboard = props => {
 
   const isEmployee = !!get(props.user, 'employee')
 
-  const nextVest = getNextVest(props.grants, props.user)
-
   // Calculate balances
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
-  const nextVestBalanceAvailable = nextVest.amount.minus(
-    props.lockupTotals.locked
-  )
+  const nextVest = getNextVest(props.grants, props.user)
+  const nextVestLocked = calculateNextVestLocked(nextVest, props.lockups)
+  const nextVestBalanceAvailable = nextVest.amount.minus(nextVestLocked)
 
   const hasLockups = props.lockups.length > 0
   const displayBonusCta = props.config.lockupsEnabled
@@ -98,6 +96,7 @@ const Dashboard = props => {
           balance={isEarlyLockup ? nextVestBalanceAvailable : balanceAvailable}
           nextVest={nextVest}
           isEarlyLockup={isEarlyLockup}
+          enabledUntil={props.config.earlyLockupsEnabledUntil}
           lockupBonusRate={
             isEarlyLockup
               ? props.config.earlyLockupBonusRate
