@@ -48,11 +48,11 @@
   border-radius: 10px;
   font-size: 18px;
   font-weight: normal;
-  background-color: white;
+  background-color: var(--bg-color);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   align-items: center;
-  color: black;
+  color: var(--text);
   padding: 2rem;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .pl-modal-content .actions {
-  box-shadow: 0 -1px 0 0 var(--border-accent);
+  box-shadow: 0 -1px 0 0 var(--hr-color);
   background-color: var(--highlight);
   margin: 2rem -2rem -2rem -2rem;
   padding: 1.5rem;
@@ -272,6 +272,7 @@
   width: 36px;
   height: 36px;
   background-color: var(--border-accent);
+  color: var(--text);
   border-radius: 50%;
   text-shadow: none;
   line-height: 35px;

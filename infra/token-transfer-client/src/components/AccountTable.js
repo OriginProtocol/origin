@@ -12,7 +12,7 @@ import {
 } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@/assets/delete.svg'
 import EthAddress from '@/components/EthAddress'
 
 class AccountTable extends Component {
@@ -94,7 +94,7 @@ class AccountTable extends Component {
                 this.setState({ displayModal: true })
               }}
             >
-              + Add Account
+              Add Account
             </a>
           </div>
         </div>
@@ -125,7 +125,7 @@ class AccountTable extends Component {
                           <EthAddress address={account.address} />
                         </td>
                         <td>{moment(account.createdAt).format('L')}</td>
-                        <td>
+                        <td className="text-right">
                           <DeleteIcon
                             style={{ fill: '#8fa7b7', cursor: 'pointer' }}
                             onClick={() => this.handleDeleteAccount(account.id)}
@@ -162,7 +162,7 @@ class AccountTable extends Component {
             <input {...input('address')} />
             {Feedback('address')}
           </div>
-          <div className="actions mt-3">
+          <div className="actions mt-5">
             <div className="row">
               <div className="col text-right">
                 <button

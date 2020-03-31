@@ -9,6 +9,7 @@
   --sidebar-bg-color: #ffffff;
   --card-bg-color: #ffffff;
   --highlight: #eff6f9;
+  --hr-color: #dbe6eb;
   --accent: #e9f0f3;
   --border-accent: #dbe6eb;
   --dark-border-accent: #bdcbd5;
@@ -29,6 +30,8 @@
   --card-bg-color: #244159;
   --sidebar-bg-color: #19364f;
   --border-accent: #061d2a;
+  --hr-color: #345d7a;
+  --highlight: #294963;
   --text: white;
   --accent: #8fa7b7;
   --dark-border: none;
@@ -45,7 +48,6 @@ body {
   line-height: 1.5;
   background-color: white;
   font-family: 'Lato';
-  color: var(--text);
 }
 
 h1 {
@@ -61,6 +63,10 @@ h2 {
 
 small {
   font-size: 70%;
+}
+
+hr {
+  border-top-color: var(--hr-color);
 }
 
 #main {
@@ -80,6 +86,10 @@ small {
 .not-logged-in {
   padding-bottom: 50px;
   background-color: var(--blue);
+}
+
+#private {
+  color: var(--text);
 }
 
 /* Modifications for desktop
@@ -144,7 +154,8 @@ input, select {
 .form-control, .form-control:focus {
   box-shadow: none;
   background-color: var(--bg-color);
-  border-color: var(--dark-border-accent);
+  border-color: var(--hr-color);
+  color: var(--text);
 }
 
 .form-control-lg {
@@ -153,6 +164,7 @@ input, select {
 }
 
 .faux-input {
+  color: var(--text);
   background-color: var(--highlight);
   line-height: 1.8;
   border: none;
@@ -160,23 +172,24 @@ input, select {
 
 .input-group {
   margin: 0 auto;
-  background-color: white;
 }
 
 .input-group > .form-control {
-  background-color: white;
+  background-color: var(--bg-color);
   border-right: 1px solid var(--card-bg-color);
+  color: var(--text);
 }
 
 .input-group.is-invalid .input-group-append {
-  border: 1px solid #dc3545;
+  border: 1px solid var(--hr-color);
 }
 
 .input-group-append {
   padding: 10px;
   display: block;
-  border: 1px solid var(--dark-border-accent);
+  border: 1px solid var(--hr-color);
   border-radius: 0 10px 10px 0;
+  background-color: var(--bg-color);
 }
 
 .input-group-fix .invalid-feedback {
@@ -558,6 +571,10 @@ input, select {
 
 .bg-orange {
   background-color: var(--orange);
+}
+
+.bg-purple {
+  background-color: var(--purple);
 }
 
 .dropdown-toggle-buttons:hover {

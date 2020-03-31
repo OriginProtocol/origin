@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 
 import SunIcon from '@/assets/sun-icon.svg'
 import MoonIcon from '@/assets/moon-icon.svg'

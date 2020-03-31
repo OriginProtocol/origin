@@ -108,9 +108,6 @@ const webpackConfig = {
     },
     contentBase: [path.join(__dirname, 'public')]
   },
-  watchOptions: {
-    poll: 2000
-  },
   mode: isProduction ? 'production' : 'development',
   plugins: [
     new SriPlugin({

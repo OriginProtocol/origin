@@ -62,8 +62,9 @@ const Lockup = props => {
 
   const renderLockups = lockups => {
     const now = moment.utc()
+    const sortedLockups = lockups.sort((a, b) => (a.date < b.date ? 1 : -1))
 
-    const rows = lockups.map(lockup => {
+    const rows = sortedLockups.map(lockup => {
       return (
         <tr key={lockup.id}>
           <td>
@@ -92,7 +93,7 @@ const Lockup = props => {
           </td>
           <td>
             <div
-              className="status-circle status-circle-secondary"
+              className="status-circle bg-purple"
               style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
             ></div>{' '}
             {Number(

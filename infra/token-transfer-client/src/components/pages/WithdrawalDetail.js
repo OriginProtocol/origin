@@ -90,7 +90,7 @@ class WithdrawalDetail extends Component {
     return (
       <>
         <div className="row align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col">
             <h1>
               <span className="text-muted">History</span> &gt; Withdrawal
               Details

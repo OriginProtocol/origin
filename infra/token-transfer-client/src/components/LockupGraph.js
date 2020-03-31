@@ -6,7 +6,7 @@ import Lock from '@/assets/lock-icon.svg'
 import { ThemeContext } from '@/providers/theme'
 
 const LockupGraph = ({ lockup }) => {
-  const { theme, setTheme } = useContext(ThemeContext)
+  const { theme } = useContext(ThemeContext)
 
   const totalDuration = moment(lockup.end).diff(moment(lockup.start))
   const remainingDuration = moment(lockup.end).diff(moment.utc())
