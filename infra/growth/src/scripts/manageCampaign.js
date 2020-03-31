@@ -356,7 +356,7 @@ async function updateMar2020ProdRules() {
   await campaign.update({ rules: JSON.stringify(mar2020Config) })
 }
 
-async function createApr020ProdCampaign() {
+async function createApr2020ProdCampaign() {
   console.log('Creating Apr 2020 campaign data in prod...')
 
   /* IMPORTANT when adding new translatable fields update the enums document:
@@ -365,7 +365,7 @@ async function createApr020ProdCampaign() {
   await db.GrowthCampaign.create({
     nameKey: 'growth.apr2020.name',
     shortNameKey: 'growth.apr2020.short_name',
-    rules: JSON.stringify(mar2020Config),
+    rules: JSON.stringify(apr2020Config),
     startDate: Date.parse('April 1, 2020, 00:00 UTC'),
     endDate: Date.parse('May 1, 2020, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2020, 00:00 UTC'),
@@ -419,7 +419,7 @@ const updateByMonth = {
   december: updateDecemberProdRules,
   jan2020: updateJan2020ProdRules,
   feb2020: updateFeb2020ProdRules,
-  Apr2020: updateApr2020ProdRules
+  apr2020: updateApr2020ProdRules
 }
 
 const action = args['--action']

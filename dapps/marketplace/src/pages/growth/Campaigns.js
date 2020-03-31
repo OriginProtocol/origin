@@ -238,7 +238,7 @@ function Campaign(props) {
         }}
       >
       <img
-        className="download-icon"
+        className="image-cta"
         src="images/growth/download-extension@2x.png"
       />
       </div>
@@ -653,6 +653,9 @@ require('react-styl')(`
       background-color: #f3f7f9
       margin-top: 30px
       position: relative
+      .image-cta
+        max-width: 100%
+        max-height: 100%
     .swag
       img
         width: 100%
