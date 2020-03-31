@@ -3,7 +3,11 @@ const router = express.Router()
 
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
-const { lockupBonusRate, earlyLockupBonusRate, earlyLockupsEnabledUntil } = require('../config')
+const {
+  lockupBonusRate,
+  earlyLockupBonusRate,
+  earlyLockupsEnabledUntil
+} = require('../config')
 const {
   getLockupsEnabled,
   getEarlyLockupsEnabled,

@@ -99,7 +99,15 @@ function calculateLocked(lockups) {
       lockup.start < moment.utc() && // Lockup has started
       lockup.end > moment.utc() // Lockup has not yet ended
     ) {
-      return total.plus(BigNumber(lockup.amount))
+      if (isEarlyLockup(lockup)) {
+        // Early lockups only contribute to the total locked amount of the
+        // date of the vesting for which the early lockup was created has passed
+        if (moment.utc(lockup.data.vest.date) <= moment.utc()) {
+          return total.plus(BigNumber(lockup.amount))
+        }
+      } else {
+        return total.plus(BigNumber(lockup.amount))
+      }
     }
     return total
   }, BigNumber(0))
@@ -131,7 +139,9 @@ function calculateNextVestLocked(nextVest, lockups) {
  * @param user
  */
 function getNextVest(grants, user) {
-  const allGrantVestingSchedule = grants.flatMap(grant => {
+  // Flat map implementation, can remove in node >11
+  const flatMap = (a, cb) => [].concat(...a.map(cb))
+  const allGrantVestingSchedule = flatMap(grants, grant => {
     return vestingSchedule(user, grant)
   })
   const sortedUnvested = allGrantVestingSchedule
