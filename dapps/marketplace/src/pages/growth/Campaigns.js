@@ -225,6 +225,24 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
       />
 
+     {/* April campaign banner. Remove once over. */}
+      <div
+        className={`april-campaign-box d-flex ${
+          !isMobile ? 'align-items-center' : 'mobile'
+        }`}
+        onClick={() => {
+          window.open(
+            'https://originprotocol.com/reward/extension/march_2020',
+            'blank'
+          )
+        }}
+      >
+      <img
+        className="download-icon"
+        src="images/growth/download-extension@2x.png"
+      />
+      </div>
+
       <ActionGroupList
         campaign={campaign}
         actions={actions}
@@ -630,6 +648,11 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .april-campaign-box
+      cursor: pointer
+      background-color: #f3f7f9
+      margin-top: 30px
+      position: relative
     .swag
       img
         width: 100%

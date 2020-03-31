@@ -8,7 +8,7 @@ const { CampaignRules } = require('../src/resources/rules')
 describe('apr2020 campaign rules', () => {
 
   before(() => {
-    const mar2020Config = require('../campaigns/apr2020')
+    const apr2020Config = require('../campaigns/apr2020')
 
     this.campaignStart = new Date()
     this.campaignEnd = new Date(this.campaignStart.getTime()+100000)
@@ -18,18 +18,18 @@ describe('apr2020 campaign rules', () => {
 
     const row = {
       id: 1,
-      rules: JSON.stringify(aor2020Config),
+      rules: JSON.stringify(apr2020Config),
       startDate: this.campaignStart,
       endDate: this.campaignEnd,
       currency: 'OGN'
     }
     this.crules = new CampaignRules(row, apr2020Config)
     expect(this.crules).to.be.an('object')
-    expect(this.crules.numLevels).to.equal(3)
+    expect(this.crules.numLevels).to.equal(2)
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(20) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(9) // Note: adjust based on number of rules.
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
@@ -46,7 +46,7 @@ describe('apr2020 campaign rules', () => {
     }
 
     // Mock the _getReferees method of the Referral rule.
-    this.crules.levels[1].rules[10]._getReferees = () => { return [] }
+    this.crules.levels[1].rules[8]._getReferees = () => { return [] }
   })
 
   it(`Legacy user with profile and email should start at level 1`, async () => {

@@ -1,5 +1,5 @@
 const apr2020Config = {
-  numLevels: 3,
+  numLevels: 2,
   levels: {
     0: {
       rules: [
