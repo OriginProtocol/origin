@@ -14,6 +14,7 @@ import MobileMenu from './_MobileMenu'
 import Products from './Products'
 import Product from './Product'
 import About from './About'
+import Affiliates from './affiliates/Affiliates'
 import Cart from './cart/Cart'
 
 const Content = () => {
@@ -25,6 +26,9 @@ const Content = () => {
       <Route path="/cart" component={Cart} />
       <Route path="/search" component={Products} />
       <Route path="/about" component={About} />
+      {!config.affiliates ? null : (
+        <Route path="/affiliates" component={Affiliates} />
+      )}
       {!config.singleProduct ? null : (
         <Redirect to={`/products/${config.singleProduct}`} />
       )}

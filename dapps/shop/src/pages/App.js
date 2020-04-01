@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom'
+import { Switch, Route, withRouter, useHistory } from 'react-router-dom'
 import get from 'lodash/get'
+import queryString from 'query-string'
 
 import Main from './Main'
 import Checkout from './checkout/Loader'
@@ -11,11 +12,11 @@ import Admin from './admin/Admin'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
 
-const { BACKEND_AUTH_TOKEN } = process.env
-
 const App = ({ location, config }) => {
+  const history = useHistory()
   const [passwordLoading, setPasswordLoading] = useState(false)
-  const [{ passwordAuthed }, dispatch] = useStateValue()
+  const [{ affiliate, passwordAuthed }, dispatch] = useStateValue()
+  const q = queryString.parse(location.search)
   const isAdmin = location.pathname.indexOf('/admin') === 0
   const isOrder = location.pathname.indexOf('/order') === 0
 
@@ -29,6 +30,16 @@ const App = ({ location, config }) => {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
   }, [])
+
+  // Record affiliate
+  useEffect(() => {
+    if (q.r) {
+      dispatch({ type: 'setReferrer', referrer: q.r })
+      delete q.r
+      const search = queryString.stringify(q)
+      history.replace({ pathname: location.pathname, search })
+    }
+  }, [location, affiliate])
 
   useEffect(() => {
     if (location.state && location.state.scrollToTop) {
@@ -44,7 +55,7 @@ const App = ({ location, config }) => {
     fetch(`${config.backend}/password`, {
       headers: {
         'content-type': 'application/json',
-        authorization: `bearer ${BACKEND_AUTH_TOKEN}`
+        authorization: `bearer ${config.backendAuthToken}`
       },
       credentials: 'include'
     }).then(async response => {

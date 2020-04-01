@@ -50,13 +50,15 @@ async function writeProductData({ OutputDir }) {
       const img = syncVariant.files.find(f => f.type === 'preview')
       if (img) {
         if (allImages[img.preview_url] === undefined) {
+          const splitImg = img.preview_url.split('/')
+          const file = splitImg[splitImg.length - 1].replace('_preview', '')
           downloadImages.push({
             id: `${handle}`,
-            file: `img-${images.length}.png`,
+            file,
             url: img.preview_url
           })
-          allImages[img.preview_url] = `img-${images.length}.png`
-          images.push(`img-${images.length}.png`)
+          allImages[img.preview_url] = file
+          images.push(file)
         }
         variantImages[idx] = allImages[img.preview_url]
       }
@@ -101,8 +103,8 @@ async function writeProductData({ OutputDir }) {
       price: Number(syncProduct.sync_variants[0].retail_price.replace('.', '')),
       available: true,
       options,
-      images: images.map((img, idx) => `img-${idx}.png`),
-      image: 'img-0.png',
+      images,
+      image: images[0],
       variants
     }
 

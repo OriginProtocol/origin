@@ -126,9 +126,9 @@ async function matchPrintfulToExisting({ OutputDir }) {
 
 async function start() {
   // await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-  await writeProductData({ OutputDir })
-  // await downloadPrintfulMockups({ OutputDir })
-  // await resizePrintfulMockups({ OutputDir })
+  // await writeProductData({ OutputDir })
+  await downloadPrintfulMockups({ OutputDir })
+  await resizePrintfulMockups({ OutputDir })
 
   // await matchPrintfulToExisting({ OutputDir })
   // await writeInternalData({ OutputDir })

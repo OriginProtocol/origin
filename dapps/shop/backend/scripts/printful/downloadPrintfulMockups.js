@@ -9,12 +9,13 @@ async function downloadPrintfulMockups({ OutputDir }) {
   for (const file of files) {
     const prefix = `${OutputDir}/data/${file.id}/orig`
     fs.mkdirSync(prefix, { recursive: true })
-    await new Promise(resolve => {
-      const f = fs
-        .createWriteStream(`${prefix}/${file.file}`)
-        .on('finish', resolve)
-      https.get(file.url, response => response.pipe(f))
-    })
+    const filename = `${prefix}/${file.file}`
+    if (!fs.existsSync(filename)) {
+      await new Promise(resolve => {
+        const f = fs.createWriteStream(filename).on('finish', resolve)
+        https.get(file.url, response => response.pipe(f))
+      })
+    }
   }
 }
 

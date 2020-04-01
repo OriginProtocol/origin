@@ -15,6 +15,7 @@ import ProductList from 'components/ProductList'
 import SortBy from 'components/SortBy'
 
 import CreateMug from 'components/custom/CreateMug'
+import AffiliateBanner from 'components/custom/AffiliateBanner'
 
 const Products = () => {
   const location = useLocation()
@@ -78,6 +79,7 @@ const Products = () => {
         <>
           <div className="collection" />
           <CreateMug />
+          <AffiliateBanner />
         </>
       )}
 

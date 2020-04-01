@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useSpring, animated } from 'react-spring'
 
-import ProgressBar from './ProgressBar'
-
-const Modal = ({ onClose, onDone, done, error }) => {
+const Modal = ({ children, onClose, className, shouldClose }) => {
   const [show, setShow] = useState(false)
 
   const bgProps = useSpring({
@@ -29,77 +27,30 @@ const Modal = ({ onClose, onDone, done, error }) => {
   }, [el])
 
   useEffect(() => {
-    if (done) {
-      setDone(true)
+    if (shouldClose) {
+      setShow(false)
+      setTimeout(() => onClose(), 150)
     }
-  }, [done])
-
-  const [isDone, setDone] = useState(false)
+  }, [shouldClose])
 
   const cmp = (
     <>
       <animated.div className="modal-backdrop" style={bgProps} />
       <animated.div
-        className={`modal d-block`}
+        className="modal d-block"
         tabIndex="-1"
         style={modalProps}
+        onClick={() => {
+          setShow(false)
+          setTimeout(() => onClose(), 150)
+        }}
       >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Creating your mug...</h5>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onClick={() => {
-                  setShow(false)
-                  setTimeout(() => {
-                    onClose()
-                  }, 150)
-                }}
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <ProgressBar
-                delay={300}
-                duration={18000}
-                className="my-4"
-                done={isDone || error}
-                barClassName={
-                  error
-                    ? 'bg-danger'
-                    : isDone
-                    ? 'bg-success'
-                    : 'progress-bar-striped'
-                }
-                onDone={() => setDone(true)}
-              />
-            </div>
-            <div className="modal-footer">
-              {!isDone ? (
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                  onClick={() => onClose()}
-                >
-                  Cancel
-                </button>
-              ) : (
-                <button
-                  onClick={() => onDone()}
-                  type="button"
-                  className="btn btn-primary"
-                >
-                  Show me my mug!
-                </button>
-              )}
-            </div>
-          </div>
+        <div
+          onClick={e => e.stopPropagation()}
+          className={`modal-dialog modal-dialog-centered ${className || ''}`}
+          role="document"
+        >
+          <div className="modal-content">{children}</div>
         </div>
       </animated.div>
     </>

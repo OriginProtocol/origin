@@ -8,7 +8,7 @@ import { useStateValue } from 'data/state'
 
 import formatPrice from 'utils/formatPrice'
 
-const CartItem = ({ item, idx }) => {
+const CartItem = ({ item }) => {
   const [product, setProduct] = useState()
   const [, dispatch] = useStateValue()
   useEffect(() => {
@@ -50,7 +50,7 @@ const CartItem = ({ item, idx }) => {
             href="#"
             onClick={e => {
               e.preventDefault()
-              dispatch({ type: 'removeFromCart', item: idx })
+              dispatch({ type: 'removeFromCart', item })
             }}
           >
             Remove
@@ -63,11 +63,8 @@ const CartItem = ({ item, idx }) => {
           className="form-control"
           value={item.quantity}
           onChange={e => {
-            dispatch({
-              type: 'updateCartQuantity',
-              item: idx,
-              quantity: Number(e.target.value)
-            })
+            const quantity = Number(e.target.value)
+            dispatch({ type: 'updateCartQuantity', item, quantity })
           }}
         >
           <option>1</option>
