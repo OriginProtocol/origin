@@ -67,6 +67,7 @@ app.use((err, req, res, next) => {
 })
 
 require('./routes/auth')(app)
+require('./routes/uphold')(app)
 require('./routes/orders')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)

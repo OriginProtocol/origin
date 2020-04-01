@@ -16,6 +16,7 @@ const ProvinceSelect = ({ country, value, onChange, className }) => {
 
   return (
     <select value={value} onChange={onChange} className={className}>
+      {value ? null : <option value="">Select State...</option>}
       {provinces.map((c, idx) => (
         <option key={`${c.code}-${idx}`} data-code={c.code} value={c.title}>
           {c.title}
