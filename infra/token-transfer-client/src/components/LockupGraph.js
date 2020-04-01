@@ -2,15 +2,16 @@ import React, { useContext } from 'react'
 import moment from 'moment'
 
 import { Doughnut } from 'react-chartjs-2'
-import Lock from '@/assets/lock-icon.svg'
 import { ThemeContext } from '@/providers/theme'
+import LockIcon from '@/assets/lock-icon.svg'
+import UnlockIcon from '@/assets/unlock-icon.svg'
 
 const LockupGraph = ({ lockup }) => {
   const { theme } = useContext(ThemeContext)
 
   const totalDuration = moment(lockup.end).diff(moment(lockup.start))
   const remainingDuration = moment(lockup.end).diff(moment.utc())
-  const percentage = (1 - remainingDuration / totalDuration) * 100
+  const percentage = Math.min((1 - remainingDuration / totalDuration) * 100, 100)
 
   const doughnutData = () => {
     return {
@@ -19,8 +20,8 @@ const LockupGraph = ({ lockup }) => {
           label: 'Token Unlock',
           data: [percentage, 100 - percentage],
           backgroundColor: [
-            '#007cff',
-            `${theme === 'light' ? '#dbe6eb' : '#061d2a'}`
+            percentage === 100 ? '#00db8d' : '#007cff',
+            theme === 'light' ? '#dbe6eb' : '#061d2a'
           ],
           borderColor: theme === 'light' ? '#ffffff' : '#244159'
         },
@@ -28,8 +29,8 @@ const LockupGraph = ({ lockup }) => {
           label: 'Bonus Token Unlock',
           data: [percentage, 100 - percentage],
           backgroundColor: [
-            '#8900fd',
-            `${theme === 'light' ? '#dbe6eb' : '#061d2a'}`
+            percentage === 100 ? '#00db8d' : '#8900fd',
+            theme === 'light' ? '#dbe6eb' : '#061d2a'
           ],
           borderColor: theme === 'light' ? '#ffffff' : '#244159'
         }
@@ -58,10 +59,17 @@ const LockupGraph = ({ lockup }) => {
         width={93}
         height={93}
       />
-      <Lock
-        className="icon icon-blue"
-        style={{ position: 'absolute', top: '30px', left: '37px' }}
-      />
+      {percentage === 100 ? (
+        <UnlockIcon
+          className="icon-green"
+          style={{ position: 'absolute', top: '35px', left: '40px', transform: 'scale(1.5)' }}
+        />
+      ) : (
+        <LockIcon
+          className="icon-blue"
+          style={{ position: 'absolute', top: '35px', left: '40px', transform: 'scale(1.5)' }}
+        />
+      )}
     </div>
   )
 }

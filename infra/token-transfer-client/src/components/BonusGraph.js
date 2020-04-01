@@ -43,7 +43,7 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
           <div className="bonus-graph-lock">
             <LockIcon
               className="icon-white"
-              style={{ transform: 'scale(0.4)', marginTop: '-8px' }}
+              style={{ transform: 'scale(0.6)', marginTop: '-8px', marginLeft: '4px' }}
             />
           </div>
         </div>
@@ -53,7 +53,7 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
           <div className="bonus-graph-lock">
             <LockIcon
               className="icon-white"
-              style={{ transform: 'scale(0.4)', marginTop: '-8px' }}
+              style={{ transform: 'scale(0.6)', marginTop: '-8px', marginLeft: '4px' }}
             />
           </div>
         </div>

@@ -69,12 +69,12 @@ const BonusCard = ({
               <NavLink to="/lockup">Details &gt;</NavLink>
             </div>
             <div className="col-12">
-              {lockups && lockups.length > 0 ? (
+              {false ? (
                 renderLockupGraphs(lockups)
               ) : (
                 <div className="col text-center text-muted p-4">
-                  <div className="mb-3">
-                    <Lock className="icon" />
+                  <div className="mb-4 mt-2">
+                    <Lock style={{ transform: 'scale(3)' }}/>
                   </div>
                   You don&apos;t have any OGN locked up.
                 </div>

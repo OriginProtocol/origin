@@ -62,7 +62,7 @@ const Lockup = props => {
 
   const renderLockups = lockups => {
     const now = moment.utc()
-    const sortedLockups = lockups.sort((a, b) => (a.date < b.date ? 1 : -1))
+    const sortedLockups = lockups.sort((a, b) => (a.start < b.start ? 1 : -1))
 
     const rows = sortedLockups.map(lockup => {
       return (
@@ -77,11 +77,17 @@ const Lockup = props => {
               </strong>
             </div>
           </td>
-          <td>{moment(lockup.createdAt).format('LL')}</td>
+          <td>{moment(lockup.start).format('LL')}</td>
           <td>
-            {moment(lockup.end).diff(now, 'days')}d{' '}
-            {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
-            {moment(lockup.end).diff(now, 'minutes') % 60}m
+            {moment(lockup.end) < now ? (
+              'Unlocked'
+            ) : (
+              <>
+                {moment(lockup.end).diff(now, 'days')}d{' '}
+                {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
+                {moment(lockup.end).diff(now, 'minutes') % 60}m
+              </>
+            )}
           </td>
           <td>
             <div

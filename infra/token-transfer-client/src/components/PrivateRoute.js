@@ -47,7 +47,7 @@ const PrivateRoute = ({
           return (
             <div id="private" className="logged-in d-flex">
               {isLoading || !user ? (
-                <div id="main" style={{ width: '100%' }}>
+                <div id="main">
                   <div className="spinner-grow" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
@@ -64,7 +64,7 @@ const PrivateRoute = ({
                       <div className="d-none d-md-block">
                         {user && <AccountActions user={user} />}
                       </div>
-                      <div className="mt-4">
+                      <div className="mt-md-4">
                         <Component {...props} user={user} />
                       </div>
                     </div>

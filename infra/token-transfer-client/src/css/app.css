@@ -72,6 +72,7 @@ hr {
 #main {
   padding: 30px;
   width: 100%;
+  margin-bottom: 50px;
 }
 
 .logged-in, .not-logged-in {
@@ -100,7 +101,8 @@ hr {
   }
 
   #main {
-    width: calc(100% - 70px)
+    width: calc(100% - 70px);
+    padding: 20px;
   }
 
   .logged-in {
