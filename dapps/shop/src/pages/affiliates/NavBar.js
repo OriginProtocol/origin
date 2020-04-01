@@ -37,17 +37,25 @@ const AffiliateNav = () => {
           <Facebook url={url} />
         </div>
         <div className="earnings d-none d-lg-flex">
-          <span>Pending <OgnIcon /> {earnings.commissionPending}</span>
-          <span>Earned <OgnIcon /> {earnings.commissionPaid}</span>
+          <span>
+            Pending <OgnIcon /> {earnings.commissionPending}
+          </span>
+          <span>
+            Earned <OgnIcon /> {earnings.commissionPaid}
+          </span>
         </div>
         <div className="d-flex">
           <Link to="/affiliates" className="nav-link">
             Dashboard
           </Link>
-          <a href="#" onClick={e => {
-            e.preventDefault()
-            dispatch({ type: 'setAffiliate', affiliate: undefined })
-          }} className="nav-link">
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              dispatch({ type: 'setAffiliate', affiliate: undefined })
+            }}
+            className="nav-link"
+          >
             Logout
           </a>
         </div>
