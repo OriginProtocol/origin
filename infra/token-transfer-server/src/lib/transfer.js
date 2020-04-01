@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -11,7 +12,7 @@ const {
   TRANSFER_CONFIRMED
 } = require('../constants/events')
 const { Event, Transfer, User, sequelize } = require('../models')
-const { hasBalance } = require('./balance')
+const { getBalance } = require('./balance')
 const { transferHasExpired } = require('../shared')
 const {
   clientUrl,
@@ -33,7 +34,12 @@ const NumBlockConfirmation = 3
  * @returns {Promise<Transfer>} Transfer object.
  */
 async function addTransfer(userId, address, amount, data = {}) {
-  const user = await hasBalance(userId, amount)
+  const balance = await getBalance(userId, amount)
+  if (BigNumber(amount).gt(balance)) {
+    throw new RangeError(
+      `Amount of ${amount} OGN exceeds the ${balance} available for transfer for user ${userId}`
+    )
+  }
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -42,7 +48,7 @@ async function addTransfer(userId, address, amount, data = {}) {
   const txn = await sequelize.transaction()
   try {
     transfer = await Transfer.create({
-      userId: user.id,
+      userId: userId,
       status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: address.toLowerCase(),
       amount,
@@ -50,7 +56,7 @@ async function addTransfer(userId, address, amount, data = {}) {
       data
     })
     await Event.create({
-      userId: user.id,
+      userId: userId,
       action: TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id
@@ -63,11 +69,7 @@ async function addTransfer(userId, address, amount, data = {}) {
     throw e
   }
 
-  logger.info(
-    `Transfer ${transfer.id} requested to ${address} by ${user.email} for ${amount} OGN, pending email confirmation`
-  )
-
-  await sendTransferConfirmationEmail(transfer, user)
+  await sendTransferConfirmationEmail(transfer, userId)
 
   return transfer
 }
@@ -77,7 +79,9 @@ async function addTransfer(userId, address, amount, data = {}) {
  * @param transfer
  * @param user
  */
-async function sendTransferConfirmationEmail(transfer, user) {
+async function sendTransferConfirmationEmail(transfer, userId) {
+  const user = await User.findByPk(userId)
+
   const confirmationToken = jwt.sign(
     {
       transferId: transfer.id
@@ -180,7 +184,12 @@ async function confirmTransfer(transfer, user) {
  * @returns {Promise<String>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId, token) {
-  const user = await hasBalance(transfer.userId, transfer.amount, transfer.id)
+  const balance = await getBalance(transfer.userId)
+  if (BigNumber(transfer.amount).gt(balance.minus(transfer.amount))) {
+    throw new RangeError(
+      `Amount of ${transfer.amount} OGN exceeds the ${balance} available for executing transfer for user ${transfer.userId}`
+    )
+  }
 
   await transfer.update({
     status: enums.TransferStatuses.Processing,
@@ -202,7 +211,6 @@ async function executeTransfer(transfer, transferTaskId, token) {
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
     await updateTransferStatus(
-      user,
       transfer,
       enums.TransferStatuses.Failed,
       TRANSFER_FAILED,
@@ -258,14 +266,7 @@ async function checkBlockConfirmation(transfer, token) {
     `Received status ${result.status} for transaction ${transfer.txHash}`
   )
 
-  const user = await User.findOne({
-    where: {
-      id: transfer.userId
-    }
-  })
-
   await updateTransferStatus(
-    user,
     transfer,
     transferStatus,
     eventAction,
@@ -277,7 +278,6 @@ async function checkBlockConfirmation(transfer, token) {
 
 /**
  * Update transfer status and add an event with the result of the transfer.
- * @param {User} transfer: Db model user object
  * @param {Transfer} transfer: Db model transfer object
  * @param {String} transferStatus
  * @param {String} eventAction:
@@ -285,7 +285,6 @@ async function checkBlockConfirmation(transfer, token) {
  * @returns {Promise<undefined>}
  */
 async function updateTransferStatus(
-  user,
   transfer,
   transferStatus,
   eventAction,
@@ -298,7 +297,7 @@ async function updateTransferStatus(
       status: transferStatus
     })
     const event = {
-      userId: user.id,
+      userId: transfer.userId,
       action: eventAction,
       data: {
         transferId: transfer.id

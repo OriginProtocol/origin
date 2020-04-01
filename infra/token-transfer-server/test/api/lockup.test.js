@@ -25,6 +25,8 @@ const {
   lockupConfirmationTimeout
 } = require('../../src/config')
 const app = require('../../src/app')
+const { getNextVest } = require('../../src/shared')
+const { getBalance } = require('../../src/lib/balance')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
@@ -247,12 +249,52 @@ describe('Lockup HTTP API', () => {
       .expect(422)
 
     expect(failedResponse.text).to.match(
-      /Amount of 100 OGN exceeds the 0 available in the next vest/
+      /Amount of 100 OGN exceeds the 0 available for early lockup/
     )
 
     // Check an email was sent with the confirmation token
     expect(sendStub.called).to.equal(true)
     sendStub.restore()
+  })
+
+  it('should allow adding a lockup if early lockup exists with combined lockup amounts greater than balance', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+    const nextVest = getNextVest(
+      this.grants.map(
+        g => g.get({ plain: true })
+      ),
+      this.user.get({ plain: true })
+    )
+    const balance = await getBalance(this.user.id)
+
+    // Lock up entire next vest
+    await Lockup.create({
+      userId: this.user.id,
+      amount: Number(nextVest.amount),
+      start: moment().subtract(1, 'days'),
+      end: moment()
+        .add(1, 'years')
+        .add(1, 'days'),
+      bonusRate: 10.0,
+      data: {
+        vest: nextVest
+      },
+      confirmed: true
+    })
+
+    // Lock up entire balance
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: balance,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+
   })
 
   it('should not add a early lockup if early lockup flag is disabled', async () => {
@@ -330,12 +372,13 @@ describe('Lockup HTTP API', () => {
       confirmed: true
     })
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 100,
         code: totp.gen(this.otpKey)
       })
+      .expect(201)
 
     // Check an email was sent with the confirmation token
     expect(sendStub.called).to.equal(true)
@@ -579,7 +622,7 @@ describe('Lockup HTTP API', () => {
       })
       .expect(422)
 
-    expect(response.text).to.match(/No more vest events/)
+    expect(response.text).to.match(/Amount of 1000 OGN exceeds the 0 available/)
 
     clock.restore()
   })

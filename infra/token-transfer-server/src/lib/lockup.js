@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js')
 const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
@@ -14,7 +15,7 @@ const {
   lockupDuration,
   lockupConfirmationTimeout
 } = require('../config')
-const { hasBalance, hasNextVestBalance } = require('./balance')
+const { getBalance, getNextVestBalance } = require('./balance')
 const { getNextVest, lockupHasExpired } = require('../shared')
 const logger = require('../logger')
 
@@ -33,17 +34,21 @@ async function addLockup(userId, amount, early, data = {}) {
   if (early) {
     // This is an early lockup for the next vest so call alternate balance
     // checking function
-    await hasNextVestBalance(userId, amount)
+    const balance = await getNextVestBalance(userId, amount)
+    if (BigNumber(amount).gt(balance)) {
+      throw new RangeError(
+        `Amount of ${amount} OGN exceeds the ${balance} available for early lockup for user ${userId}`
+      )
+    }
 
+    // Augment lockup data field with additional information about the future
+    // vesting event that this lockup is being created for
     const user = await User.findOne({
       where: {
         id: userId
       },
       include: [{ model: Grant }]
     })
-
-    // Augment lockup data field with additional information about the future
-    // vesting event that this lockup is being created for
     data = {
       ...data,
       vest: getNextVest(
@@ -53,7 +58,12 @@ async function addLockup(userId, amount, early, data = {}) {
     }
   } else {
     // Standard balance check
-    await hasBalance(userId, amount)
+    const balance = await getBalance(userId)
+    if (BigNumber(amount).gt(balance)) {
+      throw new RangeError(
+        `Amount of ${amount} OGN exceeds the ${balance} available for lockup for user ${userId}`
+      )
+    }
   }
 
   const unconfirmedLockups = await Lockup.findAll({

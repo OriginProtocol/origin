@@ -99,15 +99,7 @@ function calculateLocked(lockups) {
       lockup.start < moment.utc() && // Lockup has started
       lockup.end > moment.utc() // Lockup has not yet ended
     ) {
-      if (isEarlyLockup(lockup)) {
-        // Early lockups only contribute to the total locked amount of the
-        // date of the vesting for which the early lockup was created has passed
-        if (moment.utc(lockup.data.vest.date) <= moment.utc()) {
-          return total.plus(BigNumber(lockup.amount))
-        }
-      } else {
-        return total.plus(BigNumber(lockup.amount))
-      }
+      return total.plus(BigNumber(lockup.amount))
     }
     return total
   }, BigNumber(0))
@@ -122,11 +114,13 @@ const isEarlyLockup = lockup => {
 /* Calculate tokens from the next vest that are locked due to early lockups.
  * @param lockups
  */
-function calculateNextVestLocked(nextVest, lockups) {
+function calculateNextVestLocked(lockups) {
   return lockups.reduce((total, lockup) => {
+    // Assume every early lockup with a recorded vest date in the future is
+    // attributable to the next vest
     if (
       isEarlyLockup(lockup) &&
-      moment.utc(lockup.data.vest.date).isSame(nextVest.date, 'day')
+      moment.utc(lockup.data.vest.date) > moment.utc()
     ) {
       return total.plus(BigNumber(lockup.amount))
     }

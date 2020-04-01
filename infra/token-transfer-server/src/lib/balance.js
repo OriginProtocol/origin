@@ -1,5 +1,3 @@
-const BigNumber = require('bignumber.js')
-
 const { Grant, Lockup, Transfer, User } = require('../models')
 const {
   calculateEarnings,
@@ -13,10 +11,7 @@ const {
 const logger = require('../logger')
 
 /**
- * Helper method to check if a user has balance available for adding a transfer
- * or a lockup.
- *
- * Throws an exception in case the request is invalid.
+ * Helper method to check the available balance for a user.
  *
  * @param userId
  * @param amount
@@ -24,7 +19,7 @@ const logger = require('../logger')
  * @returns Promise<User>
  * @private
  */
-async function hasBalance(userId, amount, currentTransferId = null) {
+async function getBalance(userId) {
   const user = await User.findOne({
     where: {
       id: userId
@@ -46,39 +41,35 @@ async function hasBalance(userId, amount, currentTransferId = null) {
     `User ${user.email} unlocked earnings from lockups`,
     lockupEarnings.toString()
   )
-  // Sum amount withdrawn or pending in transfers excluding the current transfer
-  // if provided (balance check while exeucting transfer)
-  const transferWithdrawnAmount = calculateWithdrawn(
-    user.Transfers.filter(t => t.id !== currentTransferId)
-  )
+  // Sum amount withdrawn or pending in transfers
+  const transferWithdrawnAmount = calculateWithdrawn(user.Transfers)
   logger.debug(
     `User ${user.email} pending or transferred tokens`,
     transferWithdrawnAmount.toString()
   )
+
   // Sum locked by lockups
   const lockedAmount = calculateLocked(user.Lockups)
   logger.debug(`User ${user.email} tokens in lockup`, lockedAmount.toString())
+
+  const nextVestLocked = calculateNextVestLocked(user.Lockups)
+  logger.debug(`User ${user.email} tokens in early lockup`, nextVestLocked.toString())
 
   // Calculate total available tokens
   const available = vested
     .plus(lockupEarnings)
     .minus(transferWithdrawnAmount)
     .minus(lockedAmount)
+    .plus(nextVestLocked)
 
   if (available.lt(0)) {
     throw new RangeError(`Amount of available OGN is below 0`)
   }
 
-  if (BigNumber(amount).gt(available)) {
-    throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available for ${user.email}`
-    )
-  }
-
-  return user
+  return available
 }
 
-async function hasNextVestBalance(userId, amount) {
+async function getNextVestBalance(userId) {
   const user = await User.findOne({
     where: {
       id: userId
@@ -96,27 +87,22 @@ async function hasNextVestBalance(userId, amount) {
     user
   )
   if (!nextVest) {
-    throw new RangeError(`No more vest events for ${user.email}`)
+    logger.debug(`No more vest events for ${user.email}`)
+    return 0
   }
 
   // Sum locked by lockups
-  const nextVestLockedAmount = calculateNextVestLocked(nextVest, user.Lockups)
+  const nextVestLockedAmount = calculateNextVestLocked(user.Lockups)
   logger.debug(
     `User ${user.email} tokens from their next vest in lockup`,
     nextVestLockedAmount.toString()
   )
 
-  const available = nextVest.amount.minus(nextVestLockedAmount)
-
-  if (BigNumber(amount).gt(available)) {
-    throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available in the next vest for ${user.email}`
-    )
-  }
+  return nextVest.amount.minus(nextVestLockedAmount)
 }
 
 module.exports = {
   calculateEarnings,
-  hasBalance,
-  hasNextVestBalance
+  getBalance,
+  getNextVestBalance
 }
