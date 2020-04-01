@@ -225,6 +225,25 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
       />
 
+      {/* April campaign banner. Remove once over. */}
+      <div
+        className={`april-campaign-box d-flex ${
+          !isMobile ? 'align-items-center' : 'mobile'
+        }`}
+        onClick={() => {
+          window.open(
+            'https://www.originprotocol.com/reward/stay_home_shop/april_2020',
+            'blank'
+          )
+        }}
+      >
+        <img
+          className="image-cta"
+          src="images/growth/stayathome_ognRewards.png"
+        />
+      </div>
+      {/* April campaign end. */}
+
       <ActionGroupList
         campaign={campaign}
         actions={actions}
@@ -630,6 +649,13 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .april-campaign-box
+      cursor: pointer
+      margin-top: 30px
+      position: relative
+      .image-cta
+        max-width: 100%
+        max-height: 100%
     .swag
       img
         width: 100%

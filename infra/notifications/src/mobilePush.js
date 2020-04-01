@@ -1,5 +1,4 @@
 const apn = require('apn')
-const firebase = require('firebase-admin')
 const Sequelize = require('sequelize')
 const web3Utils = require('web3-utils')
 
@@ -9,11 +8,15 @@ const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
 
+const chunk = require('lodash/chunk')
+
 const {
   getMessageFingerprint,
   isNotificationDupe,
   logNotificationSent
 } = require('./dupeTools')
+
+const firebaseMessaging = require('./utils/firebaseMessaging')
 
 // Configure the APN provider
 let apnProvider, apnBundle
@@ -35,26 +38,6 @@ if (process.env.APNS_KEY_FILE) {
   logger.warn('APN provider not configured.')
 }
 
-// Firebase Admin SDK
-// ref: https://firebase.google.com/docs/reference/admin/node/admin.messaging
-let firebaseMessaging
-if (process.env.FIREBASE_SERVICE_JSON) {
-  try {
-    const firebaseServiceJson = require(process.env.FIREBASE_SERVICE_JSON)
-
-    firebase.initializeApp({
-      credential: firebase.credential.cert(firebaseServiceJson),
-      databaseURL: process.env.FIREBASE_DB_URL
-    })
-
-    firebaseMessaging = firebase.messaging()
-  } catch (error) {
-    logger.error(`Error trying to configure firebaseMessaging: ${error}`)
-  }
-} else {
-  logger.warn('Firebase messaging not configured.')
-}
-
 class MobilePush {
   /**
    * Constructor
@@ -62,6 +45,143 @@ class MobilePush {
    */
   constructor(config) {
     this.config = config
+  }
+
+  /**
+   * Sends a mobile push notification to an Android or iOS device.
+   *
+   * @param {[{deviceToken:string, ethAddress:string}]} registry
+   * @param {string} deviceType: 'APN' or 'FCM'
+   * @param {{message: {title:string, body:string}, payload: Object}} notificationObj
+   * @param {string} messageHash: Optional. Hash of the origin message.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _rawSend(registry, deviceType, notificationObj, messageHash) {
+    if (!notificationObj) {
+      throw new Error('Missing notificationObj')
+    }
+
+    if (!['APN', 'FCM'].includes(deviceType)) {
+      throw new Error(`Invalid device type ${deviceType}`)
+    }
+
+    const notificationObjAndHash = { ...notificationObj, messageHash }
+
+    const channel = deviceType === 'APN' ? 'mobile-ios' : 'mobile-android'
+
+    const filteredRegistry = registry
+      .map(data => {
+        const messageFingerprint = getMessageFingerprint({
+          ...notificationObjAndHash,
+          channel,
+          ethAddress: data.ethAddress
+        })
+
+        return {
+          ...data,
+          messageFingerprint
+        }
+      })
+      .filter(async data => {
+        const { ethAddress, messageFingerprint } = data
+
+        const dupeCount = await isNotificationDupe(
+          messageFingerprint,
+          this.config
+        )
+
+        if (dupeCount > 0) {
+          logger.warn(
+            `Duplicate. Notification already recently sent. Skipping.`,
+            ethAddress,
+            channel,
+            messageFingerprint
+          )
+          return false
+        }
+
+        return true
+      })
+
+    if (filteredRegistry.length === 0) {
+      logger.warn('No device tokens to send notifications')
+      return
+    }
+
+    const filteredTokens = filteredRegistry.map(data => data.deviceToken)
+
+    // Do not send notification during unit tests.
+    const isTest = process.env.NODE_ENV === 'test'
+    let success = isTest
+
+    if (deviceType === 'APN' && !isTest) {
+      if (!apnProvider) {
+        throw new Error('APN provider not configured, notification failed')
+      }
+
+      const notification = new apn.Notification({
+        alert: notificationObj.message,
+        sound: 'default',
+        payload: notificationObj.payload,
+        topic: apnBundle
+      })
+
+      try {
+        const response = await apnProvider.send(notification, filteredTokens)
+        // response.sent: Array of device tokens to which the notification was sent successfully
+        // response.failed: Array of objects containing the device token (`device`) and either
+        if (response.sent.length) {
+          success = true
+          logger.debug('APN sent')
+        } else {
+          logger.error('APN send failure:', response)
+        }
+      } catch (error) {
+        logger.error('APN send error: ', error)
+      }
+    } else if (deviceType === 'FCM' && !isTest) {
+      if (!firebaseMessaging) {
+        throw new Error(
+          'Firebase messaging not configured, notification failed'
+        )
+      }
+      // FCM notifications
+      // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
+      const message = {
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'Dapp'
+          }
+        },
+        notification: {
+          ...notificationObj.message
+        },
+        data: notificationObj.payload,
+        tokens: filteredTokens
+      }
+
+      try {
+        const response = await firebaseMessaging.send(message)
+        logger.debug('FCM message sent:', response)
+        success = true
+      } catch (error) {
+        logger.error('FCM message failed to send: ', error)
+      }
+    }
+
+    const promises = filteredRegistry.map(data => {
+      return logNotificationSent(
+        data.messageFingerprint,
+        data.ethAddress,
+        channel
+      )
+    })
+
+    if (success) {
+      await Promise.all(promises)
+    }
   }
 
   /**
@@ -187,23 +307,31 @@ class MobilePush {
         order: [['updatedAt', 'DESC']] // Most recently updated records first.
       })
       if (mobileRegisters.length === 0) {
-        logger.info(
-          `No device registered with notification enabled for ${ethAddress}`
-        )
-        return
+        const errorMsg = `No device registered with notification enabled for ${ethAddress}`
+        logger.info(errorMsg)
+        return {
+          error: errorMsg
+        }
       }
 
       for (const mobileRegister of mobileRegisters) {
-        await this._send(
-          mobileRegister.deviceToken,
+        await this._rawSend(
+          [{ deviceType: mobileRegister.deviceToken, ethAddress }],
           mobileRegister.deviceType,
           notificationObj,
-          ethAddress,
           messageHash
         )
       }
     } catch (error) {
-      logger.error(`Push notification failure for ${ethAddress}: ${error}`)
+      const errorMsg = `Push notification failure for ${ethAddress}: ${error}`
+      logger.error(errorMsg)
+      return {
+        error: errorMsg
+      }
+    }
+
+    return {
+      ok: true
     }
   }
 
@@ -353,6 +481,105 @@ class MobilePush {
 
     for (const [ethAddress, notificationObj] of Object.entries(receivers)) {
       await this._sendToEthAddress(ethAddress, notificationObj, null)
+    }
+  }
+
+  async _sendInChunks(data, deviceType, mobileRegisters) {
+    if (mobileRegisters.length === 0) {
+      const errorMsg = `No device registered with notification enabled`
+      logger.info(errorMsg)
+      return {
+        error: errorMsg
+      }
+    }
+    const { title, body, payload } = data
+
+    const notificationObj = {
+      message: {
+        title,
+        body
+      },
+      payload
+    }
+
+    const targets = mobileRegisters.map(register => {
+      return {
+        ethAddress: register.ethAddress,
+        deviceToken: register.deviceToken
+      }
+    })
+
+    // Send in chunks of 100
+    const chunks = chunk(targets, 100)
+
+    try {
+      for (const chunk of chunks) {
+        await this._rawSend(chunk, deviceType, notificationObj)
+      }
+    } catch (error) {
+      logger.error('Failed to send', error)
+      return {
+        error: error.message
+      }
+    }
+  }
+
+  async _sendToAllDevices(data, deviceType) {
+    const mobileRegisters = await MobileRegistry.findAll({
+      where: {
+        deviceToken: { [Sequelize.Op.ne]: null },
+        deviceType,
+        deleted: false,
+        'permissions.alert': true
+      },
+      order: [['updatedAt', 'DESC']] // Most recently updated records first.
+    })
+
+    await this._sendInChunks(data, deviceType, mobileRegisters)
+  }
+
+  async _sendToManyAddresses(data, deviceType, addresses) {
+    const mobileRegisters = await MobileRegistry.findAll({
+      where: {
+        deviceToken: { [Sequelize.Op.ne]: null },
+        deviceType,
+        ethAddress: {
+          [Sequelize.Op.in]: addresses.map(a => a.toLowerCase())
+        },
+        deleted: false,
+        'permissions.alert': true
+      },
+      order: [['updatedAt', 'DESC']] // Most recently updated records first.
+    })
+
+    await this._sendInChunks(data, deviceType, mobileRegisters)
+  }
+
+  async multicastMessage(data) {
+    const {
+      target, // One of `all` or `address`
+      targetAddress // A single address or an array of target addresses
+    } = data
+
+    try {
+      if (target === 'all') {
+        await this._sendToAllDevices(data, 'APN')
+        await this._sendToAllDevices(data, 'FCM')
+      } else if (target === 'address') {
+        const addresses =
+          targetAddress instanceof Array ? targetAddress : [targetAddress]
+        await this._sendToManyAddresses(data, 'APN', addresses)
+        await this._sendToManyAddresses(data, 'FCM', addresses)
+      }
+
+      return {
+        ok: true
+      }
+    } catch (error) {
+      logger.error(error)
+      return {
+        ok: false
+      }
     }
   }
 }
