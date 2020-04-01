@@ -225,6 +225,25 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
       />
 
+      {/* April campaign banner. Remove once over. */}
+      <div
+        className={`april-campaign-box d-flex ${
+          !isMobile ? 'align-items-center' : 'mobile'
+        }`}
+        onClick={() => {
+          window.open(
+            'https://www.originprotocol.com/reward/stay_home_shop/april_2020',
+            'blank'
+          )
+        }}
+      >
+        <img
+          className="image-cta"
+          src="images/growth/stayathome_ognRewards.png"
+        />
+      </div>
+      {/* April campaign end. */}
+
       <ActionGroupList
         campaign={campaign}
         actions={actions}
@@ -384,7 +403,7 @@ class GrowthCampaign extends Component {
               <fbt desc="EventDescription.checkBlogPost">
                 Read our{' '}
                 <fbt:param name="blog post">
-                  <a href="https://medium.com/originprotocol/holiday-rewards-campaign-ending-soon-as-origins-community-grows-by-100k-members-358cd22da43d">
+                  <a href="https://medium.com/originprotocol/march-origin-rewards-campaign-ending-early-due-to-overwhelming-response-83b0a55297cd">
                     blog post
                   </a>
                 </fbt:param>
@@ -630,6 +649,14 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
+    .april-campaign-box
+      cursor: pointer
+      background-color: #f3f7f9
+      margin-top: 30px
+      position: relative
+      .image-cta
+        max-width: 100%
+        max-height: 100%
     .swag
       img
         width: 100%

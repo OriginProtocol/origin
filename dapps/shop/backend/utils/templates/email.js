@@ -42,6 +42,10 @@ module.exports = vars => `
           <tr class="cart-summary">
             <td class="label">Subtotal</td>
             <td class="price">${vars.subTotal}</td>
+          </tr>
+          <tr class="cart-summary">
+            <td class="label">Shipping</td>
+            <td class="price">${vars.shipping}</td>
           </tr>${
             !vars.hasDiscount
               ? ''
@@ -51,11 +55,7 @@ module.exports = vars => `
             <td class="price">${vars.discount}</td>
           </tr>
           `
-          }<tr class="cart-summary">
-            <td class="label">Shipping</td>
-            <td class="price">${vars.shipping}</td>
-          </tr>
-          <tr class="cart-summary total">
+          }<tr class="cart-summary total">
             <td class="label">Total</td>
             <td class="price large">${vars.total}</td>
           </tr>

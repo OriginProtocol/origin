@@ -1,6 +1,7 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
+import get from 'lodash/get'
 import queryString from 'query-string'
 
 import formatPrice from 'utils/formatPrice'
@@ -53,9 +54,9 @@ const AdminOrdersTable = ({ orders }) => {
           >
             <td>{order.orderId}</td>
             <td>{dayjs(order.createdAt).format('MMM D, h:mm A')}</td>
-            <td>{order.data.paymentMethod.label}</td>
+            <td>{get(order, 'data.paymentMethod.label')}</td>
             <td>{order.status}</td>
-            <td>{formatPrice(order.data.total)}</td>
+            <td>{formatPrice(get(order, 'data.total'))}</td>
           </tr>
         ))}
       </tbody>
