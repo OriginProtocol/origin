@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js')
 const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
@@ -7,10 +8,15 @@ const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
 const { LOCKUP_CONFIRMED, LOCKUP_REQUEST } = require('../constants/events')
-const { Event, Lockup, sequelize } = require('../models')
-const { lockupBonusRate, lockupDuration } = require('../config')
-const { hasBalance } = require('./balance')
-const { lockupConfirmationTimeout, lockupHasExpired } = require('../shared')
+const { Event, Grant, Lockup, User, sequelize } = require('../models')
+const {
+  earlyLockupBonusRate,
+  lockupBonusRate,
+  lockupDuration,
+  lockupConfirmationTimeout
+} = require('../config')
+const { getBalance, getNextVestBalance } = require('./balance')
+const { getNextVest, lockupHasExpired } = require('../shared')
 const logger = require('../logger')
 
 const { encryptionSecret, clientUrl } = require('../config')
@@ -19,14 +25,50 @@ const { encryptionSecret, clientUrl } = require('../config')
  * Adds a lockup
  * @param userId - user id of the user adding the lockup
  * @param amount - the amount to be locked
+ * @param early - whether this is an early lockup of the next vest
+ * @param data - additional data to be stored with the lockup, e.g. fingerprint
  * @returns {Promise<Lockup>} Lockup object.
  */
-async function addLockup(userId, amount, data = {}) {
-  const user = await hasBalance(userId, amount)
+async function addLockup(userId, amount, early, data = {}) {
+  // Check if user has sufficient balance
+  if (early) {
+    // This is an early lockup for the next vest so call alternate balance
+    // checking function
+    const balance = await getNextVestBalance(userId, amount)
+    if (BigNumber(amount).gt(balance)) {
+      throw new RangeError(
+        `Amount of ${amount} OGN exceeds the ${balance} available for early lockup for user ${userId}`
+      )
+    }
+
+    // Augment lockup data field with additional information about the future
+    // vesting event that this lockup is being created for
+    const user = await User.findOne({
+      where: {
+        id: userId
+      },
+      include: [{ model: Grant }]
+    })
+    data = {
+      ...data,
+      vest: getNextVest(
+        user.Grants.map(g => g.get({ plain: true })),
+        user
+      )
+    }
+  } else {
+    // Standard balance check
+    const balance = await getBalance(userId)
+    if (BigNumber(amount).gt(balance)) {
+      throw new RangeError(
+        `Amount of ${amount} OGN exceeds the ${balance} available for lockup for user ${userId}`
+      )
+    }
+  }
 
   const unconfirmedLockups = await Lockup.findAll({
     where: {
-      userId: user.id,
+      userId: userId,
       confirmed: null, // Unconfirmed
       created_at: {
         [Sequelize.Op.gte]: moment
@@ -46,15 +88,15 @@ async function addLockup(userId, amount, data = {}) {
   const txn = await sequelize.transaction()
   try {
     lockup = await Lockup.create({
-      userId: user.id,
-      start: moment.utc(),
+      userId: userId,
+      start: moment.utc(), // TODO? If early lockup this should be the vest date
       end: moment.utc().add(lockupDuration, 'months'),
-      bonusRate: lockupBonusRate,
+      bonusRate: early ? earlyLockupBonusRate : lockupBonusRate,
       amount,
       data
     })
     await Event.create({
-      userId: user.id,
+      userId: userId,
       action: LOCKUP_REQUEST,
       data: JSON.stringify({
         lockupId: lockup.id
@@ -67,17 +109,19 @@ async function addLockup(userId, amount, data = {}) {
     throw e
   }
 
-  await sendLockupConfirmationEmail(lockup, user)
+  await sendLockupConfirmationEmail(lockup, userId)
 
   return lockup
 }
 
 /**
  * Sends an email with a token that can be used for confirming a lockup.
- * @param lockup
- * @param user
+ * @param lockup - the lockup object
+ * @param userId - id of the user to email
  */
-async function sendLockupConfirmationEmail(lockup, user) {
+async function sendLockupConfirmationEmail(lockup, userId) {
+  const user = await User.findByPk(userId)
+
   const token = jwt.sign(
     {
       lockupId: lockup.id

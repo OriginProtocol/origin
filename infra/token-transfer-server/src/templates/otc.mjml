@@ -23,7 +23,6 @@
         <mj-column>
           <mj-text font-size="18px" line-height="1.67">
             An OTC request has been submitted to <%= action %> <%= amount %> OGN by <%= name %>.
-	    t
           </mj-text>
           <mj-text font-size="18px" line-height="1.67">
             Email: <%= email %>

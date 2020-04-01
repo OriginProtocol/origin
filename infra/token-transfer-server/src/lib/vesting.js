@@ -69,6 +69,7 @@ function employeeVestingSchedule(grantObj) {
       vestingDate.add(index, 'months')
     }
     return {
+      grantId: grantObj.id,
       amount: currentVestingEvent,
       date: vestingDate.clone(),
       vested: hasVested(vestingDate, grant)
@@ -106,6 +107,7 @@ function investorVestingSchedule(grantObj) {
 
   // Add initial vest
   vestingSchedule.push({
+    grantId: grantObj.id,
     amount: initialVestAmount,
     date: grant.start.clone(),
     vested: hasVested(grant.start, grantObj)
@@ -122,6 +124,7 @@ function investorVestingSchedule(grantObj) {
       vestingDate.add(3, 'months')
     }
     vestingSchedule.push({
+      grantId: grantObj.id,
       amount: i === 7 ? adjustedFinalVest : quarterlyVestAmount,
       date: vestingDate.clone(),
       vested: hasVested(vestingDate, grant)

@@ -5,8 +5,22 @@
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
 
-const { vestedAmount, toMoment, momentizeGrant } = require('./lib/vesting')
+const {
+  vestingSchedule,
+  vestedAmount,
+  toMoment,
+  momentizeGrant
+} = require('./lib/vesting')
 const enums = require('./enums')
+
+// Length of time in minutes user has to confirm a transfer by clicking the email
+// link
+const transferConfirmationTimeout =
+  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
+
+// Length of time in minutes user has to confirm a lockup by clicking the email
+// link
+const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
 
 /* Convert the dates of a lockup object to moments.
  */
@@ -91,6 +105,45 @@ function calculateLocked(lockups) {
   }, BigNumber(0))
 }
 
+/* Determine if a lockup is a nearly lockup based
+ */
+const isEarlyLockup = lockup => {
+  return !!(lockup.data && lockup.data.vest && lockup.data.vest.grantId)
+}
+
+/* Calculate tokens from the next vest that are locked due to early lockups.
+ * @param lockups
+ */
+function calculateNextVestLocked(lockups) {
+  return lockups.reduce((total, lockup) => {
+    // Assume every early lockup with a recorded vest date in the future is
+    // attributable to the next vest
+    if (
+      isEarlyLockup(lockup) &&
+      moment.utc(lockup.data.vest.date) > moment.utc()
+    ) {
+      return total.plus(BigNumber(lockup.amount))
+    }
+    return total
+  }, BigNumber(0))
+}
+
+/* Get the next vest for a user.
+ * @param grants
+ * @param user
+ */
+function getNextVest(grants, user) {
+  // Flat map implementation, can remove in node >11
+  const flatMap = (a, cb) => [].concat(...a.map(cb))
+  const allGrantVestingSchedule = flatMap(grants, grant => {
+    return vestingSchedule(user, grant)
+  })
+  const sortedUnvested = allGrantVestingSchedule
+    .filter(v => !v.vested)
+    .sort((a, b) => a.date - b.date)
+  return sortedUnvested.length > 0 ? sortedUnvested[0] : null
+}
+
 /* Calculate the amount of tokens that have been withdrawn or are in flight in
  * a withdrawal.
  * @param transfers
@@ -109,6 +162,8 @@ function calculateWithdrawn(transfers) {
   return transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
       if (
+        // Handle the case where a transfer is still awaiting email confirmation
+        // but has expired
         transfer.status === enums.TransferStatuses.WaitingEmailConfirm &&
         transferHasExpired(transfer)
       ) {
@@ -121,6 +176,8 @@ function calculateWithdrawn(transfers) {
   }, BigNumber(0))
 }
 
+// Helper function to determine if a transfer has expired, i.e. the user did
+// not click the email link within the configured timeout
 function transferHasExpired(transfer) {
   return (
     moment().diff(moment(transfer.createdAt), 'minutes') >=
@@ -128,6 +185,8 @@ function transferHasExpired(transfer) {
   )
 }
 
+// Helper function to determine if a transfer has expired, i.e. the user did
+// not click the email link within the configured timeout
 function lockupHasExpired(lockup) {
   return (
     moment().diff(moment(lockup.createdAt), 'minutes') >=
@@ -135,37 +194,20 @@ function lockupHasExpired(lockup) {
   )
 }
 
-// Lockup bonus rate as a percentage
-const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
-
-// Lockup duration in months
-const lockupDuration = process.env.LOCKUP_DURATION || 12
-
-const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
-
-const transferConfirmationTimeout =
-  process.env.TRANSFER_CONFIRMATION_TIMEOUT || 5
-
-const lockupConfirmationTimeout = process.env.LOCKUP_CONFIRMATION_TIMEOUT || 10
-
-const otcRequestEnabled = process.env.OTC_REQUEST_ENABLED || false
-
 module.exports = {
   calculateGranted,
   calculateVested,
   calculateUnlockedEarnings,
   calculateEarnings,
   calculateLocked,
+  calculateNextVestLocked,
   calculateWithdrawn,
-  earnOgnEnabled,
+  getNextVest,
   toMoment,
   momentizeLockup,
   momentizeGrant,
-  otcRequestEnabled,
   lockupHasExpired,
-  lockupBonusRate,
-  lockupDuration,
-  lockupConfirmationTimeout,
   transferHasExpired,
+  lockupConfirmationTimeout,
   transferConfirmationTimeout
 }
