@@ -232,16 +232,17 @@ function Campaign(props) {
         }`}
         onClick={() => {
           window.open(
-            'https://originprotocol.com/reward/extension/march_2020',
+            'https://www.originprotocol.com/reward/stay_home_shop/april_2020',
             'blank'
           )
         }}
       >
       <img
         className="image-cta"
-        src="images/growth/download-extension@2x.png"
+        src="images/growth/stayathome_ognRewards.png"
       />
       </div>
+     {/* April campaign end. */}
 
       <ActionGroupList
         campaign={campaign}
