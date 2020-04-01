@@ -151,7 +151,7 @@ async function confirmTransfer(transfer, user) {
       const webhookData = {
         embeds: [
           {
-            title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
+            title: `A transfer of \`${transfer.amount}\` OGN was queued by \`${user.email}\``,
             description: [
               `**ID:** \`${transfer.id}\``,
               `**Address:** \`${transfer.toAddress}\``,
@@ -185,6 +185,8 @@ async function confirmTransfer(transfer, user) {
  */
 async function executeTransfer(transfer, transferTaskId, token) {
   const balance = await getBalance(transfer.userId)
+  // Subtract the current transfer amount from the available balance because
+  // it is what we are transferring
   if (BigNumber(transfer.amount).gt(balance.minus(transfer.amount))) {
     throw new RangeError(
       `Amount of ${transfer.amount} OGN exceeds the ${balance} available for executing transfer for user ${transfer.userId}`

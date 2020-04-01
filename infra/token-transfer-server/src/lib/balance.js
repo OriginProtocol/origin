@@ -14,9 +14,7 @@ const logger = require('../logger')
  * Helper method to check the available balance for a user.
  *
  * @param userId
- * @param amount
- * @param currentTransferId
- * @returns Promise<User>
+ * @returns Promise<Integer> - available balance
  * @private
  */
 async function getBalance(userId) {
@@ -72,6 +70,15 @@ async function getBalance(userId) {
   return available
 }
 
+/**
+ * Helper method to check the available balance of the next vest for a user. The
+ * concept of a balance for the next vest because a user can perform early
+ * lockups of tokens from the next vest.
+ *
+ * @param userId
+ * @returns Promise<Integer> - available balance on the next vest
+ * @private
+ */
 async function getNextVestBalance(userId) {
   const user = await User.findOne({
     where: {
