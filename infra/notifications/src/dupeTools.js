@@ -20,6 +20,10 @@ function getMessageFingerprint(messageObject) {
  * @returns {Promise<*>}
  */
 async function isNotificationDupe(messageFingerprint, config) {
+  if (process.env.NODE_ENV === 'test') {
+    return 0
+  }
+
   return NotificationLog.count({
     where: {
       messageFingerprint: messageFingerprint,

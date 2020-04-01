@@ -27,6 +27,7 @@ const Growth$FbtEnum = {
   'growth.jan2020.short_name': 'January 2020',
   'growth.feb2020.short_name': 'February 2020',
   'growth.mar2020.short_name': 'March 2020',
+  'growth.apr2020.short_name': 'April 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   // 2 + 1 because the user considers email to be included
