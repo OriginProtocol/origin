@@ -8,12 +8,12 @@ const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
 
 const { Op, Network, Shop } = require('./models')
-const handleLog = require('./utils/handleLog')
-const { CONTRACTS, PROVIDER, PROVIDER_WS } = require('./utils/const')
+const { handleLog } = require('./utils/handleLog')
+const { CONTRACTS } = require('./utils/const')
 
-const web3 = new Web3(PROVIDER)
+const web3 = new Web3()
 
-let networkId, listingIds, ws
+let ws
 
 const SubscribeToNewHeads = JSON.stringify({
   jsonrpc: '2.0',
@@ -55,8 +55,9 @@ const GetPastLogs = ({ address, fromBlock, toBlock, listingIds }) => {
   return JSON.stringify(rpc)
 }
 
-async function connectWS() {
+async function connectWS({ network, listingIds }) {
   let lastBlock, pingTimeout
+  const { networkId, providerWs } = network
   const res = await Network.findOne({ where: { networkId } })
   if (res) {
     lastBlock = res.lastBlock
@@ -68,7 +69,7 @@ async function connectWS() {
   const contractVersion = '001' // Hardcoded for now
   const address = get(CONTRACTS, `${networkId}.marketplace.${contractVersion}`)
 
-  console.log(`Connecting to ${PROVIDER_WS} (netId ${networkId})`)
+  console.log(`Connecting to ${providerWs} (netId ${networkId})`)
   console.log(
     `Watching listings ${listingIds.join(', ')} on contract ${address}`
   )
@@ -79,7 +80,7 @@ async function connectWS() {
   }
 
   console.log('Trying to connect...')
-  ws = new ReconnectingWebSocket(PROVIDER_WS, [], { WebSocket })
+  ws = new ReconnectingWebSocket(providerWs, [], { WebSocket })
 
   function heartbeat() {
     clearTimeout(pingTimeout)
@@ -118,11 +119,10 @@ async function connectWS() {
     }
     handled[hash] = true
 
-    const latestListings = await getListingIds()
+    const latestListings = await getListingIds({ network })
     if (!isEqual(latestListings, listingIds)) {
       console.log('Change in listings detected. Restarting listener...')
-      listingIds = latestListings
-      connectWS()
+      connectWS({ listingIds: latestListings, network })
       return
     }
 
@@ -135,10 +135,16 @@ async function connectWS() {
     } else if (data.id === 3) {
       console.log(`Got ${data.result.length} unhandled logs`)
       data.result.map(result =>
-        handleLog({ ...result, address, networkId, contractVersion })
+        handleLog({ ...result, web3, address, networkId, contractVersion })
       )
     } else if (get(data, 'params.subscription') === logs) {
-      handleLog({ ...data.params.result, networkId, address, contractVersion })
+      handleLog({
+        ...data.params.result,
+        web3,
+        networkId,
+        address,
+        contractVersion
+      })
     } else if (get(data, 'params.subscription') === heads) {
       const number = handleNewHead(data.params.result, networkId)
       const blockDiff = number - lastBlock
@@ -167,20 +173,32 @@ const handleNewHead = (head, networkId) => {
   return number
 }
 
-async function getListingIds() {
+async function getListingIds({ network }) {
   const shops = await Shop.findAll({
     attributes: ['listingId'],
     group: ['listingId'],
-    where: { networkId, listingId: { [Op.ne]: null } }
+    where: { networkId: network.networkId, listingId: { [Op.ne]: null } }
   })
 
   return shops.map(shop => shop.listingId.split('-')[2])
 }
 
-async function start() {
-  networkId = await web3.eth.net.getId()
-  listingIds = await getListingIds()
-  connectWS()
+async function start(networkId) {
+  if (!networkId) {
+    console.log('Usage: node listener.js [networkId]')
+    process.exit()
+  }
+
+  const network = await Network.findOne({ where: { networkId } })
+  if (!network) {
+    console.log('No network found in DB')
+    process.exit()
+  }
+
+  web3.setProvider(network.provider)
+
+  const listingIds = await getListingIds({ network })
+  connectWS({ network, listingIds })
 }
 
-start()
+start(process.argv[2] || process.env.NETWORK_ID || '999')
