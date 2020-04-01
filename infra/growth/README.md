@@ -1,6 +1,6 @@
 Origin Rewards
 
-Package structure:
+#Package structure:
  - campaigns: Campaigns configuration
  - data: Static data files
  - migrations: DB schema migration files
@@ -13,5 +13,8 @@ Package structure:
    - templates: Email templates
    - util: Misc utilities
  - test: unit tests
+ 
+ #Local development
+ Reminder: Do not forget to set the AUTH_PUB_KEY env var based on the value in EnvKey for the dev environment in production. Without that, the authentication will fail...
 
  
