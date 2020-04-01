@@ -225,7 +225,7 @@ function Campaign(props) {
         decimalDivision={decimalDivision}
       />
 
-     {/* April campaign banner. Remove once over. */}
+      {/* April campaign banner. Remove once over. */}
       <div
         className={`april-campaign-box d-flex ${
           !isMobile ? 'align-items-center' : 'mobile'
@@ -237,12 +237,12 @@ function Campaign(props) {
           )
         }}
       >
-      <img
-        className="image-cta"
-        src="images/growth/stayathome_ognRewards.png"
-      />
+        <img
+          className="image-cta"
+          src="images/growth/stayathome_ognRewards.png"
+        />
       </div>
-     {/* April campaign end. */}
+      {/* April campaign end. */}
 
       <ActionGroupList
         campaign={campaign}
