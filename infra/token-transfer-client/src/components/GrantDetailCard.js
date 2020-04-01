@@ -5,7 +5,7 @@ import GrantDetail from '@/components/GrantDetail'
 
 const GrantDetailCard = props => {
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       {props.grants.length > 0 ? (
         <GrantDetail grants={props.grants} user={props.user} />
       ) : (

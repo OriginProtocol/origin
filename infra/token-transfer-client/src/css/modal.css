@@ -44,15 +44,15 @@
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  max-width: 600px;
+  max-width: 680px;
   border-radius: 10px;
   font-size: 18px;
   font-weight: normal;
-  background-color: white;
+  background-color: var(--bg-color);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   align-items: center;
-  color: black;
+  color: var(--text);
   padding: 2rem;
 }
 
@@ -254,12 +254,15 @@
   font-weight: normal;
 }
 
-.pl-modal-content .actions .btn {
-  margin: 0 0.5rem 1rem 0.5rem;
+.pl-modal-content .actions {
+  box-shadow: 0 -1px 0 0 var(--hr-color);
+  background-color: var(--highlight);
+  margin: 2rem -2rem -2rem -2rem;
+  padding: 1.5rem;
 }
 
-.pl-modal-content .actions {
-  margin-top: 2rem;
+.pl-modal-content .actions .btn {
+  margin: 0;
 }
 
 .close {
@@ -268,10 +271,17 @@
   top: 1rem;
   width: 36px;
   height: 36px;
-  background-color: #dbe6eb;
+  background-color: var(--border-accent);
+  color: var(--text);
   border-radius: 50%;
   text-shadow: none;
   line-height: 35px;
+  z-index: 2000;
+}
+
+.large-header .close {
+  right: 2rem;
+  top: 2.5rem;
 }
 
 @media (max-width: 767.98px) {

@@ -5,7 +5,7 @@ import get from 'lodash.get'
 
 import { fetchAccounts } from '@/actions/account'
 import BorderedCard from '@/components/BorderedCard'
-import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import AccountTable from '@/components/AccountTable'
 import SessionTable from '@/components/SessionTable'
 
@@ -56,14 +56,15 @@ class Security extends Component {
             <BorderedCard>
               <div className="row">
                 <div
-                  className="d-none d-md-block col-md-2"
+                  className="d-none d-md-block col-2"
                   style={{
-                    backgroundImage: `url(${GoogleAuthenticatorIcon})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    margin: '-20px -10px -20px 0'
+                    marginTop: '-20px',
+                    marginBottom: '-20px',
+                    maxHeight: '60px'
                   }}
-                ></div>
+                >
+                  <GoogleAuthenticatorIcon width="100%" height="100%" />
+                </div>
                 <div className="col-md-8">Google Authenticator</div>
                 <div className="col-md-2 text-md-right">
                   <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">

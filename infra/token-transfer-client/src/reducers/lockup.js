@@ -2,6 +2,7 @@ import {
   calculateUnlockedEarnings,
   calculateEarnings,
   calculateLocked,
+  calculateNextVestLocked,
   momentizeLockup
 } from '@origin/token-transfer-server/src/shared'
 
@@ -74,5 +75,6 @@ export const getTotals = state => {
   const unlockedEarnings = Number(calculateUnlockedEarnings(lockups))
   const earnings = Number(calculateEarnings(lockups))
   const locked = Number(calculateLocked(lockups))
-  return { unlockedEarnings, earnings, locked }
+  const nextVestLocked = Number(calculateNextVestLocked(lockups))
+  return { unlockedEarnings, earnings, locked, nextVestLocked }
 }

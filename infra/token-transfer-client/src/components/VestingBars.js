@@ -91,7 +91,9 @@ const VestingBars = props => {
     <div className="mb-5">
       <h2 style={{ marginBottom: '2.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', right: 0, marginTop: '-1.5rem' }}>
+        <div
+          style={{ position: 'absolute', right: '10px', marginTop: '-1.5rem' }}
+        >
           <strong>{Number(total).toLocaleString()}</strong>{' '}
           <span className="ogn">OGN</span>
         </div>
@@ -118,7 +120,7 @@ const VestingBars = props => {
               onClick={event => handleTogglePopover(event, grant.id)}
             >
               <div
-                className="progress-bar bg-success"
+                className="progress-bar bg-green"
                 role="progressbar"
                 style={{ width: `${complete}%`, zIndex: 10 }}
               />
@@ -180,17 +182,19 @@ const VestingBars = props => {
       </div>
       <div
         className="row"
-        style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}
+        style={{ marginTop: `${3 + 0.5 * grants.length}rem` }}
       >
-        <div className="col">
-          <div className="status-circle status-circle-success mr-2"></div>
-          {Number(props.vested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">vested</span>
+        <div className="col-12 col-sm-6">
+          <div className="status-circle bg-green mr-2"></div>
+          <span className=" text-muted">
+            {Number(props.vested).toLocaleString()} OGN vested
+          </span>
         </div>
-        <div className="col">
-          <div className="status-circle ml-3 mr-2"></div>
-          {Number(props.unvested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">unvested</span>
+        <div className="col-12 col-sm-6">
+          <div className="status-circle mr-2"></div>
+          <span className=" text-muted">
+            {Number(props.unvested).toLocaleString()} OGN unvested
+          </span>
         </div>
       </div>
     </div>

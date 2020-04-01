@@ -2,10 +2,9 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import BorderedCard from '@/components/BorderedCard'
-import Earn from '-!react-svg-loader!@/assets/earn-icon.svg'
-import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
+import Lock from '@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
-import OgnTokens from '-!react-svg-loader!@/assets/ogn-tokens.svg'
+import OgnTokens from '@/assets/ogn-tokens.svg'
 
 const BonusCard = ({
   earnings,
@@ -15,18 +14,19 @@ const BonusCard = ({
   onDisplayBonusModal
 }) => {
   const renderLockupGraphs = lockups => {
-    return lockups.slice(0, 3).map(lockup => {
+    const graphs = lockups.slice(0, 3).map(lockup => {
       return (
-        <div className="ml-2 my-2" key={lockup.id}>
+        <div className="col" key={lockup.id}>
           <LockupGraph lockup={lockup} />
         </div>
       )
     })
+    return <div className="row mt-3">{graphs}</div>
   }
 
   if (isLocked) {
     return (
-      <BorderedCard shadowed={true}>
+      <BorderedCard>
         <div className="text-center">
           <OgnTokens />
           <h1 className="mt-3 mb-1">Coming Soon</h1>
@@ -40,62 +40,55 @@ const BonusCard = ({
   }
 
   return (
-    <BorderedCard shadowed={true}>
-      <div className="row mb-2">
+    <BorderedCard>
+      <div className="hot-badge bg-red">HOT</div>
+      <div className="row">
         <div className="col">
           <h2>Bonus Tokens</h2>
-        </div>
-        <div className="col text-right">
-          <NavLink to="/lockup">Earn More &gt;</NavLink>
-        </div>
-      </div>
-      <div className="row mb-4">
-        <div className="col">
-          <strong style={{ fontSize: '24px' }}>
-            {earnings.toLocaleString()}
-          </strong>{' '}
-          <span className="ml-1 ogn">OGN</span>
-          <div>Earned</div>
-        </div>
-        <div className="col">
-          <strong style={{ fontSize: '24px' }}>
-            {locked.toLocaleString()}
-          </strong>{' '}
-          <span className="ml-1 ogn">OGN</span>
-          <div>Locked Up</div>
-        </div>
-      </div>
-      <div className="row mb-2">
-        <div className="col">
-          <h2>Recent Lockups</h2>
-        </div>
-        <div className="col text-right">
-          <NavLink to="/lockup">View Details &gt;</NavLink>
-        </div>
-      </div>
-      <div className="row">
-        {lockups && lockups.length > 0 ? (
-          renderLockupGraphs(lockups)
-        ) : (
-          <div className="col text-center text-muted p-4">
-            <div className="mb-3">
-              <Lock className="icon" />
-            </div>
-            You don&apos;t have any OGN locked up.
+          <div className="mt-3 mb-2">
+            <div>Earned</div>
+            <strong style={{ fontSize: '24px' }}>
+              {earnings.toLocaleString()}
+            </strong>{' '}
+            <span className="ml-1 ogn">OGN</span>
           </div>
-        )}
+          <div>
+            <div>Locked Up</div>
+            <strong style={{ fontSize: '24px' }}>
+              {locked.toLocaleString()}
+            </strong>{' '}
+            <span className="ml-1 ogn">OGN</span>
+          </div>
+        </div>
+        <div className="col">
+          <div className="row">
+            <div className="col">
+              <h2>Recent Lockups</h2>
+            </div>
+            <div className="col text-right">
+              <NavLink to="/lockup">Details &gt;</NavLink>
+            </div>
+            <div className="col-12">
+              {lockups && lockups.length > 0 ? (
+                renderLockupGraphs(lockups)
+              ) : (
+                <div className="col text-center text-muted p-4">
+                  <div className="mb-4 mt-2">
+                    <Lock style={{ transform: 'scale(3)' }} />
+                  </div>
+                  You don&apos;t have any OGN locked up.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="row">
+      <div className="row mt-3">
         <div className="col text-center">
-          <button className="btn btn-lg btn-dark" onClick={onDisplayBonusModal}>
-            <Earn
-              className="icon"
-              style={{
-                transform: 'scale(0.8) rotate(-90deg)',
-                marginTop: '-5px',
-                marginRight: '10px'
-              }}
-            />
+          <button
+            className="btn btn-lg btn-primary"
+            onClick={onDisplayBonusModal}
+          >
             Earn OGN
           </button>
         </div>

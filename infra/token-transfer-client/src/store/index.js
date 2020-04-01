@@ -2,6 +2,7 @@ import { combineReducers, compose, createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
 import account from '@/reducers/account'
+import config from '@/reducers/config'
 import event from '@/reducers/event'
 import grant from '@/reducers/grant'
 import lockup from '@/reducers/lockup'
@@ -16,6 +17,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 export default createStore(
   combineReducers({
     account,
+    config,
     event,
     grant,
     lockup,

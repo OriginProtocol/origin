@@ -18,9 +18,11 @@ import {
 } from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import EmailIcon from '@/assets/email-icon.svg'
-import { otcRequestEnabled } from '@/constants'
 import OtcDesk from '@/assets/otc-desk.svg'
+import OgnIcon from '@/assets/ogn-icon.svg'
+import ModalStep from '@/components/ModalStep'
 
 class WithdrawModal extends Component {
   constructor(props) {
@@ -135,7 +137,8 @@ class WithdrawModal extends Component {
     }
   }
 
-  handleAddAccount = () => {
+  handleAddAccount = event => {
+    event.preventDefault()
     this.setState({
       ...this.getInitialState(),
       address: '',
@@ -157,7 +160,9 @@ class WithdrawModal extends Component {
   render() {
     return (
       <Modal
-        className="modal-lg"
+        className={`large-header${
+          this.props.otcRequestEnabled ? ' modal-lg' : ''
+        }`}
         appendToId="main"
         onClose={this.handleModalClose}
         closeBtn={true}
@@ -170,45 +175,75 @@ class WithdrawModal extends Component {
     )
   }
 
+  renderTitle() {
+    return (
+      <div className="row text-center align-items-center text-sm-left mb-3">
+        <div className="col-12 col-sm-2 text-center">
+          <OgnIcon className="icon-xl" />
+        </div>
+        <div className="col">
+          <h1 className="mb-2">Withdraw OGN</h1>
+        </div>
+      </div>
+    )
+  }
+
   renderDisclaimer() {
     return (
-      <>
-        <h1 className="mb-2">Withdraw OGN</h1>
-        <div className="alert alert-warning my-3 mx-4">
-          This transaction is <strong>not reversible</strong> and we{' '}
-          <strong>cannot help you recover these funds</strong> once you take
-          custody
-        </div>
+      <div className="text-left">
+        {this.renderTitle()}
+
+        <hr />
+
         <div className="row">
           <div className="col">
-            <ul className="my-4 text-left">
-              <li className="mt-4">
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col">
+                This transaction is <strong>not reversible</strong> and we{' '}
+                <strong>cannot help you recover these funds</strong> once you
+                take custody
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col">
                 You will need to <strong>confirm your withdrawal</strong> via
                 email within <strong>five minutes</strong> of making a request.
-              </li>
-              <li className="mt-4">
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col">
                 Be sure that <strong>only you</strong> have access to your
                 account and that your{' '}
                 <strong>private key or seed phrase is backed up</strong> and
                 stored safely.
-              </li>
-              <li className="mt-4">
-                Do not send any funds back to the account that they are sent
-                from.
-              </li>
-              <li className="mt-4">
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="row text-center align-items-center text-sm-left my-3">
+              <div className="col">
                 Large withdrawals <strong>may be delayed</strong> and will
                 require a <strong>phone call for verification.</strong>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
-          {otcRequestEnabled && (
+
+          {this.props.otcRequestEnabled && (
             <div className="col-5">
               <div
                 className="card text-left p-4 mt-3 mr-3"
-                style={{ backgroundColor: '#eff6f9' }}
+                style={{ backgroundColor: 'var(--highlight)' }}
               >
-                <img src={OtcDesk} className="mb-3" />
+                <div className="text-center">
+                  <OtcDesk className="mb-3" />
+                </div>
                 <strong className="mb-2">
                   Looking to sell a large quantity of OGN?
                 </strong>
@@ -232,13 +267,24 @@ class WithdrawModal extends Component {
             </div>
           )}
         </div>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={() => this.setState({ modalState: 'Form' })}
-        >
-          Continue
-        </button>
-      </>
+
+        <div className="actions">
+          <div className="row">
+            <div className="col"></div>
+            <div className="col">
+              <ModalStep steps={3} completedSteps={0} />
+            </div>
+            <div className="col text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => this.setState({ modalState: 'Form' })}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -248,7 +294,8 @@ class WithdrawModal extends Component {
 
     return (
       <>
-        <h1 className="mb-2">Withdraw OGN</h1>
+        {this.renderTitle()}
+        <hr />
         <form onSubmit={this.handleFormSubmit}>
           <div className="form-group">
             <label htmlFor="amount">Amount of Tokens</label>
@@ -279,7 +326,7 @@ class WithdrawModal extends Component {
                 </select>
               </div>
               <div className="form-group">
-                <a href="javascript:void(0);" onClick={this.handleAddAccount}>
+                <a href="#" onClick={this.handleAddAccount}>
                   Add Another Account
                 </a>
               </div>
@@ -308,20 +355,37 @@ class WithdrawModal extends Component {
               )}
             </>
           )}
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={this.state.amount < 1 || this.props.accountIsAdding}
-          >
-            {this.props.accountIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Continue</span>
-            )}
-          </button>
+          <div className="actions">
+            <div className="row">
+              <div className="col">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={() => this.setState({ modalState: 'Disclaimer' })}
+                >
+                  Back
+                </button>
+              </div>
+              <div className="col text-center">
+                <ModalStep steps={3} completedSteps={1} />
+              </div>
+              <div className="col text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={this.state.amount < 1 || this.props.accountIsAdding}
+                >
+                  {this.props.accountIsAdding ? (
+                    <>
+                      <span className="spinner-grow spinner-grow-sm"></span>
+                      Loading...
+                    </>
+                  ) : (
+                    <span>Continue</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </>
     )
@@ -337,28 +401,45 @@ class WithdrawModal extends Component {
 
     return (
       <>
-        <h1 className="mb-2">2-Step Verification</h1>
-        <p>Enter the code generated by Google Authenticator.</p>
+        <GoogleAuthenticatorIcon className="mb-4" width="74" height="74" />
+        <h1 className="mb-2">Enter your verification code</h1>
+        <p className="text-muted">
+          Enter the code generated by your authenticator app
+        </p>
         <form onSubmit={this.handleTwoFactorFormSubmit}>
-          <div className="form-group">
-            <label htmlFor="code">Code</label>
-            <input {...input('code')} type="number" />
+          <div className="form-group mb-5">
+            <label htmlFor="code">Verification code</label>
+            <input {...input('code')} placeholder="Enter code" type="number" />
             {Feedback('code')}
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.transferIsAdding}
-          >
-            {this.props.transferIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Verify</span>
-            )}
-          </button>
+          <div className="actions">
+            <div className="row">
+              <div className="col text-left">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={() => this.setState({ modalState: 'Form' })}
+                >
+                  Back
+                </button>
+              </div>
+              <div className="col text-center">
+                <ModalStep steps={3} completedSteps={2} />
+              </div>
+              <div className="col text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={this.props.transferIsAdding}
+                >
+                  {this.props.transferIsAdding ? (
+                    <>Loading...</>
+                  ) : (
+                    <span>Verify</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </>
     )
@@ -367,17 +448,29 @@ class WithdrawModal extends Component {
   renderCheckEmail() {
     return (
       <>
-        <h1 className="mb-2">Check Your Email</h1>
-        <p>Please click the link in the email we just sent you.</p>
-        <div className="mt-5">
-          <img src={EmailIcon} />
+        <div className="mt-5 mb-3">
+          <EmailIcon />
         </div>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={this.handleModalClose}
-        >
-          Done
-        </button>
+        <h1 className="mb-2">Please check your email</h1>
+        <p className="text-muted">
+          Click the link in the email we just sent you
+        </p>
+        <div className="actions">
+          <div className="row">
+            <div className="col"></div>
+            <div className="col text-center">
+              <ModalStep steps={3} completedSteps={3} />
+            </div>
+            <div className="col text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={this.handleModalClose}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       </>
     )
   }

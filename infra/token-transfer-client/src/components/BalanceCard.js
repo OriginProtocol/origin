@@ -4,7 +4,6 @@ import { Doughnut } from 'react-chartjs-2'
 import Dropdown from 'react-bootstrap/Dropdown'
 import moment from 'moment'
 
-import { earnOgnEnabled } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
 import DropdownDotsToggle from '@/components/DropdownDotsToggle'
 
@@ -31,9 +30,9 @@ const BalanceCard = props => {
   if (props.isLocked) {
     const now = moment.utc()
     return (
-      <BorderedCard shadowed={true}>
+      <BorderedCard>
         <div className="row">
-          {moment.isMoment(props.unlockDate) ? (
+          {props.unlockDate && moment(props.unlockDate).isValid() ? (
             <>
               <div className="col-12 col-lg-6 my-4">
                 <h1 className="mb-1">Your tokens are almost here!</h1>
@@ -43,9 +42,9 @@ const BalanceCard = props => {
               </div>
               <div className="col-12 col-lg-6" style={{ alignSelf: 'center' }}>
                 <div className="bluebox p-2 text-center">
-                  {props.unlockDate.diff(now, 'days')}d{' '}
-                  {props.unlockDate.diff(now, 'hours') % 24}h{' '}
-                  {props.unlockDate.diff(now, 'minutes') % 60}m
+                  {moment(props.unlockDate).diff(now, 'days')}d{' '}
+                  {moment(props.unlockDate).diff(now, 'hours') % 24}h{' '}
+                  {moment(props.unlockDate).diff(now, 'minutes') % 60}m
                 </div>
               </div>
             </>
@@ -62,38 +61,47 @@ const BalanceCard = props => {
   }
 
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row header mb-3">
         <div className="col">
           <h2>My Vested Tokens</h2>
         </div>
       </div>
       <div className="row">
-        {earnOgnEnabled && (props.balance > 0 || props.locked > 0) && (
+        {props.lockupsEnabled && (props.balance > 0 || props.locked > 0) && (
           <div
-            className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
-            style={{ minWidth: '200px' }}
+            className="col-12 col-lg-4 mb-4 mb-lg-0 mx-auto"
+            style={{ maxWidth: '200px' }}
           >
             <div style={{ position: 'relative' }}>
               <Doughnut
+                height={100}
+                width={100}
                 data={doughnutData}
-                options={{ cutoutPercentage: 60 }}
+                options={{ cutoutPercentage: 70 }}
                 legend={{ display: false }}
               />
             </div>
           </div>
         )}
-        <div className="col" style={{ alignSelf: 'center' }}>
-          <div className="row mb-2" style={{ fontSize: '24px' }}>
-            <div className="col">
-              <div className="status-circle status-circle-success mr-3"></div>
-              Available
-            </div>
-            <div className="col-6 text-right">
-              <strong className="text-nowrap">
+        <div className="col">
+          <div className="row">
+            {props.lockupsEnabled && (
+              <div className="col-1 text-right">
+                <div className="status-circle bg-green"></div>
+              </div>
+            )}
+            <div className="col text-nowrap">
+              <div>Available</div>
+              <div
+                className="mr-1 mb-3 d-inline-block font-weight-bold"
+                style={{ fontSize: '32px' }}
+              >
                 {props.isLocked ? 0 : Number(props.balance).toLocaleString()}{' '}
-                <small className="ogn">OGN</small>
-              </strong>
+              </div>
+              <span className="ogn">OGN</span>
+            </div>
+            <div className="col-1 text-right">
               <Dropdown drop={'left'} style={{ display: 'inline' }}>
                 <Dropdown.Toggle
                   as={DropdownDotsToggle}
@@ -101,7 +109,7 @@ const BalanceCard = props => {
                 ></Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  {earnOgnEnabled && (
+                  {props.lockupsEnabled && (
                     <Dropdown.Item onClick={props.onDisplayBonusModal}>
                       Earn Bonus Tokens
                     </Dropdown.Item>
@@ -116,16 +124,22 @@ const BalanceCard = props => {
               </Dropdown>
             </div>
           </div>
-          {earnOgnEnabled && (
-            <div className="row" style={{ fontSize: '24px' }}>
-              <div className="col">
-                <div className="status-circle status-circle-info mr-3"></div>
-                Locked Tokens
+          {props.lockupsEnabled && (
+            <div className="row mt-2">
+              <div className="col-1 text-right">
+                <div className="status-circle bg-blue"></div>
               </div>
-              <div className="col-6 text-right">
-                <strong className="text-nowrap">
-                  {props.locked} <small className="ogn">OGN</small>
-                </strong>
+              <div className="col text-nowrap">
+                <div>Locked Bonus Tokens</div>
+                <div
+                  className="mr-1 mb-2 d-inline-block font-weight-bold"
+                  style={{ fontSize: '32px' }}
+                >
+                  {props.locked.toLocaleString()}
+                </div>
+                <span className="ogn">OGN</span>
+              </div>
+              <div className="col-1 text-right">
                 <Dropdown drop={'left'} style={{ display: 'inline' }}>
                   <Dropdown.Toggle
                     as={DropdownDotsToggle}

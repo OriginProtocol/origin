@@ -7,6 +7,11 @@ import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
+import { fetchConfig } from '@/actions/config'
+import {
+  getConfig,
+  getIsLoading as getConfigIsLoading
+} from '@/reducers/config'
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
@@ -24,17 +29,19 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
-import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
 const WithdrawalHistory = props => {
   useEffect(() => {
-    props.fetchAccounts(), props.fetchTransfers(), props.fetchGrants()
+    props.fetchConfig(),
+      props.fetchAccounts(),
+      props.fetchTransfers(),
+      props.fetchGrants()
   }, [])
 
   if (
     props.accountIsLoading ||
+    props.configIsLoading ||
     props.transferIsLoading ||
     props.grantIsLoading
   ) {
@@ -45,7 +52,8 @@ const WithdrawalHistory = props => {
     )
   }
 
-  const isLocked = !unlockDate || moment.utc() < unlockDate
+  const isLocked =
+    !props.config.unlockDate || moment.utc() < props.config.unlockDate
 
   const accountNicknameMap = {}
   props.accounts.forEach(account => {
@@ -54,33 +62,59 @@ const WithdrawalHistory = props => {
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h1>Withdrawal History</h1>
+      <div className="row align-items-center">
+        <div className="col-12 col-md-3">
+          <h1 className="mb-2">History</h1>
+        </div>
+        <div className="col-12 col-md-2 text-right">
+          <small>
+            <strong>Available </strong>
+            {isLocked
+              ? 0
+              : Number(
+                  props.grantTotals.vestedTotal.minus(props.withdrawnAmount)
+                ).toLocaleString()}{' '}
+            OGN
+          </small>
+        </div>
+        <div className="col-12 col-md-2 text-right">
+          <small>
+            <strong>Withdrawn </strong>
+            <span className="text-nowrap">
+              {Number(props.withdrawnAmount).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-2 text-right">
+          <small>
+            <strong>Unvested </strong>
+            <span className="text-nowrap">
+              {Number(props.grantTotals.unvestedTotal).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-3 text-right">
+          <small>
+            <strong>Total purchase </strong>
+            <span className="text-nowrap">
+              {Number(props.grantTotals.grantTotal).toLocaleString()} OGN
+            </span>
+          </small>
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <WithdrawalHistoryCard
-            isLocked={isLocked}
-            withdrawnAmount={props.withdrawnAmount}
-            {...props.grantTotals}
-          />
-        </div>
-      </div>
+      <hr />
       <div className="row">
         <div className="col">
           <div className="table-responsive">
-            <table className="table table-clickable mt-4 mb-4">
+            <table className="table table-borderless table-card-rows table-clickable">
               <thead>
                 <tr>
-                  <th>Amount</th>
+                  <th>Withdrawal Amount</th>
                   <th>IP</th>
                   <th>Destination</th>
                   <th>Nickname</th>
                   <th>Time</th>
                   <th>Status</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +133,12 @@ const WithdrawalHistory = props => {
                         props.history.push(`/withdrawal/${transfer.id}`)
                       }
                     >
-                      <td>{Number(transfer.amount).toLocaleString()} OGN</td>
+                      <td className="pl-4">
+                        <strong>
+                          {Number(transfer.amount).toLocaleString()}
+                        </strong>{' '}
+                        <span className="ogn">OGN</span>
+                      </td>
                       <td>{get(transfer.data, 'ip', 'Unknown')}</td>
                       <td>
                         <EthAddress address={transfer.toAddress} />
@@ -117,12 +156,12 @@ const WithdrawalHistory = props => {
                             .utc()
                             .diff(moment(transfer.createdAt), 'minutes') > 5 ? (
                             <>
-                              <div className="status-circle mr-2"></div>
+                              <div className="status-circle bg-red mr-2"></div>
                               Expired
                             </>
                           ) : (
                             <>
-                              <div className="status-circle status-circle-warning mr-2"></div>
+                              <div className="status-circle bg-orange mr-2"></div>
                               Email Confirmation
                             </>
                           ))}
@@ -132,25 +171,25 @@ const WithdrawalHistory = props => {
                           enums.TransferStatuses.Processing
                         ].includes(transfer.status) && (
                           <>
-                            <div className="status-circle status-circle-warning mr-2"></div>
+                            <div className="status-circle bg-orange mr-2"></div>
                             Processing
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Paused && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Paused
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Success && (
                           <>
-                            <div className="status-circle status-circle-success mr-2"></div>
+                            <div className="status-circle bg-green mr-2"></div>
                             Confirmed
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Failed && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Failed
                           </>
                         )}
@@ -159,12 +198,11 @@ const WithdrawalHistory = props => {
                           enums.TransferStatuses.Cancelled
                         ].includes(transfer.status) && (
                           <>
-                            <div className="status-circle mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             {transfer.status}
                           </>
                         )}
                       </td>
-                      <td>&rsaquo;</td>
                     </tr>
                   ))
                 )}
@@ -177,10 +215,12 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer, user }) => {
+const mapStateToProps = ({ account, config, grant, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
+    config: getConfig(config),
+    configIsLoading: getConfigIsLoading(config),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(user.user, grant),
@@ -193,6 +233,7 @@ const mapStateToProps = ({ account, grant, transfer, user }) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      fetchConfig: fetchConfig,
       fetchAccounts: fetchAccounts,
       fetchGrants: fetchGrants,
       fetchTransfers: fetchTransfers

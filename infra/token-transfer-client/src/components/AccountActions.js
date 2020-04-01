@@ -4,6 +4,7 @@ import get from 'lodash.get'
 
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
+import ThemeToggle from '@/components/ThemeToggle'
 
 const AccountActions = props => {
   const [redirectTo, setRedirectTo] = useState(false)
@@ -19,6 +20,7 @@ const AccountActions = props => {
 
   return (
     <div className="text-right" style={{ color: '#638298' }}>
+      <ThemeToggle />
       <small>
         {get(props.user, 'email')}
         <div className="mx-3 d-inline-block">|</div>

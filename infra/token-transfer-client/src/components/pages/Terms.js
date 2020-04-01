@@ -81,7 +81,7 @@ const Terms = ({ editUser, userIsEditing }) => {
           </label>
         </div>
         <button
-          className="btn btn-secondary btn-lg"
+          className="btn btn-primary btn-lg"
           disabled={!accepted || userIsEditing}
           onClick={handleSubmit}
         >

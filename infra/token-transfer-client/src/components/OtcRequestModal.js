@@ -110,7 +110,7 @@ class OtcRequestModal extends Component {
               <label
                 className={`btn btn-lg ${
                   this.state.action === 'Buy'
-                    ? 'btn-secondary'
+                    ? 'btn-primary'
                     : 'btn-outline-secondary'
                 }`}
               >
@@ -123,7 +123,7 @@ class OtcRequestModal extends Component {
               <label
                 className={`btn btn-lg ${
                   this.state.action === 'Sell'
-                    ? 'btn-secondary'
+                    ? 'btn-primary'
                     : 'btn-outline-secondary'
                 }`}
               >
@@ -138,7 +138,11 @@ class OtcRequestModal extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="amount">Amount of Tokens</label>
-            <div className="input-group">
+            <div
+              className={`input-group ${
+                this.state.amountError ? 'is-invalid' : ''
+              }`}
+            >
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
                 <span className="badge badge-secondary">OGN</span>
@@ -148,20 +152,23 @@ class OtcRequestModal extends Component {
               {Feedback('amount')}
             </div>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.otcIsAdding}
-          >
-            {this.props.otcIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Submit Request</span>
-            )}
-          </button>
+          <div className="actions mt-5">
+            <div className="row">
+              <div className="col text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={this.props.otcIsAdding}
+                >
+                  {this.props.otcIsAdding ? (
+                    'Loading...'
+                  ) : (
+                    <span>Submit Request</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </>
     )
@@ -171,16 +178,22 @@ class OtcRequestModal extends Component {
     return (
       <>
         <div className="my-3">
-          <img src={SuccessIcon} />
+          <SuccessIcon />
         </div>
         <h1 className="mb-2">Thank you!</h1>
         <p>Our OTC partner will be in touch.</p>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={this.props.onModalClose}
-        >
-          Done
-        </button>
+        <div className="actions mt-5">
+          <div className="row">
+            <div className="col text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={this.props.onModalClose}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       </>
     )
   }
