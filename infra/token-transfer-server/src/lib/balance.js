@@ -14,7 +14,7 @@ const logger = require('../logger')
  * Helper method to check the available balance for a user.
  *
  * @param userId
- * @returns Promise<Integer> - available balance
+ * @returns Promise<BigNumber> - available balance
  * @private
  */
 async function getBalance(userId) {
@@ -76,7 +76,7 @@ async function getBalance(userId) {
  * lockups of tokens from the next vest.
  *
  * @param userId
- * @returns Promise<Integer> - available balance on the next vest
+ * @returns Promise<BigNumber> - available balance on the next vest
  * @private
  */
 async function getNextVestBalance(userId) {

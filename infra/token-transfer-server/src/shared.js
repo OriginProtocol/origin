@@ -105,7 +105,8 @@ function calculateLocked(lockups) {
   }, BigNumber(0))
 }
 
-/* Determine if a lockup is a nearly lockup based
+/* Determine if a lockup is an arly lockup based
+ * @param lockup
  */
 const isEarlyLockup = lockup => {
   return !!(lockup.data && lockup.data.vest && lockup.data.vest.grantId)
