@@ -25,17 +25,17 @@ const getUnlockDate = () => {
 
 // Use a function so that this value can be mocked in tests
 const getLockupsEnabled = () => {
-  return lockupsEnabled === true || lockupsEnabled == 'true'
+  return lockupsEnabled === true || lockupsEnabled === 'true'
 }
 
 // Use a function so that this value can be mocked in tests
 const getEarlyLockupsEnabled = () => {
-  return earlyLockupsEnabled === true || earlyLockupsEnabled == 'true'
+  return earlyLockupsEnabled === true || earlyLockupsEnabled === 'true'
 }
 
 // Use a function so that this value can be mocked in tests
 const getOtcRequestEnabled = () => {
-  return otcRequestEnabled === true || otcRequestEnabled == 'true'
+  return otcRequestEnabled === true || otcRequestEnabled === 'true'
 }
 
 // Get fingerprint data about the current device
