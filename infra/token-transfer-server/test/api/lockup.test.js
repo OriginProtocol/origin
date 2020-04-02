@@ -281,7 +281,7 @@ describe('Lockup HTTP API', () => {
     })
 
     // Lock up entire balance
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: balance,
