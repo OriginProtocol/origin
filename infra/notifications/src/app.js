@@ -464,14 +464,9 @@ app.post('/events', async (req, res) => {
 })
 
 app.post('/send_pn', pushAppAuth, async (req, res) => {
-  const { title, body, payload, address } = req.body
-
   const mPush = new MobilePush(config)
 
-  const data = await mPush.sendToAddress(address, {
-    message: { title, body },
-    payload
-  })
+  const data = await mPush.multicastMessage(req.body)
 
   res.send(data)
 })

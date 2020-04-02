@@ -226,6 +226,7 @@ module.exports = `
     inviteCode: String!
     isEligible: EligibilityInfo
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
+    enrolled(walletAddress: ID!): Boolean
     telegramGroupName: String
   }
 

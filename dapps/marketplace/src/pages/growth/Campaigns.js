@@ -651,7 +651,6 @@ require('react-styl')(`
       text-align: center
     .april-campaign-box
       cursor: pointer
-      background-color: #f3f7f9
       margin-top: 30px
       position: relative
       .image-cta

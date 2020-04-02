@@ -21,6 +21,7 @@ const enums = require('../enums')
 const logger = require('../logger')
 const { BannedUserError } = require('../util/bannedUserError')
 const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
+const db = require('../models')
 
 const requireEnrolledUser = context => {
   if (
@@ -122,6 +123,14 @@ const resolvers = {
       }
       logger.debug('Eligibility:', JSON.stringify(eligibility))
       return eligibility
+    },
+    // Checks if a wallet address has an Origin Rewards account associated with it.
+    async enrolled(_, args) {
+      const ethAddress = args.walletAddress.toLowerCase()
+      const participant = await db.GrowthParticipant.findOne({
+        where: { ethAddress }
+      })
+      return !!participant
     },
     async enrollmentStatus(_, args, context) {
       // if identity is overridden with admin_secret always show as enrolled

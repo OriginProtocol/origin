@@ -366,7 +366,7 @@ async function createApr2020ProdCampaign() {
     nameKey: 'growth.apr2020.name',
     shortNameKey: 'growth.apr2020.short_name',
     rules: JSON.stringify(apr2020Config),
-    startDate: Date.parse('April 1, 2020, 00:00 UTC'),
+    startDate: Date.parse('April 3, 2020, 17:00 UTC'),
     endDate: Date.parse('May 1, 2020, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2020, 00:00 UTC'),
     cap: tokenToNaturalUnits(0), // Set cap to 0 token
