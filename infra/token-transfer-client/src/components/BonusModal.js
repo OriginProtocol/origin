@@ -163,7 +163,11 @@ class BonusModal extends Component {
               )}
               <div className="form-group">
                 <label htmlFor="amount">Amount of tokens to lock up</label>
-                <div className="input-group">
+                <div
+                  className={`input-group ${
+                    this.state.amountError ? 'is-invalid' : ''
+                  }`}
+                >
                   <input {...input('amount')} type="number" />
                   <div className="input-group-append">
                     <a

@@ -43,7 +43,7 @@ const BonusCard = ({
     <BorderedCard>
       <div className="hot-badge bg-red">HOT</div>
       <div className="row">
-        <div className="col">
+        <div className="col-12 col-sm-6">
           <h2>Bonus Tokens</h2>
           <div className="mt-3 mb-2">
             <div>Earned</div>
@@ -60,12 +60,12 @@ const BonusCard = ({
             <span className="ml-1 ogn">OGN</span>
           </div>
         </div>
-        <div className="col">
+        <div className="col-12 col-sm-6 mt-4 mt-sm-0">
           <div className="row">
             <div className="col">
               <h2>Recent Lockups</h2>
             </div>
-            <div className="col text-right">
+            <div className="col-4 text-right">
               <NavLink to="/lockup">Details &gt;</NavLink>
             </div>
             <div className="col-12">

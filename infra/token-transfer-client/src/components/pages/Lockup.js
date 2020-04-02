@@ -118,31 +118,33 @@ const Lockup = props => {
       )
     })
     return (
-      <table className="table table-borderless table-card-rows">
-        <thead>
-          <tr>
-            <th>Lock up name</th>
-            <th>Created</th>
-            <th>Unlocks</th>
-            <th>Lock up amount</th>
-            <th>Bonus tokens</th>
-            <th>Yield %</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.lockups.length === 0 ? (
+      <div className="table-responsive">
+        <table className="table table-borderless table-card-rows">
+          <thead>
             <tr>
-              <td className="table-empty-cell" colSpan="100%">
-                {props.config.isLocked
-                  ? 'Tokens have not been ulocked yet'
-                  : 'You do not have any lockups'}
-              </td>
+              <th>Lock up name</th>
+              <th>Created</th>
+              <th>Unlocks</th>
+              <th>Lock up amount</th>
+              <th>Bonus tokens</th>
+              <th>Yield %</th>
             </tr>
-          ) : (
-            rows
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {props.lockups.length === 0 ? (
+              <tr>
+                <td className="table-empty-cell" colSpan="100%">
+                  {props.config.isLocked
+                    ? 'Tokens have not been ulocked yet'
+                    : 'You do not have any lockups'}
+                </td>
+              </tr>
+            ) : (
+              rows
+            )}
+          </tbody>
+        </table>
+      </div>
     )
   }
 

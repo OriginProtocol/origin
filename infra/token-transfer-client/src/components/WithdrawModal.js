@@ -299,7 +299,11 @@ class WithdrawModal extends Component {
         <form onSubmit={this.handleFormSubmit}>
           <div className="form-group">
             <label htmlFor="amount">Amount of Tokens</label>
-            <div className="input-group">
+            <div
+              className={`input-group ${
+                this.state.amountError ? 'is-invalid' : ''
+              }`}
+            >
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
                 <span className="badge badge-secondary">OGN</span>

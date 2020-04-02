@@ -70,7 +70,7 @@ hr {
 }
 
 #main {
-  padding: 30px;
+  padding: 20px;
   width: 100%;
   margin-bottom: 50px;
 }
@@ -102,7 +102,7 @@ hr {
 
   #main {
     width: calc(100% - 70px);
-    padding: 20px;
+    padding: 30px;
   }
 
   .logged-in {
@@ -183,10 +183,6 @@ input, select {
   color: var(--text);
 }
 
-.input-group.is-invalid .input-group-append {
-  border: 1px solid var(--hr-color);
-}
-
 .input-group-append {
   padding: 10px;
   display: block;
@@ -195,8 +191,17 @@ input, select {
   background-color: var(--bg-color);
 }
 
+.is-invalid {
+  border-color: var(--red) !important;
+}
+
+.input-group.is-invalid .input-group-append {
+  border: 1px solid var(--red);
+}
+
 .input-group-fix .invalid-feedback {
   display: block;
+  color: var(--red);
 }
 
 /*
