@@ -16,7 +16,8 @@ const _ = require('lodash')
 // const { browserPush } = require('./browserPush')
 const MobilePush = require('./mobilePush')
 const EmailSender = require('./emailSend')
-const MobileRegistry = require('./models').MobileRegistry
+const db = require('./models')
+const MobileRegistry = db.MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
 const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 const {
@@ -469,6 +470,35 @@ app.post('/send_pn', pushAppAuth, async (req, res) => {
   const data = await mPush.multicastMessage(req.body)
 
   res.send(data)
+})
+
+const cachedCountryCodes = []
+const cachcedLangCodes = []
+app.get('/push-targets', pushAppAuth, async (req, res) => {
+  if (!cachcedLangCodes.length) {
+    const [langCodes] = await db.sequelize.query(`
+      select distinct data->>'language' as langcode 
+        from growth_participant order by data->>'language' ASC;
+    `)
+
+    cachcedLangCodes.push(...langCodes.map(l => l.langcode).filter(l => l))
+  }
+
+  if (!cachedCountryCodes.length) {
+    const [countryCodes] = await db.sequelize.query(`
+      select distinct country as countrycode 
+        from identity order by country ASC;
+    `)
+
+    cachedCountryCodes.push(
+      ...countryCodes.map(c => c.countrycode).filter(c => c)
+    )
+  }
+
+  res.send({
+    langCodes: cachcedLangCodes,
+    countryCodes: cachedCountryCodes
+  })
 })
 
 // Catch all
