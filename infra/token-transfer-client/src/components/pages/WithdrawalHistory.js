@@ -66,7 +66,7 @@ const WithdrawalHistory = props => {
         <div className="col-12 col-md-3">
           <h1 className="mb-2">History</h1>
         </div>
-        <div className="col-12 col-md-2 text-right">
+        <div className="col-12 col-md-2 text-md-right">
           <small>
             <strong>Available </strong>
             {isLocked
@@ -77,7 +77,7 @@ const WithdrawalHistory = props => {
             OGN
           </small>
         </div>
-        <div className="col-12 col-md-2 text-right">
+        <div className="col-12 col-md-2 text-md-right">
           <small>
             <strong>Withdrawn </strong>
             <span className="text-nowrap">
@@ -85,7 +85,7 @@ const WithdrawalHistory = props => {
             </span>
           </small>
         </div>
-        <div className="col-12 col-md-2 text-right">
+        <div className="col-12 col-md-2 text-md-right">
           <small>
             <strong>Unvested </strong>
             <span className="text-nowrap">
@@ -93,7 +93,7 @@ const WithdrawalHistory = props => {
             </span>
           </small>
         </div>
-        <div className="col-12 col-md-3 text-right">
+        <div className="col-12 col-md-3 text-md-right">
           <small>
             <strong>Total purchase </strong>
             <span className="text-nowrap">

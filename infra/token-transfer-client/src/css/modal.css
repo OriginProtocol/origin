@@ -266,9 +266,7 @@
 }
 
 .close {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
+  margin-top: 5px;
   width: 36px;
   height: 36px;
   background-color: var(--border-accent);
@@ -277,11 +275,6 @@
   text-shadow: none;
   line-height: 35px;
   z-index: 2000;
-}
-
-.large-header .close {
-  right: 2rem;
-  top: 2.5rem;
 }
 
 @media (max-width: 767.98px) {

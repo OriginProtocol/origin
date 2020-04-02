@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 import get from 'lodash.get'
 
-import {
-  calculateNextVestLocked,
-  getNextVest
-} from '@origin/token-transfer-server/src/shared'
+import { getNextVest } from '@origin/token-transfer-server/src/shared'
 
 import { fetchAccounts } from '@/actions/account'
 import {

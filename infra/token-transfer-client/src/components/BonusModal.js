@@ -15,9 +15,9 @@ import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import BonusGraph from '@/components/BonusGraph'
 import ModalStep from '@/components/ModalStep'
+import TwoFactorStep from '@/components/modal/TwoFactorStep'
+import CheckEmailStep from '@/components/modal/CheckEmailStep'
 
-import EmailIcon from '@/assets/email-icon.svg'
-import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import OgnIcon from '@/assets/ogn-icon.svg'
 import YieldIcon from '@/assets/yield-icon.svg'
 import TokensIcon from '@/assets/tokens-icon.svg'
@@ -58,6 +58,7 @@ class BonusModal extends Component {
     }
   }
 
+  // Helper function to allow resetting to initial state
   getInitialState = () => {
     const initialState = {
       amount: this.props.balance ? Number(this.props.balance) : 0,
@@ -102,14 +103,12 @@ class BonusModal extends Component {
 
   handleTwoFactorFormSubmit = async event => {
     event.preventDefault()
-
     // Add the lockup
     const result = await this.props.addLockup({
       amount: this.state.amount,
       code: this.state.code,
       early: this.props.isEarlyLockup
     })
-
     if (result.type === 'ADD_LOCKUP_SUCCESS') {
       this.setState({ modalState: 'CheckEmail' })
     }
@@ -117,7 +116,6 @@ class BonusModal extends Component {
 
   onMaxAmount = event => {
     event.preventDefault()
-
     this.setState({
       amount: Number(this.props.balance)
     })
@@ -129,12 +127,30 @@ class BonusModal extends Component {
         appendToId="private"
         onClose={this.handleModalClose}
         closeBtn={true}
-        className="large-header"
       >
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
         {this.state.modalState === 'Form' && this.renderForm()}
-        {this.state.modalState === 'TwoFactor' && this.renderTwoFactor()}
-        {this.state.modalState === 'CheckEmail' && this.renderCheckEmail()}
+        {this.state.modalState === 'TwoFactor' && (
+          <TwoFactorStep
+            formState={{
+              code: this.state.code,
+              codeError: this.state.codeError
+            }}
+            onChangeFormState={state => this.setState(state)}
+            onBackClick={() => this.setState({ modalState: 'Form' })}
+            onSubmit={this.handleTwoFactorFormSubmit}
+            isLoading={this.props.lockupIsAdding}
+            modalSteps={3}
+            modalStepsCompleted={2}
+          />
+        )}
+        {this.state.modalState === 'CheckEmail' && (
+          <CheckEmailStep
+            onDoneClick={this.handleModalClose}
+            modalSteps={3}
+            modalStepsCompleted={3}
+          />
+        )}
       </Modal>
     )
   }
@@ -149,7 +165,7 @@ class BonusModal extends Component {
         <hr />
         <form onSubmit={this.handleFormSubmit}>
           <div className="row">
-            <div className="col-7 pr-4">
+            <div className="col-12 col-sm-7 pr-4">
               {this.props.isEarlyLockup && (
                 <div className="form-group">
                   <label htmlFor="amount">Eligible tokens</label>
@@ -194,7 +210,7 @@ class BonusModal extends Component {
               </div>
             </div>
 
-            <div className="col-5 pl-3 pt-4">
+            <div className="col-12 col-sm-5 pl-3 pt-4 pt-sm-4">
               <BonusGraph
                 lockupAmount={this.state.amount}
                 bonusRate={this.props.lockupBonusRate}
@@ -204,7 +220,7 @@ class BonusModal extends Component {
 
           <div className="actions">
             <div className="row">
-              <div className="col">
+              <div className="col d-none d-md-block">
                 <button
                   className="btn btn-outline-primary btn-lg"
                   onClick={() => this.setState({ modalState: 'Disclaimer' })}
@@ -212,10 +228,10 @@ class BonusModal extends Component {
                   Back
                 </button>
               </div>
-              <div className="col text-center">
+              <div className="col text-center d-none d-md-block">
                 <ModalStep steps={3} completedSteps={1} />
               </div>
-              <div className="col text-right">
+              <div className="col text-sm-right mb-3 mb-sm-0">
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg"
@@ -245,12 +261,12 @@ class BonusModal extends Component {
       titleText = 'Earn Bonus Tokens'
     }
     return (
-      <div className="row text-center align-items-center text-sm-left mb-3">
-        <div className="col-12 col-sm-2 text-center">
+      <div className="row align-items-center mb-3 text-center text-sm-left">
+        <div className="d-none d-sm-block col-sm-2">
           <OgnIcon className="icon-xl" />
         </div>
         <div className="col">
-          <h1 className="mb-2">{titleText}</h1>
+          <h1 className="my-2">{titleText}</h1>
         </div>
       </div>
     )
@@ -263,8 +279,8 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row text-center align-items-center text-sm-left my-3">
-          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
             <YieldIcon className="mx-3" />
           </div>
           <div className="col">
@@ -285,8 +301,8 @@ class BonusModal extends Component {
 
         <hr />
 
-        <div className="row text-center align-items-center text-sm-left my-3">
-          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
             <CalendarIcon className="mx-3" />
           </div>
           <div className="col">
@@ -299,8 +315,8 @@ class BonusModal extends Component {
 
         {this.props.isEarlyLockup ? (
           <>
-            <div className="row text-center align-items-center text-sm-left my-3">
-              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+            <div className="row align-items-center my-3">
+              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
                 <TokensIcon className="mx-3" />
               </div>
               <div className="col">
@@ -312,8 +328,8 @@ class BonusModal extends Component {
               </div>
             </div>
             <hr />
-            <div className="row text-center align-items-center text-sm-left my-3">
-              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+            <div className="row align-items-center my-3">
+              <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
                 <ClockIcon className="mx-3" />
               </div>
               <div className="col">
@@ -330,8 +346,8 @@ class BonusModal extends Component {
             </div>
           </>
         ) : (
-          <div className="row text-center align-items-center text-sm-left my-3">
-            <div className="col-12 col-sm-1 mr-sm-4 text-center my-3">
+          <div className="row align-items-center my-3">
+            <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
               <TokensIcon className="mx-3" />
             </div>
             <div className="col">
@@ -343,8 +359,8 @@ class BonusModal extends Component {
         )}
 
         <div className="actions">
-          <div className="row">
-            <div className="col-7 align-self-center">
+          <div className="row text-center text-sm-left">
+            <div className="col-12 col-sm-7 align-self-center mb-3 mb-sm-0">
               <small>
                 By continuing you certify that you are an{' '}
                 <a
@@ -356,7 +372,7 @@ class BonusModal extends Component {
                 </a>
               </small>
             </div>
-            <div className="col-5 text-right">
+            <div className="col-12 col-sm-5 text-sm-right mb-3 mb-sm-0">
               <button
                 className="btn btn-primary btn-lg"
                 onClick={() => this.setState({ modalState: 'Form' })}
@@ -367,90 +383,6 @@ class BonusModal extends Component {
           </div>
         </div>
       </div>
-    )
-  }
-
-  renderTwoFactor() {
-    const input = formInput(
-      this.state,
-      state => this.setState(state),
-      'text-center w-auto'
-    )
-    const Feedback = formFeedback(this.state)
-
-    return (
-      <>
-        <GoogleAuthenticatorIcon className="mb-4" width="74" height="74" />
-        <h1 className="mb-2">Enter your verification code</h1>
-        <p className="text-muted">
-          Enter the code generated by your authenticator app
-        </p>
-        <form onSubmit={this.handleTwoFactorFormSubmit}>
-          <div className="form-group mb-5">
-            <label htmlFor="code">Verification code</label>
-            <input {...input('code')} placeholder="Enter code" type="number" />
-            {Feedback('code')}
-          </div>
-          <div className="actions">
-            <div className="row">
-              <div className="col text-left">
-                <button
-                  className="btn btn-outline-primary btn-lg"
-                  onClick={() => this.setState({ modalState: 'Form' })}
-                >
-                  Back
-                </button>
-              </div>
-              <div className="col text-center">
-                <ModalStep steps={3} completedSteps={2} />
-              </div>
-              <div className="col text-right">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg"
-                  disabled={this.props.lockupIsAdding}
-                >
-                  {this.props.lockupIsAdding ? (
-                    'Loading...'
-                  ) : (
-                    <span>Verify</span>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </>
-    )
-  }
-
-  renderCheckEmail() {
-    return (
-      <>
-        <div className="mt-5 mb-3">
-          <EmailIcon />
-        </div>
-        <h1 className="mb-2">Please check your email</h1>
-        <p className="text-muted">
-          Click the link in the email we just sent you
-        </p>
-        <div className="actions">
-          <div className="row">
-            <div className="col"></div>
-            <div className="col text-center">
-              <ModalStep steps={3} completedSteps={3} />
-            </div>
-            <div className="col text-right">
-              <button
-                className="btn btn-primary btn-lg"
-                onClick={this.handleModalClose}
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      </>
     )
   }
 }

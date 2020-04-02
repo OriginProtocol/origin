@@ -148,9 +148,11 @@ class AccountTable extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal appendToId="main" onClose={this.reset} closeBtn={true}>
-        <h1 className="mb-2">Add an Account</h1>
-        <p>Enter a nickname and an Ethereum account address.</p>
+      <Modal appendToId="private" onClose={this.reset} closeBtn={true}>
+        <h1 className="my-2">Add an Account</h1>
+        <p className="my-2">
+          Enter a nickname and an Ethereum account address.
+        </p>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Nickname</label>
@@ -163,7 +165,7 @@ class AccountTable extends Component {
             {Feedback('address')}
           </div>
           <div className="actions mt-5">
-            <div className="row">
+            <div className="row mb-3 mb-sm-0">
               <div className="col text-right">
                 <button
                   type="submit"
