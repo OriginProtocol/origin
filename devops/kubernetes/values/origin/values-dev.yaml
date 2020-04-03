@@ -26,7 +26,7 @@ discoveryImageTag: 'b8cdfe7'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '6ee29fc'
+growthImageTag: '94866bd'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -34,7 +34,7 @@ messagingImageTag: '4893ccf'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '9301b02'
+notificationsImageTag: '960c333'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client

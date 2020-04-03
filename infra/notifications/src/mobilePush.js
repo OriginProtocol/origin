@@ -165,7 +165,7 @@ class MobilePush {
       }
 
       try {
-        const response = await firebaseMessaging.send(message)
+        const response = await firebaseMessaging.sendMulticast(message)
         logger.debug('FCM message sent:', JSON.stringify(response))
         success = true
       } catch (error) {
