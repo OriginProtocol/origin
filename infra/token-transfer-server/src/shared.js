@@ -95,6 +95,16 @@ function calculateEarnings(lockups) {
  */
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
+    if (isEarlyLockup(lockup)) {
+      // If the early lockup vest has vested then treat them as regular locked tokens
+      if (moment.utc(lockup.data.vest.date) < moment.utc()) {
+        return total.plus(BigNumber(lockup.amount))
+      } else {
+        // The early lockup vest has not vested, so the balance is these tokens
+        // are not counted here, but in calculateNextVestLocked
+        return BigNumber(0)
+      }
+    }
     if (
       lockup.start < moment.utc() && // Lockup has started
       lockup.end > moment.utc() // Lockup has not yet ended

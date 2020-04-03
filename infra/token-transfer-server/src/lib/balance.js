@@ -61,7 +61,6 @@ async function getBalance(userId) {
     .plus(lockupEarnings)
     .minus(transferWithdrawnAmount)
     .minus(lockedAmount)
-    .plus(nextVestLocked)
 
   if (available.lt(0)) {
     throw new RangeError(`Amount of available OGN is below 0`)
