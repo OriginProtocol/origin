@@ -28,13 +28,16 @@ const NumBlockConfirmation = 3
 
 /**
  * Enqueues a request to transfer tokens.
- * @param userId
- * @param address
- * @param amount
+ *
+ * @param {BigInt} userId: id of the user transferring
+ * @param {String} address: ethereum address to transfer to
+ * @param {BigNumber} amount: amount to transfer
+ * @param {Object} data: additional data to be recorded with the transfer request
  * @returns {Promise<Transfer>} Transfer object.
  */
 async function addTransfer(userId, address, amount, data = {}) {
-  const balance = await getBalance(userId, amount)
+  const balance = await getBalance(userId)
+  // @ts-ignore
   if (BigNumber(amount).gt(balance)) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${balance} available for transfer for user ${userId}`
@@ -49,6 +52,7 @@ async function addTransfer(userId, address, amount, data = {}) {
   try {
     transfer = await Transfer.create({
       userId: userId,
+      // @ts-ignore
       status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: address.toLowerCase(),
       amount,
@@ -77,7 +81,7 @@ async function addTransfer(userId, address, amount, data = {}) {
 /**
  * Sends an email with a token that can be used for confirming a transfer.
  * @param transfer
- * @param user
+ * @param userId
  */
 async function sendTransferConfirmationEmail(transfer, userId) {
   const user = await User.findByPk(userId)
@@ -101,18 +105,21 @@ async function sendTransferConfirmationEmail(transfer, userId) {
   )
 }
 
-/* Moves a transfer from waiting for email confirmation to enqueued.
+/** Moves a transfer from waiting for email confirmation to enqueued.
  * Throws an exception if the request is invalid.
- * @param transfer
- * @param user
+ *
+ * @param {Transfer} transfer: DB transfer object
+ * @param {User} user: DB user object
  */
 async function confirmTransfer(transfer, user) {
+  // @ts-ignore
   if (transfer.status !== enums.TransferStatuses.WaitingEmailConfirm) {
     throw new Error('Transfer is not waiting for confirmation')
   }
 
   if (transferHasExpired(transfer)) {
     await transfer.update({
+      // @ts-ignore
       status: enums.TransferStatuses.Expired
     })
     throw new Error('Transfer was not confirmed in the required time')
@@ -122,6 +129,7 @@ async function confirmTransfer(transfer, user) {
   // Change state of transfer and add event
   try {
     await transfer.update({
+      // @ts-ignore
       status: enums.TransferStatuses.Enqueued
     })
     const event = {
@@ -178,22 +186,25 @@ async function confirmTransfer(transfer, user) {
 
 /**
  * Sends a blockchain transaction to transfer tokens.
+ *
  * @param {Transfer} transfer: Db model transfer object
- * @param {Integer} transferTaskId: Id of the calling transfer task
+ * @param {BigInt} transferTaskId: Id of the calling transfer task
  * @param {Token} token: An instance of the token library (@origin/token)
- * @returns {Promise<String>} Hash of the transaction
+ * @returns {Promise<String|Boolean>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId, token) {
   const balance = await getBalance(transfer.userId)
   // Subtract the current transfer amount from the available balance because
   // it is what we are transferring
-  if (BigNumber(transfer.amount).gt(balance.minus(transfer.amount))) {
+  // @ts-ignore
+  if (balance.minus(transfer.amount).lt(0)) {
     throw new RangeError(
       `Amount of ${transfer.amount} OGN exceeds the ${balance} available for executing transfer for user ${transfer.userId}`
     )
   }
 
   await transfer.update({
+    // @ts-ignore
     status: enums.TransferStatuses.Processing,
     transferTaskId
   })
@@ -214,6 +225,7 @@ async function executeTransfer(transfer, transferTaskId, token) {
     logger.error('Error crediting tokens', error.message)
     await updateTransferStatus(
       transfer,
+      // @ts-ignore
       enums.TransferStatuses.Failed,
       TRANSFER_FAILED,
       error.message
@@ -224,6 +236,7 @@ async function executeTransfer(transfer, transferTaskId, token) {
   logger.info(`Transfer ${transfer.id} processed with hash ${txHash}`)
 
   await transfer.update({
+    // @ts-ignore
     status: enums.TransferStatuses.WaitingConfirmation,
     fromAddress: supplier.toLowerCase(),
     txHash
@@ -234,6 +247,7 @@ async function executeTransfer(transfer, transferTaskId, token) {
 
 /**
  * Sends a blockchain transaction to transfer tokens.
+ *
  * @param {Transfer} transfer: DB model Transfer object
  * @param {Token} token: An instance of the token library (@origin/token)
  * @returns {Promise<String>}
@@ -250,10 +264,12 @@ async function checkBlockConfirmation(transfer, token) {
   } else {
     switch (result.status) {
       case 'confirmed':
+        // @ts-ignore
         transferStatus = enums.TransferStatuses.Success
         eventAction = TRANSFER_DONE
         break
       case 'failed':
+        // @ts-ignore
         transferStatus = enums.TransferStatuses.Failed
         eventAction = TRANSFER_FAILED
         break
@@ -280,11 +296,12 @@ async function checkBlockConfirmation(transfer, token) {
 
 /**
  * Update transfer status and add an event with the result of the transfer.
+ *
  * @param {Transfer} transfer: Db model transfer object
- * @param {String} transferStatus
+ * @param {String} transferStatus: string representing status of the transfer
  * @param {String} eventAction:
- * @param {String} failureReason
- * @returns {Promise<undefined>}
+ * @param {String} failureReason: reason for the failure
+ * @returns {Promise<void>}
  */
 async function updateTransferStatus(
   transfer,

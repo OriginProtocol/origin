@@ -75,7 +75,7 @@ function _generateEmail(emailType, vars) {
       text = welcomeTextTemplate(vars)
       mjml = mjml2html(welcomeMjmlTemplate(vars))
       if (mjml.errors.length) {
-        throw new Error('Email template error:', mjml.errors)
+        throw new Error(`Email template error: ${mjml.errors}`)
       }
       html = mjml.html
       break
@@ -84,7 +84,7 @@ function _generateEmail(emailType, vars) {
       text = loginTextTemplate(vars)
       mjml = mjml2html(loginMjmlTemplate(vars))
       if (mjml.errors.length) {
-        throw new Error('Email template error:', mjml.errors)
+        throw new Error(`Email template error: ${mjml.errors}`)
       }
       html = mjml.html
       break
@@ -93,7 +93,7 @@ function _generateEmail(emailType, vars) {
       text = transferTextTemplate(vars)
       mjml = mjml2html(transferMjmlTemplate(vars))
       if (mjml.errors.length) {
-        throw new Error('Email template error:', mjml.errors)
+        throw new Error(`Email template error: ${mjml.errors}`)
       }
       html = mjml.html
       break
@@ -102,7 +102,7 @@ function _generateEmail(emailType, vars) {
       text = lockupTextTemplate(vars)
       mjml = mjml2html(lockupMjmlTemplate(vars))
       if (mjml.errors.length) {
-        throw new Error('Email template error:', mjml.errors)
+        throw new Error(`Email template error: ${mjml.errors}`)
       }
       html = mjml.html
       break
@@ -111,7 +111,7 @@ function _generateEmail(emailType, vars) {
       text = otcTextTemplate(vars)
       mjml = mjml2html(otcMjmlTemplate(vars))
       if (mjml.errors.length) {
-        throw new Error('Email template error:', mjml.errors)
+        throw new Error(`Email template error: ${mjml.errors}`)
       }
       html = mjml.html
       break

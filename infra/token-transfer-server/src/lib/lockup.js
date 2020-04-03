@@ -22,11 +22,12 @@ const logger = require('../logger')
 const { encryptionSecret, clientUrl } = require('../config')
 
 /**
- * Adds a lockup
- * @param userId - user id of the user adding the lockup
- * @param amount - the amount to be locked
- * @param early - whether this is an early lockup of the next vest
- * @param data - additional data to be stored with the lockup, e.g. fingerprint
+ * Adds a lockup.
+ *
+ * @param {BigInt} userId - user id of the user adding the lockup
+ * @param {BigNumber} amount - the amount to be locked
+ * @param {Boolean} early - whether this is an early lockup of the next vest
+ * @param {Object} data - additional data to be stored with the lockup, e.g. fingerprint
  * @returns {Promise<Lockup>} Lockup object.
  */
 async function addLockup(userId, amount, early, data = {}) {
@@ -34,7 +35,7 @@ async function addLockup(userId, amount, early, data = {}) {
   if (early) {
     // This is an early lockup for the next vest so call alternate balance
     // checking function
-    const balance = await getNextVestBalance(userId, amount)
+    const balance = await getNextVestBalance(userId)
     if (BigNumber(amount).gt(balance)) {
       throw new RangeError(
         `Amount of ${amount} OGN exceeds the ${balance} available for early lockup for user ${userId}`
@@ -116,6 +117,7 @@ async function addLockup(userId, amount, early, data = {}) {
 
 /**
  * Sends an email with a token that can be used for confirming a lockup.
+ *
  * @param lockup - the lockup object
  * @param userId - id of the user to email
  */
@@ -142,7 +144,7 @@ async function sendLockupConfirmationEmail(lockup, userId) {
   )
 }
 
-/* Moves a lockup from waiting for email confirmation to confirmed.
+/** Moves a lockup from waiting for email confirmation to confirmed.
  * Throws an exception if the request is invalid.
  * @param lockup
  * @param user

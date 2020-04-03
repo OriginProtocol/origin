@@ -6,6 +6,10 @@ const logger = require('../logger')
 
 /**
  * Sends a blob of data to a webhook.
+ *
+ * @param {String} urlString: URL to POST to
+ * @param {Object} data: data to POST
+ * @param {String} contentType: content-type to set for POST request
  */
 async function postToWebhook(
   urlString,
