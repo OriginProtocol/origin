@@ -72,7 +72,9 @@ const Lockup = props => {
                 <LockupGraph lockup={lockup} />
               </div>
               {lockup.data && lockup.data.vest ? (
-                lockup.data.vest.date
+                `${moment(lockup.data.vest.date).format(
+                  'MMMM YYYY'
+                )} special offer lockup`
               ) : (
                 <strong>
                   {Number(lockup.amount).toLocaleString()} OGN Lockup

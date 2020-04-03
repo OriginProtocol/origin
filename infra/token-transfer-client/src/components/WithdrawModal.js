@@ -5,6 +5,7 @@ import get from 'lodash.get'
 import BigNumber from 'bignumber.js'
 import web3Utils from 'web3-utils'
 import ReactGA from 'react-ga'
+import moment from 'moment'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -22,8 +23,13 @@ import ModalStep from '@/components/ModalStep'
 import TwoFactorStep from '@/components/modal/TwoFactorStep'
 import CheckEmailStep from '@/components/modal/CheckEmailStep'
 
-import OtcDesk from '@/assets/otc-desk.svg'
-import OgnIcon from '@/assets/ogn-icon.svg'
+import ClockIcon from '@/assets/clock-icon.svg'
+import WithdrawIcon from '@/assets/withdraw-icon.svg'
+import EmailIcon from '@/assets/email-small-icon.svg'
+import WalletIcon from '@/assets/wallet-icon.svg'
+import DontIcon from '@/assets/dont-icon.svg'
+import MobileIcon from '@/assets/mobile-icon.svg'
+import WhaleIcon from '@/assets/whale-icon.svg'
 
 class WithdrawModal extends Component {
   constructor(props) {
@@ -72,7 +78,7 @@ class WithdrawModal extends Component {
       code: '',
       codeError: null,
       modalAddAccount: this.props.accounts.length === 0,
-      modalState: 'Disclaimer',
+      modalState: this.props.displayLockupCta ? 'LockupCta' : 'Disclaimer',
       nickname: '',
       nicknameError: null,
       pendingTransfer: null
@@ -150,6 +156,7 @@ class WithdrawModal extends Component {
   }
 
   handleChooseAccount = () => {
+    event.preventDefault()
     this.setState({
       ...this.getInitialState(),
       amount: this.state.amount,
@@ -161,11 +168,12 @@ class WithdrawModal extends Component {
   render() {
     return (
       <Modal
-        appendToId="main"
-        className={this.props.otcRequestEnabled ? ' modal-lg' : ''}
+        appendToId="private"
         onClose={this.handleModalClose}
         closeBtn={true}
+        className={this.state.modalState === 'LockupCta' ? 'blue-cta' : ''}
       >
+        {this.state.modalState === 'LockupCta' && this.renderLockupCta()}
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
         {this.state.modalState === 'Form' && this.renderForm()}
         {this.state.modalState === 'TwoFactor' && (
@@ -197,7 +205,7 @@ class WithdrawModal extends Component {
     return (
       <div className="row align-items-center mb-3 text-center text-sm-left">
         <div className="d-none d-sm-block col-sm-2">
-          <OgnIcon className="icon-xl" />
+          <WithdrawIcon style={{ marginLeft: '-10px' }} />
         </div>
         <div className="col">
           <h1 className="my-2">Withdraw OGN</h1>
@@ -206,90 +214,134 @@ class WithdrawModal extends Component {
     )
   }
 
+  renderLockupCta() {
+    const now = moment()
+    return (
+      <>
+        <div className="bg-wrapper">
+          <div className="row">
+            <div className="col">
+              <h1>
+                <strong>EARN {this.props.lockupRate}%</strong>
+                <br />
+                for a limited time
+              </h1>
+              <p>
+                For a limited time only, earn a {this.props.lockupRate}% bonus
+                on your tokens that vest in month.
+              </p>
+              <p className="mb-0">This offer expires in</p>
+              <p>
+                <ClockIcon
+                  className="icon-white"
+                  style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
+                />
+                <strong>
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    now,
+                    'days'
+                  )}
+                  d{' '}
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    now,
+                    'hours'
+                  ) % 24}
+                  h{' '}
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    now,
+                    'minutes'
+                  ) % 60}
+                  m
+                </strong>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="actions">
+          <div className="row">
+            <div className="col text-right">
+              <button
+                className="btn btn-outline-light btn-lg"
+                onClick={() => this.setState({ modalState: 'Disclaimer' })}
+              >
+                Not interested
+              </button>
+            </div>
+            <div className="col text-left">
+              <button
+                className="btn btn-dark btn-lg"
+                onClick={this.props.onCreateLockup}
+              >
+                Yes! I want this
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   renderDisclaimer() {
     return (
       <div className="text-left">
         {this.renderTitle()}
 
+        <div className="alert alert-warning my-4">
+          This transaction is not reversible. We can&apos;t help you recover
+          your tokens.
+        </div>
+
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
+            <EmailIcon className="mx-3" />
+          </div>
+          <div className="col">
+            You will need to <strong>confirm your withdrawal via email</strong>{' '}
+            within five minutes of making a request
+          </div>
+        </div>
+
         <hr />
 
-        <div className="row">
-          <div className="col">
-            <div className="row align-items-center my-3">
-              <div className="col">
-                This transaction is <strong>not reversible</strong> and we{' '}
-                <strong>cannot help you recover these funds</strong> once you
-                take custody
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="row align-items-center my-3">
-              <div className="col">
-                You will need to <strong>confirm your withdrawal</strong> via
-                email within <strong>five minutes</strong> of making a request.
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="row align-items-center my-3">
-              <div className="col">
-                Be sure that <strong>only you</strong> have access to your
-                account and that your{' '}
-                <strong>private key or seed phrase is backed up</strong> and
-                stored safely.
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="row align-items-center my-3">
-              <div className="col">
-                Large withdrawals <strong>may be delayed</strong>
-              </div>
-            </div>
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
+            <WalletIcon className="mx-3" />
           </div>
+          <div className="col">
+            Be sure that <strong>only you have access to your account</strong>{' '}
+            and that your private key or seed phrase is{' '}
+            <strong>safely backed up and stored.</strong>
+          </div>
+        </div>
 
-          {this.props.otcRequestEnabled && (
-            <div className="col-5 d-none d-sm-block">
-              <div
-                className="card text-left p-4 mt-3 mr-3"
-                style={{ backgroundColor: 'var(--highlight)' }}
-              >
-                <div className="text-center">
-                  <OtcDesk className="mb-3" />
-                </div>
-                <strong className="mb-2">
-                  Looking to sell a large quantity of OGN?
-                </strong>
-                <p>
-                  Try an OTC (over-the-counter) trade. OTC trades oftentimes
-                  result in a better overall price for large sellers.
-                </p>
-                <strong>
-                  <a
-                    href="#"
-                    onClick={e => {
-                      e.preventDefault()
-                      this.handleModalClose()
-                      this.props.onCreateOtcRequest()
-                    }}
-                  >
-                    Create OTC Request &gt;
-                  </a>
-                </strong>
-              </div>
-            </div>
-          )}
+        <hr />
+
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
+            <DontIcon className="mx-3" />
+          </div>
+          <div className="col">
+            <strong>Do not send any funds</strong> back to the account that they
+            are sent from
+          </div>
+        </div>
+
+        <hr />
+
+        <div className="row align-items-center my-3">
+          <div className="col-12 col-sm-1 mr-sm-4 text-center my-3 d-none d-sm-block">
+            <MobileIcon className="mx-3" />
+          </div>
+          <div className="col">
+            Large withdrawals may be delayed and will{' '}
+            <strong>require a phone call for verification</strong>
+          </div>
         </div>
 
         <div className="actions">
           <div className="row">
-            <div className="col d-none d-sm-block"></div>
             <div className="col d-none d-sm-block">
-              <ModalStep steps={3} completedSteps={0} />
+              <small>By continuing you acknowledge all of the above</small>
             </div>
             <div className="col text-sm-right mb-3 mb-sm-0">
               <button
@@ -314,68 +366,109 @@ class WithdrawModal extends Component {
         {this.renderTitle()}
         <hr />
         <form onSubmit={this.handleFormSubmit}>
-          <div className="form-group">
-            <label htmlFor="amount">Amount of Tokens</label>
-            <div
-              className={`input-group ${
-                this.state.amountError ? 'is-invalid' : ''
-              }`}
-            >
-              <input {...input('amount')} type="number" />
-              <div className="input-group-append">
-                <span className="badge badge-secondary">OGN</span>
-              </div>
-            </div>
-            <div className={this.state.amountError ? 'input-group-fix' : ''}>
-              {Feedback('amount')}
-            </div>
-          </div>
-          {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
-            <>
+          <div className="row">
+            <div className="col-12 col-sm-6">
               <div className="form-group">
-                <label htmlFor="address">Destination Account</label>
-                <select
-                  className="custom-select custom-select-lg"
-                  value={this.state.address}
-                  onChange={e => this.setState({ address: e.target.value })}
+                <label htmlFor="amount">Amount of Tokens</label>
+                <div
+                  className={`input-group ${
+                    this.state.amountError ? 'is-invalid' : ''
+                  }`}
                 >
-                  {this.props.accounts.map(account => (
-                    <option key={account.address} value={account.address}>
-                      {account.nickname}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <a href="#" onClick={this.handleAddAccount}>
-                  Add Another Account
-                </a>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="form-group">
-                <label htmlFor="address">Destination Account</label>
-                <input {...input('address')} placeholder="0x..." />
-                {Feedback('address')}
-              </div>
-              <div className="form-group">
-                <label htmlFor="nickname">Destination Account Nickname</label>
-                <input {...input('nickname')} />
-                {Feedback('nickname')}
-              </div>
-              {this.props.accounts.length > 0 && (
-                <div className="form-group">
-                  <a
-                    href="javascript:void(0);"
-                    onClick={this.handleChooseAccount}
-                  >
-                    Choose Existing Account
-                  </a>
+                  <input {...input('amount')} type="number" />
+                  <div className="input-group-append">
+                    <span className="badge badge-secondary">OGN</span>
+                  </div>
                 </div>
+                <div
+                  className={this.state.amountError ? 'input-group-fix' : ''}
+                >
+                  {Feedback('amount')}
+                </div>
+              </div>
+              {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
+                <>
+                  <div className="form-group">
+                    <label htmlFor="address">Destination Account</label>
+                    <select
+                      className="custom-select custom-select-lg"
+                      value={this.state.address}
+                      onChange={e => this.setState({ address: e.target.value })}
+                    >
+                      {this.props.accounts.map(account => (
+                        <option key={account.address} value={account.address}>
+                          {account.nickname}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group text-left mt-4">
+                    <a href="#" onClick={this.handleAddAccount}>
+                      Add another account
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="form-group">
+                    <label htmlFor="address">Destination Account</label>
+                    <input {...input('address')} placeholder="0x..." />
+                    {Feedback('address')}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="nickname">
+                      Destination Account Nickname
+                    </label>
+                    <input {...input('nickname')} />
+                    {Feedback('nickname')}
+                  </div>
+                  {this.props.accounts.length > 0 && (
+                    <div className="form-group text-left mt-4">
+                      <a href="#" onClick={this.handleChooseAccount}>
+                        Choose Existing Account
+                      </a>
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+
+            {this.props.otcRequestEnabled && (
+              <div className="col-12 col-sm-6">
+                <div
+                  className="card text-left p-4 mt-5"
+                  style={{
+                    backgroundColor: 'var(--highlight)',
+                    fontSize: '15px'
+                  }}
+                >
+                  <div className="text-center">
+                    <WhaleIcon className="mb-3" />
+                  </div>
+                  <strong className="mb-2">
+                    Selling a large quantity of OGN?
+                  </strong>
+                  <p>
+                    Try an OTC (over-the-counter) trade. OTC trades oftentimes
+                    result in a better overall price for large sellers.
+                  </p>
+                  <strong>
+                    <a
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault()
+                        this.handleModalClose()
+                        this.props.onCreateOtcRequest()
+                      }}
+                    >
+                      Create OTC Request &gt;
+                    </a>
+                  </strong>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="actions">
             <div className="row">
               <div className="col d-none d-sm-block">

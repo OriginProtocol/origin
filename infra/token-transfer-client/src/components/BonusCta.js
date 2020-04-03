@@ -5,7 +5,7 @@ import BorderedCard from '@/components/BorderedCard'
 import ClockIcon from '@/assets/clock-icon.svg'
 
 const BonusCta = ({
-  enabledUntil,
+  earlyLockupsEnabledUntil,
   fullWidth,
   lockupRate,
   nextVest,
@@ -20,16 +20,16 @@ const BonusCta = ({
           style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
         />
         <strong>
-          {moment(enabledUntil).diff(now, 'days')}d{' '}
-          {moment(enabledUntil).diff(now, 'hours') % 24}h{' '}
-          {moment(enabledUntil).diff(now, 'minutes') % 60}m
+          {moment(earlyLockupsEnabledUntil).diff(now, 'days')}d{' '}
+          {moment(earlyLockupsEnabledUntil).diff(now, 'hours') % 24}h{' '}
+          {moment(earlyLockupsEnabledUntil).diff(now, 'minutes') % 60}m
         </strong>
       </>
     )
   }
 
   return (
-    <BorderedCard blue={true}>
+    <BorderedCard className="blue">
       <div className={`row ${fullWidth ? 'align-items-center' : ''}`}>
         <div className={`${fullWidth ? 'col-lg-3 col-12' : 'col-8'}`}>
           <h1 className="mb-0">
@@ -48,7 +48,8 @@ const BonusCta = ({
             Earn <strong>{lockupRate}% bonus</strong> on your tokens that vest
             in {moment(nextVest.date).format('MMMM')}.
             <br />
-            Offer valid until {moment.utc(enabledUntil).format('DD MMMM')}.
+            Offer valid until{' '}
+            {moment.utc(earlyLockupsEnabledUntil).format('DD MMMM')}.
             {fullWidth && renderCountdown()}
           </p>
         </div>

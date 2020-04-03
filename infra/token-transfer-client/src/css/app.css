@@ -397,14 +397,18 @@ input, select {
   background-color: var(--dark-border-accent);
 }
 
+.alert {
+  border-radius: 8px;
+}
+
 .alert-danger {
-  color: black;
+  color: var(--text);
 }
 
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid var(--orange) !important;
-  color: black;
+  color: var(--text);
 }
 
 .pointer {
@@ -471,10 +475,6 @@ input, select {
 
 .icon-lg {
   width: 40px;
-}
-
-.icon-xl {
-  width: 56px;
 }
 
 .icon > path {

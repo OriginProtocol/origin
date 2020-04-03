@@ -38,6 +38,26 @@
   text-decoration: none;
 }
 
+.pl-modal .btn-group .btn {
+  min-width: 0 !important;
+}
+
+.pl-modal .btn-group .btn {
+  border-radius: 10px;
+}
+
+.pl-modal .btn-group > .btn:not(:last-child):not(.dropdown-toggle),
+.pl-modal .btn-group > .btn-group:not(:last-child) > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.pl-modal .btn-group > .btn:not(:first-child),
+.pl-modal .btn-group > .btn-group:not(:first-child) > .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 .pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content {
   text-align: center;
   position: relative;
@@ -265,6 +285,33 @@
   margin: 0;
 }
 
+.pl-modal-content.blue-cta {
+  text-align: left !important;
+  background-color: var(--blue) !important;
+  color: white;
+  font-size: 24px !important;
+}
+
+.pl-modal-content.blue-cta > .bg-wrapper {
+  margin: -2rem;
+  background-image: url(/tokens.svg);
+  background-position-y: bottom;
+  background-position-x: right;
+  background-repeat: no-repeat;
+}
+
+.pl-modal-content.blue-cta > .bg-wrapper > .row {
+  padding: 2rem;
+}
+
+.pl-modal-content.blue-cta h1 {
+  font-size: 58px;
+}
+
+.pl-modal-content.blue-cta .actions {
+  background-color: #0076f2;
+}
+
 .close {
   margin-top: 5px;
   width: 36px;
@@ -275,6 +322,7 @@
   text-shadow: none;
   line-height: 35px;
   z-index: 2000;
+  text-align: center !important;
 }
 
 @media (max-width: 767.98px) {

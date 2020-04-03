@@ -89,7 +89,7 @@ const Dashboard = props => {
     .plus(props.lockupTotals.nextVestLocked)
 
   const hasLockups = props.lockups.length > 0
-  const displayBonusCta = props.config.lockupsEnabled && !props.config.isLocked
+  const displayLockupCta = props.config.lockupsEnabled && !props.config.isLocked
   const isEarlyLockup = displayBonusModal === 'early'
 
   return (
@@ -99,7 +99,7 @@ const Dashboard = props => {
           balance={isEarlyLockup ? nextVestBalanceAvailable : balanceAvailable}
           nextVest={nextVest}
           isEarlyLockup={isEarlyLockup}
-          enabledUntil={props.config.earlyLockupsEnabledUntil}
+          earlyLockupsEnabledUntil={props.config.earlyLockupsEnabledUntil}
           lockupBonusRate={
             isEarlyLockup
               ? props.config.earlyLockupBonusRate
@@ -114,7 +114,18 @@ const Dashboard = props => {
           accounts={props.accounts}
           isLocked={props.config.isLocked}
           otcRequestEnabled={props.config.otcRequestEnabled}
-          onCreateOtcRequest={() => setDisplayOtcRequestModal(true)}
+          onCreateOtcRequest={() => {
+            setDisplayWithdrawModal(false)
+            setDisplayOtcRequestModal(true)
+          }}
+          nextVest={nextVest}
+          earlyLockupsEnabledUntil={props.config.earlyLockupsEnabledUntil}
+          displayLockupCta={props.config.earlyLockupsEnabled}
+          lockupRate={props.config.earlyLockupBonusRate}
+          onCreateLockup={() => {
+            setDisplayWithdrawModal(false)
+            setDisplayBonusModal('early')
+          }}
           onModalClose={() => setDisplayWithdrawModal(false)}
         />
       )}
@@ -124,11 +135,11 @@ const Dashboard = props => {
         />
       )}
 
-      {displayBonusCta && hasLockups && props.config.earlyLockupsEnabled && (
+      {displayLockupCta && hasLockups && props.config.earlyLockupsEnabled && (
         <div className="row">
           <div className="col mb-4">
             <BonusCta
-              enabledUntil={props.config.earlyLockupsEnabledUntil}
+              earlyLockupsEnabledUntil={props.config.earlyLockupsEnabledUntil}
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
               fullWidth={true}
@@ -150,10 +161,10 @@ const Dashboard = props => {
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
-        {displayBonusCta && !hasLockups && (
+        {displayLockupCta && !hasLockups && (
           <div className="col mb-4">
             <BonusCta
-              enabledUntil={props.config.earlyLockupsEnabledUntil}
+              earlyLockupsEnabledUntil={props.config.earlyLockupsEnabledUntil}
               nextVest={nextVest}
               lockupRate={props.config.earlyLockupBonusRate}
               onDisplayBonusModal={() => setDisplayBonusModal('early')}

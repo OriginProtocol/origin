@@ -23,7 +23,7 @@ const TwoFactorStep = ({
   return (
     <>
       <GoogleAuthenticatorIcon
-        className="mb-4"
+        className="my-5"
         width="74"
         height="74"
         style={{ marginRight: '-36px' }}

@@ -263,7 +263,7 @@ class BonusModal extends Component {
     return (
       <div className="row align-items-center mb-3 text-center text-sm-left">
         <div className="d-none d-sm-block col-sm-2">
-          <OgnIcon className="icon-xl" />
+          <OgnIcon style={{ marignLeft: '-10px' }} />
         </div>
         <div className="col">
           <h1 className="my-2">{titleText}</h1>
@@ -335,11 +335,20 @@ class BonusModal extends Component {
               <div className="col">
                 This offer expires in{' '}
                 <strong>
-                  {moment(this.props.enabledUntil).diff(moment(), 'days')}d{' '}
-                  {moment(this.props.enabledUntil).diff(moment(), 'hours') % 24}
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    moment(),
+                    'days'
+                  )}
+                  d{' '}
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    moment(),
+                    'hours'
+                  ) % 24}
                   h{' '}
-                  {moment(this.props.enabledUntil).diff(moment(), 'minutes') %
-                    60}
+                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                    moment(),
+                    'minutes'
+                  ) % 60}
                   m
                 </strong>
               </div>
