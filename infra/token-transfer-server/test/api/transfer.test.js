@@ -21,7 +21,7 @@ process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
-const { transferConfirmationTimeout } = require('../../src/shared')
+const { transferConfirmationTimeout } = require('../../src/config')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -511,8 +511,8 @@ describe('Transfer HTTP API', () => {
     transferController.__Rewire__('getUnlockDate', unlockFake)
     lockupController.__Rewire__('getUnlockDate', unlockFake)
 
-    const earnOgnFake = sinon.fake.returns(true)
-    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+    const lockupsEnabledFake = sinon.fake.returns(true)
+    lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
 
     const otpCode = totp.gen(this.otpKey)
 
