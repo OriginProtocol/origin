@@ -1,20 +1,19 @@
 const express = require('express')
 const router = express.Router()
-const AsyncLock = require('async-lock')
-const lock = new AsyncLock()
 const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
 
 const {
   asyncMiddleware,
-  getEarnOgnEnabled,
+  getEarlyLockupsEnabled,
+  getLockupsEnabled,
   getUnlockDate
 } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
 const { isValidTotp } = require('../validators')
 const { Lockup } = require('../models')
-const { getFingerprintData } = require('../utils')
+const { getFingerprintData, lock } = require('../utils')
 const { encryptionSecret } = require('../config')
 const { addLockup, confirmLockup } = require('../lib/lockup')
 const logger = require('../logger')
@@ -57,7 +56,15 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    if (!getEarnOgnEnabled()) {
+    const { amount, early } = req.body
+
+    if (!getLockupsEnabled()) {
+      // Lockups are disabled
+      return res.status(404).end()
+    }
+
+    if (early && !getEarlyLockupsEnabled()) {
+      // Early lockups are disabled
       return res.status(404).end()
     }
 
@@ -72,14 +79,13 @@ router.post(
       return
     }
 
-    const { amount } = req.body
-
     let lockup
     try {
       await lock.acquire(req.user.id, async () => {
         lockup = await addLockup(
           req.user.id,
           amount,
+          early,
           await getFingerprintData(req)
         )
       })
@@ -87,6 +93,7 @@ router.post(
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
         res.status(422).send(e.message)
+        return
       } else {
         throw e
       }

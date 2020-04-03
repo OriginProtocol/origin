@@ -472,35 +472,6 @@ app.post('/send_pn', pushAppAuth, async (req, res) => {
   res.send(data)
 })
 
-const cachedCountryCodes = []
-const cachcedLangCodes = []
-app.get('/push-targets', pushAppAuth, async (req, res) => {
-  if (!cachcedLangCodes.length) {
-    const [langCodes] = await db.sequelize.query(`
-      select distinct data->>'language' as langcode 
-        from growth_participant order by data->>'language' ASC;
-    `)
-
-    cachcedLangCodes.push(...langCodes.map(l => l.langcode).filter(l => l))
-  }
-
-  if (!cachedCountryCodes.length) {
-    const [countryCodes] = await db.sequelize.query(`
-      select distinct country as countrycode 
-        from identity order by country ASC;
-    `)
-
-    cachedCountryCodes.push(
-      ...countryCodes.map(c => c.countrycode).filter(c => c)
-    )
-  }
-
-  res.send({
-    langCodes: cachcedLangCodes,
-    countryCodes: cachedCountryCodes
-  })
-})
-
 // Catch all
 app.all('*', function(req, res) {
   res.status(404).send({

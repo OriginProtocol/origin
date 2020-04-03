@@ -1,9 +1,8 @@
 const express = require('express')
+
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const moment = require('moment')
-const AsyncLock = require('async-lock')
-const lock = new AsyncLock()
 const jwt = require('jsonwebtoken')
 
 const { Transfer } = require('../../src/models')
@@ -11,7 +10,8 @@ const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
   getFingerprintData,
-  getUnlockDate
+  getUnlockDate,
+  lock
 } = require('../utils')
 const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret } = require('../config')

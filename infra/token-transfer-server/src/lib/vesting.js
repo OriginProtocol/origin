@@ -3,13 +3,19 @@
 const moment = require('moment')
 const BigNumber = require('bignumber.js')
 
+/** Ensures the passed variable is a moment
+ *
+ * @param {moment|String} date
+ */
 function toMoment(date) {
   if (!date) return date
-  if (!moment.isMoment()) return moment.utc(date)
+  if (!moment.isMoment(date)) return moment.utc(date)
   return date
 }
 
-/* Convert the dates of a grant object to moments.
+/** Convert the dates of a grant object to moments.
+ *
+ * @param {Object} grant: grant object
  */
 function momentizeGrant(grant) {
   return {
@@ -21,8 +27,11 @@ function momentizeGrant(grant) {
   }
 }
 
-/* Returns an array of vesting objects that include a datetime and status
+/** Returns an array of vesting objects that include a datetime and status
  * associated with each vesting event.
+ *
+ * @param {User} user: DB model user object
+ * @param {Object} grantObj: plain grant object
  */
 function vestingSchedule(user, grantObj) {
   return user.employee
@@ -30,6 +39,11 @@ function vestingSchedule(user, grantObj) {
     : investorVestingSchedule(grantObj)
 }
 
+/** Return a vesting schedule for an employee. Employee vests have a cliff and vest monthly
+ * thereafter.
+ *
+ * @param {Object} grantObj: plain grant object
+ */
 function employeeVestingSchedule(grantObj) {
   const grant = momentizeGrant(grantObj)
 
@@ -69,6 +83,7 @@ function employeeVestingSchedule(grantObj) {
       vestingDate.add(index, 'months')
     }
     return {
+      grantId: grantObj.id,
       amount: currentVestingEvent,
       date: vestingDate.clone(),
       vested: hasVested(vestingDate, grant)
@@ -77,6 +92,11 @@ function employeeVestingSchedule(grantObj) {
   return events
 }
 
+/** Return a vesting schedule for an investors. Investors have a 6% initial vest  plus 11.75%
+ * vesting quarterly thereafter.
+ *
+ * @param {Object} grantObj: plain grant object
+ */
 function investorVestingSchedule(grantObj) {
   const grant = momentizeGrant(grantObj)
 
@@ -106,6 +126,7 @@ function investorVestingSchedule(grantObj) {
 
   // Add initial vest
   vestingSchedule.push({
+    grantId: grantObj.id,
     amount: initialVestAmount,
     date: grant.start.clone(),
     vested: hasVested(grant.start, grantObj)
@@ -122,6 +143,7 @@ function investorVestingSchedule(grantObj) {
       vestingDate.add(3, 'months')
     }
     vestingSchedule.push({
+      grantId: grantObj.id,
       amount: i === 7 ? adjustedFinalVest : quarterlyVestAmount,
       date: vestingDate.clone(),
       vested: hasVested(vestingDate, grant)
@@ -138,8 +160,10 @@ function hasVested(vestingDate, grant) {
   )
 }
 
-/* Returns the number of tokens vested by a grant.
+/** Returns the number of tokens vested by a grant.
  *
+ * @param {User} user: DB user object
+ * @param {Object} grantObj: plain grant object
  */
 function vestedAmount(user, grantObj) {
   return vestingSchedule(user, grantObj)

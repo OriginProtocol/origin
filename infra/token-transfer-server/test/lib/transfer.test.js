@@ -15,7 +15,7 @@ const {
   executeTransfer
 } = require('../../src/lib/transfer')
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
-const { transferConfirmationTimeout } = require('../../src/shared')
+const { transferConfirmationTimeout } = require('../../src/config')
 const { TokenMock } = require('../util')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
