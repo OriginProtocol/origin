@@ -76,7 +76,8 @@ class MobilePush {
         const messageFingerprint = getMessageFingerprint({
           ...notificationObjAndHash,
           channel,
-          ethAddress: data.ethAddress
+          ethAddress: data.ethAddress,
+          deviceToken: data.deviceToken
         })
 
         return {
@@ -93,7 +94,7 @@ class MobilePush {
         )
 
         if (dupeCount > 0) {
-          logger.warn(
+          logger.debug(
             `Duplicate. Notification already recently sent. Skipping.`,
             ethAddress,
             channel,
@@ -106,7 +107,7 @@ class MobilePush {
       })
 
     if (filteredRegistry.length === 0) {
-      logger.warn('No device tokens to send notifications')
+      logger.debug('No device tokens to send notifications')
       return
     }
 
@@ -134,9 +135,9 @@ class MobilePush {
         // response.failed: Array of objects containing the device token (`device`) and either
         if (response.sent.length) {
           success = true
-          logger.debug('APN sent')
+          logger.debug('APN sent', JSON.stringify(response))
         } else {
-          logger.error('APN send failure:', response)
+          logger.error('APN send failure:', JSON.stringify(response))
         }
       } catch (error) {
         logger.error('APN send error: ', error)
@@ -165,14 +166,15 @@ class MobilePush {
 
       try {
         const response = await firebaseMessaging.send(message)
-        logger.debug('FCM message sent:', response)
+        logger.debug('FCM message sent:', JSON.stringify(response))
         success = true
       } catch (error) {
-        logger.error('FCM message failed to send: ', error)
+        logger.error('FCM message failed to send: ', JSON.stringify(error))
       }
     }
 
     const promises = filteredRegistry.map(data => {
+      logger.debug(`Sent notification to ${data.ethAddress} (${deviceType})`)
       return logNotificationSent(
         data.messageFingerprint,
         data.ethAddress,
@@ -216,7 +218,7 @@ class MobilePush {
 
       for (const mobileRegister of mobileRegisters) {
         await this._rawSend(
-          [{ deviceType: mobileRegister.deviceToken, ethAddress }],
+          [{ deviceToken: mobileRegister.deviceToken, ethAddress }],
           mobileRegister.deviceType,
           notificationObj,
           messageHash
@@ -385,9 +387,12 @@ class MobilePush {
   }
 
   async _sendInChunks(data, deviceType, mobileRegisters) {
+    // NOTE: The send process won't resume if interrupted in the middle
+    // The state of sent/unsent chunks isn't stored anywhere
+
     if (mobileRegisters.length === 0) {
       const errorMsg = `No device registered with notification enabled`
-      logger.info(errorMsg)
+      logger.debug(errorMsg)
       return {
         error: errorMsg
       }
@@ -412,8 +417,14 @@ class MobilePush {
     // Send in chunks of 100
     const chunks = chunk(targets, 100)
 
+    logger.debug(
+      `Preparing to send notifcation to ${targets.length} ${deviceType} devices in ${chunks.length} chunks`
+    )
+
+    let chunkCount = 0
     try {
       for (const chunk of chunks) {
+        logger.debug(`Sending chunk ${chunkCount++}/${chunks.length}`)
         await this._rawSend(chunk, deviceType, notificationObj)
       }
     } catch (error) {
@@ -435,6 +446,8 @@ class MobilePush {
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
 
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
+
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
 
@@ -451,6 +464,11 @@ class MobilePush {
       },
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
+
+    logger.debug(
+      `Found ${mobileRegisters.length} ${deviceType} devices`,
+      JSON.stringify(addresses.slice(0, 10))
+    )
 
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
@@ -472,7 +490,7 @@ class MobilePush {
     )
 
     if (!addresses.length) {
-      console.log('There are no addresses from', countryCode)
+      logger.error('There are no addresses from', countryCode)
       return
     }
 
@@ -488,6 +506,8 @@ class MobilePush {
       },
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
+
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
 
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
@@ -509,7 +529,7 @@ class MobilePush {
     )
 
     if (!addresses.length) {
-      console.log('There are no addresses from', languageCode)
+      logger.error('There are no addresses for language', languageCode)
       return
     }
 
@@ -526,6 +546,8 @@ class MobilePush {
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
 
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
+
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
 
@@ -536,6 +558,8 @@ class MobilePush {
       countryCode,
       languageCode
     } = data
+
+    logger.debug('Received data for PN', JSON.stringify(data))
 
     try {
       if (target === 'all') {
