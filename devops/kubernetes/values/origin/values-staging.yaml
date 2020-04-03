@@ -6,7 +6,7 @@ bridgeImageTag: '2aa3dbe'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '4769d43'
+dappImageTag: 'da91b64'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -34,7 +34,7 @@ messagingImageTag: '3ad759e'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'a515376'
+notificationsImageTag: 'da91b64'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -71,11 +71,11 @@ graphqlImageTag: '4769d43'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '3ad759e'
+t3ClientImageTag: 'da91b64'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '3ad759e'
+t3ServerImageTag: 'da91b64'
 
 # origin-auth
 authImage: origin-auth
