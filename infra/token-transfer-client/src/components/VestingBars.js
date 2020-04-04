@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import moment from 'moment'
 import numeral from 'numeral'
 import BigNumber from 'bignumber.js'
 
-const VestingBars = props => {
+import { DataContext } from '@/providers/data'
+
+const VestingBars = ({ user }) => {
+  const data = useContext(DataContext)
+
   const [displayPopover, setDisplayPopover] = useState({})
 
-  if (!props.grants || props.grants.length === 0) {
+  if (!data.grants || data.grants.length === 0) {
     return null
   }
 
   const now = moment()
 
   // Momentize all the dates
-  const grants = props.grants.map(grant => {
+  const grants = data.grants.map(grant => {
     return {
       ...grant,
       start: moment(grant.start),
@@ -28,7 +32,7 @@ const VestingBars = props => {
 
   const generateMarkers = () => {
     const maxMarkers = 4
-    if (grants.length > 1 || props.user.employee) {
+    if (grants.length > 1 || user.employee) {
       return generateMonthMarkers(maxMarkers)
     } else {
       return generateAmountMarkers(maxMarkers)
@@ -85,7 +89,9 @@ const VestingBars = props => {
     })
   }
 
-  const total = BigNumber(props.vested).plus(BigNumber(props.unvested))
+  const total = BigNumber(data.totals.vested).plus(
+    BigNumber(data.totals.unvested)
+  )
 
   return (
     <div className="mb-5">
@@ -100,7 +106,7 @@ const VestingBars = props => {
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
           // upper bound of 100
-          const complete = props.isLocked
+          const complete = data.config.isLocked
             ? 0
             : Math.min(
                 ((now - grant.start) / (grant.end - grant.start)) * 100,
@@ -187,13 +193,13 @@ const VestingBars = props => {
         <div className="col-12 col-sm-6">
           <div className="status-circle bg-green mr-2"></div>
           <span className=" text-muted">
-            {Number(props.vested).toLocaleString()} OGN vested
+            {Number(data.totals.vested).toLocaleString()} OGN vested
           </span>
         </div>
         <div className="col-12 col-sm-6">
           <div className="status-circle mr-2"></div>
           <span className=" text-muted">
-            {Number(props.unvested).toLocaleString()} OGN unvested
+            {Number(data.totals.unvested).toLocaleString()} OGN unvested
           </span>
         </div>
       </div>

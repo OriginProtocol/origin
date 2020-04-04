@@ -7,6 +7,7 @@ import web3Utils from 'web3-utils'
 import ReactGA from 'react-ga'
 import moment from 'moment'
 
+import { DataContext } from '@/providers/data'
 import { addAccount } from '@/actions/account'
 import {
   getError as getAccountsError,
@@ -22,7 +23,6 @@ import Modal from '@/components/Modal'
 import ModalStep from '@/components/ModalStep'
 import TwoFactorStep from '@/components/modal/TwoFactorStep'
 import CheckEmailStep from '@/components/modal/CheckEmailStep'
-
 import ClockIcon from '@/assets/clock-icon.svg'
 import WithdrawIcon from '@/assets/withdraw-icon.svg'
 import EmailIcon from '@/assets/email-small-icon.svg'
@@ -32,9 +32,11 @@ import MobileIcon from '@/assets/mobile-icon.svg'
 import WhaleIcon from '@/assets/whale-icon.svg'
 
 class WithdrawModal extends Component {
-  constructor(props) {
+  static contextType = DataContext
+
+  constructor(props, context) {
     super(props)
-    this.state = this.getInitialState()
+    this.state = this.getInitialState(context)
   }
 
   componentDidMount() {
@@ -68,16 +70,15 @@ class WithdrawModal extends Component {
     }
   }
 
-  getInitialState = () => {
+  getInitialState = context => {
     const initialState = {
-      address:
-        this.props.accounts.length > 0 ? this.props.accounts[0].address : '',
+      address: context.accounts.length > 0 ? context.accounts[0].address : '',
       addressError: null,
       amount: '',
       amountError: null,
       code: '',
       codeError: null,
-      modalAddAccount: this.props.accounts.length === 0,
+      modalAddAccount: this.context.accounts.length === 0,
       modalState: this.props.displayLockupCta ? 'LockupCta' : 'Disclaimer',
       nickname: '',
       nicknameError: null,
@@ -89,10 +90,12 @@ class WithdrawModal extends Component {
   handleFormSubmit = async event => {
     event.preventDefault()
 
-    if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
+    if (
+      BigNumber(this.state.amount).isGreaterThan(this.context.totals.balance)
+    ) {
       this.setState({
         amountError: `Withdrawal amount is greater than your balance of ${Number(
-          this.props.balance
+          this.context.totals.balance
         ).toLocaleString()} OGN`
       })
       return
@@ -138,7 +141,7 @@ class WithdrawModal extends Component {
 
   handleModalClose = () => {
     // Reset the state of the modal back to defaults
-    this.setState(this.getInitialState())
+    this.setState(this.getInitialState(this.context))
     if (this.props.onModalClose) {
       this.props.onModalClose()
     }
@@ -222,13 +225,16 @@ class WithdrawModal extends Component {
           <div className="row">
             <div className="col">
               <h1>
-                <strong>EARN {this.props.lockupRate}%</strong>
+                <strong>
+                  EARN {this.context.config.earlyLockupBonusRate}%
+                </strong>
                 <br />
                 for a limited time
               </h1>
               <p>
-                For a limited time only, earn a {this.props.lockupRate}% bonus
-                on your tokens that vest in month.
+                For a limited time only, earn a{' '}
+                {this.context.config.earlyLockupBonusRate}% bonus on your tokens
+                that vest in month.
               </p>
               <p className="mb-0">This offer expires in</p>
               <p>
@@ -237,17 +243,17 @@ class WithdrawModal extends Component {
                   style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
                 />
                 <strong>
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     now,
                     'days'
                   )}
                   d{' '}
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     now,
                     'hours'
                   ) % 24}
                   h{' '}
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     now,
                     'minutes'
                   ) % 60}
@@ -386,7 +392,8 @@ class WithdrawModal extends Component {
                   {Feedback('amount')}
                 </div>
               </div>
-              {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
+              {this.context.accounts.length > 0 &&
+              !this.state.modalAddAccount ? (
                 <>
                   <div className="form-group">
                     <label htmlFor="address">Destination Account</label>
@@ -395,7 +402,7 @@ class WithdrawModal extends Component {
                       value={this.state.address}
                       onChange={e => this.setState({ address: e.target.value })}
                     >
-                      {this.props.accounts.map(account => (
+                      {this.context.accounts.map(account => (
                         <option key={account.address} value={account.address}>
                           {account.nickname}
                         </option>
@@ -422,7 +429,7 @@ class WithdrawModal extends Component {
                     <input {...input('nickname')} />
                     {Feedback('nickname')}
                   </div>
-                  {this.props.accounts.length > 0 && (
+                  {this.context.accounts.length > 0 && (
                     <div className="form-group text-left mt-4">
                       <a href="#" onClick={this.handleChooseAccount}>
                         Choose Existing Account

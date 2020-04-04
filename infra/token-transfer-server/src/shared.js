@@ -102,7 +102,7 @@ function calculateLocked(lockups) {
       } else {
         // The early lockup vest has not vested, so the balance is these tokens
         // are not counted here, but in calculateNextVestLocked
-        return BigNumber(0)
+        return total
       }
     }
     if (

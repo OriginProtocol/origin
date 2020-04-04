@@ -72,9 +72,9 @@ export const getIsLoading = state => state.isLoading
 export const getIsAdding = state => state.isAdding
 export const getTotals = state => {
   const lockups = getLockups(state)
-  const unlockedEarnings = Number(calculateUnlockedEarnings(lockups))
-  const earnings = Number(calculateEarnings(lockups))
-  const locked = Number(calculateLocked(lockups))
-  const nextVestLocked = Number(calculateNextVestLocked(lockups))
-  return { unlockedEarnings, earnings, locked, nextVestLocked }
+  const unlockedEarnings = calculateUnlockedEarnings(lockups)
+  const allEarnings = calculateEarnings(lockups)
+  const locked = calculateLocked(lockups)
+  const nextVestLocked = calculateNextVestLocked(lockups)
+  return { unlockedEarnings, allEarnings, locked, nextVestLocked }
 }

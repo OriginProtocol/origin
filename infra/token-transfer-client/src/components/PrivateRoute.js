@@ -13,6 +13,7 @@ import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 import Modal from '@/components/Modal'
 import { ThemeProvider } from '@/providers/theme'
+import { DataProvider } from '@/providers/data'
 
 const PrivateRoute = ({
   component: Component,
@@ -65,7 +66,9 @@ const PrivateRoute = ({
                         {user && <AccountActions user={user} />}
                       </div>
                       <div className="mt-md-4">
-                        <Component {...props} user={user} />
+                        <DataProvider>
+                          <Component {...props} user={user} />
+                        </DataProvider>
                       </div>
                     </div>
                   </ThemeProvider>

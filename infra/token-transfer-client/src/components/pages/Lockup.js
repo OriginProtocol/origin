@@ -1,63 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useContext, useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 
-import { fetchConfig } from '@/actions/config'
-import {
-  getConfig,
-  getIsLoading as getConfigIsLoading
-} from '@/reducers/config'
-import { fetchGrants } from '@/actions/grant'
-import {
-  getGrants,
-  getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals
-} from '@/reducers/grant'
-import { confirmLockup, fetchLockups } from '@/actions/lockup'
-import {
-  getLockups,
-  getTotals as getLockupTotals,
-  getIsLoading as getLockupIsLoading
-} from '@/reducers/lockup'
-import { fetchTransfers } from '@/actions/transfer'
-import {
-  getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount
-} from '@/reducers/transfer'
+import { DataContext } from '@/providers/data'
 import BonusModal from '@/components/BonusModal'
 import LockupGraph from '@/components/LockupGraph'
 
-const Lockup = props => {
-  useEffect(() => {
-    props.fetchConfig(),
-      props.fetchGrants(),
-      props.fetchLockups(),
-      props.fetchTransfers()
-  }, [])
+const Lockup = () => {
+  const data = useContext(DataContext)
 
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
-  if (
-    props.accountIsLoading ||
-    props.configIsLoading ||
-    props.transferIsLoading ||
-    props.grantIsLoading ||
-    props.lockupIsLoading
-  ) {
-    return (
-      <div className="spinner-grow" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    )
-  }
-
-  const balanceAvailable = props.grantTotals.vestedTotal
-    .minus(props.withdrawnAmount)
-    .minus(props.lockupTotals.locked)
-    .plus(props.lockupTotals.unlockedEarnings)
-    .plus(props.lockupTotals.nextVestLocked)
 
   const renderLockups = lockups => {
     const now = moment.utc()
@@ -133,10 +86,10 @@ const Lockup = props => {
             </tr>
           </thead>
           <tbody>
-            {props.lockups.length === 0 ? (
+            {data.lockups.length === 0 ? (
               <tr>
                 <td className="table-empty-cell" colSpan="100%">
-                  {props.config.isLocked
+                  {data.config.isLocked
                     ? 'Tokens have not been ulocked yet'
                     : 'You do not have any lockups'}
                 </td>
@@ -153,11 +106,7 @@ const Lockup = props => {
   return (
     <>
       {displayBonusModal && (
-        <BonusModal
-          balance={balanceAvailable}
-          lockupBonusRate={props.config.lockupBonusRate}
-          onModalClose={() => setDisplayBonusModal(false)}
-        />
+        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
       )}
 
       <div className="row align-items-center">
@@ -167,21 +116,24 @@ const Lockup = props => {
         <div className="col-12 col-md-2">
           <small>
             <strong className="mr-2">Total Locked Up </strong>
-            {Number(props.lockupTotals.locked).toLocaleString()} OGN
+            {Number(
+              data.totals.locked.plus(data.totals.nextVestLocked)
+            ).toLocaleString()}{' '}
+            OGN
           </small>
         </div>
         <div className="col-12 col-md-2">
           <small>
             <strong className="mr-2">Total Earned </strong>
-            {Number(props.lockupTotals.earnings).toLocaleString()} OGN
+            {Number(data.totals.allEarnings.toLocaleString())} OGN
           </small>
         </div>
-        {!props.config.isLocked && (
+        {!data.config.isLocked && (
           <div className="col text-md-right">
             <button
               className="btn btn-lg btn-primary mt-4 mt-md-0"
               onClick={() => setDisplayBonusModal(true)}
-              disabled={!props.config.lockupsEnabled}
+              disabled={!data.config.lockupsEnabled}
             >
               Start Earning
             </button>
@@ -190,37 +142,10 @@ const Lockup = props => {
       </div>
       <hr />
       <div className="row">
-        <div className="col">{renderLockups(props.lockups)}</div>
+        <div className="col">{renderLockups(data.lockups)}</div>
       </div>
     </>
   )
 }
 
-const mapStateToProps = ({ config, grant, lockup, transfer, user }) => {
-  return {
-    config: getConfig(config),
-    configIsLoading: getConfigIsLoading(config),
-    grants: getGrants(grant),
-    grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(user, grant),
-    lockups: getLockups(lockup),
-    lockupIsLoading: getLockupIsLoading(lockup),
-    lockupTotals: getLockupTotals(lockup),
-    transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer)
-  }
-}
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      confirmLockup: confirmLockup,
-      fetchConfig: fetchConfig,
-      fetchGrants: fetchGrants,
-      fetchLockups: fetchLockups,
-      fetchTransfers: fetchTransfers
-    },
-    dispatch
-  )
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Lockup))
+export default withRouter(Lockup)

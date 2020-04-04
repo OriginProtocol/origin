@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from 'moment'
 
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 import ClockIcon from '@/assets/clock-icon.svg'
 
 const BonusCta = ({
-  earlyLockupsEnabledUntil,
   fullWidth,
-  lockupRate,
   nextVest,
+  lockupBonusRate,
   onDisplayBonusModal
 }) => {
+  const data = useContext(DataContext)
+
   const renderCountdown = () => {
     const now = moment()
     return (
@@ -20,9 +22,12 @@ const BonusCta = ({
           style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
         />
         <strong>
-          {moment(earlyLockupsEnabledUntil).diff(now, 'days')}d{' '}
-          {moment(earlyLockupsEnabledUntil).diff(now, 'hours') % 24}h{' '}
-          {moment(earlyLockupsEnabledUntil).diff(now, 'minutes') % 60}m
+          {moment(data.config.earlyLockupsEnabledUntil).diff(now, 'days')}d{' '}
+          {moment(data.config.earlyLockupsEnabledUntil).diff(now, 'hours') % 24}
+          h{' '}
+          {moment(data.config.earlyLockupsEnabledUntil).diff(now, 'minutes') %
+            60}
+          m
         </strong>
       </>
     )
@@ -45,12 +50,12 @@ const BonusCta = ({
 
         <div className={`${fullWidth ? 'col-lg-6' : ''} col-12`}>
           <p className="mb-0">
-            Earn <strong>{lockupRate}% bonus</strong> on your tokens that vest
-            in {moment(nextVest.date).format('MMMM')}.
+            Earn <strong>{lockupBonusRate}% bonus</strong> on your tokens that
+            vest in {moment(nextVest.date).format('MMMM')}.
             <br />
             Offer valid until{' '}
-            {moment.utc(earlyLockupsEnabledUntil).format('DD MMMM')}.
-            {fullWidth && renderCountdown()}
+            {moment.utc(data.config.earlyLockupsEnabledUntil).format('DD MMMM')}
+            .{fullWidth && renderCountdown()}
           </p>
         </div>
 

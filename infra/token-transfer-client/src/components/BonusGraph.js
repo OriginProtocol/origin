@@ -22,7 +22,7 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
             <strong>Lock up amount</strong>
           </div>
           <div className="col text-right">
-            <strong>{lockupAmount.toLocaleString()} OGN</strong>
+            <strong>{Number(lockupAmount).toLocaleString()} OGN</strong>
           </div>
         </div>
 
@@ -32,7 +32,7 @@ const BonusGraph = ({ lockupAmount, bonusRate }) => {
             <strong>Bonus Tokens</strong> ({bonusRate}%)
           </div>
           <div className="col text-right">
-            <strong>{bonusAmount.toLocaleString()} OGN</strong>
+            <strong>{Number(bonusAmount).toLocaleString()} OGN</strong>
           </div>
         </div>
       </div>

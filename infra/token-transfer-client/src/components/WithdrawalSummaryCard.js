@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 
-const WithdrawalSummaryCard = props => {
-  const total = Number(props.vested)
-  const withdrawnPercent = (Number(props.withdrawnAmount) / total) * 100
+const WithdrawalSummaryCard = ({ onDisplayWithdrawModal }) => {
+  const data = useContext(DataContext)
+
+  const total = Number(data.totals.vested)
+  const withdrawnPercent = (Number(data.totals.withdrawn) / total) * 100
   const remainingPercent = 100 - withdrawnPercent
 
   return (
@@ -21,7 +24,7 @@ const WithdrawalSummaryCard = props => {
       <div className="row mb-2">
         <div className="col text-muted">Vested To Date</div>
         <div className="col text-right">
-          <strong>{Number(props.vested).toLocaleString()} </strong>
+          <strong>{Number(data.totals.vested).toLocaleString()} </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
@@ -30,7 +33,7 @@ const WithdrawalSummaryCard = props => {
           <div className="status-circle bg-red mr-2"></div>Total Withdrawn
         </div>
         <div className="col text-right">
-          <strong>{Number(props.withdrawnAmount).toLocaleString()} </strong>
+          <strong>{Number(data.totals.withdrawn).toLocaleString()} </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
@@ -40,7 +43,9 @@ const WithdrawalSummaryCard = props => {
         </div>
         <div className="col text-right">
           <strong>
-            {Number(props.vested.minus(props.withdrawnAmount)).toLocaleString()}{' '}
+            {Number(
+              data.totals.vested.minus(data.totals.withdrawn)
+            ).toLocaleString()}{' '}
           </strong>
           <span className="ogn">OGN</span>
         </div>
@@ -57,12 +62,12 @@ const WithdrawalSummaryCard = props => {
           style={{ width: `${withdrawnPercent}%` }}
         ></div>
       </div>
-      {!props.isLocked && (
+      {!data.config.isLocked && (
         <div className="row mt-5">
           <div className="col text-center">
             <button
               className="btn btn-lg btn-outline-primary"
-              onClick={props.onDisplayWithdrawModal}
+              onClick={onDisplayWithdrawModal}
             >
               Withdraw
             </button>

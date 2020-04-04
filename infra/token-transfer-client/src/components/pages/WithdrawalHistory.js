@@ -1,62 +1,20 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { useContext } from 'react'
 import { withRouter } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
-import { fetchConfig } from '@/actions/config'
-import {
-  getConfig,
-  getIsLoading as getConfigIsLoading
-} from '@/reducers/config'
-import { fetchAccounts } from '@/actions/account'
-import {
-  getAccounts,
-  getIsLoading as getAccountIsLoading
-} from '@/reducers/account'
-import { fetchGrants } from '@/actions/grant'
-import {
-  getGrants,
-  getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals
-} from '@/reducers/grant'
-import { fetchTransfers } from '@/actions/transfer'
-import {
-  getTransfers,
-  getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount
-} from '@/reducers/transfer'
+import { DataContext } from '@/providers/data'
 import EthAddress from '@/components/EthAddress'
 
-const WithdrawalHistory = props => {
-  useEffect(() => {
-    props.fetchConfig(),
-      props.fetchAccounts(),
-      props.fetchTransfers(),
-      props.fetchGrants()
-  }, [])
+const WithdrawalHistory = ({ history }) => {
+  const data = useContext(DataContext)
 
-  if (
-    props.accountIsLoading ||
-    props.configIsLoading ||
-    props.transferIsLoading ||
-    props.grantIsLoading
-  ) {
-    return (
-      <div className="spinner-grow" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    )
-  }
-
-  const isLocked =
-    !props.config.unlockDate || moment.utc() < props.config.unlockDate
+  console.log(data)
 
   const accountNicknameMap = {}
-  props.accounts.forEach(account => {
+  data.accounts.forEach(account => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
   })
 
@@ -69,11 +27,9 @@ const WithdrawalHistory = props => {
         <div className="col-12 col-md-2 text-md-right">
           <small>
             <strong>Available </strong>
-            {isLocked
+            {data.config.isLocked
               ? 0
-              : Number(
-                  props.grantTotals.vestedTotal.minus(props.withdrawnAmount)
-                ).toLocaleString()}{' '}
+              : Number(data.totals.balance).toLocaleString()}{' '}
             OGN
           </small>
         </div>
@@ -81,7 +37,7 @@ const WithdrawalHistory = props => {
           <small>
             <strong>Withdrawn </strong>
             <span className="text-nowrap">
-              {Number(props.withdrawnAmount).toLocaleString()} OGN
+              {Number(data.totals.withdrawn).toLocaleString()} OGN
             </span>
           </small>
         </div>
@@ -89,7 +45,7 @@ const WithdrawalHistory = props => {
           <small>
             <strong>Unvested </strong>
             <span className="text-nowrap">
-              {Number(props.grantTotals.unvestedTotal).toLocaleString()} OGN
+              {Number(data.totals.unvested).toLocaleString()} OGN
             </span>
           </small>
         </div>
@@ -97,7 +53,7 @@ const WithdrawalHistory = props => {
           <small>
             <strong>Total purchase </strong>
             <span className="text-nowrap">
-              {Number(props.grantTotals.grantTotal).toLocaleString()} OGN
+              {Number(data.totals.granted).toLocaleString()} OGN
             </span>
           </small>
         </div>
@@ -118,20 +74,18 @@ const WithdrawalHistory = props => {
                 </tr>
               </thead>
               <tbody>
-                {props.transfers.length === 0 ? (
+                {data.transfers.length === 0 ? (
                   <tr>
                     <td className="table-empty-cell" colSpan="100%">
                       You have not made any withdrawals.
                     </td>
                   </tr>
                 ) : (
-                  props.transfers.map(transfer => (
+                  data.transfers.map(transfer => (
                     <tr
                       key={transfer.id}
                       className="hoverable"
-                      onClick={() =>
-                        props.history.push(`/withdrawal/${transfer.id}`)
-                      }
+                      onClick={() => history.push(`/withdrawal/${transfer.id}`)}
                     >
                       <td className="pl-4">
                         <strong>
@@ -215,32 +169,4 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, config, grant, transfer, user }) => {
-  return {
-    accounts: getAccounts(account),
-    accountIsLoading: getAccountIsLoading(account),
-    config: getConfig(config),
-    configIsLoading: getConfigIsLoading(config),
-    grants: getGrants(grant),
-    grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(user.user, grant),
-    transfers: getTransfers(transfer),
-    transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer)
-  }
-}
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      fetchConfig: fetchConfig,
-      fetchAccounts: fetchAccounts,
-      fetchGrants: fetchGrants,
-      fetchTransfers: fetchTransfers
-    },
-    dispatch
-  )
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(WithdrawalHistory)
-)
+export default withRouter(WithdrawalHistory)

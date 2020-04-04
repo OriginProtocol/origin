@@ -91,4 +91,4 @@ export const getError = state => state.error
 export const getIsAdding = state => state.isAdding
 export const getIsConfirming = state => state.isConfirming
 export const getIsLoading = state => state.isLoading
-export const getWithdrawnAmount = state => calculateWithdrawn(state.transfers)
+export const getWithdrawn = state => calculateWithdrawn(state.transfers)

@@ -5,7 +5,6 @@ import moment from 'moment'
 
 import { addAccount, deleteAccount } from '@/actions/account'
 import {
-  getAccounts,
   getError,
   getIsAdding,
   getIsLoading
@@ -71,14 +70,6 @@ class AccountTable extends Component {
   }
 
   render() {
-    if (this.props.isLoading) {
-      return (
-        <div className="spinner-grow" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )
-    }
-
     return (
       <>
         {this.state.displayModal && this.renderModal()}
@@ -189,7 +180,6 @@ class AccountTable extends Component {
 
 const mapStateToProps = ({ account }) => {
   return {
-    accounts: getAccounts(account),
     isAdding: getIsAdding(account),
     isLoading: getIsLoading(account),
     error: getError(account)

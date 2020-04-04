@@ -46,8 +46,8 @@ export const getError = state => state.error
 export const getIsLoading = state => state.isLoading
 export const getTotals = (user, state) => {
   const grants = getGrants(state)
-  const grantTotal = calculateGranted(grants)
-  const vestedTotal = calculateVested(user, grants)
-  const unvestedTotal = grantTotal.minus(vestedTotal)
-  return { grantTotal, vestedTotal, unvestedTotal }
+  const granted = calculateGranted(grants)
+  const vested = calculateVested(user, grants)
+  const unvested = granted.minus(vested)
+  return { granted, vested, unvested }
 }

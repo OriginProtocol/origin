@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import BigNumber from 'bignumber.js'
@@ -6,6 +6,7 @@ import get from 'lodash.get'
 import ReactGA from 'react-ga'
 import moment from 'moment'
 
+import { DataContext } from '@/providers/data'
 import { addLockup } from '@/actions/lockup'
 import {
   getError as getLockupsError,
@@ -24,10 +25,12 @@ import TokensIcon from '@/assets/tokens-icon.svg'
 import ClockIcon from '@/assets/clock-icon.svg'
 import CalendarIcon from '@/assets/calendar-icon.svg'
 
-class BonusModal extends Component {
-  constructor(props) {
+class BonusModal extends React.Component {
+  static contextType = DataContext
+
+  constructor(props, context) {
     super(props)
-    this.state = this.getInitialState()
+    this.state = this.getInitialState(context)
   }
 
   componentDidMount() {
@@ -45,7 +48,20 @@ class BonusModal extends Component {
     }
   }
 
-  handleServerError(error) {
+  // Helper function to allow resetting to initial state
+  getInitialState = context => {
+    const initialState = {
+      amount: context.totals.balance ? context.totals.balance : 0,
+      amountError: null,
+      code: '',
+      codeError: null,
+      modalState: 'Disclaimer'
+    }
+
+    return initialState
+  }
+
+  handleServerError = error => {
     if (error && error.status === 422) {
       // Parse validation errors from API
       if (error.response.body && error.response.body.errors) {
@@ -58,22 +74,9 @@ class BonusModal extends Component {
     }
   }
 
-  // Helper function to allow resetting to initial state
-  getInitialState = () => {
-    const initialState = {
-      amount: this.props.balance ? Number(this.props.balance) : 0,
-      amountError: null,
-      code: '',
-      codeError: null,
-      modalState: 'Disclaimer'
-    }
-
-    return initialState
-  }
-
   handleModalClose = () => {
     // Reset the state of the modal back to defaults
-    this.setState(this.getInitialState())
+    this.setState(this.getInitialState(this.context))
     if (this.props.onModalClose) {
       this.props.onModalClose()
     }
@@ -82,10 +85,12 @@ class BonusModal extends Component {
   handleFormSubmit = () => {
     event.preventDefault()
 
-    if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
+    if (
+      BigNumber(this.state.amount).isGreaterThan(this.context.totals.balance)
+    ) {
       this.setState({
         amountError: `Lock up amount is greater than your balance of ${Number(
-          this.props.balance
+          this.context.totals.balance
         ).toLocaleString()} OGN`
       })
       return
@@ -116,9 +121,7 @@ class BonusModal extends Component {
 
   onMaxAmount = event => {
     event.preventDefault()
-    this.setState({
-      amount: Number(this.props.balance)
-    })
+    this.setState({ amount: this.context.totals.balance })
   }
 
   render() {
@@ -213,7 +216,11 @@ class BonusModal extends Component {
             <div className="col-12 col-sm-5 pl-3 pt-4 pt-sm-4">
               <BonusGraph
                 lockupAmount={this.state.amount}
-                bonusRate={this.props.lockupBonusRate}
+                bonusRate={
+                  this.props.isEarlyLockup
+                    ? this.context.config.earlyLockupBonusRate
+                    : this.context.config.lockupBonusRate
+                }
               />
             </div>
           </div>
@@ -286,14 +293,15 @@ class BonusModal extends Component {
           <div className="col">
             {this.props.isEarlyLockup ? (
               <>
-                Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
-                immediately by locking up your{' '}
+                Earn{' '}
+                <strong>{this.context.config.earlyLockupBonusRate}%</strong>{' '}
+                bonus tokens immediately by locking up your{' '}
                 {moment(this.props.nextVest.date).format('MMMM')} vest
               </>
             ) : (
               <>
-                Earn <strong>{this.props.lockupBonusRate}%</strong> bonus tokens
-                immediately by locking up vested tokens
+                Earn <strong>{this.context.config.lockupBonusRate}%</strong>{' '}
+                bonus tokens immediately by locking up vested tokens
               </>
             )}
           </div>

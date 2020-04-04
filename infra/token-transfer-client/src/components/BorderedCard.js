@@ -1,6 +1,6 @@
 import React from 'react'
 
-const BorderedCard = ({ children, className, blue = false, ...rest }) => (
+const BorderedCard = ({ children, className, ...rest }) => (
   <div
     className={`card-wrapper bordered${className ? ` ${className}` : ''}`}
     {...rest}

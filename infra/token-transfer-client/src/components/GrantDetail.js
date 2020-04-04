@@ -5,7 +5,7 @@ import get from 'lodash.get'
 import Swiper from 'react-id-swiper'
 import 'swiper/css/swiper.css'
 
-const GrantDetail = props => {
+const GrantDetail = ({ grants, user }) => {
   const swiperParams = {
     autoHeight: true,
     slidesPerView: 1,
@@ -16,7 +16,7 @@ const GrantDetail = props => {
     }
   }
 
-  const details = props.grants.map(grant => {
+  const details = grants.map(grant => {
     return (
       <div key={grant.id}>
         <div className="row mt-4 mb-2">
@@ -24,7 +24,7 @@ const GrantDetail = props => {
             <span className="text-muted">Investor</span>
           </div>
           <div className="col font-weight-bold text-right">
-            {get(props.user, 'name', '')}
+            {get(user, 'name', '')}
           </div>
         </div>
         <div className="row mb-2">

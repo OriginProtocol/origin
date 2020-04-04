@@ -1,18 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 import Lock from '@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
 import OgnTokens from '@/assets/ogn-tokens.svg'
 
-const BonusCard = ({
-  earnings,
-  isLocked,
-  locked,
-  lockups,
-  onDisplayBonusModal
-}) => {
+const BonusCard = ({ onDisplayBonusModal }) => {
+  const data = useContext(DataContext)
+
   const renderLockupGraphs = lockups => {
     const graphs = lockups.slice(0, 3).map(lockup => {
       return (
@@ -24,7 +21,7 @@ const BonusCard = ({
     return <div className="row mt-3">{graphs}</div>
   }
 
-  if (isLocked) {
+  if (data.config.isLocked) {
     return (
       <BorderedCard>
         <div className="text-center">
@@ -48,14 +45,16 @@ const BonusCard = ({
           <div className="mt-3 mb-2">
             <div>Earned</div>
             <strong style={{ fontSize: '24px' }}>
-              {earnings.toLocaleString()}
+              {Number(data.totals.allEarnings.toLocaleString())}
             </strong>{' '}
             <span className="ml-1 ogn">OGN</span>
           </div>
           <div>
             <div>Locked Up</div>
             <strong style={{ fontSize: '24px' }}>
-              {locked.toLocaleString()}
+              {Number(
+                data.totals.locked.plus(data.totals.nextVestLocked)
+              ).toLocaleString()}
             </strong>{' '}
             <span className="ml-1 ogn">OGN</span>
           </div>
@@ -69,8 +68,8 @@ const BonusCard = ({
               <NavLink to="/lockup">Details &gt;</NavLink>
             </div>
             <div className="col-12">
-              {lockups && lockups.length > 0 ? (
-                renderLockupGraphs(lockups)
+              {data.lockups && data.lockups.length > 0 ? (
+                renderLockupGraphs(data.lockups)
               ) : (
                 <div className="col text-center text-muted p-4">
                   <div className="mb-4 mt-2">
