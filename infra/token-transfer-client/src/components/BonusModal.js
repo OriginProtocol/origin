@@ -51,7 +51,7 @@ class BonusModal extends React.Component {
   // Helper function to allow resetting to initial state
   getInitialState = context => {
     const initialState = {
-      amount: context.totals.balance ? context.totals.balance : 0,
+      amount: this.getBalance(context) || 0,
       amountError: null,
       code: '',
       codeError: null,
@@ -85,12 +85,13 @@ class BonusModal extends React.Component {
   handleFormSubmit = () => {
     event.preventDefault()
 
-    if (
-      BigNumber(this.state.amount).isGreaterThan(this.context.totals.balance)
-    ) {
+    const balance = this.getBalance(this.context)
+    const exceedsBalance = BigNumber(this.state.amount).isGreaterThan(balance)
+
+    if (exceedsBalance) {
       this.setState({
         amountError: `Lock up amount is greater than your balance of ${Number(
-          this.context.totals.balance
+          balance
         ).toLocaleString()} OGN`
       })
       return
@@ -121,7 +122,13 @@ class BonusModal extends React.Component {
 
   onMaxAmount = event => {
     event.preventDefault()
-    this.setState({ amount: this.context.totals.balance })
+    this.setState({ amount: this.getBalance(this.context) })
+  }
+
+  getBalance = context => {
+    return this.props.isEarlyLockup
+      ? this.props.nextVest.amount.minus(context.totals.nextVestLocked)
+      : context.totals.balance
   }
 
   render() {

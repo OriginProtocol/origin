@@ -78,7 +78,7 @@ class WithdrawModal extends Component {
       amountError: null,
       code: '',
       codeError: null,
-      modalAddAccount: this.context.accounts.length === 0,
+      modalAddAccount: context.accounts.length === 0,
       modalState: this.props.displayLockupCta ? 'LockupCta' : 'Disclaimer',
       nickname: '',
       nicknameError: null,
@@ -150,7 +150,7 @@ class WithdrawModal extends Component {
   handleAddAccount = event => {
     event.preventDefault()
     this.setState({
-      ...this.getInitialState(),
+      ...this.getInitialState(this.context),
       address: '',
       amount: this.state.amount,
       modalAddAccount: !this.state.modalAddAccount,
@@ -161,7 +161,7 @@ class WithdrawModal extends Component {
   handleChooseAccount = () => {
     event.preventDefault()
     this.setState({
-      ...this.getInitialState(),
+      ...this.getInitialState(this.context),
       amount: this.state.amount,
       modalAddAccount: !this.state.modalAddAccount,
       modalState: this.state.modalState
@@ -373,7 +373,11 @@ class WithdrawModal extends Component {
         <hr />
         <form onSubmit={this.handleFormSubmit}>
           <div className="row">
-            <div className="col-12 col-sm-6">
+            <div
+              className={`col-12${
+                this.context.config.otcRequestEnabled ? ' col-sm-6' : ''
+              }`}
+            >
               <div className="form-group">
                 <label htmlFor="amount">Amount of Tokens</label>
                 <div
@@ -440,7 +444,7 @@ class WithdrawModal extends Component {
               )}
             </div>
 
-            {this.props.otcRequestEnabled && (
+            {this.context.config.otcRequestEnabled && (
               <div className="col-12 col-sm-6">
                 <div
                   className="card text-left p-4 mt-5"

@@ -6,9 +6,9 @@ import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
-import { confirmTransfer, fetchTransfers } from '@/actions/transfer'
+import { DataContext } from '@/providers/data'
+import { confirmTransfer } from '@/actions/transfer'
 import {
-  getTransfers,
   getError as getTransferError,
   getIsLoading as getTransferIsLoading,
   getIsConfirming as getTransferIsConfirming
@@ -18,15 +18,25 @@ import EthAddress from '@/components/EthAddress'
 import ClockIcon from '@/assets/clock-icon.svg'
 
 class WithdrawalDetail extends Component {
+  static contextType = DataContext
+
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    this.props.fetchTransfers()
-    // Force component update every three seconds because time passing won't
-    // trigger an update as it is not in state. This is required to correctly
-    // update when expired.
+    const token = this.props.match.params.token
+    if (token) {
+      const transferToConfirm = this.context.transfers.find(
+        t => t.id == this.props.match.params.id
+      )
+      if (
+        transferToConfirm &&
+        transferToConfirm.status === enums.TransferStatuses.WaitingEmailConfirm
+      ) {
+        this.props.confirmTransfer(transferToConfirm.id, token)
+      }
+    }
     this.interval = setInterval(() => this.forceUpdate(), 3000)
   }
 
@@ -34,34 +44,8 @@ class WithdrawalDetail extends Component {
     clearInterval(this.interval)
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.transferIsLoading && !this.props.transferIsLoading) {
-      const token = this.props.match.params.token
-      if (token) {
-        const transferToConfirm = this.props.transfers.find(
-          t => t.id == this.props.match.params.id
-        )
-        if (
-          transferToConfirm &&
-          transferToConfirm.status ===
-            enums.TransferStatuses.WaitingEmailConfirm
-        ) {
-          this.props.confirmTransfer(transferToConfirm.id, token)
-        }
-      }
-    }
-  }
-
   render() {
-    if (this.props.transferIsLoading || this.props.transferIsConfirming) {
-      return (
-        <div className="spinner-grow mb-3" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )
-    }
-
-    const transfer = this.props.transfers.find(
+    const transfer = this.context.transfers.find(
       t => t.id == this.props.match.params.id
     )
 
@@ -201,7 +185,6 @@ class WithdrawalDetail extends Component {
 
 const mapStateToProps = ({ transfer }) => {
   return {
-    transfers: getTransfers(transfer),
     transferError: getTransferError(transfer),
     transferIsLoading: getTransferIsLoading(transfer),
     transferIsConfirming: getTransferIsConfirming(transfer)
@@ -211,7 +194,6 @@ const mapStateToProps = ({ transfer }) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchTransfers: fetchTransfers,
       confirmTransfer: confirmTransfer
     },
     dispatch
