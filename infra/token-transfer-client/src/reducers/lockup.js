@@ -10,6 +10,9 @@ import {
   ADD_LOCKUP_PENDING,
   ADD_LOCKUP_SUCCESS,
   ADD_LOCKUP_ERROR,
+  CONFIRM_LOCKUP_PENDING,
+  CONFIRM_LOCKUP_SUCCESS,
+  CONFIRM_LOCKUP_ERROR,
   FETCH_LOCKUPS_PENDING,
   FETCH_LOCKUPS_SUCCESS,
   FETCH_LOCKUPS_ERROR
@@ -40,6 +43,28 @@ export default function lockupsReducer(state = initialState, action) {
       return {
         ...state,
         isAdding: false,
+        error: action.error
+      }
+    case CONFIRM_LOCKUP_PENDING:
+      return {
+        ...state,
+        isConfirming: true
+      }
+    case CONFIRM_LOCKUP_SUCCESS:
+      const index = state.lockups.findIndex(l => l.id == action.payload.id)
+      return {
+        ...state,
+        isConfirming: false,
+        lockups: [
+          ...state.lockups.slice(0, index),
+          action.payload,
+          ...state.lockups.slice(index + 1)
+        ]
+      }
+    case CONFIRM_LOCKUP_ERROR:
+      return {
+        ...state,
+        isConfirming: false,
         error: action.error
       }
     case FETCH_LOCKUPS_PENDING:

@@ -4,11 +4,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { addAccount, deleteAccount } from '@/actions/account'
-import {
-  getError,
-  getIsAdding,
-  getIsLoading
-} from '@/reducers/account'
+import { getError, getIsAdding, getIsLoading } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import DeleteIcon from '@/assets/delete.svg'

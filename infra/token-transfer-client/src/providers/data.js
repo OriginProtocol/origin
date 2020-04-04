@@ -79,8 +79,6 @@ const _DataProvider = ({ children, ...rest }) => {
     }
   }
 
-  console.log(value)
-
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>
 }
 

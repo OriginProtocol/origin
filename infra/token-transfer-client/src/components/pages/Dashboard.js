@@ -24,10 +24,6 @@ const Dashboard = props => {
 
   const isEmployee = !!get(props.user, 'employee')
   const nextVest = getNextVest(data.grants, props.user)
-  const nextVestBalanceAvailable = nextVest.amount.minus(
-    data.totals.nextVestLocked
-  )
-
   const hasLockups = data.lockups.length > 0
   const displayLockupCta = data.config.lockupsEnabled && !data.config.isLocked
   const isEarlyLockup = displayBonusModal === 'early'

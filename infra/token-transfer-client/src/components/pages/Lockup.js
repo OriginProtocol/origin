@@ -16,6 +16,8 @@ const Lockup = () => {
     const now = moment.utc()
     const sortedLockups = lockups.sort((a, b) => (a.start < b.start ? 1 : -1))
 
+    console.log(lockups)
+
     const rows = sortedLockups.map(lockup => {
       return (
         <tr key={lockup.id}>
