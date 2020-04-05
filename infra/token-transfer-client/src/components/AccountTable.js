@@ -9,6 +9,7 @@ import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import DeleteIcon from '@/assets/delete.svg'
 import EthAddress from '@/components/EthAddress'
+import OgnIcon from '@/assets/ogn-icon.svg'
 
 class AccountTable extends Component {
   constructor(props) {
@@ -139,23 +140,43 @@ class AccountTable extends Component {
 
     return (
       <Modal appendToId="private" onClose={this.reset} closeBtn={true}>
-        <h1 className="my-2">Add an Account</h1>
-        <p className="my-2">
-          Enter a nickname and an Ethereum account address.
-        </p>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Nickname</label>
-            <input {...input('nickname')} />
-            {Feedback('nickname')}
+        <div className="row align-items-center mb-3 text-center text-sm-left">
+          <div className="d-none d-sm-block col-sm-2">
+            <OgnIcon style={{ marignLeft: '-10px' }} />
           </div>
-          <div className="form-group">
-            <label htmlFor="email">Ethereum Address</label>
-            <input {...input('address')} />
-            {Feedback('address')}
+          <div className="col">
+            <h1 className="my-2">Add an account</h1>
+          </div>
+        </div>
+        <hr/>
+        <form onSubmit={this.handleSubmit}>
+          <div className="row">
+            <div className="col-12 col-sm-8 offset-sm-2">
+              <div className="form-group">
+                <label htmlFor="email">Nickname</label>
+                <input {...input('nickname')} />
+                {Feedback('nickname')}
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Ethereum Address</label>
+                <input {...input('address')} />
+                {Feedback('address')}
+              </div>
+            </div>
           </div>
           <div className="actions mt-5">
             <div className="row mb-3 mb-sm-0">
+              <div className="col d-none d-md-block">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={event => {
+                    event.preventDefault()
+                    this.setState({ displayModal: false })
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
               <div className="col text-right">
                 <button
                   type="submit"
