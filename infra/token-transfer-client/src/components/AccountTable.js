@@ -108,13 +108,10 @@ class AccountTable extends Component {
                     this.props.accounts.map(account => (
                       <tr key={account.address}>
                         <td>
-                          <strong>
-                            {account.nickname}
-                          </strong>
+                          <strong>{account.nickname}</strong>
                         </td>
                         <td className="d-none d-lg-block">{account.address}</td>
                         <td className="d-lg-none">
-
                           <EthAddress address={account.address} />
                         </td>
                         <td>{moment(account.createdAt).format('L')}</td>

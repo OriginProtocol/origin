@@ -26,9 +26,8 @@ const Lockup = () => {
               </div>
               {lockup.data && lockup.data.vest ? (
                 <strong>
-                  {moment(lockup.data.vest.date).format(
-                    'MMMM YYYY'
-                  )} special offer lockup
+                  {moment(lockup.data.vest.date).format('MMMM YYYY')} special
+                  offer lockup
                 </strong>
               ) : (
                 <strong>

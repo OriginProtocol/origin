@@ -52,9 +52,7 @@ const SessionTable = props => {
                   loginEvents.map(event => (
                     <tr key={event.id}>
                       <td>
-                        <strong>
-                          {event.data.ip || 'Unknown'}
-                        </strong>
+                        <strong>{event.data.ip || 'Unknown'}</strong>
                       </td>
                       <td>
                         {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
