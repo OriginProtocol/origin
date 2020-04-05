@@ -43,8 +43,12 @@ router.post(
     check('termsAgreedAt')
       .optional()
       .isRFC3339(),
-    check('email').optional().isEmail(),
-    check('code').optional().custom(isValidTotp),
+    check('email')
+      .optional()
+      .isEmail(),
+    check('code')
+      .optional()
+      .custom(isValidTotp),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
@@ -71,7 +75,10 @@ router.post(
     if (req.body.email) {
       // Email update requires 2FA
       if (!req.body.code) {
-        res.status(422).send('Invalid OTP code').end()
+        res
+          .status(422)
+          .send('Invalid OTP code')
+          .end()
         return
       }
       toUpdate.email = req.body.email
