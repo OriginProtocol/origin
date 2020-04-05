@@ -183,7 +183,7 @@ class BonusModal extends React.Component {
                     <strong>
                       {Number(this.props.nextVest.amount).toLocaleString()} OGN
                     </strong>{' '}
-                    vest on {moment(this.props.nextVest.date).format('L')}
+                    on {moment(this.props.nextVest.date).format('L')}
                   </div>
                 </div>
               )}
