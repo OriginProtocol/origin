@@ -6,6 +6,8 @@ import get from 'lodash.get'
 import ReactGA from 'react-ga'
 import moment from 'moment'
 
+import { lockupConfirmationTimeout } from '@origin/token-transfer-server/src/shared'
+
 import { DataContext } from '@/providers/data'
 import { addLockup } from '@/actions/lockup'
 import {
@@ -100,6 +102,21 @@ class BonusModal extends React.Component {
     if (BigNumber(this.state.amount).isLessThan(100)) {
       this.setState({
         amountError: `Lock up amount must be at least 100 OGN`
+      })
+      return
+    }
+
+    const existingUnconfirmed = this.context.lockups.find(lockup => {
+      return (
+        !lockup.confirmed &&
+        moment(lockup.createdAt) >
+          moment().subtract(lockupConfirmationTimeout, 'minutes')
+      )
+    })
+
+    if (existingUnconfirmed) {
+      this.setState({
+        amountError: `Unconfirmed lock ups exist, please confirm or wait until expiry`
       })
       return
     }

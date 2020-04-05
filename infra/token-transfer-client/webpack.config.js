@@ -23,8 +23,8 @@ const webpackConfig = {
   devtool,
   output: {
     filename: '[name].js',
-    chunkFilename: 'dist/[name].[hash:8].bundle.js',
-    path: path.resolve(__dirname, 'public'),
+    chunkFilename: '[name].[hash:8].bundle.js',
+    path: path.resolve(__dirname, 'build'),
     crossOriginLoading: 'anonymous'
   },
   externals: {

@@ -148,7 +148,7 @@ class AccountTable extends Component {
             <h1 className="my-2">Add an account</h1>
           </div>
         </div>
-        <hr/>
+        <hr />
         <form onSubmit={this.handleSubmit}>
           <div className="row">
             <div className="col-12 col-sm-8 offset-sm-2">

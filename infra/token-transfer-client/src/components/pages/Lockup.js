@@ -16,63 +16,65 @@ const Lockup = () => {
     const now = moment.utc()
     const sortedLockups = lockups.sort((a, b) => (a.start < b.start ? 1 : -1))
 
-    const rows = sortedLockups.map(lockup => {
-      return (
-        <tr key={lockup.id}>
-          <td>
-            <div className="d-flex align-items-center">
-              <div className="d-inline-block mr-4">
-                <LockupGraph lockup={lockup} />
+    const rows = sortedLockups
+      .filter(l => l.confirmed)
+      .map(lockup => {
+        return (
+          <tr key={lockup.id}>
+            <td>
+              <div className="d-flex align-items-center">
+                <div className="d-inline-block mr-4">
+                  <LockupGraph lockup={lockup} />
+                </div>
+                {lockup.data && lockup.data.vest ? (
+                  <strong>
+                    {moment(lockup.data.vest.date).format('MMMM YYYY')} special
+                    offer lockup
+                  </strong>
+                ) : (
+                  <strong>
+                    {Number(lockup.amount).toLocaleString()} OGN Lockup
+                  </strong>
+                )}
               </div>
-              {lockup.data && lockup.data.vest ? (
-                <strong>
-                  {moment(lockup.data.vest.date).format('MMMM YYYY')} special
-                  offer lockup
-                </strong>
+            </td>
+            <td>{moment(lockup.start).format('LL')}</td>
+            <td>
+              {moment(lockup.end) < now ? (
+                'Unlocked'
               ) : (
-                <strong>
-                  {Number(lockup.amount).toLocaleString()} OGN Lockup
-                </strong>
+                <>
+                  {moment(lockup.end).diff(now, 'days')}d{' '}
+                  {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
+                  {moment(lockup.end).diff(now, 'minutes') % 60}m
+                </>
               )}
-            </div>
-          </td>
-          <td>{moment(lockup.start).format('LL')}</td>
-          <td>
-            {moment(lockup.end) < now ? (
-              'Unlocked'
-            ) : (
-              <>
-                {moment(lockup.end).diff(now, 'days')}d{' '}
-                {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
-                {moment(lockup.end).diff(now, 'minutes') % 60}m
-              </>
-            )}
-          </td>
-          <td>
-            <div
-              className="status-circle bg-blue"
-              style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
-            ></div>{' '}
-            {Number(lockup.amount).toLocaleString()}{' '}
-            <span className="ogn">OGN</span>
-          </td>
-          <td>
-            <div
-              className="status-circle bg-purple"
-              style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
-            ></div>{' '}
-            {Number(
-              BigNumber((lockup.amount * lockup.bonusRate) / 100).toFixed(
-                0,
-                BigNumber.ROUND_HALF_UP
-              )
-            ).toLocaleString()}{' '}
-            <span className="ogn">OGN</span>
-          </td>
-          <td>{lockup.bonusRate}%</td>
-        </tr>
-      )
-    })
+            </td>
+            <td>
+              <div
+                className="status-circle bg-blue"
+                style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
+              ></div>{' '}
+              {Number(lockup.amount).toLocaleString()}{' '}
+              <span className="ogn">OGN</span>
+            </td>
+            <td>
+              <div
+                className="status-circle bg-purple"
+                style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
+              ></div>{' '}
+              {Number(
+                BigNumber((lockup.amount * lockup.bonusRate) / 100).toFixed(
+                  0,
+                  BigNumber.ROUND_HALF_UP
+                )
+              ).toLocaleString()}{' '}
+              <span className="ogn">OGN</span>
+            </td>
+            <td>{lockup.bonusRate}%</td>
+          </tr>
+        )
+      })
     return (
       <div className="table-responsive">
         <table className="table table-borderless table-card-rows">
