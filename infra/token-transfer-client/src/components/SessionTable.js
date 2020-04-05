@@ -30,7 +30,7 @@ const SessionTable = props => {
       <div className="row">
         <div className="col">
           <div className="table-responsive">
-            <table className="table mb-4">
+            <table className="table table-borderless table-card-rows mb-4">
               <thead>
                 <tr>
                   <th>IP</th>
@@ -51,7 +51,11 @@ const SessionTable = props => {
                 ) : (
                   loginEvents.map(event => (
                     <tr key={event.id}>
-                      <td>{event.data.ip || 'Unknown'}</td>
+                      <td>
+                        <strong>
+                          {event.data.ip || 'Unknown'}
+                        </strong>
+                      </td>
                       <td>
                         {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
                       </td>

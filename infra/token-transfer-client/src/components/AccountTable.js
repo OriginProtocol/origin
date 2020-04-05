@@ -88,12 +88,12 @@ class AccountTable extends Component {
         <div className="row">
           <div className="col">
             <div className="table-responsive">
-              <table className="table mb-4">
+              <table className="table table-borderless table-card-rows mb-4">
                 <thead>
                   <tr>
-                    <th>Nickname</th>
-                    <th>Address</th>
-                    <th>Created</th>
+                    <th>Account Nickname</th>
+                    <th>Account Address</th>
+                    <th>Date Created</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -107,8 +107,14 @@ class AccountTable extends Component {
                   ) : (
                     this.props.accounts.map(account => (
                       <tr key={account.address}>
-                        <td>{account.nickname}</td>
                         <td>
+                          <strong>
+                            {account.nickname}
+                          </strong>
+                        </td>
+                        <td className="d-none d-lg-block">{account.address}</td>
+                        <td className="d-lg-none">
+
                           <EthAddress address={account.address} />
                         </td>
                         <td>{moment(account.createdAt).format('L')}</td>

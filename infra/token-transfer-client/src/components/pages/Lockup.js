@@ -16,8 +16,6 @@ const Lockup = () => {
     const now = moment.utc()
     const sortedLockups = lockups.sort((a, b) => (a.start < b.start ? 1 : -1))
 
-    console.log(lockups)
-
     const rows = sortedLockups.map(lockup => {
       return (
         <tr key={lockup.id}>
@@ -27,9 +25,11 @@ const Lockup = () => {
                 <LockupGraph lockup={lockup} />
               </div>
               {lockup.data && lockup.data.vest ? (
-                `${moment(lockup.data.vest.date).format(
-                  'MMMM YYYY'
-                )} special offer lockup`
+                <strong>
+                  {moment(lockup.data.vest.date).format(
+                    'MMMM YYYY'
+                  )} special offer lockup
+                </strong>
               ) : (
                 <strong>
                   {Number(lockup.amount).toLocaleString()} OGN Lockup

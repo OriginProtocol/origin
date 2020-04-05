@@ -58,7 +58,7 @@ h1 {
 
 h2 {
   font-size: 18px;
-  font-weight: bold;
+  font-family: 'Poppins';
 }
 
 small {
@@ -334,6 +334,10 @@ input, select {
   padding: 0.25rem 0.75rem;
 }
 
+.table-card-rows td {
+  padding: 1rem;
+}
+
 .table-card-rows tbody tr td {
   border-top: 1px solid var(--border-accent);
   border-bottom: 1px solid var(--border-accent);
@@ -386,7 +390,6 @@ input, select {
 .status-circle {
   display: inline-block;
   background-color: var(--accent);
-  border: var(--dark-border);
   vertical-align: middle;
   width: 14px;
   height: 14px;
