@@ -32,7 +32,6 @@ const feb2020Config = require('../../campaigns/feb2020.js')
 const mar2020Config = require('../../campaigns/mar2020.js')
 const apr2020Config = require('../../campaigns/apr2020.js')
 
-
 async function createTestData() {
   //
   // Campaigns
