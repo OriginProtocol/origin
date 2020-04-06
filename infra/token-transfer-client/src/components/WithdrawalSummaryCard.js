@@ -2,10 +2,12 @@ import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { DataContext } from '@/providers/data'
+import { ThemeContext } from '@/providers/theme'
 import BorderedCard from '@/components/BorderedCard'
 
 const WithdrawalSummaryCard = ({ onDisplayWithdrawModal }) => {
   const data = useContext(DataContext)
+  const { theme } = useContext(ThemeContext)
 
   const total = Number(data.totals.vested)
   const withdrawnPercent = (Number(data.totals.withdrawn) / total) * 100
@@ -66,7 +68,7 @@ const WithdrawalSummaryCard = ({ onDisplayWithdrawModal }) => {
         <div className="row mt-5">
           <div className="col text-center">
             <button
-              className="btn btn-lg btn-outline-primary"
+              className={`btn btn-lg btn-outline-${theme === 'dark' ? 'light': 'primary'}`}
               onClick={onDisplayWithdrawModal}
             >
               Withdraw

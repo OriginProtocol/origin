@@ -239,7 +239,7 @@ class BonusModal extends React.Component {
 
             <div className="col-12 col-sm-5 pl-3 pt-4 pt-sm-4">
               <BonusGraph
-                lockupAmount={this.state.amount}
+                lockupAmount={Number(this.state.amount)}
                 bonusRate={
                   this.props.isEarlyLockup
                     ? this.context.config.earlyLockupBonusRate

@@ -65,9 +65,16 @@ const _DataProvider = ({ children, ...rest }) => {
     // Earnings from lockups that are unlocked
     .plus(rest.lockupTotals.unlockedEarnings)
 
+  const configOverrides = window.localStorage.configOverrides
+    ? JSON.parse(window.localStorage.configOverrides)
+    : {}
+
   const value = {
     accounts: rest.accounts,
-    config: rest.config,
+    config: {
+      ...rest.config,
+      ...configOverrides
+    },
     lockups: rest.lockups,
     grants: rest.grants,
     transfers: rest.transfers,
