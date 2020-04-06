@@ -68,7 +68,9 @@ const WithdrawalSummaryCard = ({ onDisplayWithdrawModal }) => {
         <div className="row mt-5">
           <div className="col text-center">
             <button
-              className={`btn btn-lg btn-outline-${theme === 'dark' ? 'light': 'primary'}`}
+              className={`btn btn-lg btn-outline-${
+                theme === 'dark' ? 'light' : 'primary'
+              }`}
               onClick={onDisplayWithdrawModal}
             >
               Withdraw

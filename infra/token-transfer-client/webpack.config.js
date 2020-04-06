@@ -84,7 +84,7 @@ const webpackConfig = {
           {
             loader: 'css-loader',
             options: {
-              url: url => {
+              url: () => {
                 return true
               }
             }
@@ -116,7 +116,10 @@ const webpackConfig = {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'src/css')]
+    contentBase: [
+      path.join(__dirname, 'public'),
+      path.join(__dirname, 'src/css')
+    ]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
