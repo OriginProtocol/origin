@@ -112,29 +112,31 @@ function calculateEarnings(lockups) {
  * @param {[Object]} lockups: array of lockups
  */
 function calculateLocked(lockups) {
-  return lockups.reduce((total, lockup) => {
-    if (isEarlyLockup(lockup)) {
-      // If the early lockup vest has vested then treat them as regular locked tokens
-      if (moment.utc(lockup.data.vest.date) < moment.utc()) {
+  return lockups
+    .filter(l => l.confirmed)
+    .reduce((total, lockup) => {
+      if (isEarlyLockup(lockup)) {
+        // If the early lockup vest has vested then treat them as regular locked tokens
+        if (moment.utc(lockup.data.vest.date) < moment.utc()) {
+          // @ts-ignore
+          return total.plus(BigNumber(lockup.amount))
+        } else {
+          // The early lockup vest has not vested, so the balance is these tokens
+          // are not counted here, but in calculateNextVestLocked
+          // @ts-ignore
+          return BigNumber(0)
+        }
+      }
+      if (
+        lockup.start < moment.utc() && // Lockup has started
+        lockup.end > moment.utc() // Lockup has not yet ended
+      ) {
         // @ts-ignore
         return total.plus(BigNumber(lockup.amount))
-      } else {
-        // The early lockup vest has not vested, so the balance is these tokens
-        // are not counted here, but in calculateNextVestLocked
-        // @ts-ignore
-        return BigNumber(0)
       }
-    }
-    if (
-      lockup.start < moment.utc() && // Lockup has started
-      lockup.end > moment.utc() // Lockup has not yet ended
-    ) {
+      return total
       // @ts-ignore
-      return total.plus(BigNumber(lockup.amount))
-    }
-    return total
-    // @ts-ignore
-  }, BigNumber(0))
+    }, BigNumber(0))
 }
 
 /** Determine if a lockup is an arly lockup based
@@ -148,19 +150,21 @@ const isEarlyLockup = lockup => {
  * @param {[Object]} lockups: array of lockups.
  */
 function calculateNextVestLocked(lockups) {
-  return lockups.reduce((total, lockup) => {
-    // Assume every early lockup with a recorded vest date in the future is
-    // attributable to the next vest
-    if (
-      isEarlyLockup(lockup) &&
-      moment.utc(lockup.data.vest.date) > moment.utc()
-    ) {
+  return lockups
+    .filter(l => l.confirmed)
+    .reduce((total, lockup) => {
+      // Assume every early lockup with a recorded vest date in the future is
+      // attributable to the next vest
+      if (
+        isEarlyLockup(lockup) &&
+        moment.utc(lockup.data.vest.date) > moment.utc()
+      ) {
+        // @ts-ignore
+        return total.plus(BigNumber(lockup.amount))
+      }
+      return total
       // @ts-ignore
-      return total.plus(BigNumber(lockup.amount))
-    }
-    return total
-    // @ts-ignore
-  }, BigNumber(0))
+    }, BigNumber(0))
 }
 
 /** Get the next vest for a user.
