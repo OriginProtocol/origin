@@ -79,9 +79,9 @@ describe('Email and MobilePush notifications for Marketplace events', () => {
 
   it(`Should send an email and a mobile push notification for a review given by buyer`, async () => {
     await request(app)
-    .post('/events')
-    .send(OfferData)
-    .expect(200)
+      .post('/events')
+      .send(OfferData)
+      .expect(200)
 
     // For a review given, only the seller gets notified.
     // There should be 2 entries in notification_log, one for email and the

@@ -80,7 +80,7 @@ const messageTemplates = {
       OfferData: {
         title: template('New Review for <%= listing.title %>'),
         body: template(
-            'A review has been left on your transaction for <%= listing.title %>.'
+          'A review has been left on your transaction for <%= listing.title %>.'
         )
       }
     },
@@ -137,10 +137,10 @@ const messageTemplates = {
       OfferData: {
         subject: template('New Review for <%= listing.title %>'),
         mjml: template(
-            fs.readFileSync(`${templateDir}/buyer-OfferReview.mjml`).toString()
+          fs.readFileSync(`${templateDir}/buyer-OfferReview.mjml`).toString()
         ),
         text: template(
-            fs.readFileSync(`${templateDir}/buyer-OfferReview.txt`).toString()
+          fs.readFileSync(`${templateDir}/buyer-OfferReview.txt`).toString()
         )
       }
     }
@@ -208,7 +208,7 @@ const messageTemplates = {
         text: template(
           fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
         )
-      },
+      }
     }
   }
 }
