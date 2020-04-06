@@ -30,6 +30,8 @@ const decemberConfig = require('../../campaigns/december.js')
 const jan2020Config = require('../../campaigns/jan2020.js')
 const feb2020Config = require('../../campaigns/feb2020.js')
 const mar2020Config = require('../../campaigns/mar2020.js')
+const apr2020Config = require('../../campaigns/apr2020.js')
+
 
 async function createTestData() {
   //
@@ -250,6 +252,20 @@ async function createTestData() {
     startDate: Date.parse('March 1, 2020'),
     endDate: Date.parse('April 1, 2020'),
     distributionDate: Date.parse('April 1, 2020'),
+    cap: 10000 * Math.pow(10, 18),
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+
+  await db.GrowthCampaign.upsert({
+    id: 15,
+    nameKey: 'growth.apr2020.name',
+    shortNameKey: 'growth.apr2020.short_name',
+    rules: JSON.stringify(apr2020Config),
+    startDate: Date.parse('April 1, 2020'),
+    endDate: Date.parse('MAy 1, 2020'),
+    distributionDate: Date.parse('May, 2020'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,
     currency: 'OGN',
