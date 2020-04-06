@@ -52,7 +52,7 @@ class Otp extends Component {
             </div>
             <button
               type="submit"
-              className="btn btn-secondary btn-lg mt-5"
+              className="btn btn-primary btn-lg mt-5"
               onClick={this.handleVerifyOtpCode}
               disabled={this.state.loading}
             >

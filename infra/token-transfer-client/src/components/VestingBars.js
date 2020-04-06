@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import moment from 'moment'
 import numeral from 'numeral'
 import BigNumber from 'bignumber.js'
 
-const VestingBars = props => {
+import { DataContext } from '@/providers/data'
+
+const VestingBars = ({ user }) => {
+  const data = useContext(DataContext)
+
   const [displayPopover, setDisplayPopover] = useState({})
 
-  if (!props.grants || props.grants.length === 0) {
+  if (!data.grants || data.grants.length === 0) {
     return null
   }
 
   const now = moment()
 
   // Momentize all the dates
-  const grants = props.grants.map(grant => {
+  const grants = data.grants.map(grant => {
     return {
       ...grant,
       start: moment(grant.start),
@@ -28,7 +32,7 @@ const VestingBars = props => {
 
   const generateMarkers = () => {
     const maxMarkers = 4
-    if (grants.length > 1 || props.user.employee) {
+    if (grants.length > 1 || user.employee) {
       return generateMonthMarkers(maxMarkers)
     } else {
       return generateAmountMarkers(maxMarkers)
@@ -85,20 +89,24 @@ const VestingBars = props => {
     })
   }
 
-  const total = BigNumber(props.vested).plus(BigNumber(props.unvested))
+  const total = BigNumber(data.totals.vested).plus(
+    BigNumber(data.totals.unvested)
+  )
 
   return (
     <div className="mb-5">
       <h2 style={{ marginBottom: '2.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', right: 0, marginTop: '-1.5rem' }}>
+        <div
+          style={{ position: 'absolute', right: '10px', marginTop: '-1.5rem' }}
+        >
           <strong>{Number(total).toLocaleString()}</strong>{' '}
           <span className="ogn">OGN</span>
         </div>
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
           // upper bound of 100
-          const complete = props.isLocked
+          const complete = data.config.isLocked
             ? 0
             : Math.min(
                 ((now - grant.start) / (grant.end - grant.start)) * 100,
@@ -118,7 +126,7 @@ const VestingBars = props => {
               onClick={event => handleTogglePopover(event, grant.id)}
             >
               <div
-                className="progress-bar bg-success"
+                className="progress-bar bg-green"
                 role="progressbar"
                 style={{ width: `${complete}%`, zIndex: 10 }}
               />
@@ -180,17 +188,19 @@ const VestingBars = props => {
       </div>
       <div
         className="row"
-        style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}
+        style={{ marginTop: `${3 + 0.5 * grants.length}rem` }}
       >
-        <div className="col">
-          <div className="status-circle status-circle-success mr-2"></div>
-          {Number(props.vested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">vested</span>
+        <div className="col-12 col-sm-6">
+          <div className="status-circle bg-green mr-2"></div>
+          <span className=" text-muted">
+            {Number(data.totals.vested).toLocaleString()} OGN vested
+          </span>
         </div>
-        <div className="col">
-          <div className="status-circle ml-3 mr-2"></div>
-          {Number(props.unvested).toLocaleString()} OGN{' '}
-          <span className=" text-muted">unvested</span>
+        <div className="col-12 col-sm-6">
+          <div className="status-circle mr-2"></div>
+          <span className=" text-muted">
+            {Number(data.totals.unvested).toLocaleString()} OGN unvested
+          </span>
         </div>
       </div>
     </div>

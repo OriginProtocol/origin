@@ -81,7 +81,7 @@ class OtpSetup extends Component {
               anyone else.
             </div>
             <button
-              className="btn btn-secondary btn-lg mt-5"
+              className="btn btn-primary btn-lg mt-5"
               onClick={() => this.setState({ redirectToVerify: true })}
             >
               Continue

@@ -29,7 +29,7 @@ const OnboardingRoute = ({
       render={props => (
         <div className="not-logged-in">
           <div className="text-center" style={{ backgroundColor: '#007cff' }}>
-            <img src={Logo} className="my-5" style={{ width: '160px' }} />
+            <Logo className="my-5" style={{ width: '160px' }} />
           </div>
           {isLoading ? (
             <div className="action-card">

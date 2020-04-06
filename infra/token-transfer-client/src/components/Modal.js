@@ -11,13 +11,16 @@ export default class Modal extends Component {
     this.state = {
       anim: 'is-entering'
     }
+    this.appendElement = this.props.appendToId
+      ? document.getElementById(this.props.appendToId)
+      : document.body
     this.portal = document.createElement('div')
   }
 
   componentDidMount() {
-    document.body.appendChild(this.portal)
-    document.body.className += ' pl-modal-open'
-    document.body.addEventListener('touchmove', freezeVp, false)
+    this.appendElement.appendChild(this.portal)
+    this.appendElement.className += ' pl-modal-open'
+    this.appendElement.addEventListener('touchmove', freezeVp, false)
     this.renderContent(this.props)
 
     this.onKeyDown = this.onKeyDown.bind(this)
@@ -40,7 +43,7 @@ export default class Modal extends Component {
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
-    document.body.removeChild(this.portal)
+    this.appendElement.removeChild(this.portal)
     clearTimeout(this.timeout)
   }
 

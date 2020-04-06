@@ -44,7 +44,7 @@ const Welcome = ({ isLoading, user }) => {
       </div>
       <hr className="mx-5" />
       <button
-        className="btn btn-secondary btn-lg"
+        className="btn btn-primary btn-lg"
         onClick={() => setRedirectTo(nextOnboardingStep)}
       >
         Continue
