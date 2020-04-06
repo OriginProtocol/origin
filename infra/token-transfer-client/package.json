@@ -60,6 +60,7 @@
     "url-loader": "4.0.0",
     "web3-utils": "^1.2.6",
     "webpack": "4.42.1",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "3.10.3",
     "webpack-subresource-integrity": "^1.4.0"
   },
