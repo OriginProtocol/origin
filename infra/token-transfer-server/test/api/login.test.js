@@ -148,6 +148,28 @@ describe('Login HTTP API', () => {
     expect(response.body.phone).to.equal(phone)
   })
 
+  it('should not allow setting of email if totp not verified', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    const email = 'user@email.com'
+
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ email })
+      .expect(422)
+
+    expect(response.text).to.match(/Invalid OTP/)
+  })
+
   it('should allow setting of revised schedule agreed date if totp not verified', async () => {
     const mockApp = express()
     mockApp.use((req, res, next) => {
