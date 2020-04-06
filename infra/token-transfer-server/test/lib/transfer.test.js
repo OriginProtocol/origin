@@ -22,8 +22,8 @@ const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
 describe('Token transfer library', () => {
   beforeEach(async () => {
-    // Wipe database before each test
     expect(process.env.NODE_ENV).to.equal('test')
+    // Wipe database before each test
     await sequelize.sync({ force: true })
 
     this.user = await User.create({
