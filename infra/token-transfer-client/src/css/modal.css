@@ -294,7 +294,7 @@
 
 .pl-modal-content.blue-cta > .bg-wrapper {
   margin: -2rem;
-  background-image: url(/tokens.svg);
+  background-image: url('../assets/tokens-background.svg');
   background-position-y: bottom;
   background-position-x: right;
   background-repeat: no-repeat;

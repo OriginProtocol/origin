@@ -45,6 +45,7 @@ const webpackConfig = {
       },
       {
         test: /\.svg$/,
+        issuer: /\.jsx?$/,
         use: [
           {
             loader: 'babel-loader'
@@ -54,6 +55,15 @@ const webpackConfig = {
             options: {
               jsx: true // true outputs JSX tags
             }
+          }
+        ]
+      },
+      {
+        test: /\.svg$/,
+        issuer: /\.css$/,
+        use: [
+          {
+            loader: 'file-loader'
           }
         ]
       },
@@ -75,7 +85,7 @@ const webpackConfig = {
             loader: 'css-loader',
             options: {
               url: url => {
-                return url.match(/(svg|png)/) ? false : true
+                return true
               }
             }
           }
@@ -106,7 +116,7 @@ const webpackConfig = {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    contentBase: [path.join(__dirname, 'public')]
+    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'src/css')]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
@@ -124,7 +134,7 @@ const webpackConfig = {
       CLIENT_SENTRY_DSN: process.env.CLIENT_SENTRY_DSN || '',
       TEAM_API_URL: process.env.TEAM_API_URL || 'http://localhost:5000',
       ENABLE_GA: process.env.ENABLE_GA || false,
-      INVESTOR_API: process.env.INVESTOR_API_URL || 'http://localhost:5000'
+      INVESTOR_API_URL: process.env.INVESTOR_API_URL || 'http://localhost:5000'
     })
   ],
 

@@ -235,7 +235,7 @@ input, select {
   background-color: var(--blue);
   font-size: 18px;
   color: white;
-  background-image: url(/tokens.svg);
+  background-image: url('../assets/tokens-background.svg');
   background-position-y: bottom;
   background-position-x: right;
   background-repeat: no-repeat;
