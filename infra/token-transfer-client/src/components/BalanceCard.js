@@ -148,7 +148,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
                 <div className="col-1 text-right">
                   <div className="status-circle bg-blue"></div>
                 </div>
-                <div className="col text-nowrap">
+                <div className="col">
                   <div>
                     Locked Bonus Tokens{' '}
                     <a
@@ -157,7 +157,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
                         event.preventDefault()
                         setDisplayLockupDescModal(true)
                       }}
-                      style={{ marginLeft: '10px' }}
+                      className="ml-md-1"
                     >
                       What is this?
                     </a>
