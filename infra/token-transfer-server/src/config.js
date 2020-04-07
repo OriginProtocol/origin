@@ -42,9 +42,11 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
-const largeTransferThreshold = Number(process.env.LARGE_TRANSFER_THRESHOLD) || 100000
+const largeTransferThreshold =
+  Number(process.env.LARGE_TRANSFER_THRESHOLD) || 100000
 
-const largeTransferDelayMinutes = Number(process.env.LARGE_TRANSFER_DELAY_MINUTES) || 60
+const largeTransferDelayMinutes =
+  Number(process.env.LARGE_TRANSFER_DELAY_MINUTES) || 60
 
 const otcPartnerEmails = (
   process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'

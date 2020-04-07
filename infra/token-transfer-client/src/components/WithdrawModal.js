@@ -207,11 +207,12 @@ class WithdrawModal extends Component {
   renderTitle() {
     return (
       <div className="row align-items-center mb-3 text-center text-sm-left">
-        <div className="d-none d-sm-block col-sm-2">
-          <WithdrawIcon style={{ marginLeft: '-10px' }} />
-        </div>
         <div className="col">
-          <h1 className="my-2">Withdraw OGN</h1>
+          <WithdrawIcon
+            className="mr-3 d-none d-sm-inline-block"
+            style={{ marginTop: '-10px' }}
+          />
+          <h1 className="my-3 d-inline-block">Withdraw OGN</h1>
         </div>
       </div>
     )

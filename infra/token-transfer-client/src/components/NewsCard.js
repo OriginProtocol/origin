@@ -3,7 +3,7 @@ import React from 'react'
 import BorderedCard from './BorderedCard'
 
 const NewsCard = props => (
-  <BorderedCard className="p-0 my-3 mx-2">
+  <BorderedCard className="p-0">
     {props.feature && (
       <div className="p-4">
         <strong style={{ fontSize: '40px' }}>{props.title}</strong>
