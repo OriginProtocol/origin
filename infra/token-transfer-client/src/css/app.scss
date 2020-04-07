@@ -1,4 +1,6 @@
-@import '~bootstrap/dist/css/bootstrap.css';
+$grid-gutter-width: 10px;
+
+@import '~bootstrap/scss/bootstrap';
 @import '~typeface-lato';
 @import '~typeface-poppins';
 @import 'navbar.css';
@@ -69,10 +71,13 @@ hr {
   border-top-color: var(--hr-color);
 }
 
+.mb-10 {
+  margin-bottom: 10px;
+}
+
 #main {
   padding: 20px;
   width: 100%;
-  margin-bottom: 50px;
 }
 
 .logged-in, .not-logged-in {
@@ -97,12 +102,15 @@ hr {
  */
 @media (min-width: 768px) {
   #sidebar {
+    position: fixed;
+    height: 100%;
     width: 70px
   }
 
   #main {
     width: calc(100% - 70px);
     padding: 30px;
+    margin-left: 70px;
   }
 
   .logged-in {
@@ -229,6 +237,7 @@ input, select {
   padding: 35px 30px;
   border-radius: 10px;
   font-size: 14px;
+  height: 100%;
 }
 
 .card-wrapper.blue {

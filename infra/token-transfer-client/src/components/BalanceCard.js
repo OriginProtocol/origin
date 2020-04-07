@@ -157,7 +157,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
                         event.preventDefault()
                         setDisplayLockupDescModal(true)
                       }}
-                      className="ml-md-1"
+                      className="ml-md-2"
                     >
                       What is this?
                     </a>

@@ -313,14 +313,15 @@
 }
 
 .close {
-  margin-top: 5px;
+  margin-top: 15px;
+  margin-right: 10px;
   width: 36px;
   height: 36px;
   background-color: var(--border-accent);
-  color: var(--text);
+  color: var(--text) !important;
   border-radius: 50%;
   text-shadow: none;
-  line-height: 35px;
+  line-height: 1.5 !important;
   z-index: 2000;
   text-align: center !important;
 }

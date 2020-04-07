@@ -60,7 +60,7 @@ const webpackConfig = {
       },
       {
         test: /\.svg$/,
-        issuer: /\.css$/,
+        issuer: /\.s?css$/,
         use: [
           {
             loader: 'file-loader'
@@ -72,6 +72,15 @@ const webpackConfig = {
         use: [
           {
             loader: 'file-loader'
+          }
+        ]
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: isProduction ? 'file-loader' : 'url-loader',
+            options: isProduction ? { name: 'fonts/[name].[ext]' } : {}
           }
         ]
       },
@@ -92,14 +101,22 @@ const webpackConfig = {
         ]
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        test: /\.s[ac]ss$/i,
         use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
           {
-            loader: isProduction ? 'file-loader' : 'url-loader',
-            options: isProduction ? { name: 'fonts/[name].[ext]' } : {}
-          }
-        ]
-      }
+            loader: 'css-loader',
+            options: {
+              url: () => true
+            }
+          },
+          'resolve-url-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
+      },
     ]
   },
   resolve: {

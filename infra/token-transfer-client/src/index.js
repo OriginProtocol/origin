@@ -4,7 +4,7 @@ import { HashRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import * as Sentry from '@sentry/browser'
 
-import './css/app.css'
+import './css/app.scss'
 import store from '@/store'
 import App from '@/app'
 

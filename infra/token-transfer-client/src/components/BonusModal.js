@@ -199,7 +199,8 @@ class BonusModal extends React.Component {
                   <label htmlFor="amount">Eligible tokens</label>
                   <div className="faux-input form-control form-control-lg">
                     <strong>
-                      {Number(this.props.nextVest.amount).toLocaleString()} OGN
+                      {Number(this.getBalance(this.context)).toLocaleString()}{' '}
+                      OGN
                     </strong>{' '}
                     on {moment(this.props.nextVest.date).format('L')}
                   </div>
@@ -295,11 +296,12 @@ class BonusModal extends React.Component {
     }
     return (
       <div className="row align-items-center mb-3 text-center text-sm-left">
-        <div className="d-none d-sm-block col-sm-2">
-          <OgnIcon style={{ marignLeft: '-10px' }} />
-        </div>
         <div className="col">
-          <h1 className="my-2">{titleText}</h1>
+          <OgnIcon
+            className="mr-3 d-none d-sm-inline-block"
+            style={{ marginTop: '-10px' }}
+          />
+          <h1 className="my-3 d-inline-block">{titleText}</h1>
         </div>
       </div>
     )
