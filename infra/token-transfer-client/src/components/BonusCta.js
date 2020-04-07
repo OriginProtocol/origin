@@ -38,7 +38,7 @@ const BonusCta = ({
       <div className={`row ${fullWidth ? 'align-items-center' : ''}`}>
         <div className={`${fullWidth ? 'col-lg-3 col-12' : 'col-8'}`}>
           <h1 className="mb-0">
-            {moment(nextVest.date).format('MMMM YYYY')}
+            {moment(nextVest.date).format('YYYY MMMM')}
             <br />
             <strong>SPECIAL OFFER!</strong>
           </h1>
