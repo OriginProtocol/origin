@@ -176,6 +176,7 @@ class BonusModal extends React.Component {
             onDoneClick={this.handleModalClose}
             modalSteps={3}
             modalStepsCompleted={3}
+            text="Click the link in the email we just sent you to confirm your lockup"
           />
         )}
       </Modal>
