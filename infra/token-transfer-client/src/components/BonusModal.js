@@ -369,17 +369,17 @@ class BonusModal extends React.Component {
               <div className="col">
                 This offer expires in{' '}
                 <strong>
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'days'
                   )}
                   d{' '}
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'hours'
                   ) % 24}
                   h{' '}
-                  {moment(this.props.earlyLockupsEnabledUntil).diff(
+                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'minutes'
                   ) % 60}
