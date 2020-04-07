@@ -419,6 +419,7 @@ const updateByMonth = {
   december: updateDecemberProdRules,
   jan2020: updateJan2020ProdRules,
   feb2020: updateFeb2020ProdRules,
+  mar2020: updateMar2020ProdRules,
   apr2020: updateApr2020ProdRules
 }
 

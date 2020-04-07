@@ -1,32 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import moment from 'moment'
+import React, { useContext, useState } from 'react'
 import get from 'lodash.get'
 
-import { fetchAccounts } from '@/actions/account'
-import {
-  getAccounts,
-  getIsLoading as getAccountIsLoading
-} from '@/reducers/account'
-import { fetchGrants } from '@/actions/grant'
-import {
-  getGrants,
-  getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals
-} from '@/reducers/grant'
-import { fetchLockups } from '@/actions/lockup'
-import {
-  getLockups,
-  getIsLoading as getLockupIsLoading,
-  getTotals as getLockupTotals
-} from '@/reducers/lockup'
-import { fetchTransfers } from '@/actions/transfer'
-import {
-  getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount
-} from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
+import { getNextVest } from '@origin/token-transfer-server/src/shared'
+
+import { DataContext } from '@/providers/data'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
 import VestingCard from '@/components/VestingCard'
@@ -34,57 +11,46 @@ import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
 import BonusModal from '@/components/BonusModal'
+import BonusCta from '@/components/BonusCta'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
-import { earnOgnEnabled } from '@/constants'
 
 const Dashboard = props => {
+  const data = useContext(DataContext)
+
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
   const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
   const [displayOtcRequestModal, setDisplayOtcRequestModal] = useState(false)
 
-  useEffect(() => {
-    props.fetchAccounts(),
-      props.fetchGrants(),
-      props.fetchLockups(),
-      props.fetchTransfers()
-  }, [])
-
-  if (
-    props.accountIsLoading ||
-    props.transferIsLoading ||
-    props.grantIsLoading ||
-    props.lockupIsLoading
-  ) {
-    return (
-      <div className="spinner-grow" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    )
-  }
-
-  const { vestedTotal, unvestedTotal } = props.grantTotals
-  const balanceAvailable = vestedTotal
-    .minus(props.withdrawnAmount)
-    .minus(props.lockupTotals.locked)
-  const isLocked = !unlockDate || moment.utc() < unlockDate
   const isEmployee = !!get(props.user, 'employee')
-  const displayBonusCard = earnOgnEnabled && !isEmployee
+  const nextVest = getNextVest(data.grants, props.user)
+  const hasLockups = data.lockups.length > 0
+  const displayLockupCta =
+    data.config.earlyLockupsEnabled && !data.config.isLocked
+  const displayFullWidthLockupCta = displayLockupCta && hasLockups
+  const isEarlyLockup = displayBonusModal === 'early'
 
-  return (
+  const renderModals = () => (
     <>
       {displayBonusModal && (
         <BonusModal
-          balance={balanceAvailable}
+          nextVest={nextVest}
+          isEarlyLockup={isEarlyLockup}
           onModalClose={() => setDisplayBonusModal(false)}
         />
       )}
       {displayWithdrawModal && (
         <WithdrawModal
-          balance={balanceAvailable}
-          accounts={props.accounts}
-          isLocked={props.isLocked}
-          onCreateOtcRequest={() => setDisplayOtcRequestModal(true)}
+          displayLockupCta={false} // For future use
+          onCreateOtcRequest={() => {
+            setDisplayWithdrawModal(false)
+            setDisplayOtcRequestModal(true)
+          }}
+          nextVest={nextVest}
+          onCreateLockup={() => {
+            setDisplayWithdrawModal(false)
+            setDisplayBonusModal('early')
+          }}
           onModalClose={() => setDisplayWithdrawModal(false)}
         />
       )}
@@ -93,92 +59,77 @@ const Dashboard = props => {
           onModalClose={() => setDisplayOtcRequestModal(false)}
         />
       )}
+    </>
+  )
 
+  return (
+    <>
+      {renderModals()}
+
+      {displayFullWidthLockupCta && (
+        <div className="row">
+          <div className="col mb-4">
+            <BonusCta
+              fullWidth={true}
+              nextVest={nextVest}
+              lockupBonusRate={
+                data.config.earlyLockupsEnabled
+                  ? data.config.earlyLockupBonusRate
+                  : data.config.lockupBonusRate
+              }
+              onDisplayBonusModal={() => setDisplayBonusModal('early')}
+            />
+          </div>
+        </div>
+      )}
       <div className="row">
-        <div className="col mb-4">
+        <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-4`}>
           <BalanceCard
-            balance={balanceAvailable}
-            accounts={props.accounts}
-            locked={props.lockupTotals.locked}
-            isLocked={isLocked}
-            unlockDate={unlockDate}
             onDisplayBonusModal={() => setDisplayBonusModal(true)}
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
+        {displayLockupCta && !displayFullWidthLockupCta && (
+          <div className="col mb-4">
+            <BonusCta
+              nextVest={nextVest}
+              lockupBonusRate={
+                data.config.earlyLockupsEnabled
+                  ? data.config.earlyLockupBonusRate
+                  : data.config.lockupBonusRate
+              }
+              onDisplayBonusModal={() => setDisplayBonusModal('early')}
+            />
+          </div>
+        )}
+        {hasLockups && (
+          <div className="col mb-4">
+            <BonusCard onDisplayBonusModal={() => setDisplayBonusModal(true)} />
+          </div>
+        )}
       </div>
       <div className="row">
         <div className="col-12 col-xl-6 mb-4">
-          <VestingCard
-            grants={props.grants}
-            user={props.user}
-            vested={vestedTotal}
-            unvested={unvestedTotal}
-            isLocked={isLocked}
-            isEmployee={isEmployee}
-          />
+          <VestingCard user={props.user} isEmployee={isEmployee} />
         </div>
         <div className="col-12 col-xl-6 mb-4">
-          {displayBonusCard ? (
-            <BonusCard
-              lockups={props.lockups}
-              locked={props.lockupTotals.locked}
-              earnings={props.lockupTotals.earnings}
-              isLocked={isLocked}
-              onDisplayBonusModal={() => setDisplayBonusModal(true)}
-            />
-          ) : (
-            <NewsHeadlinesCard />
-          )}
-          <div className="mt-4">
+          <div>
             <WithdrawalSummaryCard
-              vested={vestedTotal}
-              unvested={unvestedTotal}
-              isLocked={isLocked}
-              withdrawnAmount={props.withdrawnAmount}
               onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
             />
           </div>
-        </div>
-      </div>
-      <div className="row">
-        {!isEmployee && (
-          <div className="col-12 col-lg-6 mb-5">
-            <GrantDetailCard grants={props.grants} user={props.user} />
+          <div className="mt-4">
+            <NewsHeadlinesCard />
           </div>
-        )}
-        <div className="col-12 col-lg-6 mb-4">
-          {displayBonusCard && <NewsHeadlinesCard />}
+          {!isEmployee && (
+            <div className="mt-4">
+              <GrantDetailCard user={props.user} />
+            </div>
+          )}
         </div>
       </div>
     </>
   )
 }
 
-const mapStateToProps = ({ account, grant, lockup, transfer, user }) => {
-  return {
-    accounts: getAccounts(account),
-    accountIsLoading: getAccountIsLoading(account),
-    grants: getGrants(grant),
-    grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(user.user, grant),
-    lockups: getLockups(lockup),
-    lockupIsLoading: getLockupIsLoading(lockup),
-    lockupTotals: getLockupTotals(lockup),
-    transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer)
-  }
-}
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      fetchAccounts: fetchAccounts,
-      fetchGrants: fetchGrants,
-      fetchLockups: fetchLockups,
-      fetchTransfers: fetchTransfers
-    },
-    dispatch
-  )
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default Dashboard

@@ -8,7 +8,8 @@ const key = crypto
 const algorithm = 'aes-256-ctr'
 
 /**
- * Encrypt
+ * Encrypt a string.
+ *
  * @param {string} str - String to encrypt, UTF-8 encoded.
  * @returns {string} - Encrypted string, hex encoded with iv prefixed.
  */
@@ -20,7 +21,7 @@ function encrypt(str) {
 }
 
 /**
- * Decrypt
+ * Decrypt a string.
  * @param str - Encrypted string, hex encoded with iv prefixed.
  * @returns {string} - Decrypted string, UTF-8 encoded.
  */

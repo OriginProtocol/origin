@@ -3,7 +3,8 @@ const Sequelize = require('sequelize')
 const web3Utils = require('web3-utils')
 
 const Identity = require('@origin/identity/src/models').Identity
-const MobileRegistry = require('./models').MobileRegistry
+const db = require('./models')
+const MobileRegistry = db.MobileRegistry
 const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
@@ -75,7 +76,8 @@ class MobilePush {
         const messageFingerprint = getMessageFingerprint({
           ...notificationObjAndHash,
           channel,
-          ethAddress: data.ethAddress
+          ethAddress: data.ethAddress,
+          deviceToken: data.deviceToken
         })
 
         return {
@@ -92,7 +94,7 @@ class MobilePush {
         )
 
         if (dupeCount > 0) {
-          logger.warn(
+          logger.debug(
             `Duplicate. Notification already recently sent. Skipping.`,
             ethAddress,
             channel,
@@ -105,7 +107,7 @@ class MobilePush {
       })
 
     if (filteredRegistry.length === 0) {
-      logger.warn('No device tokens to send notifications')
+      logger.debug('No device tokens to send notifications')
       return
     }
 
@@ -133,9 +135,9 @@ class MobilePush {
         // response.failed: Array of objects containing the device token (`device`) and either
         if (response.sent.length) {
           success = true
-          logger.debug('APN sent')
+          logger.debug('APN sent', JSON.stringify(response))
         } else {
-          logger.error('APN send failure:', response)
+          logger.error('APN send failure:', JSON.stringify(response))
         }
       } catch (error) {
         logger.error('APN send error: ', error)
@@ -163,15 +165,16 @@ class MobilePush {
       }
 
       try {
-        const response = await firebaseMessaging.send(message)
-        logger.debug('FCM message sent:', response)
+        const response = await firebaseMessaging.sendMulticast(message)
+        logger.debug('FCM message sent:', JSON.stringify(response))
         success = true
       } catch (error) {
-        logger.error('FCM message failed to send: ', error)
+        logger.error('FCM message failed to send: ', JSON.stringify(error))
       }
     }
 
     const promises = filteredRegistry.map(data => {
+      logger.debug(`Sent notification to ${data.ethAddress} (${deviceType})`)
       return logNotificationSent(
         data.messageFingerprint,
         data.ethAddress,
@@ -181,107 +184,6 @@ class MobilePush {
 
     if (success) {
       await Promise.all(promises)
-    }
-  }
-
-  /**
-   * Sends a mobile push notification to an Android or iOS device.
-   *
-   * @param {string} deviceToken
-   * @param {string} deviceType: 'APN' or 'FCM'
-   * @param {{message: {title:string, body:string}, payload: Object}} notificationObj
-   * @param {string} ethAddress: Eth address, lower cased.
-   * @param {string} messageHash: Optional. Hash of the origin message.
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _send(
-    deviceToken,
-    deviceType,
-    notificationObj,
-    ethAddress,
-    messageHash
-  ) {
-    if (!notificationObj) {
-      throw new Error('Missing notificationObj')
-    }
-    if (!['APN', 'FCM'].includes(deviceType)) {
-      throw new Error(`Invalid device type ${deviceType}`)
-    }
-
-    // Check we are not spamming the user.
-    const notificationObjAndHash = { ...notificationObj, messageHash }
-    const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
-    if ((await isNotificationDupe(messageFingerprint, this.config)) > 0) {
-      logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
-      return
-    }
-
-    // Do not send notification during unit tests.
-    const isTest = process.env.NODE_ENV === 'test'
-    let success = isTest
-
-    if (deviceType === 'APN' && !isTest) {
-      if (!apnProvider) {
-        throw new Error('APN provider not configured, notification failed')
-      }
-
-      const notification = new apn.Notification({
-        alert: notificationObj.message,
-        sound: 'default',
-        payload: notificationObj.payload,
-        topic: apnBundle
-      })
-
-      try {
-        const response = await apnProvider.send(notification, deviceToken)
-        // response.sent: Array of device tokens to which the notification was sent successfully
-        // response.failed: Array of objects containing the device token (`device`) and either
-        if (response.sent.length) {
-          success = true
-          logger.debug('APN sent')
-        } else {
-          logger.error('APN send failure:', response)
-        }
-      } catch (error) {
-        logger.error('APN send error: ', error)
-      }
-    } else if (deviceType === 'FCM' && !isTest) {
-      if (!firebaseMessaging) {
-        throw new Error(
-          'Firebase messaging not configured, notification failed'
-        )
-      }
-      // FCM notifications
-      // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
-      const message = {
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'Dapp'
-          }
-        },
-        notification: {
-          ...notificationObj.message
-        },
-        data: notificationObj.payload,
-        token: deviceToken
-      }
-
-      try {
-        const response = await firebaseMessaging.send(message)
-        logger.debug('FCM message sent:', response)
-        success = true
-      } catch (error) {
-        logger.error('FCM message failed to send: ', error)
-      }
-    }
-    if (success) {
-      await logNotificationSent(
-        messageFingerprint,
-        ethAddress,
-        deviceType === 'APN' ? 'mobile-ios' : 'mobile-android'
-      )
     }
   }
 
@@ -316,7 +218,7 @@ class MobilePush {
 
       for (const mobileRegister of mobileRegisters) {
         await this._rawSend(
-          [{ deviceType: mobileRegister.deviceToken, ethAddress }],
+          [{ deviceToken: mobileRegister.deviceToken, ethAddress }],
           mobileRegister.deviceType,
           notificationObj,
           messageHash
@@ -485,9 +387,12 @@ class MobilePush {
   }
 
   async _sendInChunks(data, deviceType, mobileRegisters) {
+    // NOTE: The send process won't resume if interrupted in the middle
+    // The state of sent/unsent chunks isn't stored anywhere
+
     if (mobileRegisters.length === 0) {
       const errorMsg = `No device registered with notification enabled`
-      logger.info(errorMsg)
+      logger.debug(errorMsg)
       return {
         error: errorMsg
       }
@@ -512,8 +417,14 @@ class MobilePush {
     // Send in chunks of 100
     const chunks = chunk(targets, 100)
 
+    logger.debug(
+      `Preparing to send notifcation to ${targets.length} ${deviceType} devices in ${chunks.length} chunks`
+    )
+
+    let chunkCount = 0
     try {
       for (const chunk of chunks) {
+        logger.debug(`Sending chunk ${chunkCount++}/${chunks.length}`)
         await this._rawSend(chunk, deviceType, notificationObj)
       }
     } catch (error) {
@@ -535,6 +446,8 @@ class MobilePush {
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
 
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
+
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
 
@@ -552,14 +465,101 @@ class MobilePush {
       order: [['updatedAt', 'DESC']] // Most recently updated records first.
     })
 
+    logger.debug(
+      `Found ${mobileRegisters.length} ${deviceType} devices`,
+      JSON.stringify(addresses.slice(0, 10))
+    )
+
+    await this._sendInChunks(data, deviceType, mobileRegisters)
+  }
+
+  async _sendToCountryCode(data, deviceType, countryCode) {
+    const [addresses] = await db.sequelize.query(
+      `
+    select distinct iden.eth_address as address
+      from identity iden, growth_event gevent 
+      where gevent.eth_address=iden.eth_address 
+        and gevent.type='MobileAccountCreated' 
+        and iden.country=:countryCode
+    `,
+      {
+        replacements: {
+          countryCode
+        }
+      }
+    )
+
+    if (!addresses.length) {
+      logger.error('There are no addresses from', countryCode)
+      return
+    }
+
+    const mobileRegisters = await MobileRegistry.findAll({
+      where: {
+        deviceToken: { [Sequelize.Op.ne]: null },
+        deviceType,
+        ethAddress: {
+          [Sequelize.Op.in]: addresses.map(a => a.address.toLowerCase())
+        },
+        deleted: false,
+        'permissions.alert': true
+      },
+      order: [['updatedAt', 'DESC']] // Most recently updated records first.
+    })
+
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
+
+    await this._sendInChunks(data, deviceType, mobileRegisters)
+  }
+
+  async _sendToLangCode(data, deviceType, languageCode) {
+    const [addresses] = await db.sequelize.query(
+      `
+    select distinct p.eth_address as address
+      from growth_participant p, growth_event e 
+      where p.eth_address=e.eth_address 
+        and e.type='MobileAccountCreated' 
+        and p.data->>'language'=:languageCode
+    `,
+      {
+        replacements: {
+          languageCode
+        }
+      }
+    )
+
+    if (!addresses.length) {
+      logger.error('There are no addresses for language', languageCode)
+      return
+    }
+
+    const mobileRegisters = await MobileRegistry.findAll({
+      where: {
+        deviceToken: { [Sequelize.Op.ne]: null },
+        deviceType,
+        ethAddress: {
+          [Sequelize.Op.in]: addresses.map(a => a.address.toLowerCase())
+        },
+        deleted: false,
+        'permissions.alert': true
+      },
+      order: [['updatedAt', 'DESC']] // Most recently updated records first.
+    })
+
+    logger.debug(`Found ${mobileRegisters.length} ${deviceType} devices`)
+
     await this._sendInChunks(data, deviceType, mobileRegisters)
   }
 
   async multicastMessage(data) {
     const {
-      target, // One of `all` or `address`
-      targetAddress // A single address or an array of target addresses
+      target, // One of `all`, `address`, `country` or `language`
+      targetAddress, // A single address or an array of target addresses
+      countryCode,
+      languageCode
     } = data
+
+    logger.debug('Received data for PN', JSON.stringify(data))
 
     try {
       if (target === 'all') {
@@ -570,6 +570,12 @@ class MobilePush {
           targetAddress instanceof Array ? targetAddress : [targetAddress]
         await this._sendToManyAddresses(data, 'APN', addresses)
         await this._sendToManyAddresses(data, 'FCM', addresses)
+      } else if (target === 'country') {
+        await this._sendToCountryCode(data, 'APN', countryCode)
+        await this._sendToCountryCode(data, 'FCM', countryCode)
+      } else if (target === 'language') {
+        await this._sendToLangCode(data, 'APN', languageCode)
+        await this._sendToLangCode(data, 'FCM', languageCode)
       }
 
       return {

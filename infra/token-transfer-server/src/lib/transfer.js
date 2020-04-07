@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -11,9 +12,14 @@ const {
   TRANSFER_CONFIRMED
 } = require('../constants/events')
 const { Event, Transfer, User, sequelize } = require('../models')
-const { hasBalance } = require('./balance')
-const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
-const { clientUrl, encryptionSecret, gasPriceMultiplier } = require('../config')
+const { getBalance } = require('./balance')
+const { transferHasExpired } = require('../shared')
+const {
+  clientUrl,
+  encryptionSecret,
+  gasPriceMultiplier,
+  transferConfirmationTimeout
+} = require('../config')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -22,13 +28,21 @@ const NumBlockConfirmation = 3
 
 /**
  * Enqueues a request to transfer tokens.
- * @param userId
- * @param address
- * @param amount
+ *
+ * @param {BigInt} userId: id of the user transferring
+ * @param {String} address: ethereum address to transfer to
+ * @param {BigNumber} amount: amount to transfer
+ * @param {Object} data: additional data to be recorded with the transfer request
  * @returns {Promise<Transfer>} Transfer object.
  */
 async function addTransfer(userId, address, amount, data = {}) {
-  const user = await hasBalance(userId, amount)
+  const balance = await getBalance(userId)
+  // @ts-ignore
+  if (BigNumber(amount).gt(balance)) {
+    throw new RangeError(
+      `Amount of ${amount} OGN exceeds the ${balance} available for transfer for user ${userId}`
+    )
+  }
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -37,7 +51,8 @@ async function addTransfer(userId, address, amount, data = {}) {
   const txn = await sequelize.transaction()
   try {
     transfer = await Transfer.create({
-      userId: user.id,
+      userId: userId,
+      // @ts-ignore
       status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: address.toLowerCase(),
       amount,
@@ -45,7 +60,7 @@ async function addTransfer(userId, address, amount, data = {}) {
       data
     })
     await Event.create({
-      userId: user.id,
+      userId: userId,
       action: TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id
@@ -58,11 +73,7 @@ async function addTransfer(userId, address, amount, data = {}) {
     throw e
   }
 
-  logger.info(
-    `Transfer ${transfer.id} requested to ${address} by ${user.email} for ${amount} OGN, pending email confirmation`
-  )
-
-  await sendTransferConfirmationEmail(transfer, user)
+  await sendTransferConfirmationEmail(transfer, userId)
 
   return transfer
 }
@@ -70,9 +81,11 @@ async function addTransfer(userId, address, amount, data = {}) {
 /**
  * Sends an email with a token that can be used for confirming a transfer.
  * @param transfer
- * @param user
+ * @param userId
  */
-async function sendTransferConfirmationEmail(transfer, user) {
+async function sendTransferConfirmationEmail(transfer, userId) {
+  const user = await User.findByPk(userId)
+
   const confirmationToken = jwt.sign(
     {
       transferId: transfer.id
@@ -92,18 +105,21 @@ async function sendTransferConfirmationEmail(transfer, user) {
   )
 }
 
-/* Moves a transfer from waiting for email confirmation to enqueued.
+/** Moves a transfer from waiting for email confirmation to enqueued.
  * Throws an exception if the request is invalid.
- * @param transfer
- * @param user
+ *
+ * @param {Transfer} transfer: DB transfer object
+ * @param {User} user: DB user object
  */
 async function confirmTransfer(transfer, user) {
+  // @ts-ignore
   if (transfer.status !== enums.TransferStatuses.WaitingEmailConfirm) {
     throw new Error('Transfer is not waiting for confirmation')
   }
 
   if (transferHasExpired(transfer)) {
     await transfer.update({
+      // @ts-ignore
       status: enums.TransferStatuses.Expired
     })
     throw new Error('Transfer was not confirmed in the required time')
@@ -113,6 +129,7 @@ async function confirmTransfer(transfer, user) {
   // Change state of transfer and add event
   try {
     await transfer.update({
+      // @ts-ignore
       status: enums.TransferStatuses.Enqueued
     })
     const event = {
@@ -142,7 +159,7 @@ async function confirmTransfer(transfer, user) {
       const webhookData = {
         embeds: [
           {
-            title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
+            title: `A transfer of \`${transfer.amount}\` OGN was queued by \`${user.email}\``,
             description: [
               `**ID:** \`${transfer.id}\``,
               `**Address:** \`${transfer.toAddress}\``,
@@ -169,15 +186,25 @@ async function confirmTransfer(transfer, user) {
 
 /**
  * Sends a blockchain transaction to transfer tokens.
+ *
  * @param {Transfer} transfer: Db model transfer object
- * @param {Integer} transferTaskId: Id of the calling transfer task
+ * @param {BigInt} transferTaskId: Id of the calling transfer task
  * @param {Token} token: An instance of the token library (@origin/token)
- * @returns {Promise<String>} Hash of the transaction
+ * @returns {Promise<String|Boolean>} Hash of the transaction
  */
 async function executeTransfer(transfer, transferTaskId, token) {
-  const user = await hasBalance(transfer.userId, transfer.amount, transfer.id)
+  const balance = await getBalance(transfer.userId)
+  // Subtract the current transfer amount from the available balance because
+  // it is what we are transferring
+  // @ts-ignore
+  if (balance.minus(transfer.amount).lt(0)) {
+    throw new RangeError(
+      `Amount of ${transfer.amount} OGN exceeds the ${balance} available for executing transfer for user ${transfer.userId}`
+    )
+  }
 
   await transfer.update({
+    // @ts-ignore
     status: enums.TransferStatuses.Processing,
     transferTaskId
   })
@@ -197,8 +224,8 @@ async function executeTransfer(transfer, transferTaskId, token) {
   } catch (error) {
     logger.error('Error crediting tokens', error.message)
     await updateTransferStatus(
-      user,
       transfer,
+      // @ts-ignore
       enums.TransferStatuses.Failed,
       TRANSFER_FAILED,
       error.message
@@ -209,6 +236,7 @@ async function executeTransfer(transfer, transferTaskId, token) {
   logger.info(`Transfer ${transfer.id} processed with hash ${txHash}`)
 
   await transfer.update({
+    // @ts-ignore
     status: enums.TransferStatuses.WaitingConfirmation,
     fromAddress: supplier.toLowerCase(),
     txHash
@@ -219,6 +247,7 @@ async function executeTransfer(transfer, transferTaskId, token) {
 
 /**
  * Sends a blockchain transaction to transfer tokens.
+ *
  * @param {Transfer} transfer: DB model Transfer object
  * @param {Token} token: An instance of the token library (@origin/token)
  * @returns {Promise<String>}
@@ -235,10 +264,12 @@ async function checkBlockConfirmation(transfer, token) {
   } else {
     switch (result.status) {
       case 'confirmed':
+        // @ts-ignore
         transferStatus = enums.TransferStatuses.Success
         eventAction = TRANSFER_DONE
         break
       case 'failed':
+        // @ts-ignore
         transferStatus = enums.TransferStatuses.Failed
         eventAction = TRANSFER_FAILED
         break
@@ -253,14 +284,7 @@ async function checkBlockConfirmation(transfer, token) {
     `Received status ${result.status} for transaction ${transfer.txHash}`
   )
 
-  const user = await User.findOne({
-    where: {
-      id: transfer.userId
-    }
-  })
-
   await updateTransferStatus(
-    user,
     transfer,
     transferStatus,
     eventAction,
@@ -272,15 +296,14 @@ async function checkBlockConfirmation(transfer, token) {
 
 /**
  * Update transfer status and add an event with the result of the transfer.
- * @param {User} transfer: Db model user object
+ *
  * @param {Transfer} transfer: Db model transfer object
- * @param {String} transferStatus
+ * @param {String} transferStatus: string representing status of the transfer
  * @param {String} eventAction:
- * @param {String} failureReason
- * @returns {Promise<undefined>}
+ * @param {String} failureReason: reason for the failure
+ * @returns {Promise<void>}
  */
 async function updateTransferStatus(
-  user,
   transfer,
   transferStatus,
   eventAction,
@@ -293,7 +316,7 @@ async function updateTransferStatus(
       status: transferStatus
     })
     const event = {
-      userId: user.id,
+      userId: transfer.userId,
       action: eventAction,
       data: {
         transferId: transfer.id

@@ -27,8 +27,8 @@ const purchaseRounds = ['Advisor', 'Strategic', 'CoinList']
 const signedAmendmentResponses = ['Yes', 'No', 'Abstain', 'Did not respond']
 
 // TODO(franck): Update those values based on final investors vesting schedule.
-const investorsVestingStart = moment.utc('2020/01/01')
-const investorsVestingEnd = moment.utc('2020/12/31')
+const investorsVestingStart = moment.utc('2020-01-01')
+const investorsVestingEnd = moment.utc('2020-12-31')
 
 class CsvFileParser {
   constructor(filename, employee) {

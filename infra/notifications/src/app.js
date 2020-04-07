@@ -16,7 +16,8 @@ const _ = require('lodash')
 // const { browserPush } = require('./browserPush')
 const MobilePush = require('./mobilePush')
 const EmailSender = require('./emailSend')
-const MobileRegistry = require('./models').MobileRegistry
+const db = require('./models')
+const MobileRegistry = db.MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
 const { GrowthEvent } = require('@origin/growth-shared/src/resources/event')
 const {

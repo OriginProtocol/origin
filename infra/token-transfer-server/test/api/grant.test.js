@@ -51,6 +51,7 @@ describe('Grant HTTP API', () => {
 
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
+      // @ts-ignore
       req.session = {
         passport: {
           user: this.user.id

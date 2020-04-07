@@ -12,6 +12,8 @@ import { setSessionExpired } from '@/actions/session'
 import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 import Modal from '@/components/Modal'
+import { ThemeProvider } from '@/providers/theme'
+import { DataProvider } from '@/providers/data'
 
 const PrivateRoute = ({
   component: Component,
@@ -44,28 +46,32 @@ const PrivateRoute = ({
         {...rest}
         render={props => {
           return (
-            <div className="logged-in">
+            <div id="private" className="logged-in d-flex">
               {isLoading || !user ? (
-                <div id="main" style={{ width: '100%' }}>
+                <div id="main">
                   <div className="spinner-grow" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
                 </div>
               ) : (
                 <>
-                  <Navigation
-                    onExpandSidebar={toggleSidebar}
-                    expandSidebar={expandSidebar}
-                    user={user}
-                  />
-                  <div id="main" className={expandSidebar ? 'd-none' : ''}>
-                    <div className="d-none d-md-block">
-                      {user && <AccountActions user={user} />}
+                  <ThemeProvider>
+                    <Navigation
+                      onExpandSidebar={toggleSidebar}
+                      expandSidebar={expandSidebar}
+                      user={user}
+                    />
+                    <div id="main" className={expandSidebar ? 'd-none' : ''}>
+                      <div className="d-none d-md-block">
+                        {user && <AccountActions user={user} />}
+                      </div>
+                      <div className="mt-md-4">
+                        <DataProvider>
+                          <Component {...props} user={user} />
+                        </DataProvider>
+                      </div>
                     </div>
-                    <div className="mt-4">
-                      <Component {...props} user={user} />
-                    </div>
-                  </div>
+                  </ThemeProvider>
                 </>
               )}
             </div>

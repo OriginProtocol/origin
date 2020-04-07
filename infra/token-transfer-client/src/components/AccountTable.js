@@ -4,16 +4,12 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { addAccount, deleteAccount } from '@/actions/account'
-import {
-  getAccounts,
-  getError,
-  getIsAdding,
-  getIsLoading
-} from '@/reducers/account'
+import { getError, getIsAdding, getIsLoading } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@/assets/delete.svg'
 import EthAddress from '@/components/EthAddress'
+import OgnIcon from '@/assets/ogn-icon.svg'
 
 class AccountTable extends Component {
   constructor(props) {
@@ -71,14 +67,6 @@ class AccountTable extends Component {
   }
 
   render() {
-    if (this.props.isLoading) {
-      return (
-        <div className="spinner-grow" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )
-    }
-
     return (
       <>
         {this.state.displayModal && this.renderModal()}
@@ -94,19 +82,19 @@ class AccountTable extends Component {
                 this.setState({ displayModal: true })
               }}
             >
-              + Add Account
+              Add Account
             </a>
           </div>
         </div>
         <div className="row">
           <div className="col">
             <div className="table-responsive">
-              <table className="table mb-4">
+              <table className="table table-borderless table-card-rows mb-4">
                 <thead>
                   <tr>
-                    <th>Nickname</th>
-                    <th>Address</th>
-                    <th>Created</th>
+                    <th>Account Nickname</th>
+                    <th>Account Address</th>
+                    <th>Date Created</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -120,12 +108,15 @@ class AccountTable extends Component {
                   ) : (
                     this.props.accounts.map(account => (
                       <tr key={account.address}>
-                        <td>{account.nickname}</td>
                         <td>
+                          <strong>{account.nickname}</strong>
+                        </td>
+                        <td className="d-none d-lg-block">{account.address}</td>
+                        <td className="d-lg-none">
                           <EthAddress address={account.address} />
                         </td>
                         <td>{moment(account.createdAt).format('L')}</td>
-                        <td>
+                        <td className="text-right">
                           <DeleteIcon
                             style={{ fill: '#8fa7b7', cursor: 'pointer' }}
                             onClick={() => this.handleDeleteAccount(account.id)}
@@ -148,36 +139,60 @@ class AccountTable extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal appendToId="main" onClose={this.reset} closeBtn={true}>
-        <h1 className="mb-2">Add an Account</h1>
-        <p>Enter a nickname and an Ethereum account address.</p>
+      <Modal appendToId="private" onClose={this.reset} closeBtn={true}>
+        <div className="row align-items-center mb-3 text-center text-sm-left">
+          <div className="d-none d-sm-block col-sm-2">
+            <OgnIcon style={{ marignLeft: '-10px' }} />
+          </div>
+          <div className="col">
+            <h1 className="my-2">Add an account</h1>
+          </div>
+        </div>
+        <hr />
         <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Nickname</label>
-            <input {...input('nickname')} />
-            {Feedback('nickname')}
+          <div className="row">
+            <div className="col-12 col-sm-8 offset-sm-2">
+              <div className="form-group">
+                <label htmlFor="email">Nickname</label>
+                <input {...input('nickname')} />
+                {Feedback('nickname')}
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Ethereum Address</label>
+                <input {...input('address')} />
+                {Feedback('address')}
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="email">Ethereum Address</label>
-            <input {...input('address')} />
-            {Feedback('address')}
+          <div className="actions mt-5">
+            <div className="row mb-3 mb-sm-0">
+              <div className="col text-left d-none d-md-block">
+                <button
+                  type="button"
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={event => {
+                    event.preventDefault()
+                    this.setState({ displayModal: false })
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+              <div className="col text-right">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={
+                    !this.state.nickname ||
+                    !this.state.address ||
+                    this.props.isAdding
+                  }
+                >
+                  {this.props.isAdding ? <>Loading...</> : <span>Add</span>}
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={
-              !this.state.nickname || !this.state.address || this.props.isAdding
-            }
-          >
-            {this.props.isAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Add</span>
-            )}
-          </button>
         </form>
       </Modal>
     )
@@ -186,7 +201,6 @@ class AccountTable extends Component {
 
 const mapStateToProps = ({ account }) => {
   return {
-    accounts: getAccounts(account),
     isAdding: getIsAdding(account),
     isLoading: getIsLoading(account),
     error: getError(account)

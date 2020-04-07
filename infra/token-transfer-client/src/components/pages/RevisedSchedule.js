@@ -38,7 +38,7 @@ const RevisedSchedule = () => {
           foster long-term community growth and participation.
         </p>
         <button
-          className="btn btn-secondary btn-lg mt-5"
+          className="btn btn-primary btn-lg mt-5"
           onClick={() => setRedirectTo('/revised_terms')}
         >
           View Agreement
