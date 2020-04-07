@@ -34,7 +34,11 @@ const BonusCta = ({
   }
 
   return (
-    <BorderedCard className="blue">
+    <BorderedCard
+      className="blue"
+      onClick={onDisplayBonusModal}
+      style={{ cursor: 'pointer' }}
+    >
       <div className={`row ${fullWidth ? 'align-items-center' : ''}`}>
         <div className={`${fullWidth ? 'col-lg-3 col-12' : 'col-8'}`}>
           <h1 className="mb-0">
