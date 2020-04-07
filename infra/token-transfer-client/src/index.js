@@ -8,6 +8,9 @@ import './css/app.scss'
 import store from '@/store'
 import App from '@/app'
 
+require('typeface-lato')
+require('typeface-poppins')
+
 if (process.env.NODE_ENV === 'production' && process.env.CLIENT_SENTRY_DSN) {
   Sentry.init({ dsn: process.env.CLIENT_SENTRY_DSN })
 }

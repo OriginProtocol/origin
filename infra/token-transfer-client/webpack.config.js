@@ -59,8 +59,7 @@ const webpackConfig = {
         ]
       },
       {
-        test: /\.svg$/,
-        issuer: /\.s?css$/,
+        test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
             loader: 'file-loader'
@@ -68,7 +67,8 @@ const webpackConfig = {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.svg$/,
+        issuer: /\.s?css$/,
         use: [
           {
             loader: 'file-loader'
@@ -79,38 +79,21 @@ const webpackConfig = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: [
           {
-            loader: isProduction ? 'file-loader' : 'url-loader',
-            options: isProduction ? { name: 'fonts/[name].[ext]' } : {}
-          }
-        ]
-      },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
-          },
-          {
-            loader: 'css-loader',
+            loader: 'file-loader',
             options: {
-              url: () => {
-                return true
-              }
-            }
+              name: '[name].[hash].[ext]',
+            },
           }
         ]
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(scss|sass|css)$/i,
         use: [
           // Creates `style` nodes from JS strings
           'style-loader',
           // Translates CSS into CommonJS
           {
             loader: 'css-loader',
-            options: {
-              url: () => true
-            }
           },
           'resolve-url-loader',
           // Compiles Sass to CSS
@@ -183,10 +166,6 @@ if (isProduction) {
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' })
   )
-  webpackConfig.resolve.alias = {
-    'react-styl': 'react-styl/prod.js'
-  }
-  webpackConfig.module.noParse = [/^(react-styl)$/]
 }
 
 module.exports = webpackConfig
