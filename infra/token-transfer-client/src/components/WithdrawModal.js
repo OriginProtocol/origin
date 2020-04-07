@@ -484,6 +484,7 @@ class WithdrawModal extends Component {
             <div className="row">
               <div className="col d-none d-sm-block">
                 <button
+                  type="button"
                   className="btn btn-outline-primary btn-lg"
                   onClick={() => this.setState({ modalState: 'Disclaimer' })}
                 >

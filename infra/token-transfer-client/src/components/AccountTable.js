@@ -166,8 +166,9 @@ class AccountTable extends Component {
           </div>
           <div className="actions mt-5">
             <div className="row mb-3 mb-sm-0">
-              <div className="col d-none d-md-block">
+              <div className="col text-left d-none d-md-block">
                 <button
+                  type="button"
                   className="btn btn-outline-primary btn-lg"
                   onClick={event => {
                     event.preventDefault()

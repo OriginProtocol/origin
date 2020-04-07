@@ -42,6 +42,7 @@ const TwoFactorStep = ({
           <div className="row">
             <div className="col d-none d-md-block">
               <button
+                type="button"
                 className="btn btn-outline-primary btn-lg"
                 onClick={onBackClick}
               >
