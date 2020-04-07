@@ -42,9 +42,9 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
-const largeTransferThreshold = process.env.LARGE_TRANSFER_THRESHOLD || 100000
+const largeTransferThreshold = Number(process.env.LARGE_TRANSFER_THRESHOLD) || 100000
 
-const largeTransferDelayMinutes = process.env.LARGE_TRANSFER_DELAY_MINUTES || 60
+const largeTransferDelayMinutes = Number(process.env.LARGE_TRANSFER_DELAY_MINUTES) || 60
 
 const otcPartnerEmails = (
   process.env.OTC_PARTNER_EMAIL || 'investor-relations@originprotocol.com'
@@ -59,10 +59,10 @@ const unlockDate = moment(process.env.UNLOCK_DATE, 'YYYY-MM-DD').isValid()
   : undefined
 
 // Lockup bonus rate as a percentage
-const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 17.5
+const lockupBonusRate = Number(process.env.LOCKUP_BONUS_RATE) || 17.5
 
 // Early lockup bons rate as a percentage
-const earlyLockupBonusRate = process.env.EARLY_LOCKUP_BONUS_RATE || 35
+const earlyLockupBonusRate = Number(process.env.EARLY_LOCKUP_BONUS_RATE) || 35
 
 // Date early lockups are enabled until
 const earlyLockupsEnabledUntil = process.env.EARLY_LOCKUPS_ENABLED_UNTIL
@@ -76,7 +76,7 @@ const earlyLockupsEnabled = moment(
   : false
 
 // Lockup duration in months
-const lockupDuration = process.env.LOCKUP_DURATION || 12
+const lockupDuration = Number(process.env.LOCKUP_DURATION) || 12
 
 // Whether lockups are enabled
 const lockupsEnabled = process.env.LOCKUPS_ENABLED || true
