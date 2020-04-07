@@ -15,12 +15,11 @@ async function resizePrintfulMockups({ OutputDir }) {
     fs.mkdirSync(outputFileDir, { recursive: true })
     const images = fs.readdirSync(inputDir)
     for (const image of images) {
-      const filename = `${inputDir}/${image}`
+      const filename = `${outputFileDir}/${image}`
       if (!fs.existsSync(filename)) {
-        const resizedFile = await sharp()
+        const resizedFile = await sharp(`${inputDir}/${image}`)
           .resize(520)
           .toBuffer()
-
         fs.writeFileSync(`${outputFileDir}/${image}`, resizedFile)
       }
     }

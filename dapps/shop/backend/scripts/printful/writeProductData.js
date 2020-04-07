@@ -4,9 +4,19 @@ const sortBy = require('lodash/sortBy')
 async function writeProductData({ OutputDir }) {
   const productsRaw = fs.readFileSync(`${OutputDir}/printful-products.json`)
   const products = JSON.parse(productsRaw).reverse()
+  let existingProducts = []
+  try {
+    const existingProductsRaw = fs.readFileSync(
+      `${OutputDir}/data/products.json`
+    )
+    existingProducts = JSON.parse(existingProductsRaw)
+  } catch (e) {
+    /* Ignore */
+  }
   let productsOut = []
   const downloadImages = []
   const allImages = {}
+  const printfulIds = {}
 
   for (const row of products) {
     const syncProductRaw = fs.readFileSync(
@@ -19,25 +29,37 @@ async function writeProductData({ OutputDir }) {
       `${OutputDir}/data-printful/product-${productId}.json`
     )
     const product = JSON.parse(productRaw)
+    const externalId = syncProduct.sync_product.id
 
-    let handle = syncProduct.sync_product.name
-      .toLowerCase()
-      .replace(/[^0-9a-z -]/g, '')
-      .replace(/ +/g, '-')
-      .replace(/^-+/, '')
-      .replace(/--+/g, '-')
-    const origHandle = handle
+    const existingProduct = existingProducts.find(
+      p => p.externalId === externalId
+    )
 
-    for (let n = 1; productsOut.find(p => p.id === handle); n++) {
-      handle = `${origHandle}-${n}`
+    let handle
+    if (existingProduct) {
+      handle = existingProduct.id
+    } else {
+      handle = syncProduct.sync_product.name
+        .toLowerCase()
+        .replace(/[^0-9a-z -]/g, '')
+        .replace(/ +/g, '-')
+        .replace(/^-+/, '')
+        .replace(/--+/g, '-')
+      const origHandle = handle
+
+      for (let n = 1; productsOut.find(p => p.id === handle); n++) {
+        handle = `${origHandle}-${n}`
+      }
     }
 
     const colors = [],
       sizes = [],
       images = [],
-      variantImages = {}
+      variantImages = {},
+      printfulSyncIds = {}
     syncProduct.sync_variants.forEach((syncVariant, idx) => {
       const vId = syncVariant.product.variant_id
+      printfulSyncIds[vId] = syncVariant.id
       const v = product.variants.find(v => v.id === vId)
       const color = v.color
       const size = v.size
@@ -84,6 +106,7 @@ async function writeProductData({ OutputDir }) {
       }
       return {
         id,
+        externalId: variant.id,
         title: variant.name,
         option1: options[0] || null,
         option2: options[1] || null,
@@ -96,8 +119,11 @@ async function writeProductData({ OutputDir }) {
       }
     })
 
+    printfulIds[handle] = printfulSyncIds
+
     const out = {
       id: handle,
+      externalId,
       title: syncProduct.sync_product.name,
       description: product.product.description.replace(/\r\n/g, '<br/>'),
       price: Number(syncProduct.sync_variants[0].retail_price.replace('.', '')),
@@ -105,11 +131,13 @@ async function writeProductData({ OutputDir }) {
       options,
       images,
       image: images[0],
-      variants
+      variants,
+      sizeGuide: product.sizeGuide
     }
 
     productsOut.push({
       id: out.id,
+      externalId: out.externalId,
       title: out.title,
       price: out.price,
       image: out.image
@@ -123,25 +151,31 @@ async function writeProductData({ OutputDir }) {
   }
 
   // Keep original products.json order
-  try {
-    const existingProductsRaw = fs.readFileSync(
-      `${OutputDir}/data/products.json`
-    )
-    const existingProductIds = JSON.parse(existingProductsRaw).map(p => p.id)
+  const existingProductSlugs = existingProducts.map(p => p.id)
+  const existingProductExternalIds = existingProducts.map(p => p.externalId).filter(i => i)
+  console.log(existingProductSlugs)
+  console.log(existingProductExternalIds)
 
-    if (existingProductIds.length) {
-      productsOut = sortBy(productsOut, p => {
-        const idx = existingProductIds.indexOf(p.id)
-        return idx < 0 ? Infinity : idx
-      })
-    }
-  } catch (e) {
-    /* Ignore */
+  if (existingProductSlugs.length) {
+    productsOut = sortBy(productsOut, p => {
+      let idx
+      if (p.externalId && existingProductExternalIds.length) {
+        idx = existingProductExternalIds.indexOf(p.externalId)
+      } else {
+        idx = existingProductSlugs.indexOf(p.id)
+      }
+      return idx < 0 ? Infinity : idx
+    })
   }
 
   fs.writeFileSync(
     `${OutputDir}/data/products.json`,
     JSON.stringify(productsOut, null, 2)
+  )
+
+  fs.writeFileSync(
+    `${OutputDir}/data/printful-ids.json`,
+    JSON.stringify(printfulIds, null, 2)
   )
 
   let collections = []

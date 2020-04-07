@@ -75,7 +75,6 @@ async function writePrintfulIds() {
   )
 }
 
-
 async function matchPrintfulToExisting({ OutputDir }) {
   console.log('Matching Printful products...')
   const printfulProductsRaw = fs.readFileSync(
@@ -126,10 +125,9 @@ async function matchPrintfulToExisting({ OutputDir }) {
 
 async function start() {
   // await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-  // await writeProductData({ OutputDir })
-  await downloadPrintfulMockups({ OutputDir })
-  await resizePrintfulMockups({ OutputDir })
-
+  await writeProductData({ OutputDir })
+  // await downloadPrintfulMockups({ OutputDir })
+  // await resizePrintfulMockups({ OutputDir })
   // await matchPrintfulToExisting({ OutputDir })
   // await writeInternalData({ OutputDir })
   // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })

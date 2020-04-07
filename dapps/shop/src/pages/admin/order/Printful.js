@@ -16,6 +16,7 @@ function generatePrintfulOrder(order, printfulIds) {
     recipient: {
       name: `${data.userInfo.firstName} ${data.userInfo.lastName}`,
       address1: data.userInfo.address1,
+      address2: data.userInfo.address2,
       city: data.userInfo.city,
       state_name: data.userInfo.province,
       state_code: get(

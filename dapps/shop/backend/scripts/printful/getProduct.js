@@ -1,6 +1,8 @@
 const fs = require('fs')
 const { get } = require('./_api')
 
+const getSizeGuide = require('./getSizeGuide')
+
 async function getProduct({ apiAuth, OutputDir, id }) {
   const syncPath = `${OutputDir}/data-printful/sync-product-${id}.json`
   const json = await get(`/sync/products/${id}`, { auth: apiAuth })
@@ -11,8 +13,13 @@ async function getProduct({ apiAuth, OutputDir, id }) {
 
   if (!fs.existsSync(productPath)) {
     const productJson = await get(`/products/${productId}`, { auth: apiAuth })
-    fs.writeFileSync(productPath, JSON.stringify(productJson.result, null, 2))
-    console.log(`Wrote sync product ${id}, product ${productId}`)
+    const result = productJson.result
+    const sizeGuide = await getSizeGuide({ OutputDir, productId })
+    result.sizeGuide = sizeGuide
+    fs.writeFileSync(productPath, JSON.stringify(result, null, 2))
+
+    const sg = sizeGuide ? ' + size guide' : ''
+    console.log(`Wrote sync product ${id}, product ${productId}${sg}`)
   } else {
     console.log(`Wrote sync product ${id}`)
   }

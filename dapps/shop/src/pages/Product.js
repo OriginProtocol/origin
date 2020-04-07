@@ -9,6 +9,7 @@ import Link from 'components/Link'
 import GalleryScroll from 'components/GalleryScroll'
 import Gallery from 'components/Gallery'
 import SimilarProducts from 'components/SimilarProducts'
+import SizeGuide from './product/SizeGuide'
 import formatPrice from 'utils/formatPrice'
 import useIsMobile from 'utils/useIsMobile'
 import useConfig from 'utils/useConfig'
@@ -56,6 +57,7 @@ const Product = ({ history, location, match }) => {
       const newState = {
         productData: data,
         activeImage: 0,
+        addedToCart: false,
         options: pick(variant, 'option1', 'option2', 'option3')
       }
       const imageForVariant = getImageForVariant(data, variant)
@@ -129,14 +131,26 @@ const Product = ({ history, location, match }) => {
     pics,
     active: activeImage,
     onChange: activeId => {
-      const variant = productData.variants.find(
-        variant => variant.image === productData.images[activeId]
-      )
-      if (variant !== undefined) {
-        setState({ options: pick(variant, 'option1', 'option2', 'option3') })
+      const sizeIdx = productOptions.indexOf('Size')
+      const foundVariant = productData.variants.find(curVariant => {
+        if (sizeIdx >= 0 && productOptions.length > 1) {
+          const sizeMatches =
+            variant[`option${sizeIdx + 1}`] ==
+            curVariant[`option${sizeIdx + 1}`]
+          const matches =
+            sizeMatches && curVariant.image === productData.images[activeId]
+          return matches
+        } else {
+          return curVariant.image === productData.images[activeId]
+        }
+      })
+      if (foundVariant !== undefined) {
+        setState({
+          options: pick(foundVariant, 'option1', 'option2', 'option3')
+        })
         history.replace(
           `${urlPrefix}/products/${match.params.id}${
-            variant ? `?variant=${variant.id}` : ''
+            foundVariant ? `?variant=${foundVariant.id}` : ''
           }`
         )
       }
@@ -232,6 +246,7 @@ const Product = ({ history, location, match }) => {
             className="mt-4 description"
             dangerouslySetInnerHTML={{ __html: productData.description }}
           />
+          <SizeGuide product={productData} />
         </div>
       </div>
       {!productData.descriptionLong ? null : (

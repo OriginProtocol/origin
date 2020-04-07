@@ -117,7 +117,7 @@ module.exports = function(app) {
       }
       const apiAuth = Buffer.from(apiKey).toString('base64')
 
-      const url = `${PrintfulURL}/orders/@${req.params.id}/confirm`
+      const url = `${PrintfulURL}/orders/@${req.params.orderId}/confirm`
       const confirmOrderResponse = await fetch(url, {
         headers: {
           'content-type': 'application/json',

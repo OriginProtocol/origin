@@ -27,6 +27,14 @@ try {
   // Ignore
 }
 
+let siteConfig = {}
+try {
+  const siteConfigPath = `${__dirname}/data/${process.env.DATA_DIR}/config.json`
+  siteConfig = JSON.parse(fs.readFileSync(siteConfigPath).toString())
+} catch (e) {
+  // Ignore
+}
+
 let devtool = 'cheap-module-source-map'
 if (isProduction) {
   devtool = false
@@ -145,6 +153,7 @@ const webpackConfig = {
       provider: process.env.PROVIDER,
       analytics: process.env.ANALYTICS,
       fbPixel: process.env.FB,
+      title: siteConfig.fullTitle,
       dataDir:
         process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
       absolute
