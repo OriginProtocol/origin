@@ -99,6 +99,6 @@ export const getTotals = state => {
   const unlockedEarnings = calculateUnlockedEarnings(lockups)
   const allEarnings = calculateEarnings(lockups)
   const locked = calculateLocked(lockups.filter(l => l.confirmed))
-  const nextVestLocked = calculateNextVestLocked(l => l.confirmed)
+  const nextVestLocked = calculateNextVestLocked(lockups.filter(l => l.confirmed))
   return { unlockedEarnings, allEarnings, locked, nextVestLocked }
 }
