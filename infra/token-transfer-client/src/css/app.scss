@@ -438,7 +438,8 @@ input, select {
 
 .popover {
   position: absolute;
-  z-index: 2;
+  background-color: var(--sidebar-bg-color);
+  color: var(--text);
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.29);
