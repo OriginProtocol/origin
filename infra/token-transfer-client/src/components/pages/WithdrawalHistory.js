@@ -11,8 +11,6 @@ import EthAddress from '@/components/EthAddress'
 const WithdrawalHistory = ({ history }) => {
   const data = useContext(DataContext)
 
-  console.log(data)
-
   const accountNicknameMap = {}
   data.accounts.forEach(account => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
