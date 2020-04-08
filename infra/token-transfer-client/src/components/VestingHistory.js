@@ -50,19 +50,7 @@ const VestingHistory = props => {
       <div className="table-card">
         <div className="scrolling-table">
           <table className="table mb-0">
-            <tbody>
-              {data.config.isLocked ? (
-                <tr>
-                  <td className="table-empty-cell" colSpan="100%">
-                    Vesting has not yet started.
-                    <br />
-                    Please check back after Lockup Period ends.
-                  </td>
-                </tr>
-              ) : (
-                tableRows
-              )}
-            </tbody>
+            <tbody>{tableRows}</tbody>
           </table>
         </div>
       </div>
