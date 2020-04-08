@@ -194,12 +194,13 @@ async function confirmTransfer(transfer, user) {
  */
 async function executeTransfer(transfer, transferTaskId, token) {
   const balance = await getBalance(transfer.userId)
-  // Subtract the current transfer amount from the available balance because
-  // it is what we are transferring
-  // @ts-ignore
-  if (balance.minus(transfer.amount).lt(0)) {
+
+  // Add the current transfer to the balance because it is the one we are processing
+  const balanceExcludingTransfer = balance.plus(transfer.amount)
+
+  if (balanceExcludingTransfer.lt(0)) {
     throw new RangeError(
-      `Amount of ${transfer.amount} OGN exceeds the ${balance} available for executing transfer for user ${transfer.userId}`
+      `Amount of ${transfer.amount} OGN exceeds the ${balanceExcludingTransfer} available for executing transfer for user ${transfer.userId}`
     )
   }
 
