@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { DataContext } from '@/providers/data'
+import { ThemeContext } from '@/providers/theme'
 import BorderedCard from '@/components/BorderedCard'
-import Withdraw from '-!react-svg-loader!@/assets/export-icon.svg'
 
-const WithdrawalSummaryCard = props => {
-  const total = Number(props.vested)
-  const withdrawnPercent = (Number(props.withdrawnAmount) / total) * 100
+const WithdrawalSummaryCard = ({ onDisplayWithdrawModal }) => {
+  const data = useContext(DataContext)
+  const { theme } = useContext(ThemeContext)
+
+  const total = Number(data.totals.vested)
+  const withdrawnPercent = (Number(data.totals.withdrawn) / total) * 100
   const remainingPercent = 100 - withdrawnPercent
+
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard>
       <div className="row mb-2">
         <div className="col">
           <h2>Withdrawals</h2>
@@ -19,37 +24,37 @@ const WithdrawalSummaryCard = props => {
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">Vested To Date</div>
+        <div className="col text-muted">Vested To Date</div>
         <div className="col text-right">
-          <strong>{Number(props.vested).toLocaleString()} </strong>
+          <strong>{Number(data.totals.vested).toLocaleString()} </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">
-          <div className="status-circle status-circle-error mr-2"></div>Total
-          Withdrawn
+        <div className="col text-nowrap text-muted">
+          <div className="status-circle bg-red mr-2"></div>Total Withdrawn
         </div>
         <div className="col text-right">
-          <strong>{Number(props.withdrawnAmount).toLocaleString()} </strong>
+          <strong>{Number(data.totals.withdrawn).toLocaleString()} </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col">
-          <div className="status-circle status-circle-success mr-2"></div>Total
-          Remaining
+        <div className="col text-nowrap text-muted">
+          <div className="status-circle bg-green mr-2"></div>Total Remaining
         </div>
         <div className="col text-right">
           <strong>
-            {Number(props.vested.minus(props.withdrawnAmount)).toLocaleString()}{' '}
+            {Number(
+              data.totals.vested.minus(data.totals.withdrawn)
+            ).toLocaleString()}{' '}
           </strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
       <div className="progress mt-4" style={{ height: '5px' }}>
         <div
-          className="progress-bar bg-success"
+          className="progress-bar bg-green"
           role="progressbar"
           style={{ width: `${remainingPercent}%` }}
         ></div>
@@ -59,17 +64,15 @@ const WithdrawalSummaryCard = props => {
           style={{ width: `${withdrawnPercent}%` }}
         ></div>
       </div>
-      {!props.isLocked && (
-        <div className="row mt-3">
+      {!data.config.isLocked && (
+        <div className="row mt-5">
           <div className="col text-center">
             <button
-              className="btn btn-lg btn-outline-dark"
-              onClick={props.onDisplayWithdrawModal}
+              className={`btn btn-lg btn-outline-${
+                theme === 'dark' ? 'light' : 'primary'
+              }`}
+              onClick={onDisplayWithdrawModal}
             >
-              <Withdraw
-                className="icon"
-                style={{ marginTop: '-5px', marginRight: '10px' }}
-              />
               Withdraw
             </button>
           </div>

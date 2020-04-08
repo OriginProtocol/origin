@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from 'moment'
 
 import { vestingSchedule } from '@origin/token-transfer-server/src/lib/vesting'
 
+import { DataContext } from '@/providers/data'
+
 const VestingHistory = props => {
+  const data = useContext(DataContext)
+
   const schedule = {}
-  props.grants.forEach(grant => {
+  data.grants.forEach(grant => {
     vestingSchedule(props.user, grant).forEach(vest => {
       const dateKey = vest.date.format()
       schedule[dateKey] = schedule[dateKey]
@@ -19,20 +23,22 @@ const VestingHistory = props => {
     const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
-        <td className="pl-0">
+        <td className="pl-0" width="10px">
           <div
             className={`status-circle ${
-              momentDate < moment.now() ? `status-circle-success` : ''
+              momentDate < moment.now() ? `bg-green` : ''
             }`}
           ></div>
         </td>
-        <td>{Number(schedule[date]).toLocaleString()} OGN</td>
-        <td>
+        <td className="text-nowrap" width="130px">
+          {Number(schedule[date]).toLocaleString()} OGN
+        </td>
+        <td className="d-none d-sm-block">
           <span className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}
           </span>
         </td>
-        <td>{momentDate.format('L')}</td>
+        <td className="text-right">{momentDate.format('L')}</td>
       </tr>
     )
   }
@@ -45,7 +51,7 @@ const VestingHistory = props => {
         <div className="scrolling-table">
           <table className="table mb-0">
             <tbody>
-              {props.isLocked ? (
+              {data.config.isLocked ? (
                 <tr>
                   <td className="table-empty-cell" colSpan="100%">
                     Vesting has not yet started.

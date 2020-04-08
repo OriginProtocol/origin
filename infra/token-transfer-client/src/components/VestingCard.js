@@ -1,22 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 import VestingBars from '@/components/VestingBars'
 import VestingHistory from '@/components/VestingHistory'
 import VestingSchedule from '@/assets/schedule@3x.png'
 
-const VestingCard = props => {
+const VestingCard = ({ isEmployee, user }) => {
+  const data = useContext(DataContext)
+
   return (
-    <BorderedCard shadowed={true} style={{ minHeight: '100%' }}>
-      <VestingBars
-        grants={props.grants}
-        user={props.user}
-        vested={props.vested}
-        unvested={props.unvested}
-        isLocked={props.isLocked}
-      />
-      {props.isLocked ? (
-        !props.isEmployee && (
+    <BorderedCard style={{ minHeight: '100%' }}>
+      <VestingBars user={user} />
+      {data.config.isLocked ? (
+        !isEmployee && (
           <>
             <h2>Revised Vesting Schedule</h2>
             <p>
@@ -27,11 +24,7 @@ const VestingCard = props => {
           </>
         )
       ) : (
-        <VestingHistory
-          grants={props.grants}
-          user={props.user}
-          isLocked={props.isLocked}
-        />
+        <VestingHistory user={user} />
       )}
     </BorderedCard>
   )

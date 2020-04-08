@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 
 const OtpExplain = () => {
   const [redirectTo, setRedirectTo] = useState(null)
@@ -13,7 +13,9 @@ const OtpExplain = () => {
   return (
     <div className="action-card">
       <h1>Set Up Google Authenticator</h1>
-      <img src={GoogleAuthenticatorIcon} />
+      <div className="mb-4 mx-auto" style={{ maxWidth: '150px' }}>
+        <GoogleAuthenticatorIcon width="100%" height="100%" />
+      </div>
       <p className="mb-3">
         Google Authenticator will generate a unique, time-sensitive security
         code you can use to secure your account.
@@ -30,7 +32,7 @@ const OtpExplain = () => {
         app installed.
       </p>
       <button
-        className="btn btn-secondary btn-lg mt-5"
+        className="btn btn-primary btn-lg mt-5"
         onClick={() => setRedirectTo('/otp/setup')}
       >
         <span>Continue</span>

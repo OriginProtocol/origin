@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { withRouter } from 'react-router'
-import { Switch } from 'react-router-dom'
+import { withRouter, Switch } from 'react-router-dom'
 
 import Modal from '@/components/Modal'
 import ScrollToTop from '@/components/ScrollToTop'

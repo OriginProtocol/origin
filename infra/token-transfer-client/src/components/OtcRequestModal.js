@@ -12,6 +12,7 @@ import {
 } from '@/reducers/otc'
 import Modal from '@/components/Modal'
 import SuccessIcon from '@/assets/success-icon.svg'
+import WhaleIcon from '@/assets/whale-icon.svg'
 
 class OtcRequestModal extends Component {
   constructor(props) {
@@ -98,70 +99,93 @@ class OtcRequestModal extends Component {
 
     return (
       <>
-        <h1 className="mb-2">Create OTC Request</h1>
-        <form onSubmit={this.handleFormSubmit}>
-          <p>
-            By submitting this OTC request, you grant Origin the right to share
-            your email address, phone number, and desired trade amount with one
-            or more OTC desk partners.
-          </p>
-          <div className="form-group">
-            <div className="btn-group btn-group-toggle" data-toggle="buttons">
-              <label
-                className={`btn btn-lg ${
-                  this.state.action === 'Buy'
-                    ? 'btn-secondary'
-                    : 'btn-outline-secondary'
-                }`}
-              >
-                <input
-                  type="radio"
-                  onClick={() => this.handleRadioClick('Buy')}
-                />{' '}
-                Buy
-              </label>
-              <label
-                className={`btn btn-lg ${
-                  this.state.action === 'Sell'
-                    ? 'btn-secondary'
-                    : 'btn-outline-secondary'
-                }`}
-              >
-                <input
-                  type="radio"
-                  autoComplete="off"
-                  onClick={() => this.handleRadioClick('Sell')}
-                />{' '}
-                Sell
-              </label>
-            </div>
+        <div className="row align-items-center mb-3 text-center text-sm-left">
+          <div className="d-none d-sm-block col-sm-2">
+            <WhaleIcon style={{ marginLeft: '-10px' }} />
           </div>
-          <div className="form-group">
-            <label htmlFor="amount">Amount of Tokens</label>
-            <div className="input-group">
-              <input {...input('amount')} type="number" />
-              <div className="input-group-append">
-                <span className="badge badge-secondary">OGN</span>
+          <div className="col">
+            <h1 className="my-2">Create OTC Request</h1>
+          </div>
+        </div>
+
+        <hr />
+
+        <form onSubmit={this.handleFormSubmit}>
+          <div className="col-12 col-sm-8 offset-sm-2">
+            <p>
+              By submitting this OTC request, you grant Origin the right to
+              share your email address, phone number, and desired trade amount
+              with one or more OTC desk partners.
+            </p>
+            <div className="form-group">
+              <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                <label
+                  className={`btn btn-lg ${
+                    this.state.action === 'Buy'
+                      ? 'btn-primary'
+                      : 'btn-outline-secondary'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    onClick={() => this.handleRadioClick('Buy')}
+                  />{' '}
+                  Buy
+                </label>
+                <label
+                  className={`btn btn-lg ${
+                    this.state.action === 'Sell'
+                      ? 'btn-primary'
+                      : 'btn-outline-secondary'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    autoComplete="off"
+                    onClick={() => this.handleRadioClick('Sell')}
+                  />{' '}
+                  Sell
+                </label>
               </div>
             </div>
-            <div className={this.state.amountError ? 'input-group-fix' : ''}>
-              {Feedback('amount')}
+            <div className="form-group">
+              <label htmlFor="amount">Amount of Tokens</label>
+              <div
+                className={`input-group ${
+                  this.state.amountError ? 'is-invalid' : ''
+                }`}
+              >
+                <input {...input('amount')} type="number" />
+                <div className="input-group-append">
+                  <span className="badge badge-secondary">OGN</span>
+                </div>
+              </div>
+              <div className={this.state.amountError ? 'input-group-fix' : ''}>
+                {Feedback('amount')}
+              </div>
             </div>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.otcIsAdding}
-          >
-            {this.props.otcIsAdding ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Submit Request</span>
-            )}
-          </button>
+          <div className="actions mt-5">
+            <div className="row">
+              <div className="col text-left d-none d-sm-block">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={this.handleModalClose}
+                >
+                  Cancel
+                </button>
+              </div>
+              <div className="col text-sm-right mb-3 mb-sm-0">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={this.props.otcIsAdding}
+                >
+                  {this.props.otcIsAdding ? 'Loading...' : 'Continue'}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </>
     )
@@ -171,16 +195,22 @@ class OtcRequestModal extends Component {
     return (
       <>
         <div className="my-3">
-          <img src={SuccessIcon} />
+          <SuccessIcon />
         </div>
         <h1 className="mb-2">Thank you!</h1>
         <p>Our OTC partner will be in touch.</p>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={this.props.onModalClose}
-        >
-          Done
-        </button>
+        <div className="actions mt-5">
+          <div className="row">
+            <div className="col text-right">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={this.props.onModalClose}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       </>
     )
   }

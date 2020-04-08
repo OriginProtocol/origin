@@ -1,105 +1,98 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { useContext } from 'react'
 import { withRouter } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import get from 'lodash.get'
 
 import enums from '@origin/token-transfer-server/src/enums'
 
-import { fetchAccounts } from '@/actions/account'
-import {
-  getAccounts,
-  getIsLoading as getAccountIsLoading
-} from '@/reducers/account'
-import { fetchGrants } from '@/actions/grant'
-import {
-  getGrants,
-  getIsLoading as getGrantIsLoading,
-  getTotals as getGrantTotals
-} from '@/reducers/grant'
-import { fetchTransfers } from '@/actions/transfer'
-import {
-  getTransfers,
-  getIsLoading as getTransferIsLoading,
-  getWithdrawnAmount
-} from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
-import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
+import { DataContext } from '@/providers/data'
 import EthAddress from '@/components/EthAddress'
 
-const WithdrawalHistory = props => {
-  useEffect(() => {
-    props.fetchAccounts(), props.fetchTransfers(), props.fetchGrants()
-  }, [])
+const WithdrawalHistory = ({ history }) => {
+  const data = useContext(DataContext)
 
-  if (
-    props.accountIsLoading ||
-    props.transferIsLoading ||
-    props.grantIsLoading
-  ) {
-    return (
-      <div className="spinner-grow" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    )
-  }
-
-  const isLocked = !unlockDate || moment.utc() < unlockDate
+  console.log(data)
 
   const accountNicknameMap = {}
-  props.accounts.forEach(account => {
+  data.accounts.forEach(account => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
   })
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h1>Withdrawal History</h1>
+      <div className="row align-items-center">
+        <div className="col-12 col-md-4">
+          <h1 className="mb-2">History</h1>
+        </div>
+        <div className="col-12 col-md-2 text-md-right">
+          <small>
+            <strong>Available </strong>
+            {data.config.isLocked
+              ? 0
+              : Number(data.totals.balance).toLocaleString()}{' '}
+            OGN
+          </small>
+        </div>
+        <div className="col-12 col-md-2 text-md-right">
+          <small>
+            <strong>Withdrawn </strong>
+            <span className="text-nowrap">
+              {Number(data.totals.withdrawn).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-2 text-md-right">
+          <small>
+            <strong>Unvested </strong>
+            <span className="text-nowrap">
+              {Number(data.totals.unvested).toLocaleString()} OGN
+            </span>
+          </small>
+        </div>
+        <div className="col-12 col-md-2 text-md-right">
+          <small>
+            <strong>Total purchase </strong>
+            <span className="text-nowrap">
+              {Number(data.totals.granted).toLocaleString()} OGN
+            </span>
+          </small>
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <WithdrawalHistoryCard
-            isLocked={isLocked}
-            withdrawnAmount={props.withdrawnAmount}
-            {...props.grantTotals}
-          />
-        </div>
-      </div>
+      <hr />
       <div className="row">
         <div className="col">
           <div className="table-responsive">
-            <table className="table table-clickable mt-4 mb-4">
+            <table className="table table-borderless table-card-rows table-clickable">
               <thead>
                 <tr>
-                  <th>Amount</th>
+                  <th>Withdrawal Amount</th>
                   <th>IP</th>
                   <th>Destination</th>
                   <th>Nickname</th>
                   <th>Time</th>
                   <th>Status</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                {props.transfers.length === 0 ? (
+                {data.transfers.length === 0 ? (
                   <tr>
                     <td className="table-empty-cell" colSpan="100%">
                       You have not made any withdrawals.
                     </td>
                   </tr>
                 ) : (
-                  props.transfers.map(transfer => (
+                  data.transfers.map(transfer => (
                     <tr
                       key={transfer.id}
                       className="hoverable"
-                      onClick={() =>
-                        props.history.push(`/withdrawal/${transfer.id}`)
-                      }
+                      onClick={() => history.push(`/withdrawal/${transfer.id}`)}
                     >
-                      <td>{Number(transfer.amount).toLocaleString()} OGN</td>
+                      <td className="pl-4">
+                        <strong>
+                          {Number(transfer.amount).toLocaleString()}
+                        </strong>{' '}
+                        <span className="ogn">OGN</span>
+                      </td>
                       <td>{get(transfer.data, 'ip', 'Unknown')}</td>
                       <td>
                         <EthAddress address={transfer.toAddress} />
@@ -117,12 +110,12 @@ const WithdrawalHistory = props => {
                             .utc()
                             .diff(moment(transfer.createdAt), 'minutes') > 5 ? (
                             <>
-                              <div className="status-circle mr-2"></div>
+                              <div className="status-circle bg-red mr-2"></div>
                               Expired
                             </>
                           ) : (
                             <>
-                              <div className="status-circle status-circle-warning mr-2"></div>
+                              <div className="status-circle bg-orange mr-2"></div>
                               Email Confirmation
                             </>
                           ))}
@@ -132,25 +125,25 @@ const WithdrawalHistory = props => {
                           enums.TransferStatuses.Processing
                         ].includes(transfer.status) && (
                           <>
-                            <div className="status-circle status-circle-warning mr-2"></div>
+                            <div className="status-circle bg-orange mr-2"></div>
                             Processing
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Paused && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Paused
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Success && (
                           <>
-                            <div className="status-circle status-circle-success mr-2"></div>
+                            <div className="status-circle bg-green mr-2"></div>
                             Confirmed
                           </>
                         )}
                         {transfer.status === enums.TransferStatuses.Failed && (
                           <>
-                            <div className="status-circle status-circle-error mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             Failed
                           </>
                         )}
@@ -159,12 +152,11 @@ const WithdrawalHistory = props => {
                           enums.TransferStatuses.Cancelled
                         ].includes(transfer.status) && (
                           <>
-                            <div className="status-circle mr-2"></div>
+                            <div className="status-circle bg-red mr-2"></div>
                             {transfer.status}
                           </>
                         )}
                       </td>
-                      <td>&rsaquo;</td>
                     </tr>
                   ))
                 )}
@@ -177,29 +169,4 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer, user }) => {
-  return {
-    accounts: getAccounts(account),
-    accountIsLoading: getAccountIsLoading(account),
-    grants: getGrants(grant),
-    grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(user.user, grant),
-    transfers: getTransfers(transfer),
-    transferIsLoading: getTransferIsLoading(transfer),
-    withdrawnAmount: getWithdrawnAmount(transfer)
-  }
-}
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      fetchAccounts: fetchAccounts,
-      fetchGrants: fetchGrants,
-      fetchTransfers: fetchTransfers
-    },
-    dispatch
-  )
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(WithdrawalHistory)
-)
+export default withRouter(WithdrawalHistory)

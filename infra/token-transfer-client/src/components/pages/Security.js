@@ -1,98 +1,77 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React, { useContext } from 'react'
 import get from 'lodash.get'
 
-import { fetchAccounts } from '@/actions/account'
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
-import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import AccountTable from '@/components/AccountTable'
 import SessionTable from '@/components/SessionTable'
 
-class Security extends Component {
-  constructor(props) {
-    super(props)
-  }
+const Security = ({ user }) => {
+  const data = useContext(DataContext)
 
-  componentDidMount() {
-    this.props.fetchAccounts()
-  }
+  return (
+    <>
+      <h1>Security</h1>
+      <div className="row mb-4">
+        <div className="col-xs-12 col-lg-6 mb-4">
+          <BorderedCard>
+            <div className="row">
+              <div className="col-xl-6">
+                <strong style={{ fontSize: '18px' }}>
+                  {get(user, 'email')}
+                </strong>
+              </div>
+              <div className="col-xl-6 text-xl-right">
+                <a
+                  href="mailto:investor-relations@originprotocol.com?subject=Change Investor Email"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Change Email
+                </a>
+              </div>
+            </div>
+          </BorderedCard>
+        </div>
 
-  renderLoading() {
-    return (
-      <div className="spinner-grow" role="status">
-        <span className="sr-only">Loading...</span>
+        <div className="col-xs-12 col-lg-6 mb-4">
+          <BorderedCard>
+            <div className="row">
+              <div
+                className="d-none d-md-block col-2"
+                style={{
+                  marginTop: '-20px',
+                  marginBottom: '-20px',
+                  maxHeight: '60px'
+                }}
+              >
+                <GoogleAuthenticatorIcon width="100%" height="100%" />
+              </div>
+              <div className="col-md-8">
+                <strong style={{ fontSize: '18px' }}>
+                  Google Authenticator
+                </strong>
+              </div>
+              <div className="col-md-2 text-md-right">
+                <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">
+                  Help
+                </a>
+              </div>
+            </div>
+          </BorderedCard>
+        </div>
       </div>
-    )
-  }
 
-  render() {
-    if (this.props.isLoading) {
-      return this.renderLoading()
-    }
+      <div className="mb-4">
+        <AccountTable accounts={data.accounts} />
+      </div>
 
-    return (
-      <>
-        <h1>Security</h1>
-        <div className="row mb-4">
-          <div className="col-xs-12 col-lg-6 mb-4">
-            <BorderedCard>
-              <div className="row">
-                <div className="col-xl-6">{get(this.props.user, 'email')}</div>
-                <div className="col-xl-6 text-xl-right">
-                  <a
-                    href="mailto:investor-relations@originprotocol.com?subject=Change Investor Email"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Change Email
-                  </a>
-                </div>
-              </div>
-            </BorderedCard>
-          </div>
-
-          <div className="col-xs-12 col-lg-6 mb-4">
-            <BorderedCard>
-              <div className="row">
-                <div
-                  className="d-none d-md-block col-md-2"
-                  style={{
-                    backgroundImage: `url(${GoogleAuthenticatorIcon})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    margin: '-20px -10px -20px 0'
-                  }}
-                ></div>
-                <div className="col-md-8">Google Authenticator</div>
-                <div className="col-md-2 text-md-right">
-                  <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">
-                    Help
-                  </a>
-                </div>
-              </div>
-            </BorderedCard>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <AccountTable />
-        </div>
-
-        <div className="mb-4">
-          <SessionTable />
-        </div>
-      </>
-    )
-  }
+      <div className="mb-4">
+        <SessionTable />
+      </div>
+    </>
+  )
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      fetchAccounts: fetchAccounts
-    },
-    dispatch
-  )
-
-export default connect(null, mapDispatchToProps)(Security)
+export default Security
