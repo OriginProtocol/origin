@@ -106,12 +106,10 @@ const VestingBars = ({ user }) => {
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
           // upper bound of 100
-          const complete = data.config.isLocked
-            ? 0
-            : Math.min(
-                ((now - grant.start) / (grant.end - grant.start)) * 100,
-                100
-              )
+          const complete = Math.min(
+            ((now - grant.start) / (grant.end - grant.start)) * 100,
+            100
+          )
           // Calculate the width of the grant relative to the width of the
           // total component
           const width = ((grant.end - grant.start) / totalDuration) * 100
