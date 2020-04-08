@@ -38,21 +38,41 @@
   text-decoration: none;
 }
 
+.pl-modal .btn-group .btn {
+  min-width: 0 !important;
+}
+
+.pl-modal .btn-group .btn {
+  border-radius: 10px;
+}
+
+.pl-modal .btn-group > .btn:not(:last-child):not(.dropdown-toggle),
+.pl-modal .btn-group > .btn-group:not(:last-child) > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.pl-modal .btn-group > .btn:not(:first-child),
+.pl-modal .btn-group > .btn-group:not(:first-child) > .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 .pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content {
   text-align: center;
   position: relative;
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  max-width: 600px;
+  max-width: 680px;
   border-radius: 10px;
   font-size: 18px;
   font-weight: normal;
-  background-color: white;
+  background-color: var(--bg-color);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   align-items: center;
-  color: black;
+  color: var(--text);
   padding: 2rem;
 }
 
@@ -254,24 +274,56 @@
   font-weight: normal;
 }
 
-.pl-modal-content .actions .btn {
-  margin: 0 0.5rem 1rem 0.5rem;
+.pl-modal-content .actions {
+  box-shadow: 0 -1px 0 0 var(--hr-color);
+  background-color: var(--highlight);
+  margin: 2rem -2rem -2rem -2rem;
+  padding: 1.5rem;
 }
 
-.pl-modal-content .actions {
-  margin-top: 2rem;
+.pl-modal-content .actions .btn {
+  margin: 0;
+}
+
+.pl-modal-content.blue-cta {
+  text-align: left !important;
+  background-color: var(--blue) !important;
+  color: white;
+  font-size: 24px !important;
+}
+
+.pl-modal-content.blue-cta > .bg-wrapper {
+  margin: -2rem;
+  background-image: url('../assets/tokens-background.svg');
+  background-position-y: bottom;
+  background-position-x: right;
+  background-repeat: no-repeat;
+}
+
+.pl-modal-content.blue-cta > .bg-wrapper > .row {
+  padding: 2rem;
+}
+
+.pl-modal-content.blue-cta h1 {
+  font-size: 58px;
+}
+
+.pl-modal-content.blue-cta .actions {
+  background-color: #0076f2;
 }
 
 .close {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
+  margin-top: 15px;
+  margin-right: 10px;
   width: 36px;
   height: 36px;
-  background-color: #dbe6eb;
+  background-color: var(--border-accent);
+  color: var(--text) !important;
   border-radius: 50%;
   text-shadow: none;
-  line-height: 35px;
+  line-height: 1.5 !important;
+  z-index: 2000;
+  text-align: center !important;
 }
 
 @media (max-width: 767.98px) {

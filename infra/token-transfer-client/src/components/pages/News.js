@@ -21,10 +21,11 @@ const News = props => {
 
   return (
     <div>
-      <h1>News</h1>
+      <h1 className="mb-2">News</h1>
+      <hr />
       <div className="row">
         {props.news.slice(0, 9).map(item => (
-          <div className="col-12 col-lg-6 col-xl-4" key={item.title}>
+          <div className="col-12 col-lg-6 col-xl-4 mb-10" key={item.title}>
             <NewsCard
               {...item}
               description={item.description.substr(0, 120) + '...'}

@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
+import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 import GrantDetail from '@/components/GrantDetail'
 
-const GrantDetailCard = props => {
+const GrantDetailCard = ({ user }) => {
+  const data = useContext(DataContext)
+
   return (
-    <BorderedCard shadowed={true}>
-      {props.grants.length > 0 ? (
-        <GrantDetail grants={props.grants} user={props.user} />
+    <BorderedCard>
+      {data.grants.length > 0 ? (
+        <GrantDetail grants={data.grants} user={user} />
       ) : (
         <div className="empty">You don&apos;t have any token grants</div>
       )}

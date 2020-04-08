@@ -10,7 +10,7 @@ const DropdownDotsToggle = React.forwardRef(({ onClick }, ref) => (
     }}
     className="dropdown-toggle-buttons"
   >
-    <span className="ml-2" style={{ fontWeight: 900, color: '#bdcbd5' }}>
+    <span className="text-dark" style={{ fontSize: '28px', fontWeight: 900 }}>
       &#8942;
     </span>
   </a>

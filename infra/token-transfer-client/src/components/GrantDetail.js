@@ -5,7 +5,7 @@ import get from 'lodash.get'
 import Swiper from 'react-id-swiper'
 import 'swiper/css/swiper.css'
 
-const GrantDetail = props => {
+const GrantDetail = ({ grants, user }) => {
   const swiperParams = {
     autoHeight: true,
     slidesPerView: 1,
@@ -16,21 +16,23 @@ const GrantDetail = props => {
     }
   }
 
-  const details = props.grants.map(grant => {
+  const details = grants.map(grant => {
     return (
       <div key={grant.id}>
         <div className="row mt-4 mb-2">
           <div className="col">
-            <strong>Investor</strong>
+            <span className="text-muted">Investor</span>
           </div>
-          <div className="col text-right">{get(props.user, 'name', '')}</div>
+          <div className="col font-weight-bold text-right">
+            {get(user, 'name', '')}
+          </div>
         </div>
         <div className="row mb-2">
           <div className="col">
-            <strong>Purchase Date</strong>
+            <span className="text-muted">Purchase Date</span>
           </div>
           {grant.purchaseDate && (
-            <div className="col text-right">
+            <div className="col font-weigbt-bold text-right">
               {moment(grant.purchaseDate)
                 .utc()
                 .format('LL')}
@@ -39,24 +41,25 @@ const GrantDetail = props => {
         </div>
         <div className="row mb-2">
           <div className="col">
-            <strong>Purchase Round</strong>
+            <span className="text-muted">Purchase Round</span>
           </div>
-          <div className="col text-right">{grant.purchaseRound}</div>
-        </div>
-        <div className="row mb-2">
-          <div className="col">
-            <strong>Total Purchase</strong>
-          </div>
-          <div className="col text-right">
-            {Number(grant.amount).toLocaleString()}{' '}
-            <span className="ogn">OGN</span>
+          <div className="col font-weight-bold text-right">
+            {grant.purchaseRound}
           </div>
         </div>
         <div className="row mb-2">
           <div className="col">
-            <strong>Investment Amount</strong>
+            <span className="text-muted">Total Purchase</span>
           </div>
-          <div className="col text-right">
+          <div className="col font-weight-bold text-right">
+            {Number(grant.amount).toLocaleString()} OGN
+          </div>
+        </div>
+        <div className="row mb-2">
+          <div className="col">
+            <span className="text-muted">Investment Amount</span>
+          </div>
+          <div className="col font-weight-bold  text-right">
             {'$' + Number(grant.investmentAmount).toLocaleString()}
           </div>
         </div>
@@ -67,7 +70,7 @@ const GrantDetail = props => {
   return (
     <>
       <h2 className="mb-2">Investment Details</h2>
-      <div className="table-card" style={{ fontSize: '14px' }}>
+      <div>
         {details.length > 1 ? (
           <Swiper {...swiperParams}>{details}</Swiper>
         ) : (
