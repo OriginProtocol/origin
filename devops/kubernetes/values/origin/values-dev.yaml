@@ -6,11 +6,11 @@ bridgeImageTag: 'e3253c1'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'f1c7113'
+dappImageTag: '2df1a66'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '4893ccf'
+ipfsProxyImageTag: '2df1a66'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -18,7 +18,7 @@ faucetImageTag: 'e05d00c'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '58f214a'
+eventlistenerImageTag: '2df1a66'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: 'b8cdfe7'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '81e0541'
+growthImageTag: '4e95559'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -55,27 +55,27 @@ cronImageTag: 'd4da76a'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '4893ccf'
+adminImageTag: '4e95559'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '1d2583c'
+relayerImageTag: '2df1a66'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '58f214a'
+graphqlImageTag: '2df1a66'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '9f6bb8a'
+t3ClientImageTag: '5aa7877'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '9f6bb8a'
+t3ServerImageTag: '2df1a66'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '4893ccf'
+authImageTag: '2df1a66'
 
 # origin-ipfs-issuer
 ipfsIssuerIp: '35.185.244.158'

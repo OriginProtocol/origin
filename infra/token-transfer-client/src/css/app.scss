@@ -1,6 +1,6 @@
-@import '~bootstrap/dist/css/bootstrap.css';
-@import '~typeface-lato';
-@import '~typeface-poppins';
+$grid-gutter-width: 10px;
+
+@import '~bootstrap/scss/bootstrap';
 @import 'navbar.css';
 @import 'modal.css';
 
@@ -69,10 +69,13 @@ hr {
   border-top-color: var(--hr-color);
 }
 
+.mb-10 {
+  margin-bottom: 10px;
+}
+
 #main {
   padding: 20px;
   width: 100%;
-  margin-bottom: 50px;
 }
 
 .logged-in, .not-logged-in {
@@ -97,12 +100,15 @@ hr {
  */
 @media (min-width: 768px) {
   #sidebar {
+    position: fixed;
+    height: 100%;
     width: 70px
   }
 
   #main {
     width: calc(100% - 70px);
     padding: 30px;
+    margin-left: 70px;
   }
 
   .logged-in {
@@ -229,6 +235,7 @@ input, select {
   padding: 35px 30px;
   border-radius: 10px;
   font-size: 14px;
+  height: 100%;
 }
 
 .card-wrapper.blue {
@@ -431,7 +438,8 @@ input, select {
 
 .popover {
   position: absolute;
-  z-index: 2;
+  background-color: var(--sidebar-bg-color);
+  color: var(--text);
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.29);
@@ -701,7 +709,7 @@ input, select {
 .hot-badge {
   position: absolute;
   top: 0px;
-  right: 15px;
+  right: 5px;
   color: white;
   padding: 2px 12px;
   font-size: 14px;

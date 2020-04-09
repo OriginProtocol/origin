@@ -10,6 +10,7 @@ import History from '@/assets/history-icon.svg'
 import News from '@/assets/news-icon.svg'
 import Security from '@/assets/security-icon.svg'
 import OLogo from '@/assets/0-rigin-logo.svg'
+import OriginLogo from '@/assets/origin-logo.svg'
 
 const Navigation = props => {
   const [redirectTo, setRedirectTo] = useState(null)
@@ -26,11 +27,16 @@ const Navigation = props => {
   return (
     <nav
       id="sidebar"
-      className={`navbar${props.expandSidebar ? ' expanded' : ''}`}
+      className={`${props.expandSidebar ? ' expanded' : ''}`}
       style={{ height: props.expandSidebar ? '100vh' : '' }}
     >
       <div className="nav-logo text-center">
-        <OLogo />
+        <div className="d-sm-none">
+          <OriginLogo />
+        </div>
+        <div className="d-none d-sm-block">
+          <OLogo />
+        </div>
       </div>
       <div
         className={`nav-icon d-md-none ${

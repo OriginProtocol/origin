@@ -26,7 +26,7 @@ const Dashboard = props => {
   const nextVest = getNextVest(data.grants, props.user)
   const hasLockups = data.lockups.length > 0
   const displayLockupCta =
-    data.config.earlyLockupsEnabled && !data.config.isLocked
+    nextVest && data.config.earlyLockupsEnabled && !data.config.isLocked
   const displayFullWidthLockupCta = displayLockupCta && hasLockups
   const isEarlyLockup = displayBonusModal === 'early'
 
@@ -67,8 +67,8 @@ const Dashboard = props => {
       {renderModals()}
 
       {displayFullWidthLockupCta && (
-        <div className="row">
-          <div className="col mb-4">
+        <div className="row small-gutter">
+          <div className="col mb-10">
             <BonusCta
               fullWidth={true}
               nextVest={nextVest}
@@ -82,15 +82,15 @@ const Dashboard = props => {
           </div>
         </div>
       )}
-      <div className="row">
-        <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-4`}>
+      <div className="row small-gutter">
+        <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-10`}>
           <BalanceCard
             onDisplayBonusModal={() => setDisplayBonusModal(true)}
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
         {displayLockupCta && !displayFullWidthLockupCta && (
-          <div className="col mb-4">
+          <div className="col mb-10">
             <BonusCta
               nextVest={nextVest}
               lockupBonusRate={
@@ -103,26 +103,26 @@ const Dashboard = props => {
           </div>
         )}
         {hasLockups && (
-          <div className="col mb-4">
+          <div className="col mb-10">
             <BonusCard onDisplayBonusModal={() => setDisplayBonusModal(true)} />
           </div>
         )}
       </div>
-      <div className="row">
-        <div className="col-12 col-xl-6 mb-4">
+      <div className="row small-gutter">
+        <div className="col col-xl-6 mb-10">
           <VestingCard user={props.user} isEmployee={isEmployee} />
         </div>
-        <div className="col-12 col-xl-6 mb-4">
-          <div>
+        <div className="col col-xl-6">
+          <div className="mb-10">
             <WithdrawalSummaryCard
               onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
             />
           </div>
-          <div className="mt-4">
+          <div className="mb-10">
             <NewsHeadlinesCard />
           </div>
           {!isEmployee && (
-            <div className="mt-4">
+            <div className="mb-10">
               <GrantDetailCard user={props.user} />
             </div>
           )}
