@@ -11,14 +11,12 @@ function useOrders() {
   useEffect(() => {
     async function fetchOrders() {
       setLoading(true)
-      const headers = new Headers({
-        authorization: `bearer ${config.backendAuthToken}`
-      })
-      const myRequest = new Request(`${config.backend}/orders`, {
+      const raw = await fetch(`${config.backend}/orders`, {
         credentials: 'include',
-        headers
+        headers: {
+          authorization: `bearer ${config.backendAuthToken}`
+        }
       })
-      const raw = await fetch(myRequest)
       const ordersRaw = await raw.json()
       const orders = ordersRaw.map(order => {
         return {

@@ -52,9 +52,10 @@ require('react-styl')(`
   .affiliates-header
     background-image: url(images/affiliate-header2.svg)
     background-repeat: no-repeat
-    height: 16rem
     width: 100%
     background-position: center bottom
+    padding-top: 35%
+    background-size: 100%;
   .affiliate-landing
     display: flex
     flex-direction: column

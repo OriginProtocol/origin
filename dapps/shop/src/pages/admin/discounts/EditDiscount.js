@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
-import { useStateValue } from 'data/state'
 
 const times = Array(48)
   .fill(0)
@@ -49,7 +48,6 @@ const AdminEditDiscount = () => {
   const { data: discount } = useRest(`/discounts/${discountId}`, {
     skip: discountId === 'new'
   })
-  const [{ admin }] = useStateValue()
   const [state, setStateRaw] = useState(defaultValues)
   const setState = newState => setStateRaw({ ...state, ...newState })
   useEffect(() => {
@@ -58,7 +56,9 @@ const AdminEditDiscount = () => {
         ...discount,
         endDateEnabled: discount.endTime ? true : false,
         startDate: dayjs(discount.startTime).format('YYYY-MM-DD'),
-        endDate: dayjs(discount.endTime).format('YYYY-MM-DD')
+        endDate: dayjs(discount.endTime).format('YYYY-MM-DD'),
+        startTime: dayjs(discount.startTime).format('HH:mm:ss'),
+        endTime: dayjs(discount.endTime).format('HH:mm:ss')
       })
     } else {
       setStateRaw(defaultValues)
@@ -85,17 +85,23 @@ const AdminEditDiscount = () => {
             if (discount && discount.id) {
               url += `/${discount.id}`
             }
-            const myRequest = new Request(url, {
+
+            const startTimeS = `${newState.startDate} ${newState.startTime}`
+            const endTimeS = `${newState.endDate} ${newState.endTime}`
+            const startTime = dayjs(startTimeS, 'YYYY-MM-DD HH:mm:ss').format()
+            const endTime = newState.endDateEnabled
+              ? dayjs(endTimeS, 'YYYY-MM-DD HH:mm:ss').format()
+              : null
+
+            const raw = await fetch(url, {
               headers,
               credentials: 'include',
               method: discount && discount.id ? 'PUT' : 'POST',
               body: JSON.stringify({
                 discountType: newState.discountType,
                 value: Number(newState.value),
-                startTime: dayjs(newState.startDate).format(),
-                endTime: newState.endDateEnabled
-                  ? dayjs(newState.endDate).format()
-                  : null,
+                startTime,
+                endTime,
                 code: newState.code,
                 status: newState.status,
                 maxUses: newState.maxUses ? Number(newState.maxUses) : null,
@@ -103,7 +109,6 @@ const AdminEditDiscount = () => {
                 excludeShipping: newState.excludeShipping ? true : false
               })
             })
-            const raw = await fetch(myRequest)
             if (raw.ok) {
               history.push({
                 pathname: '/admin/discounts',
@@ -268,12 +273,13 @@ const AdminEditDiscount = () => {
                     className="btn btn-danger ml-2"
                     onClick={async () => {
                       const headers = new Headers({
-                        authorization: admin,
+                        authorization: `bearer ${config.backendAuthToken}`,
                         'content-type': 'application/json'
                       })
                       const url = `${config.backend}/discounts/${discount.id}`
                       const myRequest = new Request(url, {
                         headers,
+                        credentials: 'include',
                         method: 'DELETE'
                       })
                       const raw = await fetch(myRequest)

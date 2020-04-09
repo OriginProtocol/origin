@@ -73,7 +73,16 @@ const Product = ({ history, location, match }) => {
     setState({ addedToCart: true })
     dispatch({
       type: 'addToCart',
-      item: { product, quantity: 1, variant: variant.id, price: variant.price }
+      item: {
+        title: product.title,
+        product: product.id,
+        quantity: 1,
+        variant: variant.id,
+        price: variant.price,
+        externalProductId: product.externalId,
+        externalVariantId: variant.externalId,
+        restrictShippingTo: product.restrictShippingTo
+      }
     })
   }
 
@@ -229,9 +238,7 @@ const Product = ({ history, location, match }) => {
               </>
             ) : variant ? (
               <button
-                onClick={() => {
-                  addToCart(productData.id, variant)
-                }}
+                onClick={() => addToCart(productData, variant)}
                 className={`btn btn-outline-primary${lg}`}
               >
                 {onSale ? 'Pre-Order' : 'Add to Cart'}

@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 
 import formatPrice from 'utils/formatPrice'
-import Paginate from 'components/Paginate'
+// import Paginate from 'components/Paginate'
 
 import useOrders from 'utils/useOrders'
 
@@ -25,7 +25,7 @@ const AdminOrders = () => {
         <AdminOrdersTable orders={orders} />
       )}
 
-      <Paginate total={orders.length} />
+      {/* <Paginate total={orders.length} /> */}
     </>
   )
 }
@@ -47,7 +47,7 @@ const AdminOrdersTable = ({ orders }) => {
       <tbody>
         {orders.map(order => (
           <tr
-            key={order.id}
+            key={order.orderId}
             onClick={() => {
               history.push(`/admin/orders/${order.orderId}`)
             }}
@@ -67,15 +67,23 @@ const AdminOrdersTable = ({ orders }) => {
 const AdminOrdersCSV = ({ orders }) => {
   const cols = ['Order', 'Date', 'Payment', 'Total', 'Customer'].join(',')
   const data = orders.reverse().map(order => {
-    return [
-      order.order_id,
-      dayjs(order.createdAt).format('MMM D h:mm A'),
-      order.data.paymentMethod.label,
-      (order.data.total / 100).toFixed(2),
-      `${order.data.userInfo.firstName} ${order.data.userInfo.lastName}`
-    ].join(',')
+    try {
+      return [
+        order.order_id,
+        dayjs(order.createdAt).format('MMM D h:mm A'),
+        get(order, 'data.paymentMethod.label'),
+        (order.data.total / 100).toFixed(2),
+        `${get(order, 'data.userInfo.firstName', '')} ${get(
+          order,
+          'data.userInfo.lastName',
+          ''
+        )}`
+      ].join(',')
+    } catch (e) {
+      /* Ignore */
+    }
   })
-  return <pre>{[cols, ...data].join('\n')}</pre>
+  return <pre>{[cols, ...data].filter(a => a).join('\n')}</pre>
 }
 
 export default AdminOrders

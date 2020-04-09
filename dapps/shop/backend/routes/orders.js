@@ -146,6 +146,26 @@ module.exports = function(app) {
 
     const { recipient, items } = req.body
 
+    const query = {
+      recipient: {
+        address1: recipient.address1,
+        city: recipient.city,
+        country_code: recipient.countryCode,
+        state_code: recipient.provinceCode,
+        zip: recipient.zip
+      },
+      items: items
+        .map(i => ({
+          quantity: i.quantity,
+          variant_id: i.variant
+        }))
+        .filter(i => i.variant_id)
+    }
+
+    if (!query.items.length) {
+      return res.json({ success: false })
+    }
+
     const shippingRatesResponse = await fetch(`${PrintfulURL}/shipping/rates`, {
       headers: {
         'content-type': 'application/json',
@@ -153,25 +173,10 @@ module.exports = function(app) {
       },
       credentials: 'include',
       method: 'POST',
-      body: JSON.stringify({
-        recipient: {
-          address1: recipient.address1,
-          city: recipient.city,
-          country_code: recipient.countryCode,
-          state_code: recipient.provinceCode,
-          zip: recipient.zip
-        },
-        items: items.map(i => {
-          return {
-            quantity: i.quantity,
-            variant_id: i.variant
-          }
-        })
-      })
+      body: JSON.stringify(query)
     })
     const json = await shippingRatesResponse.json()
     if (json.result) {
-      // console.log(json.result)
       res.json(
         json.result.map(rate => {
           const [, label] = rate.name.match(/^(.*) \((.*)\)/)

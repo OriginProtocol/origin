@@ -177,7 +177,7 @@ function getReducer(key) {
     } else if (action.type === 'setPasswordAuthed') {
       newState = set(newState, `passwordAuthed`, action.authed)
     } else if (action.type === 'logout') {
-      newState = set(newState, 'admin', '')
+      newState = set(newState, 'admin', null)
     } else if (action.type === 'updateInstructions') {
       newState = set(newState, 'cart.instructions', action.value)
     } else if (action.type === 'setDiscount') {

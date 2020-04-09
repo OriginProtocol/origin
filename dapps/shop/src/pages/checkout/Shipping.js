@@ -11,6 +11,10 @@ import Contact from './_Contact'
 import ShipTo from './_ShipTo'
 import BetaWarning from './_BetaWarning'
 
+function isActive(zone, cart) {
+  return get(cart, 'shipping.id') === zone.id ? 'active' : 'inactive'
+}
+
 const CheckoutShipping = () => {
   const { config } = useConfig()
   const [{ cart }, dispatch] = useStateValue()
@@ -26,6 +30,14 @@ const CheckoutShipping = () => {
     filteredShippingZones.push(defaultShippingZone)
   }
 
+  const unshippableItems = cart.items.filter(item => {
+    const restrictTo = get(item, 'restrictShippingTo', [])
+    if (!restrictTo.length) {
+      return false
+    }
+    return restrictTo.indexOf(countryCode) < 0
+  })
+
   useEffect(() => {
     const selected = get(cart, 'shipping.id')
     const hasSelected = filteredShippingZones.find(z => z.id === selected)
@@ -36,6 +48,8 @@ const CheckoutShipping = () => {
       }
     }
   }, [shippingZones.length])
+
+  const disabled = unshippableItems.length || !filteredShippingZones.length
 
   return (
     <div className="checkout-shipping">
@@ -58,35 +72,50 @@ const CheckoutShipping = () => {
         <b>Shipping Method</b>
       </div>
       <div className="checkout-payment-method">
-        {loading ? <div>Loading...</div> : null}
-        {filteredShippingZones.map(zone => (
-          <label
-            key={zone.id}
-            className={`radio ${
-              get(cart, 'shipping.id') === zone.id ? 'active' : 'inactive'
-            }`}
-          >
-            <input
-              type="radio"
-              name="shippingMethod"
-              checked={get(cart, 'shipping.id') === zone.id}
-              onChange={() => dispatch({ type: 'updateShipping', zone })}
-            />
-            <div>
-              <div>{zone.label}</div>
-              <div className="description">{zone.detail}</div>
-            </div>
-            <span className="ml-auto">
-              {zone.amount ? formatPrice(zone.amount) : 'Free'}
-            </span>
-          </label>
-        ))}
+        {unshippableItems.length ? (
+          <div>
+            {`Sorry, these items cannot be shipped to ${country}:`}
+            <ul className="mt-2">
+              {unshippableItems.map((item, idx) => (
+                <li key={idx}>{item.title}</li>
+              ))}
+            </ul>
+          </div>
+        ) : loading ? (
+          <div>Loading shipping costs...</div>
+        ) : !filteredShippingZones.length ? (
+          <div>Sorry, there was an error calculating shipping costs.</div>
+        ) : (
+          filteredShippingZones.map(zone => (
+            <label key={zone.id} className={`radio ${isActive(zone, cart)}`}>
+              <input
+                type="radio"
+                name="shippingMethod"
+                checked={get(cart, 'shipping.id') === zone.id}
+                onChange={() => dispatch({ type: 'updateShipping', zone })}
+              />
+              <div>
+                <div>{zone.label}</div>
+                <div className="description">{zone.detail}</div>
+              </div>
+              <span className="ml-auto">
+                {zone.amount ? formatPrice(zone.amount) : 'Free'}
+              </span>
+            </label>
+          ))
+        )}
       </div>
       <div className="actions">
         <Link to="/checkout">&laquo; Return to information</Link>
-        <Link to="/checkout/payment" className="btn btn-primary btn-lg">
-          Continue to payment
-        </Link>
+        {disabled ? (
+          <button className="btn btn-primary btn-lg disabled">
+            Continue to payment
+          </button>
+        ) : (
+          <Link to="/checkout/payment" className="btn btn-primary btn-lg">
+            Continue to payment
+          </Link>
+        )}
       </div>
 
       <BetaWarning />

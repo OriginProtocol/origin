@@ -33,7 +33,9 @@ function useShippingZones() {
           if (json.success !== false) {
             zones = json
           }
-        } else {
+        }
+
+        if (!zones.length) {
           const raw = await fetch(`${dataUrl()}shipping.json`)
           zones = await raw.json()
         }

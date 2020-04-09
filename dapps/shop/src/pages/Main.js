@@ -14,6 +14,7 @@ import MobileMenu from './_MobileMenu'
 import Products from './Products'
 import Product from './Product'
 import About from './About'
+import Footer from './_Footer'
 import Affiliates from './affiliates/Affiliates'
 import Cart from './cart/Cart'
 
@@ -42,25 +43,18 @@ const Content = () => {
   )
 
   return (
-    <>
-      <main>
-        {config.singleProduct ? (
-          Routes
-        ) : (
-          <div className="row">
-            <div className="col-md-3">
-              <Categories />
-            </div>
-            <div className="col-md-9">{Routes}</div>
+    <main>
+      {config.singleProduct ? (
+        Routes
+      ) : (
+        <div className="row">
+          <div className="col-md-3">
+            <Categories />
           </div>
-        )}
-      </main>
-      {!config.footer ? null : (
-        <div className="footer my-4 py-4">
-          <div dangerouslySetInnerHTML={{ __html: config.footer }} />
+          <div className="col-md-9">{Routes}</div>
         </div>
       )}
-    </>
+    </main>
   )
 }
 
@@ -73,21 +67,26 @@ const Main = () => {
   }
   if (isMobile) {
     return (
-      <div className="container">
-        <header>
-          <Link to="/" onClick={() => setMenu(false)}>
-            <h1>
-              {config.logo ? <img src={`${dataUrl()}${config.logo}`} /> : null}
-              {config.title}
-            </h1>
-          </Link>
-          <button className="btn" onClick={() => setMenu(!menu)}>
-            <Bars />
-          </button>
-        </header>
-        <MobileMenu open={menu} onClose={() => setMenu(false)} />
-        <Content />
-      </div>
+      <>
+        <div className="container">
+          <header>
+            <Link to="/" onClick={() => setMenu(false)}>
+              <h1>
+                {config.logo ? (
+                  <img src={`${dataUrl()}${config.logo}`} />
+                ) : null}
+                {config.title}
+              </h1>
+            </Link>
+            <button className="btn" onClick={() => setMenu(!menu)}>
+              <Bars />
+            </button>
+          </header>
+          <MobileMenu open={menu} onClose={() => setMenu(false)} />
+          <Content />
+        </div>
+        <Footer />
+      </>
     )
   }
   return (
@@ -107,6 +106,7 @@ const Main = () => {
         </header>
         <Content />
       </div>
+      <Footer />
     </>
   )
 }
@@ -136,12 +136,6 @@ require('react-styl')(`
   main
     min-height: 5rem
 
-  .footer
-    border-top: 1px solid #eee
-    font-size: 12px
-    .ul
-      text-decoration: underline
-
   .breadcrumbs
     margin-bottom: 1.5rem
     a,span
@@ -167,6 +161,4 @@ require('react-styl')(`
         svg,img
           width: 1.5rem
           margin-right: 0.75rem
-    .footer
-      text-align: center
 `)

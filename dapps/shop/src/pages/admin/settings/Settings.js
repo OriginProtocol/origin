@@ -3,6 +3,7 @@ import { NavLink, Switch, Route } from 'react-router-dom'
 
 import ServerSettings from './Server'
 import ClientSettings from './Client'
+import Users from './Users'
 
 const AdminSettings = () => {
   return (
@@ -19,10 +20,18 @@ const AdminSettings = () => {
             Client
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to={`/admin/settings/users`}>
+            Users
+          </NavLink>
+        </li>
       </ul>
       <Switch>
         <Route path="/admin/settings/client">
           <ClientSettings />
+        </Route>
+        <Route path="/admin/settings/users">
+          <Users />
         </Route>
         <Route>
           <ServerSettings />
