@@ -38,14 +38,14 @@ export const NETWORKS = [
     name: 'Mainnet',
     dappUrl: 'https://shoporigin.com/#/',
     provider:
-      'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
+      'https://eth-mainnet.alchemyapi.io/v2/snPxmbyVLjq1Sq32Z4pAal7FXwe941uf'
   },
   {
     id: 4,
     name: 'Rinkeby',
     dappUrl: 'https://dapp.staging.originprotocol.com/#/',
     provider:
-      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
+      'https://eth-rinkeby.alchemyapi.io/v2/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
   },
   {
     id: 2222,
