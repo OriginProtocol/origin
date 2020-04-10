@@ -24,15 +24,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
     nginx.ingress.kubernetes.io/proxy-buffering: "on"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_clear_headers "Server: ";
-      more_set_headers "X-Frame-Options: DENY";
-      more_set_headers "X-Content-Type-Options: nosniff";
-      more_set_headers "X-XSS-Protection: 1";
-      more_set_headers "Strict-Transport-Security: max-age=31536000";
-      more_set_headers "Expect-CT: max-age=86400";
-      more_set_headers "Feature-Policy: microphone 'none'";
-      more_set_headers "Content-Security-Policy: default-src https:";
 spec:
   tls:
     - secretName: {{ template "ipfs.host" . }}
