@@ -6,12 +6,12 @@ const Privacy = () => {
       Last updated: October 30th, 2019
       <br />
       <br />
-      This privacy policy (&quot;<b>Policy</b>&quot;) describes how Origin Protocol Labs
-      and its related companies (&quot;<b>Company</b>&quot;) collect, use and share
-      personal information of consumer users of this website, originprotocol.com
-      (the &quot;<b>Site</b>&quot;). This Policy also applies to any of our other websites
-      that post this Policy. This Policy does not apply to websites that post
-      different statements.
+      This privacy policy (&quot;<b>Policy</b>&quot;) describes how Origin
+      Protocol Labs and its related companies (&quot;<b>Company</b>&quot;)
+      collect, use and share personal information of consumer users of this
+      website, originprotocol.com (the &quot;<b>Site</b>&quot;). This Policy
+      also applies to any of our other websites that post this Policy. This
+      Policy does not apply to websites that post different statements.
       <h4>WHAT WE COLLECT</h4>
       We get information about you in a range of ways.
       <br />
@@ -32,13 +32,14 @@ const Privacy = () => {
       your use of and actions on our Site.
       <br />
       <br />
-      <b>Cookies.</b> We may log information using &quot;cookies.&quot; Cookies are small
-      data files stored on your hard drive by a website. We may use both session
-      Cookies (which expire once you close your web browser) and persistent
-      Cookies (which stay on your computer until you delete them) to provide you
-      with a more personal and interactive experience on our Site. This type of
-      information is collected to make the Site more useful to you and to tailor
-      the experience with us to meet your special interests and needs.
+      <b>Cookies.</b> We may log information using &quot;cookies.&quot; Cookies
+      are small data files stored on your hard drive by a website. We may use
+      both session Cookies (which expire once you close your web browser) and
+      persistent Cookies (which stay on your computer until you delete them) to
+      provide you with a more personal and interactive experience on our Site.
+      This type of information is collected to make the Site more useful to you
+      and to tailor the experience with us to meet your special interests and
+      needs.
       <br />
       <h4>USE OF PERSONAL INFORMATION</h4>
       We use your personal information as follows:
@@ -122,9 +123,9 @@ const Privacy = () => {
       own uses.
       <br />
       <h4>INFORMATION CHOICES AND CHANGES</h4>
-      Our marketing emails tell you how to &quot;opt-out.&quot; If you opt out, we may
-      still send you non-marketing emails. Non-marketing emails include emails
-      about your accounts and our business dealings with you.
+      Our marketing emails tell you how to &quot;opt-out.&quot; If you opt out,
+      we may still send you non-marketing emails. Non-marketing emails include
+      emails about your accounts and our business dealings with you.
       <br />
       You may send requests about personal information to our Contact
       Information below. You can request to change contact choices, opt-out of
