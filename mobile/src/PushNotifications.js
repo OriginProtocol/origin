@@ -168,8 +168,16 @@ class PushNotifications extends Component {
       notificationObj.url = notification.url
     }
 
+    const navParams = {
+      dappUrl: notificationObj.url
+    }
+
     // Popup notification in an alert
     if (notificationObj.title && notificationObj.body) {
+      if (notification.foreground && notification.finish) {
+        notification.finish()
+      }
+
       Alert.alert(notificationObj.title, notificationObj.body, [
         { text: 'Close' },
         {
@@ -192,17 +200,14 @@ class PushNotifications extends Component {
               console.debug('Change network for notification to: ', network)
               this.props.setNetwork(network)
             }
-            NavigationService.navigate('Marketplace', {
-              marketplaceUrl: notificationObj.url
-            })
+            console.debug('Notification network', network)
+            NavigationService.navigate('Marketplace', navParams)
           }
         }
       ])
     } else if (notificationObj.url) {
       // FCM notification received may only have the URL
-      NavigationService.navigate('Marketplace', {
-        marketplaceUrl: notificationObj.url
-      })
+      NavigationService.navigate('Marketplace', navParams)
     }
     // Save notification to redux in case we want to display them later
     this.props.addNotification(notificationObj)
