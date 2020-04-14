@@ -18,7 +18,7 @@ faucetImageTag: 'e05d00c'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7de03d3'
+eventlistenerImageTag: 'c305873'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -63,11 +63,11 @@ relayerImageTag: '7de03d3'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '7de03d3'
+graphqlImageTag: 'c305873'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '8f7f180'
+t3ClientImageTag: '3c311d8'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
