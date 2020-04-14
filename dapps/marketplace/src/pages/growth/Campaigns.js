@@ -337,6 +337,11 @@ class PastCampaigns extends Component {
                     <img className="mr-1" src="images/ogn-icon.svg" />
                     <div>{tokensEarned.toString()}</div>
                   </div>
+                  {campaign.rewardDetails && (
+                    <div className="total-earned-details mr-2">
+                      {campaign.rewardDetails}
+                    </div>
+                  )}
                 </div>
                 <ProgressBar
                   maxValue={maxProgressBarTokens}
@@ -709,6 +714,11 @@ require('react-styl')(`
         .total-earned img
           width: 20px
           height: 20px
+        .total-earned-details
+          margin-left: 18px
+          font-family: Lato
+          color: var(--dark)
+          font-weight: normal
   .growth-campaigns.mobile
     h1
       font-size: 24px

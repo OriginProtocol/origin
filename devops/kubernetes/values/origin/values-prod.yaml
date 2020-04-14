@@ -6,7 +6,7 @@ bridgeImageTag: '2a06e0e'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '97d7515'
+dappImageTag: 'f31f88f'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: '1268860'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '97d7515'
+eventlistenerImageTag: 'f31f88f'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: 'c1ee3c5'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '0c246a4'
+growthImageTag: 'f31f88f'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -55,21 +55,21 @@ linkingImageTag: 'a0d9e2f'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'fb2d5c9'
+cronImageTag: 'f31f88f'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '0c246a4'
+relayerImageTag: '346f915'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '97d7515'
+graphqlImageTag: 'f31f88f'
 
 ipfsLoadBalancerIP: 35.233.189.126
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '97d7515'
+t3ClientImageTag: 'f31f88f'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
