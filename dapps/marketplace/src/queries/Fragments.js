@@ -284,6 +284,7 @@ export default {
           amount
           currency
         }
+        rewardDetails
       }
     `
   }
