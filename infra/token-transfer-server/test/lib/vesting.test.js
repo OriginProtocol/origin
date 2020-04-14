@@ -12,12 +12,67 @@ const {
   vestedAmount,
   vestingSchedule
 } = require('../../src/lib/vesting')
+const { getNextVest } = require('../../src/shared')
 
 // Sets up clean database
 async function setupDatabase() {
   expect(process.env.NODE_ENV).to.equal('test')
   await sequelize.sync({ force: true })
 }
+
+describe('Utility functions', () => {
+  beforeEach(async () => {
+    await setupDatabase()
+    this.user = await User.create({
+      email: 'user+employee@originprotocol.com',
+      otpKey: '123',
+      otpVerified: true
+    })
+    this.grants = [
+      await Grant.create({
+        userId: this.user.id,
+        start: moment.utc(),
+        end: moment.utc().add(2, 'years'),
+        amount: 10000
+      })
+    ]
+  })
+
+  it('should get next vest', () => {
+    const nextVest = getNextVest(
+      this.grants.map(g => g.get({ plain: true })),
+      this.user
+    )
+
+    expect(nextVest.amount).to.be.bignumber.equal(1175)
+    expect(nextVest.vested).to.be.equal(false)
+    expect(nextVest.grantId).to.be.equal(this.grants[0].id)
+  })
+
+  it('should get next vest with multiple vests on the same day', async () => {
+    // Add another grant the same as the existing one
+    this.grants.push(
+      await Grant.create({
+        userId: this.user.id,
+        start: moment.utc(),
+        end: moment.utc().add(2, 'years'),
+        amount: 10000
+      })
+    )
+
+    const nextVest = getNextVest(
+      this.grants.map(g => g.get({ plain: true })),
+      this.user
+    )
+
+    expect(nextVest.amount).to.be.bignumber.equal(1175 * 2)
+    expect(nextVest.vested).to.be.equal(false)
+    expect(nextVest.grantId).to.deep.equal([
+      this.grants[0].id,
+      this.grants[1].id
+    ])
+  })
+})
 
 describe('Employee vesting', () => {
   describe('4 year grant with 1 year cliff', () => {
