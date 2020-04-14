@@ -45,7 +45,7 @@ const BonusCard = ({ onDisplayBonusModal }) => {
           <div className="mt-3 mb-2">
             <div>Earned</div>
             <strong style={{ fontSize: '24px' }}>
-              {Number(data.totals.allEarnings.toLocaleString())}
+              {Number(data.totals.allEarnings).toLocaleString()}
             </strong>{' '}
             <span className="ml-1 ogn">OGN</span>
           </div>
