@@ -67,7 +67,7 @@ relayerImageTag: '7ce7d9f'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '7ce7d9f'
+graphqlImageTag: '96f1a62'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
