@@ -3,6 +3,7 @@
 
 'use strict'
 
+const fs = require('fs')
 const Sequelize = require('sequelize')
 const Logger = require('logplease')
 
@@ -25,6 +26,9 @@ if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_FRAUD) {
   FraudEngine = require('../fraud/dev/engine')
   logger.info('Loaded DEV fraud engine.')
 }
+
+// Id of the March campaign in the prod DB.
+const march2020CampaignId = 13
 
 class VerifyEvents {
   constructor(config) {
@@ -54,6 +58,28 @@ class VerifyEvents {
     }
     // It is not a proxy address therefore it must be a wallet address.
     return address
+  }
+
+  // March specific. Remove for future payouts.
+  _loadMarchActiveBrowserExtensionData() {
+    logger.info('Loading March active browser extension data...')
+    this.activeBrowserExtensionByAddress = {}
+    const data = fs.readFileSync('./MarchActive.csv').toString()
+    const lines = data.split('\n')
+    for (const line of lines) {
+      if (!line.length) {
+        continue
+      }
+      const parts = line.split(',')
+      if (parts.length !== 2) {
+        throw new Error(`Invalid line in browser extension file: ${line}`)
+      }
+      const ethAddress = parts[1].trim().toLowerCase()
+      this.activeBrowserExtensionByAddress[ethAddress] = true
+    }
+    logger.info(
+      `Loaded ${lines.length} eth addresses with active browser extension`
+    )
   }
 
   async process() {
@@ -102,16 +128,32 @@ class VerifyEvents {
       }
 
       let status, data
-      const fraud = await this.fraudEngine.isFraudEvent(participant, event)
-      if (fraud) {
+      if (
+        campaign.id === march2020CampaignId &&
+        event.type === enums.GrowthEventTypes.BrowserExtensionInstalled &&
+        !this.activeBrowserExtensionByAddress[participant.ethAddress]
+      ) {
+        // March 2020 payout specific.
+        // Check if the user had an active browser extension and qualifies for the reward.
         status = enums.GrowthEventStatuses.Fraud
-        data = Object.assign(event.data || {}, { fraud })
+        data = Object.assign(event.data || {}, {
+          type: 'Fraudulent install',
+          reasons: ['Insufficient or fraudulent browser activity']
+        })
         this.stats.numFraud++
       } else {
-        status = enums.GrowthEventStatuses.Verified
-        data = event.data // No change to data.
-        this.stats.numVerified++
+        const fraud = await this.fraudEngine.isFraudEvent(participant, event)
+        if (fraud) {
+          status = enums.GrowthEventStatuses.Fraud
+          data = Object.assign(event.data || {}, { fraud })
+          this.stats.numFraud++
+        } else {
+          status = enums.GrowthEventStatuses.Verified
+          data = event.data // No change to data.
+          this.stats.numVerified++
+        }
       }
+
       if (this.config.persist) {
         await event.update({ status, data })
       } else {
@@ -145,6 +187,11 @@ if (require.main === module) {
   logger.info(config)
 
   const job = new VerifyEvents(config)
+
+  // Load March 2020 specific data.
+  if (Number(config.campaignId) === march2020CampaignId) {
+    job._loadMarchActiveBrowserExtensionData()
+  }
 
   job
     .process()
