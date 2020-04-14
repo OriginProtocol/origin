@@ -1,7 +1,12 @@
+const Sequelize = require('sequelize')
+
 const db = require('../models')
 const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
+
+const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
+
 // Maps rule Id -> Apollo action type.
 const ruleIdToActionType = {
   ProfilePublished: 'Profile',
@@ -39,6 +44,9 @@ const ruleIdToActionType = {
   PartnerReferral: 'PartnerReferral',
   BrowserExtensionInstall: 'BrowserExtensionInstall'
 }
+
+// Id of the March campaign in the prod DB.
+const march2020CampaignId = 13
 
 /**
  * Adapts data representing the state of a campaign rule into
@@ -202,6 +210,23 @@ const campaignToApolloObject = async (
     if (!payout) {
       // No payout was made to this account. Return 0 earnings.
       out.rewardEarned = { amount: '0', currency: campaign.currency }
+
+      // Additional explanation as to why there was no payout.
+      if (campaign.id === march2020CampaignId) {
+        // Check if the user installed the browser extension and the event was marked as Fraud.
+        const browserEvent = await db.GrowthEvent.findOne({
+          where: {
+            ethAddress: ethAddress,
+            type: enums.GrowthEventTypes.BrowserExtensionInstalled,
+            status: enums.GrowthEventStatuses.Fraud,
+            createdAt: { [Sequelize.Op.lt]: campaign.endDate }
+          }
+        })
+        if (browserEvent) {
+          out.rewardDetails =
+            'Browser extension activity insufficient to qualify for a reward.'
+        }
+      }
     } else {
       // Return payout made to the account.
       out.rewardEarned = { amount: payout.amount, currency: payout.currency }
