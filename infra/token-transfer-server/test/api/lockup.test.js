@@ -55,8 +55,7 @@ describe('Lockup HTTP API', () => {
         start: moment().subtract(4, 'years'),
         end: moment(),
         cliff: moment().subtract(3, 'years'),
-        amount: 100000,
-        interval: 'days'
+        amount: 100000
       }),
       // Vesting in the future
       await Grant.create({
@@ -64,8 +63,7 @@ describe('Lockup HTTP API', () => {
         start: moment().add(1, 'years'),
         end: moment().add(4, 'years'),
         cliff: moment().add(1, 'years'),
-        amount: 10000000,
-        interval: 'days'
+        amount: 10000000
       })
     ]
 
@@ -141,17 +139,51 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1000,
+        amount: 600000, // Full amount possible, first investor vest is 6%
         early: true,
         code: totp.gen(this.otpKey)
       })
-      .expect(201)
 
+    expect(Number(response.body.amount)).to.equal(600000)
     expect(Number(response.body.bonusRate)).to.equal(earlyLockupBonusRate)
 
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
     ).to.equal(1)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+  })
+
+  it('should add a early lockup using multiple vests occurring on same day', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+
+    // Add another grant with the same parameters as the grant being used for
+    // the next vest tests, which will mean there are multiple vests on the same
+    // day
+    this.grants.push(
+      await Grant.create({
+        userId: this.grants[1].userId,
+        start: this.grants[1].start,
+        end: this.grants[1].end,
+        amount: this.grants[1].amount
+      })
+    )
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 600000 * 2, // Full amount possible
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+
+    expect(Number(response.body.amount)).to.equal(600000 * 2)
+    expect(Number(response.body.bonusRate)).to.equal(earlyLockupBonusRate)
 
     // Check an email was sent with the confirmation token
     expect(sendStub.called).to.equal(true)
@@ -194,7 +226,7 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
-  it('should not add a lockup if lockup enabled var is false', async () => {
+  it('should not add a lockup if flag is false', async () => {
     const lockupsEnabledFake = sinon.fake.returns(false)
     lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
 
@@ -205,56 +237,6 @@ describe('Lockup HTTP API', () => {
         code: totp.gen(this.otpKey)
       })
       .expect(404)
-  })
-
-  it('should not add a early lockup if early lockup enabled is false', async () => {
-    const lockupsEnabledFake = sinon.fake.returns(false)
-    lockupController.__Rewire__('getLockupsEnabled', lockupsEnabledFake)
-
-    await request(this.mockApp)
-      .post('/api/lockups')
-      .send({
-        amount: 100,
-        early: true,
-        code: totp.gen(this.otpKey)
-      })
-      .expect(404)
-  })
-
-  it('should not add a early lockup if total early lockups exceed next vest amount', async () => {
-    const sendStub = sinon.stub(sendgridMail, 'send')
-
-    // Lockup the same size as the first vesting event
-    const response = await request(this.mockApp)
-      .post('/api/lockups')
-      .send({
-        amount: 600000,
-        early: true,
-        code: totp.gen(this.otpKey)
-      })
-      .expect(201)
-
-    await Lockup.update(
-      { confirmed: true },
-      { where: { id: response.body.id } }
-    )
-
-    const failedResponse = await request(this.mockApp)
-      .post('/api/lockups')
-      .send({
-        amount: 100,
-        early: true,
-        code: totp.gen(this.otpKey)
-      })
-      .expect(422)
-
-    expect(failedResponse.text).to.match(
-      /Amount of 100 OGN exceeds the 0 available for early lockup/
-    )
-
-    // Check an email was sent with the confirmation token
-    expect(sendStub.called).to.equal(true)
-    sendStub.restore()
   })
 
   it('should allow adding a lockup if early lockup exists with combined lockup amounts greater than balance', async () => {
@@ -294,7 +276,7 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
-  it('should not add a early lockup if early lockup flag is disabled', async () => {
+  it('should not add a early lockup if flag is disabled', async () => {
     const earlyLockupsEnabledFake = sinon.fake.returns(false)
     lockupController.__Rewire__(
       'getEarlyLockupsEnabled',
@@ -599,6 +581,42 @@ describe('Lockup HTTP API', () => {
       .post('/api/lockups')
       .send({
         amount: 600000,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+  })
+
+  it('should not add an early lockup if not enough tokens in multiple same day next vest', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+
+    // Add another grant with the same parameters as the grant being used for
+    // the next vest tests, which will mean there are multiple vests on the same
+    // day
+    this.grants.push(
+      await Grant.create({
+        userId: this.grants[1].userId,
+        start: this.grants[1].start,
+        end: this.grants[1].end,
+        amount: this.grants[1].amount
+      })
+    )
+
+    // Small lockup which should succeed
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        early: true,
+        code: totp.gen(this.otpKey)
+      })
+
+    // Lockup the same size as the first vesting event
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 600000 * 2, // Full amount from combined same day next vests
         early: true,
         code: totp.gen(this.otpKey)
       })
