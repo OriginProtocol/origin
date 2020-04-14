@@ -12,7 +12,6 @@ const _discoveryModels = require('@origin/discovery/src/models')
 const _identityModels = require('@origin/identity/src/models')
 const _growthModels = require('../models')
 const db = { ..._discoveryModels, ..._identityModels, ..._growthModels }
-const { GrowthEventTypes } = require('@origin/growth-shared/src/enums')
 
 const parseArgv = require('../util/args')
 
@@ -131,7 +130,7 @@ class VerifyEvents {
       let status, data
       if (
         campaign.id === march2020CampaignId &&
-        event.type === GrowthEventTypes.BrowserExtensionInstalled &&
+        event.type === enums.GrowthEventTypes.BrowserExtensionInstalled &&
         !this.activeBrowserExtensionByAddress[participant.ethAddress]
       ) {
         // March 2020 payout specific.
