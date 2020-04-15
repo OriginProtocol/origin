@@ -25,8 +25,11 @@ const Growth$FbtEnum = {
   'growth.dec2019.short_name': 'December 2019',
   'growth.jan2020.name': 'January 2020 Campaign',
   'growth.jan2020.short_name': 'January 2020',
+  'growth.feb2020.name': 'February 2020 Campaign',
   'growth.feb2020.short_name': 'February 2020',
+  'growth.mar2020.name': 'March 2020 Campaign',
   'growth.mar2020.short_name': 'March 2020',
+  'growth.apr2020.name': 'April 2020 Campaign',
   'growth.apr2020.short_name': 'April 2020',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
