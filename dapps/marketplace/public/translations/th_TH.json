@@ -104,7 +104,7 @@
   "2idJzM": "ไอคอน Metamask ตั้งอยู่ที่ด้านบนขวาของแถบเครื่องมือเบราว์เซอร์ของคุณ",
   "32hLtQ": "ขอแสดงความยินดี! ตอนนี้คุณสามารถส่งข้อความถึงผู้ใช้คนอื่นบน Origin และติดตามข่าวสารเกี่ยวกับการซื้อและการขายทั้งหมดของคุณ",
   "AACIs": "คุณทำเสร็จแล้วและสามารถดำเนินการต่อได้โดยกดปุ่มด้านล่าง",
-  "2D2wro": {
+  "BJGtC": {
     "growth.jan2019.name": "แคมเปญมกราคม 2562",
     "growth.jan2019.short_name": "ม.ค. 2019",
     "growth.feb2019.name": "แคมเปญกุมภาพันธ์ 2019",
@@ -131,8 +131,11 @@
     "growth.dec2019.short_name": "December 2019",
     "growth.jan2020.name": "January 2020 Campaign",
     "growth.jan2020.short_name": "January 2020",
+    "growth.feb2020.name": "February 2020 Campaign",
     "growth.feb2020.short_name": "February 2020",
+    "growth.mar2020.name": "March 2020 Campaign",
     "growth.mar2020.short_name": "March 2020",
+    "growth.apr2020.name": "April 2020 Campaign",
     "growth.apr2020.short_name": "April 2020",
     "growth.profile.and.email.requirement": "ยืนยันอีเมลและโปรไฟล์ Origin แล้ว",
     "growth.two.attestations.requirement": "การตรวจสอบสามโปรไฟล์",

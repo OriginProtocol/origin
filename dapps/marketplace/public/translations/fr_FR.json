@@ -104,7 +104,7 @@
   "2idJzM": "L'icône Metamask est située en haut à droite de la barre d'outils de votre navigateur.",
   "32hLtQ": "Toutes nos félicitations! Vous pouvez désormais envoyer des messages aux autres utilisateurs sur Origin et rester à jour de tous vos achats et ventes.",
   "AACIs": "Vous avez terminé et vous pouvez continuer en appuyant sur le bouton ci-dessous.",
-  "2D2wro": {
+  "BJGtC": {
     "growth.jan2019.name": "Campagne de janvier 2019",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Campagne de février 2019",
@@ -131,9 +131,12 @@
     "growth.dec2019.short_name": "Décembre 2019",
     "growth.jan2020.name": "Campagne de janvier 2020",
     "growth.jan2020.short_name": "Janvier 2020",
+    "growth.feb2020.name": "February 2020 Campaign",
     "growth.feb2020.short_name": "Février 2020",
+    "growth.mar2020.name": "March 2020 Campaign",
     "growth.mar2020.short_name": "Mars 2020",
-    "growth.apr2020.short_name": "April 2020",
+    "growth.apr2020.name": "April 2020 Campaign",
+    "growth.apr2020.short_name": "Avril 2020",
     "growth.profile.and.email.requirement": "Email vérifié et profile sur Origin",
     "growth.two.attestations.requirement": "Trois vérifications de profil",
     "growth.three.attestations.requirement": "Quatre vérifications de profil",

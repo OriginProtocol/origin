@@ -176,7 +176,33 @@ function getNextVest(grants, user) {
   const sortedUnvested = allGrantVestingSchedule
     .filter(v => !v.vested)
     .sort((a, b) => a.date - b.date)
-  return sortedUnvested.length > 0 ? sortedUnvested[0] : null
+
+  // No next vest
+  if (sortedUnvested.length === 0) return null
+
+  // Check if there a multiple vests happening on the same day to handle the
+  // case where users have multiple grants starting at the same time.
+  // Note that the client displays vests on the same day as the sum of those
+  // vests in the vesting history card
+  const sameDay = sortedUnvested.filter(v =>
+    v.date.isSame(sortedUnvested[0].date, 'day')
+  )
+
+  // Only one vest happening on the day of the next vest
+  if (sameDay.length === 1) return sameDay[0]
+
+  // Multiple vests, combine them into one so they can all be locked up
+  return {
+    // Dates are the same
+    date: sortedUnvested[0].date,
+    // List of grant ids
+    grantId: sameDay.map(s => s.grantId),
+    // Sum the vest amounts
+    amount: sameDay.reduce((total, vest) => {
+      return total.plus(BigNumber(vest.amount))
+    }, BigNumber(0)),
+    vested: false
+  }
 }
 
 /** Calculate the amount of tokens that have been withdrawn or are in flight in

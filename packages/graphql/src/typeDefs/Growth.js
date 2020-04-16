@@ -198,6 +198,7 @@ module.exports = `
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
     rewardEarned: GrowthPrice      # amount earned all actions combined
+    rewardDetails: String          # Optional details about the reward payout. 
   }
 
   type GrowthCampaignConnection {

@@ -102,6 +102,15 @@ http {
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
+
+      more_clear_headers "Server: ";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1";
+      more_set_headers "Strict-Transport-Security: max-age=31536000";
+      more_set_headers "Expect-CT: max-age=86400";
+      more_set_headers "Feature-Policy: microphone 'none'";
+      more_set_headers "Content-Security-Policy: default-src https: 'unsafe-inline' 'unsafe-eval'";
     }
   }
 }
