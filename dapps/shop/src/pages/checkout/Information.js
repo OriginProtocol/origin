@@ -97,7 +97,11 @@ const CheckoutInfo = () => {
             </div>
           </div>
           <div className="form-group col-md-6">
-            <input type="tel" placeholder="Mobile phone (optional)" {...input('phone')} />
+            <input
+              type="tel"
+              placeholder="Mobile phone (optional)"
+              {...input('phone')}
+            />
             {Feedback('phone')}
           </div>
         </div>
