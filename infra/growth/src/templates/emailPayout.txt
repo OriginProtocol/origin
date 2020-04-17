@@ -1,8 +1,3 @@
-Congratulations! You've received ${amount} Origin Tokens (OGN) from our recent February Origin Rewards campaign. The tokens were sent to ${ethAddress}, which you can verify on Etherscan ${txLink}
+Congratulations! You've received ${amount} Origin Tokens (OGN) from our recent March Origin Rewards campaign. The tokens were sent to ${ethAddress}, which you can verify on Etherscan ${txLink}
 
 We are thrilled to have you engage and grow with our broader Origin community. Thank you for participating in our monthly Origin Rewards campaign. 
-
-But don't stop there! Install the New Origin Browser Extension today and be the first to learn about new Origin’s experiments. Download the Origin browser extension and earn 15 Origin Tokens (OGN).
-
-Read more about the March Origin Rewards campaign:
-https://medium.com/originprotocol/install-the-new-origin-browser-extension-to-earn-ogn-d3f0cd30ea8d

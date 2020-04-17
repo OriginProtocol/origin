@@ -26,9 +26,10 @@ if (require.main === module && process.stdin.isTTY) {
   const [address] = process.argv.slice(2)
   console.log('from: ', address)
 
-  const web3 = new Web3(
-    'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
-  )
+  if (!process.env.PROVIDER_URL) {
+    throw new Error('PROVIDER_URL env var not set')
+  }
+  const web3 = new Web3(process.env.PROVIDER_URL)
 
   const ProxyFactory = new web3.eth.Contract(
     ProxyFactoryContract.abi,
