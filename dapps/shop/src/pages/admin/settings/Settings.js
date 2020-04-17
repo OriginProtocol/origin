@@ -11,13 +11,13 @@ const AdminSettings = () => {
       <h3>Settings</h3>
       <ul className="nav nav-tabs mt-3">
         <li className="nav-item">
-          <NavLink className="nav-link" to="/admin/settings" exact>
-            Server
+          <NavLink className="nav-link" to={`/admin/settings`} exact>
+            Client
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to={`/admin/settings/client`}>
-            Client
+          <NavLink className="nav-link" to="/admin/settings/server" exact>
+            Server
           </NavLink>
         </li>
         <li className="nav-item">
@@ -27,14 +27,14 @@ const AdminSettings = () => {
         </li>
       </ul>
       <Switch>
-        <Route path="/admin/settings/client">
-          <ClientSettings />
-        </Route>
         <Route path="/admin/settings/users">
           <Users />
         </Route>
-        <Route>
+        <Route path="/admin/settings/server">
           <ServerSettings />
+        </Route>
+        <Route>
+          <ClientSettings />
         </Route>
       </Switch>
     </>

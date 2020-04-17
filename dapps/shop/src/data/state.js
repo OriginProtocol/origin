@@ -85,16 +85,20 @@ function getReducer(key) {
     fbTrack(state, action)
     let newState = cloneDeep(state)
     if (action.type === 'addToCart') {
-      const { product, variant } = action.item
-      const existing = state.cart.items.findIndex(
+      const { product, variant, maxQuantity } = action.item
+      const existingIdx = state.cart.items.findIndex(
         i => i.product === product && i.variant === variant
       )
-      if (existing >= 0) {
-        const quantity = get(newState, `cart.items[${existing}].quantity`)
+      if (existingIdx >= 0) {
+        const quantity = get(newState, `cart.items[${existingIdx}].quantity`)
+        let newQuantity = quantity + 1
+        if (maxQuantity && newQuantity > maxQuantity) {
+          newQuantity = maxQuantity
+        }
         newState = set(
           newState,
-          `cart.items[${existing}].quantity`,
-          quantity + 1
+          `cart.items[${existingIdx}].quantity`,
+          newQuantity
         )
       } else {
         const lastIdx = state.cart.items.length
@@ -142,6 +146,7 @@ function getReducer(key) {
         'email',
         'firstName',
         'lastName',
+        'phone',
         'address1',
         'address2',
         'city',

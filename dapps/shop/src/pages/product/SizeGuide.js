@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SizeGuide = ({ product }) => {
+const SizeGuide = ({ product, wide }) => {
   if (!product || !product.sizeGuide) {
     return null
   }
@@ -13,9 +13,18 @@ const SizeGuide = ({ product }) => {
   const sizes = product.sizeGuide.sizes.filter(
     s => productSizes.indexOf(s.size) >= 0
   )
+  // console.log(sizes.length, wide)
+
+  if (!data.measurements.length) {
+    return null
+  } else if (wide && data.measurements.length <= 4) {
+    return null
+  } else if (!wide && data.measurements.length > 4) {
+    return null
+  }
 
   return (
-    <div className="size-guide">
+    <div className="size-guide table-responsive">
       <table className="table table-sm">
         <thead>
           <tr>

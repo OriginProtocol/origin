@@ -7,6 +7,7 @@ import Link from 'components/Link'
 
 import Products from './Products'
 import Collections from './Collections'
+import Dashboard from './Dashboard'
 import Orders from './Orders'
 import Discounts from './discounts/Discounts'
 import EditDiscount from './discounts/EditDiscount'
@@ -57,6 +58,13 @@ const Admin = () => {
           <h3>&nbsp;</h3>
           <div className="categories">
             <ul className="list-unstyled">
+              <li
+                className={
+                  pathname.indexOf('/admin/dashboard') === 0 ? 'active' : ''
+                }
+              >
+                <Link to="/admin/dashboard">Dashboard</Link>
+              </li>
               <li
                 className={
                   pathname.indexOf('/admin/orders') === 0 ? 'active' : ''
@@ -127,7 +135,8 @@ const Admin = () => {
             <Route path="/admin/events" component={Events} />
             <Route path="/admin/orders/:id" component={Order} />
             <Route path="/admin/orders" component={Orders} />
-            <Redirect to="/admin/orders" />
+            <Route path="/admin/dashboard" component={Dashboard} />
+            <Redirect to="/admin/dashboard" />
           </Switch>
         </div>
       </div>

@@ -128,6 +128,7 @@ async function start() {
   await writeProductData({ OutputDir })
   await downloadPrintfulMockups({ OutputDir })
   await resizePrintfulMockups({ OutputDir })
+
   // await matchPrintfulToExisting({ OutputDir })
   // await writeInternalData({ OutputDir })
   // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })

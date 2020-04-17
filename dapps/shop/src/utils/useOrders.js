@@ -6,6 +6,7 @@ import sortBy from 'lodash/sortBy'
 function useOrders() {
   const { config } = useConfig()
   const [loading, setLoading] = useState(false)
+  const [shouldReload, setReload] = useState(1)
   const [{ orders }, dispatch] = useStateValue()
 
   useEffect(() => {
@@ -32,12 +33,11 @@ function useOrders() {
 
       dispatch({ type: 'setOrders', orders: sortedOrders })
     }
-    if (!orders.length) {
-      fetchOrders()
-    }
-  }, [])
 
-  return { orders, loading }
+    fetchOrders()
+  }, [shouldReload])
+
+  return { orders, loading, reload: () => setReload(shouldReload + 1) }
 }
 
 export default useOrders

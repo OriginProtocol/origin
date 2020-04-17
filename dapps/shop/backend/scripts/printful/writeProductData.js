@@ -13,7 +13,7 @@ async function writeProductData({ OutputDir }) {
   } catch (e) {
     /* Ignore */
   }
-  let productsOut = []
+  let productsOut = existingProducts.filter(p => p.keep)
   const downloadImages = []
   const allImages = {}
   const printfulIds = {}
@@ -79,8 +79,8 @@ async function writeProductData({ OutputDir }) {
             file,
             url: img.preview_url
           })
-          allImages[img.preview_url] = file
-          images.push(file)
+          allImages[img.preview_url] = file.replace('.png', '.jpg')
+          images.push(file.replace('.png', '.jpg'))
         }
         variantImages[idx] = allImages[img.preview_url]
       }
@@ -152,9 +152,9 @@ async function writeProductData({ OutputDir }) {
 
   // Keep original products.json order
   const existingProductSlugs = existingProducts.map(p => p.id)
-  const existingProductExternalIds = existingProducts.map(p => p.externalId).filter(i => i)
-  console.log(existingProductSlugs)
-  console.log(existingProductExternalIds)
+  const existingProductExternalIds = existingProducts
+    .map(p => p.externalId)
+    .filter(i => i)
 
   if (existingProductSlugs.length) {
     productsOut = sortBy(productsOut, p => {

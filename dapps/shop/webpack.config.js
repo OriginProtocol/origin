@@ -154,6 +154,7 @@ const webpackConfig = {
       analytics: process.env.ANALYTICS,
       fbPixel: process.env.FB,
       title: siteConfig.fullTitle,
+      metaDescription: siteConfig.metaDescription,
       dataDir:
         process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
       absolute

@@ -10,6 +10,8 @@ const AdminOrderDetails = ({ cart }) => {
     return <div>Loading...</div>
   }
 
+  const phone = get(cart, 'userInfo.phone')
+
   return (
     <div className="checkout">
       <div className="checkout-confirmation">
@@ -18,6 +20,7 @@ const AdminOrderDetails = ({ cart }) => {
             <div className="col-md-6">
               <h5>Contact information</h5>
               <div className="value">{get(cart, 'userInfo.email')}</div>
+              {!phone ? null : <div className="value">{`Phone: ${phone}`}</div>}
             </div>
             <div className="col-md-6">
               <h5>Payment method</h5>
@@ -36,7 +39,10 @@ const AdminOrderDetails = ({ cart }) => {
             <div className="col-md-6">
               <h5>Billing address</h5>
               <div className="value">
-                {formatAddress(cart.userInfo).map((line, idx) => (
+                {formatAddress(
+                  cart.userInfo,
+                  cart.userInfo.billingDifferent ? 'billing' : null
+                ).map((line, idx) => (
                   <div key={idx}>{line}</div>
                 ))}
               </div>

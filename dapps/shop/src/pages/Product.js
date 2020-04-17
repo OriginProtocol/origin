@@ -81,7 +81,8 @@ const Product = ({ history, location, match }) => {
         price: variant.price,
         externalProductId: product.externalId,
         externalVariantId: variant.externalId,
-        restrictShippingTo: product.restrictShippingTo
+        restrictShippingTo: product.restrictShippingTo,
+        maxQuantity: product.maxQuantity
       }
     })
   }
@@ -253,9 +254,10 @@ const Product = ({ history, location, match }) => {
             className="mt-4 description"
             dangerouslySetInnerHTML={{ __html: productData.description }}
           />
-          <SizeGuide product={productData} />
+          <SizeGuide product={productData} wide={false} />
         </div>
       </div>
+      <SizeGuide product={productData} wide={true} />
       {!productData.descriptionLong ? null : (
         <div
           className="mt-4"

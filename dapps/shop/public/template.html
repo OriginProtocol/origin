@@ -7,6 +7,9 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no">
   <meta http-equiv="Content-Language" content="en">
+  <% if (htmlWebpackPlugin.options.metaDescription) { %>
+  <meta name="description" content="<%= htmlWebpackPlugin.options.metaDescription %>">
+  <% } %>
 
   <% if (htmlWebpackPlugin.options.analytics) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.analytics %>"></script>

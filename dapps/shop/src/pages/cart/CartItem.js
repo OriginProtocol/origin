@@ -22,6 +22,9 @@ const CartItem = ({ item }) => {
     variant = product
   }
 
+  const maxQuantity = product.maxQuantity || 10
+  const quantities = Array.from(Array(maxQuantity)).map((i, idx) => idx + 1)
+
   return (
     <>
       <div className="pic">
@@ -59,25 +62,22 @@ const CartItem = ({ item }) => {
       </div>
       <div className="price">{formatPrice(variant.price)}</div>
       <div className="quantity">
-        <select
-          className="form-control"
-          value={item.quantity}
-          onChange={e => {
-            const quantity = Number(e.target.value)
-            dispatch({ type: 'updateCartQuantity', item, quantity })
-          }}
-        >
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-          <option>6</option>
-          <option>7</option>
-          <option>8</option>
-          <option>9</option>
-          <option>10</option>
-        </select>
+        {quantities.length === 1 ? (
+          quantities[0]
+        ) : (
+          <select
+            className="form-control"
+            value={item.quantity}
+            onChange={e => {
+              const quantity = Number(e.target.value)
+              dispatch({ type: 'updateCartQuantity', item, quantity })
+            }}
+          >
+            {quantities.map(q => (
+              <option key={q}>{q}</option>
+            ))}
+          </select>
+        )}
       </div>
       <div className="total">{formatPrice(item.quantity * variant.price)}</div>
     </>

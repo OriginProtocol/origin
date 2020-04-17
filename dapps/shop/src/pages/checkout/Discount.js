@@ -17,6 +17,9 @@ const OrderDiscount = ({ cart }) => {
       className="discount"
       onSubmit={async e => {
         e.preventDefault()
+        if (!code) {
+          return
+        }
         const res = await fetch(`${config.backend}/check-discount`, {
           method: 'POST',
           headers: {
@@ -41,9 +44,17 @@ const OrderDiscount = ({ cart }) => {
           className="form-control"
           placeholder="Discount code"
           value={code}
-          onChange={e => setCode(e.target.value)}
+          onChange={e => {
+            setCode(e.target.value)
+            if (!e.target.value) {
+              setError(false)
+            }
+          }}
         />
-        <button type="submit" className="btn btn-primary ml-2">
+        <button
+          type="submit"
+          className={`btn btn-${code ? 'primary' : 'secondary'} ml-2`}
+        >
           Apply
         </button>
       </div>
