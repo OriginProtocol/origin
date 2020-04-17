@@ -560,8 +560,7 @@ class GrowthInvite extends Component {
               className={`invites-subtitle ${isMobile ? 'text-center' : ''}`}
             >
               <fbt desc="RewardInvite.getOgnByGettingFriendsToSignUp">
-                Invite friends and earn Origin Tokens when they sign up and
-                create profiles.
+                Invite friends.
               </fbt>
             </div>
           </div>
