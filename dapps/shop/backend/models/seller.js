@@ -2,15 +2,9 @@ module.exports = (sequelize, DataTypes) => {
   const Seller = sequelize.define(
     'Seller',
     {
-      name: {
-        type: DataTypes.STRING
-      },
-      email: {
-        type: DataTypes.STRING
-      },
-      password: {
-        type: DataTypes.STRING
-      }
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING
     },
     {
       underscored: true,
@@ -19,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Seller.associate = function(models) {
-    Seller.hasMany(models.Shop, { as: 'shops' })
+    Seller.belongsToMany(models.Shop, { through: models.SellerShop })
   }
 
   return Seller

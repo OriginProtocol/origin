@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import useConfig from 'utils/useConfig'
 import useIsMobile from 'utils/useIsMobile'
-import Modal from 'components/Modal'
+import Modal from 'components/custom/ModalMug'
 
 const CreateMug = () => {
   const { config } = useConfig()

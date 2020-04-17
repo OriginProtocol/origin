@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import get from 'lodash/get'
 
+import useConfig from 'utils/useConfig'
 import useCollections from 'utils/useCollections'
 import Link from 'components/Link'
 import SocialLinks from 'components/SocialLinks'
@@ -15,9 +16,11 @@ const Item = ({ id, children, active, onClick }) => (
 )
 
 const Categories = () => {
+  const { config } = useConfig()
   const { collections } = useCollections()
   const match = useRouteMatch('/collections/:collection')
   const aboutMatch = useRouteMatch('/about')
+  const affiliateMatch = useRouteMatch('/affiliate')
   const active = get(match, 'params.collection')
 
   return (
@@ -31,6 +34,11 @@ const Categories = () => {
         <li className={`db ${aboutMatch ? 'active' : ''}`}>
           <Link to="/about">About</Link>
         </li>
+        {!config.affiliates ? null : (
+          <li className={`${affiliateMatch ? 'active' : ''}`}>
+            <Link to="/affiliates">Affiliates</Link>
+          </li>
+        )}
       </ul>
       <SocialLinks />
     </div>

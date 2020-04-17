@@ -6,19 +6,18 @@ import sortBy from 'lodash/sortBy'
 function useOrders() {
   const { config } = useConfig()
   const [loading, setLoading] = useState(false)
+  const [shouldReload, setReload] = useState(1)
   const [{ orders }, dispatch] = useStateValue()
 
   useEffect(() => {
     async function fetchOrders() {
       setLoading(true)
-      const headers = new Headers({
-        authorization: `bearer ${config.backendAuthToken}`
-      })
-      const myRequest = new Request(`${config.backend}/orders`, {
+      const raw = await fetch(`${config.backend}/orders`, {
         credentials: 'include',
-        headers
+        headers: {
+          authorization: `bearer ${config.backendAuthToken}`
+        }
       })
-      const raw = await fetch(myRequest)
       const ordersRaw = await raw.json()
       const orders = ordersRaw.map(order => {
         return {
@@ -34,12 +33,11 @@ function useOrders() {
 
       dispatch({ type: 'setOrders', orders: sortedOrders })
     }
-    if (!orders.length) {
-      fetchOrders()
-    }
-  }, [])
 
-  return { orders, loading }
+    fetchOrders()
+  }, [shouldReload])
+
+  return { orders, loading, reload: () => setReload(shouldReload + 1) }
 }
 
 export default useOrders

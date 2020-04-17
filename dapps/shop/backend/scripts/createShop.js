@@ -13,7 +13,7 @@ const { createSeller, findSeller, authSeller } = require('../utils/sellers')
 const { createShop } = require('../utils/shop')
 const createListing = require('../utils/createListing')
 const encryptedConfig = require('../utils/encryptedConfig')
-const { Network, Shop } = require('../models')
+const { Network, Shop, SellerShop } = require('../models')
 
 const downloadProductData = require('./printful/downloadProductData')
 const downloadPrintfulMockups = require('./printful/downloadPrintfulMockups')
@@ -245,6 +245,16 @@ async function go() {
 
   console.log(`Created shop ${shopResponse.shop.id}`)
   await encryptedConfig.assign(shopResponse.shop.id, config)
+  console.log(`Assigned config OK`)
+
+  const role = 'admin'
+  await SellerShop.create({
+    sellerId: seller.id,
+    shopId: shopResponse.shop.id,
+    role
+  })
+  console.log(`Added role OK`)
+
   // console.log(`Public PGP Key:`)
   // console.log(JSON.stringify(pgpPublicKey).replace(/\\r/g, ''))
 

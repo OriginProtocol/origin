@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink, useRouteMatch, Switch, Route } from 'react-router-dom'
 
 import useOrder from 'utils/useOrder'
+import { useStateValue } from 'data/state'
 
 import OrderDetails from './Details'
 import Printful from './Printful'
@@ -10,6 +11,7 @@ const AdminOrder = () => {
   const match = useRouteMatch('/admin/orders/:orderId/:tab?')
   const { orderId } = match.params
   const { order, loading } = useOrder(orderId)
+  const [{ admin }] = useStateValue()
   const urlPrefix = `/admin/orders/${orderId}`
 
   if (loading) {
@@ -28,16 +30,20 @@ const AdminOrder = () => {
             Details
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to={`${urlPrefix}/printful`}>
-            Printful
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to={`${urlPrefix}/payment`}>
-            Payment
-          </NavLink>
-        </li>
+        {admin.role !== 'admin' ? null : (
+          <li className="nav-item">
+            <NavLink className="nav-link" to={`${urlPrefix}/printful`}>
+              Printful
+            </NavLink>
+          </li>
+        )}
+        {admin.role !== 'admin' ? null : (
+          <li className="nav-item">
+            <NavLink className="nav-link" to={`${urlPrefix}/payment`}>
+              Payment
+            </NavLink>
+          </li>
+        )}
       </ul>
       <Switch>
         <Route path={`${urlPrefix}/printful`}>

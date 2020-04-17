@@ -1,19 +1,28 @@
 const omit = require('lodash/omit')
-const { Seller, Shop } = require('../models')
-const { checkPassword, authShop } = require('./_auth')
+const { Seller, Shop, SellerShop } = require('../models')
+const {
+  checkPassword,
+  authShop,
+  authSellerAndShop,
+  authRole
+} = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const { IS_PROD } = require('../utils/const')
 const encConf = require('../utils/encryptedConfig')
-const { authSellerAndShop } = require('./_auth')
 const { validateConfig, validateShop } = require('../utils/validators')
+const get = require('lodash/get')
 
 module.exports = function(app) {
-  app.get('/auth', (req, res) => {
+  app.get('/auth', authSellerAndShop, (req, res) => {
     if (!req.session.sellerId) {
       return res.json({ success: false })
     }
     Seller.findOne({ where: { id: req.session.sellerId } }).then(seller => {
-      res.json({ success: true, email: seller.email })
+      res.json({
+        success: true,
+        email: seller.email,
+        role: req.sellerShop.role
+      })
     })
   })
 
@@ -24,19 +33,31 @@ module.exports = function(app) {
     return res.sendStatus(seller === null ? 404 : 204)
   })
 
-  app.post('/auth/login', async (req, res) => {
-    const seller = await Seller.findOne({ where: { email: req.body.email } })
-    if (!seller) {
-      return res.status(404).send({ success: false })
+  app.post(
+    '/auth/login',
+    async (req, res, next) => {
+      const seller = await Seller.findOne({ where: { email: req.body.email } })
+      if (!seller) {
+        return res.status(404).send({ success: false })
+      }
+      const check = await checkPassword(req.body.password, seller.password)
+      if (check === true) {
+        req.session.sellerId = seller.id
+        req.seller = seller
+        next()
+      } else {
+        next()
+      }
+    },
+    authSellerAndShop,
+    (req, res) => {
+      res.json({
+        success: true,
+        email: req.seller.email,
+        role: req.sellerShop.role
+      })
     }
-    const check = await checkPassword(req.body.password, seller.password)
-    if (check === true) {
-      req.session.sellerId = seller.id
-      res.json({ success: true })
-    } else {
-      res.json({ success: false })
-    }
-  })
+  )
 
   const logoutHandler = (req, res) => {
     if (req.session.sellerId) {
@@ -83,6 +104,35 @@ module.exports = function(app) {
     res.json({ success: false, destroy })
   })
 
+  app.get(
+    '/shop/users',
+    authSellerAndShop,
+    authRole('admin'),
+    async (req, res) => {
+      const users = await Seller.findAll({
+        attributes: ['id', 'name', 'email'],
+        include: {
+          model: Shop,
+          attributes: ['id'],
+          through: { attributes: ['role'] },
+          where: { id: req.shop.id }
+        }
+      })
+
+      res.json({
+        success: true,
+        users: users.map(user => {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: get(user, 'Shops[0].SellerShop.role')
+          }
+        })
+      })
+    }
+  )
+
   app.get('/shop', async (req, res) => {
     const { sellerId } = req.session
 
@@ -126,54 +176,99 @@ module.exports = function(app) {
     res.json({ success: true, shop })
   })
 
-  app.delete('/shop', authSellerAndShop, async (req, res) => {
-    await Shop.destroy({
-      where: {
-        id: req.body.id,
-        sellerId: req.session.sellerId
-      }
-    })
-    res.json({ success: true })
-  })
+  app.post(
+    '/shop/add-user',
+    authSellerAndShop,
+    authRole('admin'),
+    async (req, res, next) => {
+      const { seller, status, error } = await createSeller(req.body)
 
-  app.get('/config', authSellerAndShop, async (req, res) => {
+      if (error) {
+        return res.status(status).json({ success: false, message: error })
+      }
+
+      if (!seller) {
+        return res.json({ success: false })
+      }
+
+      SellerShop.create({
+        sellerId: seller.id,
+        shopId: req.shop.id,
+        role: req.body.role
+      })
+        .then(() => {
+          res.json({ success: true })
+        })
+        .catch(err => {
+          console.error(err)
+          next(err)
+        })
+    }
+  )
+
+  app.delete(
+    '/shop',
+    authSellerAndShop,
+    authRole('admin'),
+    async (req, res) => {
+      await Shop.destroy({
+        where: {
+          id: req.body.id,
+          sellerId: req.session.sellerId
+        }
+      })
+      res.json({ success: true })
+    }
+  )
+
+  app.get('/config', authSellerAndShop, authRole('admin'), async (req, res) => {
     const config = await encConf.dump(req.shop.id)
     return res.json({ success: true, config })
   })
 
-  app.post('/config', authSellerAndShop, async (req, res) => {
-    const config = req.body
+  app.post(
+    '/config',
+    authSellerAndShop,
+    authRole('admin'),
+    async (req, res) => {
+      const config = req.body
 
-    if (!validateConfig(config)) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Invalid config data' })
+      if (!validateConfig(config)) {
+        return res
+          .status(400)
+          .json({ success: false, message: 'Invalid config data' })
+      }
+
+      await encConf.assign(req.shop.id, config)
+      return res.json({ success: true })
     }
+  )
 
-    await encConf.assign(req.shop.id, config)
-    return res.json({ success: true })
-  })
+  app.get(
+    '/config/dump',
+    authSellerAndShop,
+    authRole('admin'),
+    async (req, res) => {
+      if (!req.session.sellerId) {
+        return res.json({ success: false })
+      }
+      const { id } = req.shop
 
-  app.get('/config/dump', authSellerAndShop, async (req, res) => {
-    if (!req.session.sellerId) {
-      return res.json({ success: false })
+      // Testing only
+      if (IS_PROD) return res.sendStatus(404)
+
+      const shop = await Shop.findOne({
+        where: { id, sellerId: req.session.sellerId }
+      })
+
+      if (!shop) {
+        return res.status(404)
+      }
+
+      const config = await encConf.dump(id)
+      return res.json({ success: true, config })
     }
-    const { id } = req.shop
-
-    // Testing only
-    if (IS_PROD) return res.sendStatus(404)
-
-    const shop = await Shop.findOne({
-      where: { id, sellerId: req.session.sellerId }
-    })
-
-    if (!shop) {
-      return res.status(404)
-    }
-
-    const config = await encConf.dump(id)
-    return res.json({ success: true, config })
-  })
+  )
 
   app.get('/password', authShop, async (req, res) => {
     const password = await encConf.get(req.shop.id, 'password')

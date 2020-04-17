@@ -1,4 +1,5 @@
 const fs = require('fs')
+const sharp = require('sharp')
 const https = require('https')
 
 async function downloadPrintfulMockups({ OutputDir }) {
@@ -9,12 +10,19 @@ async function downloadPrintfulMockups({ OutputDir }) {
   for (const file of files) {
     const prefix = `${OutputDir}/data/${file.id}/orig`
     fs.mkdirSync(prefix, { recursive: true })
-    await new Promise(resolve => {
-      const f = fs
-        .createWriteStream(`${prefix}/${file.file}`)
-        .on('finish', resolve)
-      https.get(file.url, response => response.pipe(f))
-    })
+    const filename = `${prefix}/${file.file}`
+    const filenameOut = filename.replace('.png', '.jpg')
+    if (!fs.existsSync(filenameOut)) {
+      await new Promise(resolve => {
+        const f = fs.createWriteStream(filename).on('finish', resolve)
+        https.get(file.url, response => response.pipe(f))
+      })
+      const resizedFile = await sharp(filename)
+        .jpeg()
+        .toBuffer()
+      fs.writeFileSync(filenameOut, resizedFile)
+      fs.unlinkSync(filename)
+    }
   }
 }
 

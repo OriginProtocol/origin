@@ -78,7 +78,6 @@ require('react-styl')(`
         &:last-of-type
           border-bottom: 0
       .search
-        margin: 0 auto
-        width: 115px
+        margin: 0 5px 0 calc(50% - 50px)
 
 `)
