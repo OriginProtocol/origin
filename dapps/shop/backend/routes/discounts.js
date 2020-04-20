@@ -3,13 +3,14 @@ const { authShop, authSellerAndShop } = require('./_auth')
 
 module.exports = function(app) {
   app.post('/check-discount', authShop, async (req, res) => {
+    const code = req.body.code
     const discounts = await Discount.findAll({
       where: {
         [Sequelize.Op.and]: [
           { status: 'active' },
           Sequelize.where(
             Sequelize.fn('lower', Sequelize.col('code')),
-            Sequelize.fn('lower', req.body.code)
+            Sequelize.fn('lower', code)
           )
         ],
         shopId: req.shop.id
@@ -70,7 +71,7 @@ module.exports = function(app) {
     const discount = await Discount.findOne({
       where: {
         id: req.params.id,
-        shopId: req.shopId
+        shopId: req.shop.id
       }
     })
 

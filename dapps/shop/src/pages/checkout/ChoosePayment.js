@@ -82,7 +82,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   const [loading, setLoading] = useState(false)
   const [upholdCard, setUpholdCard] = useState()
   const [paymentReq, setPaymentReq] = useState()
-  const [{ cart }, dispatch] = useStateValue()
+  const [{ cart, referrer }, dispatch] = useStateValue()
   const [approveOfferTx, setApproveOfferTx] = useState()
   const [auth, setAuth] = useState()
   const [offerTx, setOfferTx] = useState()
@@ -167,7 +167,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
       setLoading(true)
       setSubmit(false)
 
-      const encryptedData = await addData(cart, config)
+      const encryptedData = await addData({ ...cart, referrer }, config)
       const { auth, hash } = encryptedData
 
       if (paymentMethod === 'stripe') {
@@ -375,6 +375,10 @@ const CreditCardForm = injectStripe(({ stripe }) => {
                 style={{ base: { fontSize: '16px', lineHeight: '24px' } }}
               />
               {Feedback('card')}
+              <img
+                src="images/powered_by_stripe.svg"
+                className="ml-auto mt-2"
+              />
             </div>
           </div>
         )}

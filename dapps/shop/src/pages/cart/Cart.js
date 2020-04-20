@@ -21,12 +21,8 @@ const CartItems = () => {
         <div className="th price">Price</div>
         <div className="th quantity">Quantity</div>
         <div className="th total">Total</div>
-        {cart.items.map((item, idx) => (
-          <CartItem
-            key={`${item.product}-${item.variant}`}
-            item={item}
-            idx={idx}
-          />
+        {cart.items.map(item => (
+          <CartItem key={`${item.product}-${item.variant}`} item={item} />
         ))}
       </div>
       <div className="row mt-4">

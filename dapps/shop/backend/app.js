@@ -67,8 +67,10 @@ app.use((err, req, res, next) => {
 })
 
 require('./routes/auth')(app)
+require('./routes/affiliate')(app)
 require('./routes/uphold')(app)
 require('./routes/orders')(app)
+require('./routes/printful')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
 require('./routes/tx')(app)

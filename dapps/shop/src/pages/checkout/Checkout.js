@@ -57,7 +57,7 @@ const Checkout = () => {
             </div>
 
             <div className="order-summary-wrap">
-              <Summary cart={cart} discountForm={true} />
+              <Summary cart={cart} discountForm={true} donationForm={true} />
             </div>
           </div>
         </Elements>
@@ -121,7 +121,7 @@ require('react-styl')(`
         .toggle-order-summary
           display: flex
           justify-content: space-between
-          .toggle
+          .txt
             color: #1990c6
           .icon-caret
             fill: #1990c6

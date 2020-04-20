@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const { PASSWORD_SALT_ROUNDS } = require('../utils/const')
+const get = require('lodash/get')
 
-const { Shop } = require('../models')
+const { Shop, Seller } = require('../models')
 
 async function createSalt() {
   return await bcrypt.genSalt(PASSWORD_SALT_ROUNDS)
@@ -13,6 +14,15 @@ async function hashPassword(salt, password) {
 
 async function checkPassword(password, passwordHash) {
   return await bcrypt.compare(password, passwordHash)
+}
+
+function authRole(role) {
+  return function(req, res, next) {
+    if (req.sellerShop.role !== role) {
+      return res.json({ success: false, error: 'Unauthorized' })
+    }
+    next()
+  }
 }
 
 async function authSellerAndShop(req, res, next) {
@@ -28,12 +38,17 @@ async function authSellerAndShop(req, res, next) {
     return res.status(401).json({ success: false, message: 'No auth token' })
   }
 
-  Shop.findOne({ where: { sellerId, authToken } }).then(shop => {
+  Shop.findOne({
+    include: { model: Seller, where: { id: sellerId } },
+    where: { authToken }
+  }).then(shop => {
     if (!shop) {
-      return res.status(401).json({ success: false, message: 'Shop not found' })
+      return res.status(401).json({ success: false, message: 'Unauthorized' })
     }
 
     req.shop = shop
+    req.sellerShop = get(shop, 'Sellers[0].SellerShop.dataValues')
+
     next()
   })
 }
@@ -59,5 +74,6 @@ module.exports = {
   hashPassword,
   checkPassword,
   authShop,
-  authSellerAndShop
+  authSellerAndShop,
+  authRole
 }

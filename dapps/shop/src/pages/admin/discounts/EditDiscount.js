@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
-import { useStateValue } from 'data/state'
 
 const times = Array(48)
   .fill(0)
@@ -49,7 +48,6 @@ const AdminEditDiscount = () => {
   const { data: discount } = useRest(`/discounts/${discountId}`, {
     skip: discountId === 'new'
   })
-  const [{ admin }] = useStateValue()
   const [state, setStateRaw] = useState(defaultValues)
   const setState = newState => setStateRaw({ ...state, ...newState })
   useEffect(() => {
@@ -58,7 +56,9 @@ const AdminEditDiscount = () => {
         ...discount,
         endDateEnabled: discount.endTime ? true : false,
         startDate: dayjs(discount.startTime).format('YYYY-MM-DD'),
-        endDate: dayjs(discount.endTime).format('YYYY-MM-DD')
+        endDate: dayjs(discount.endTime).format('YYYY-MM-DD'),
+        startTime: dayjs(discount.startTime).format('HH:mm:ss'),
+        endTime: dayjs(discount.endTime).format('HH:mm:ss')
       })
     } else {
       setStateRaw(defaultValues)
@@ -67,35 +67,41 @@ const AdminEditDiscount = () => {
 
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
+  const title = `${discountId === 'new' ? 'Create' : 'Edit'} Discount`
 
   return (
     <>
-      <h3>{`${discountId === 'new' ? 'Create' : 'Edit'} Discount`}</h3>
+      <h3 className="mb-3">{title}</h3>
       <form
         onSubmit={async e => {
           e.preventDefault()
           const { valid, newState } = validate(state)
           setState(newState)
           if (valid) {
-            const headers = new Headers({
-              authorization: `bearer ${config.backendAuthToken}`,
-              'content-type': 'application/json'
-            })
             let url = `${config.backend}/discounts`
             if (discount && discount.id) {
               url += `/${discount.id}`
             }
-            const myRequest = new Request(url, {
-              headers,
+
+            const startTimeS = `${newState.startDate} ${newState.startTime}`
+            const endTimeS = `${newState.endDate} ${newState.endTime}`
+            const startTime = dayjs(startTimeS, 'YYYY-MM-DD HH:mm:ss').format()
+            const endTime = newState.endDateEnabled
+              ? dayjs(endTimeS, 'YYYY-MM-DD HH:mm:ss').format()
+              : null
+
+            const raw = await fetch(url, {
+              headers: {
+                authorization: `bearer ${config.backendAuthToken}`,
+                'content-type': 'application/json'
+              },
               credentials: 'include',
               method: discount && discount.id ? 'PUT' : 'POST',
               body: JSON.stringify({
                 discountType: newState.discountType,
                 value: Number(newState.value),
-                startTime: dayjs(newState.startDate).format(),
-                endTime: newState.endDateEnabled
-                  ? dayjs(newState.endDate).format()
-                  : null,
+                startTime,
+                endTime,
                 code: newState.code,
                 status: newState.status,
                 maxUses: newState.maxUses ? Number(newState.maxUses) : null,
@@ -103,7 +109,6 @@ const AdminEditDiscount = () => {
                 excludeShipping: newState.excludeShipping ? true : false
               })
             })
-            const raw = await fetch(myRequest)
             if (raw.ok) {
               history.push({
                 pathname: '/admin/discounts',
@@ -115,62 +120,66 @@ const AdminEditDiscount = () => {
           }
         }}
       >
-        <div className="form-group" style={{ maxWidth: '15rem' }}>
-          <label>Discount Code</label>
-          <input type="code" {...input('code')} />
-          {Feedback('code')}
-        </div>
-        <div className="form-group" style={{ maxWidth: '15rem' }}>
-          <label>Status</label>
-          <select {...input('status')}>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-          {Feedback('status')}
-        </div>
-        <div className="form-group">
-          <label>Type</label>
-          <div className="form-check">
-            <label className="form-check-label">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="type"
-                checked={state.discountType === 'percentage'}
-                onChange={() => setState({ discountType: 'percentage' })}
-              />
-              Percentage
-            </label>
+        <div className="form-row">
+          <div className="form-group col-md-6" style={{ maxWidth: '15rem' }}>
+            <label>Discount Code</label>
+            <input type="code" {...input('code')} />
+            {Feedback('code')}
           </div>
-          <div className="form-check">
-            <label className="form-check-label">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="type"
-                checked={state.discountType === 'fixed'}
-                onChange={() => setState({ discountType: 'fixed' })}
-              />
-              Fixed amount
-            </label>
+          <div className="form-group col-md-6" style={{ maxWidth: '15rem' }}>
+            <label>Status</label>
+            <select {...input('status')}>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            {Feedback('status')}
           </div>
         </div>
-        <div className="form-group" style={{ maxWidth: '15rem' }}>
-          <label>Discount Value</label>
-          <div className="input-group">
-            {state.discountType !== 'fixed' ? null : (
-              <div className="input-group-prepend">
-                <span className="input-group-text">$</span>
-              </div>
-            )}
-            <input type="text" {...input('value')} />
-            {state.discountType === 'fixed' ? null : (
-              <div className="input-group-append">
-                <span className="input-group-text">%</span>
-              </div>
-            )}
+        <div className="form-row">
+          <div className="form-group col-md-6" style={{ maxWidth: '15rem' }}>
+            <label>Type</label>
+            <div className="form-check">
+              <label className="form-check-label">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="type"
+                  checked={state.discountType === 'percentage'}
+                  onChange={() => setState({ discountType: 'percentage' })}
+                />
+                Percentage
+              </label>
+            </div>
+            <div className="form-check">
+              <label className="form-check-label">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="type"
+                  checked={state.discountType === 'fixed'}
+                  onChange={() => setState({ discountType: 'fixed' })}
+                />
+                Fixed amount
+              </label>
+            </div>
           </div>
-          {Feedback('value')}
+          <div className="form-group col-md-6" style={{ maxWidth: '15rem' }}>
+            <label>Discount Value</label>
+            <div className="input-group">
+              {state.discountType !== 'fixed' ? null : (
+                <div className="input-group-prepend">
+                  <span className="input-group-text">$</span>
+                </div>
+              )}
+              <input type="text" {...input('value')} />
+              {state.discountType === 'fixed' ? null : (
+                <div className="input-group-append">
+                  <span className="input-group-text">%</span>
+                </div>
+              )}
+            </div>
+            {Feedback('value')}
+          </div>
         </div>
         <div className="form-check mb-3">
           <label className="form-check-label">
@@ -183,7 +192,7 @@ const AdminEditDiscount = () => {
             Exclude shipping price from discount
           </label>
         </div>
-        <div className="form-group" style={{ maxWidth: '15rem' }}>
+        {/* <div className="form-group" style={{ maxWidth: '15rem' }}>
           <label>Max Uses</label>
           <input type="text" {...input('maxUses')} />
           {Feedback('maxUses')}
@@ -198,7 +207,7 @@ const AdminEditDiscount = () => {
             />
             One Per Customer
           </label>
-        </div>
+        </div> */}
         <div className="form-row mb-3" style={{ maxWidth: '30rem' }}>
           <div className="col-6">
             <label>Start Date</label>
@@ -268,12 +277,13 @@ const AdminEditDiscount = () => {
                     className="btn btn-danger ml-2"
                     onClick={async () => {
                       const headers = new Headers({
-                        authorization: admin,
+                        authorization: `bearer ${config.backendAuthToken}`,
                         'content-type': 'application/json'
                       })
                       const url = `${config.backend}/discounts/${discount.id}`
                       const myRequest = new Request(url, {
                         headers,
+                        credentials: 'include',
                         method: 'DELETE'
                       })
                       const raw = await fetch(myRequest)

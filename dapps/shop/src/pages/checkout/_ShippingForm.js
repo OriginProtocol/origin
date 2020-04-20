@@ -29,7 +29,7 @@ const ShippingForm = ({ prefix = '', state, setState, input, Feedback }) => {
       </div>
       <div className="form-group">
         <input
-          placeholder="Appartment, suite, etc. (optional)"
+          placeholder="Apartment, suite, etc. (optional)"
           {...input(field('address2'))}
         />
         {Feedback(field('address2'))}
@@ -38,6 +38,7 @@ const ShippingForm = ({ prefix = '', state, setState, input, Feedback }) => {
         <input placeholder="City" {...input(field('city'))} />
         {Feedback(field('city'))}
       </div>
+
       <div className="form-row">
         <div className="form-group col-md">
           <CountrySelect

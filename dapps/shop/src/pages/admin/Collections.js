@@ -8,7 +8,7 @@ const AdminCollections = () => {
   return (
     <>
       <h3>Collections</h3>
-      <table className="table admin-products" style={{ width: 'auto' }}>
+      <table className="table" style={{ width: 'auto' }}>
         <thead>
           <tr>
             <th>Title</th>

@@ -151,6 +151,8 @@ async function sendMail(shopId, cart, skip) {
     subTotal: formatPrice(cart.subTotal),
     hasDiscount: cart.discount > 0 ? true : false,
     discount: formatPrice(cart.discount),
+    hasDonation: cart.donation > 0 ? true : false,
+    donation: formatPrice(cart.donation),
     shipping: formatPrice(cart.shipping.amount),
     total: formatPrice(cart.total),
     shippingAddress,
