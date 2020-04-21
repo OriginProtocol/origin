@@ -4,6 +4,8 @@ import { NavLink, useRouteMatch, Switch, Route } from 'react-router-dom'
 import useOrder from 'utils/useOrder'
 import { useStateValue } from 'data/state'
 
+import Link from 'components/Link'
+
 import OrderDetails from './Details'
 import Printful from './Printful'
 
@@ -23,7 +25,13 @@ const AdminOrder = () => {
   const cart = order.data
   return (
     <>
-      {!cart.offerId ? null : <h3>{`Order #${cart.offerId}`}</h3>}
+      <h3 className="admin-title">
+        <Link to="/admin/orders" className="muted">
+          Orders
+        </Link>
+        <span className="chevron" />
+        {!cart.offerId ? null : `#${cart.offerId}`}
+      </h3>
       <ul className="nav nav-tabs mt-3">
         <li className="nav-item">
           <NavLink className="nav-link" to={urlPrefix} exact>
@@ -51,7 +59,7 @@ const AdminOrder = () => {
         </Route>
         <Route path={`${urlPrefix}/payment`}>Payment</Route>
         <Route>
-          <OrderDetails cart={cart} />
+          <OrderDetails order={order} />
         </Route>
       </Switch>
     </>
@@ -59,3 +67,17 @@ const AdminOrder = () => {
 }
 
 export default AdminOrder
+
+require('react-styl')(`
+  .nav-tabs
+    .nav-link
+      padding: 0.5rem 0.25rem
+      margin-right: 2rem
+      border-width: 0 0 4px 0
+      color: #666666
+      &:hover
+        border-color: transparent
+      &.active
+        border-color: #3b80ee
+        color: #000
+`)

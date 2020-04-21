@@ -1,30 +1,13 @@
-const config = require('../config')
 const get = require('lodash/get')
 
-const Web3 = require('web3')
 const bodyParser = require('body-parser')
 const Stripe = require('stripe')
 
 const { Shop } = require('../models')
 const { authShop } = require('./_auth')
-const { ListingID } = require('../utils/id')
 const encConf = require('../utils/encryptedConfig')
-const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
-const abi = require('../utils/_abi')
-const { WEB3_PK, PROVIDER } = require('../utils/const')
-
-const ZeroAddress = '0x0000000000000000000000000000000000000000'
-
-// TODO: This needs to be cleaner, all of this conf does
-const web3 = new Web3(PROVIDER)
-let walletAddress
-if (WEB3_PK) {
-  const account = web3.eth.accounts.wallet.add(WEB3_PK)
-  walletAddress = account.address
-  console.log(`using walletAddress ${walletAddress}`)
-} else {
-  console.log('No wallet key found.')
-}
+const { WEB3_PK } = require('../utils/const')
+const { makeOffer } = require('../utils/orders')
 
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
@@ -103,13 +86,9 @@ module.exports = function(app) {
 
     // Get API Key from config, and init Stripe
     const stripeBackend = await encConf.get(shopId, 'stripeBackend')
-    const dataURL = await encConf.get(shopId, 'dataUrl')
-
     const stripe = Stripe(stripeBackend || '')
-
     const webhookSecret = await encConf.get(shopId, 'stripeWebhookSecret')
-    const siteConfig = await config.getSiteConfig(dataURL, shop.networkId)
-    const lid = ListingID.fromFQLID(shop.listingId)
+
     let event
     const signature = req.headers['stripe-signature']
     try {
@@ -128,62 +107,14 @@ module.exports = function(app) {
     console.log(JSON.stringify(event, null, 4))
 
     const encryptedData = get(event, 'data.object.metadata.encryptedData')
-    const contractAddr = siteConfig.marketplaceContract
+    const amount = get(event, 'data.object.amount') / 100
 
-    if (!contractAddr) {
-      console.error(
-        'Contract missing address.  Will be unable to send transaction.'
-      )
-      return res.status(500)
-    }
-
-    const offer = {
-      schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
-      listingId: lid.toString(),
-      listingType: 'unit',
-      unitsPurchased: 1,
-      totalPrice: {
-        amount: get(event, 'data.object.amount') / 100,
-        currency: 'fiat-USD'
-      },
-      commission: { currency: 'OGN', amount: '0' },
-      finalizes: 60 * 60 * 24 * 14, // 2 weeks after offer accepted
-      encryptedData
-    }
-
-    let ires
-    try {
-      ires = await post(siteConfig.ipfsApi, offer, true)
-    } catch (err) {
-      console.error(`Error adding offer to ${siteConfig.ipfsApi}!`)
-      console.error(err)
-      return res.status(500)
-    }
-    const Marketplace = new web3.eth.Contract(abi, contractAddr)
-
-    Marketplace.methods
-      .makeOffer(
-        lid.listingId,
-        getBytes32FromIpfsHash(ires),
-        offer.finalizes,
-        siteConfig.affiliate || ZeroAddress,
-        '0',
-        '0',
-        ZeroAddress,
-        siteConfig.arbitrator || walletAddress
-      )
-      .send({
-        from: walletAddress,
-        gas: 350000
-      })
-      .then(tx => {
-        console.log('Make offer:')
-        console.log(tx)
-      })
+    makeOffer({ shop, amount, encryptedData })
+      .then(() => res.sendStatus(200))
       .catch(err => {
-        console.log(err)
+        console.error(err)
+        res.status(500)
+        return
       })
-
-    res.sendStatus(200)
   })
 }

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import get from 'lodash/get'
 
 import formatPrice from 'utils/formatPrice'
@@ -75,6 +75,7 @@ const AdminOrdersTable = ({ orders }) => {
       <thead>
         <tr>
           <th>Order</th>
+          <th>Time</th>
           <th>Customer</th>
           <th>Payment</th>
           {/* <th>Status</th> */}
@@ -90,6 +91,7 @@ const AdminOrdersTable = ({ orders }) => {
             }}
           >
             <td>{order.orderId}</td>
+            <td>{dayjs(order.createdAt).format('MMM D, h:mm A')}</td>
             <td>{`${get(order, 'data.userInfo.firstName', '')} ${get(
               order,
               'data.userInfo.lastName',

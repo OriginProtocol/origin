@@ -17,11 +17,28 @@ module.exports = function(app) {
     if (!req.session.sellerId) {
       return res.json({ success: false })
     }
-    Seller.findOne({ where: { id: req.session.sellerId } }).then(seller => {
-      res.json({
-        success: true,
-        email: seller.email,
-        role: req.sellerShop.role
+
+    const id = req.session.sellerId
+
+    Shop.findAll({
+      attributes: ['name', 'id', 'authToken', 'hostname'],
+      include: { model: Seller, where: { id } }
+    }).then(allShops => {
+      const shops = allShops.map(s => ({
+        id: s.dataValues.id,
+        name: s.dataValues.name,
+        authToken: s.dataValues.authToken,
+        hostname: s.dataValues.hostname,
+        role: get(s, 'Sellers[0].SellerShop.dataValues.role')
+      }))
+
+      Seller.findOne({ where: { id } }).then(seller => {
+        res.json({
+          success: true,
+          email: seller.email,
+          role: req.sellerShop.role,
+          shops
+        })
       })
     })
   })

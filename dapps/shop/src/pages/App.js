@@ -112,6 +112,5 @@ require('react-styl')(`
     color: #333
     &:hover,&:focus
       color: #333
-      opacity: 0.7
       text-decoration: none
 `)

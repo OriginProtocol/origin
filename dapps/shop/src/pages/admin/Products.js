@@ -20,8 +20,8 @@ const AdminProducts = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between">
-        <h3>Products</h3>
+      <div className="d-flex justify-content-between mb-3">
+        <h3 className="m-0">Products</h3>
         <SortBy />
       </div>
       <table className="table admin-products">
@@ -39,8 +39,8 @@ const AdminProducts = () => {
                 />
               </td>
               <td>
-                <div>{product.title}</div>
-                <div>{formatPrice(product.price)}</div>
+                <div className="title">{product.title}</div>
+                <div className="price">{formatPrice(product.price)}</div>
               </td>
             </tr>
           ))}
@@ -56,9 +56,18 @@ export default AdminProducts
 
 require('react-styl')(`
   .admin-products
+    line-height: 1.25rem
     tr
       td:first-child
         width: 80px
+      td
+        vertical-align: middle
+    .title
+      font-weight: 600
+      color: #000
+    .price
+      color: #666
+      font-size: 14px
     .pic
       width: 60px
       height: 50px

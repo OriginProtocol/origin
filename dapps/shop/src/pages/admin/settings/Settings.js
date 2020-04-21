@@ -4,6 +4,7 @@ import { NavLink, Switch, Route } from 'react-router-dom'
 import ServerSettings from './Server'
 import ClientSettings from './Client'
 import Users from './Users'
+import Console from './Console'
 
 const AdminSettings = () => {
   return (
@@ -25,6 +26,11 @@ const AdminSettings = () => {
             Users
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to={`/admin/settings/console`}>
+            Console
+          </NavLink>
+        </li>
       </ul>
       <Switch>
         <Route path="/admin/settings/users">
@@ -32,6 +38,9 @@ const AdminSettings = () => {
         </Route>
         <Route path="/admin/settings/server">
           <ServerSettings />
+        </Route>
+        <Route path="/admin/settings/console">
+          <Console />
         </Route>
         <Route>
           <ClientSettings />
