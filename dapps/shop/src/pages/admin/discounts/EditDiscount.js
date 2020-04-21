@@ -73,7 +73,9 @@ const AdminEditDiscount = () => {
   return (
     <>
       <h3 className="admin-title with-border">
-        <Link to="/admin/discounts" className="muted">Discounts</Link>
+        <Link to="/admin/discounts" className="muted">
+          Discounts
+        </Link>
         <span className="chevron" />
         {title}
       </h3>

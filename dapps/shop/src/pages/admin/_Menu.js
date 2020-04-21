@@ -47,7 +47,7 @@ const AdminMenu = () => {
       {admin.role !== 'admin' ? null : (
         <li className={`settings ${active('/admin/settings')}`}>
           <Link to="/admin/settings">
-          <Icons.Settings />
+            <Icons.Settings />
             Settings
           </Link>
         </li>

@@ -20,7 +20,10 @@ const Chart = ({ orders = [], numDays = 10 }) => {
       .map((i, idx) => dayjs().subtract(idx, 'days'))
       .reverse()
 
-    const labels = [...days.map(d => d.format('ddd Do')).slice(0, numDays - 1), 'Today']
+    const labels = [
+      ...days.map(d => d.format('ddd Do')).slice(0, numDays - 1),
+      'Today'
+    ]
 
     const byDay = groupBy(orders, o => dayjs(o.createdAt).format('YYYY-MM-DD'))
     const seriesRaw = days.map(d => {
