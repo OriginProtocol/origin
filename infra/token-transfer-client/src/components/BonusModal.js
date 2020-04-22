@@ -202,7 +202,7 @@ class BonusModal extends React.Component {
                       {Number(this.getBalance(this.context)).toLocaleString()}{' '}
                       OGN
                     </strong>{' '}
-                    on {moment(this.props.nextVest.date).format('L')}
+                    on {moment.utc(this.props.nextVest.date).format('L')}
                   </div>
                 </div>
               )}
@@ -288,7 +288,7 @@ class BonusModal extends React.Component {
   renderTitle() {
     let titleText
     if (this.props.isEarlyLockup) {
-      titleText = `Special offer for ${moment(this.props.nextVest.date).format(
+      titleText = `Special offer for ${moment.utc(this.props.nextVest.date).format(
         'MMMM'
       )} vesting`
     } else {
@@ -324,7 +324,7 @@ class BonusModal extends React.Component {
                 Earn{' '}
                 <strong>{this.context.config.earlyLockupBonusRate}%</strong>{' '}
                 bonus tokens immediately by locking up your{' '}
-                {moment(this.props.nextVest.date).format('MMMM')} vest
+                {moment.utc(this.props.nextVest.date).format('MMMM')} vest
               </>
             ) : (
               <>
@@ -360,7 +360,7 @@ class BonusModal extends React.Component {
                   {Number(this.props.nextVest.amount).toLocaleString()}
                 </strong>{' '}
                 OGN are scheduled to vest in{' '}
-                {moment(this.props.nextVest.date).format('MMMM')}
+                {moment.utc(this.props.nextVest.date).format('MMMM')}
               </div>
             </div>
             <hr />
@@ -371,17 +371,17 @@ class BonusModal extends React.Component {
               <div className="col">
                 This offer expires in{' '}
                 <strong>
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
+                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'days'
                   )}
                   d{' '}
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
+                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'hours'
                   ) % 24}
                   h{' '}
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
+                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
                     moment(),
                     'minutes'
                   ) % 60}
