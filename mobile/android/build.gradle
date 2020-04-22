@@ -34,6 +34,7 @@ buildscript {
         minSdkVersion = 21
         targetSdkVersion = 28
         compileSdkVersion = 28
+        buildToolsVersion = "28.0.3"
     }
     repositories {
         google()
@@ -41,7 +42,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
-        classpath 'com.google.gms:google-services:4.0.2'
+        classpath 'com.google.gms:google-services:+'
         classpath 'com.google.android.gms:strict-version-matcher-plugin:1.0.2'
     }
 }

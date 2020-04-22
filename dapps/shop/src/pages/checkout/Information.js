@@ -87,13 +87,25 @@ const CheckoutInfo = () => {
         }}
       >
         <div className="mb-3">
-          <b>Email</b>
+          <b>Contact information</b>
         </div>
-        <div className="form-group">
-          <input type="email" placeholder="Email" {...input('email')} />
-          {Feedback('email')}
+        <div className="form-row">
+          <div className="form-group col-md-6 mb-0">
+            <div className="form-group">
+              <input type="email" placeholder="Email" {...input('email')} />
+              {Feedback('email')}
+            </div>
+          </div>
+          <div className="form-group col-md-6">
+            <input
+              type="tel"
+              placeholder="Mobile phone (optional)"
+              {...input('phone')}
+            />
+            {Feedback('phone')}
+          </div>
         </div>
-        <div className="mt-4 mb-3">
+        <div className="mb-3">
           <b>Shipping Address</b>
         </div>
 

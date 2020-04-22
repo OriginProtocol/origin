@@ -30,7 +30,7 @@ router.get(
       earlyLockupsEnabledUntil,
       earlyLockupsEnabled: getEarlyLockupsEnabled(),
       unlockDate: getUnlockDate(),
-      isLocked: moment() < moment(getUnlockDate()),
+      isLocked: moment.utc() < moment.utc(getUnlockDate()),
       otcRequestEnabled: getOtcRequestEnabled()
     })
   })

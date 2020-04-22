@@ -28,8 +28,8 @@ const Lockup = () => {
                 </div>
                 {lockup.data && lockup.data.vest ? (
                   <strong>
-                    {moment(lockup.data.vest.date).format('MMMM YYYY')} special
-                    offer lockup
+                    {moment.utc(lockup.data.vest.date).format('MMMM YYYY')}{' '}
+                    special offer lockup
                   </strong>
                 ) : (
                   <strong>
@@ -38,15 +38,15 @@ const Lockup = () => {
                 )}
               </div>
             </td>
-            <td>{moment(lockup.start).format('LL')}</td>
+            <td>{moment.utc(lockup.start).format('LL')}</td>
             <td>
-              {moment(lockup.end) < now ? (
+              {moment.utc(lockup.end) < now ? (
                 'Unlocked'
               ) : (
                 <>
-                  {moment(lockup.end).diff(now, 'days')}d{' '}
-                  {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
-                  {moment(lockup.end).diff(now, 'minutes') % 60}m
+                  {moment.utc(lockup.end).diff(now, 'days')}d{' '}
+                  {moment.utc(lockup.end).diff(now, 'hours') % 24}h{' '}
+                  {moment.utc(lockup.end).diff(now, 'minutes') % 60}m
                 </>
               )}
             </td>

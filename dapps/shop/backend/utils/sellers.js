@@ -7,9 +7,7 @@ async function createSeller({ name, email, password }) {
   }
 
   const sellerCheck = await Seller.findOne({
-    where: {
-      email
-    }
+    where: { email: email.toLowerCase() }
   })
 
   if (sellerCheck) {

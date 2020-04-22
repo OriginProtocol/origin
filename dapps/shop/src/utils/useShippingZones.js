@@ -29,8 +29,13 @@ function useShippingZones() {
               recipient: cart.userInfo
             })
           })
-          zones = await raw.json()
-        } else {
+          const json = await raw.json()
+          if (json.success !== false) {
+            zones = json
+          }
+        }
+
+        if (!zones.length) {
           const raw = await fetch(`${dataUrl()}shipping.json`)
           zones = await raw.json()
         }

@@ -38,7 +38,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
       <BorderedCard>
         <div className="row">
           {data.config.unlockDate &&
-          moment(data.config.unlockDate).isValid() ? (
+          moment.utc(data.config.unlockDate).isValid() ? (
             <>
               <div className="col-12 col-lg-6 my-4">
                 <h1 className="mb-1">Your tokens are almost here!</h1>
@@ -48,9 +48,10 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
               </div>
               <div className="col-12 col-lg-6" style={{ alignSelf: 'center' }}>
                 <div className="bluebox p-2 text-center">
-                  {moment(data.config.unlockDate).diff(now, 'days')}d{' '}
-                  {moment(data.config.unlockDate).diff(now, 'hours') % 24}h{' '}
-                  {moment(data.config.unlockDate).diff(now, 'minutes') % 60}m
+                  {moment.utc(data.config.unlockDate).diff(now, 'days')}d{' '}
+                  {moment.utc(data.config.unlockDate).diff(now, 'hours') % 24}h{' '}
+                  {moment.utc(data.config.unlockDate).diff(now, 'minutes') % 60}
+                  m
                 </div>
               </div>
             </>

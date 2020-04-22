@@ -144,6 +144,10 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
       fields.createdBlock = event.blockNumber
       fields.ipfsHash = event.ipfsHash
       fields.encryptedIpfsHash = encrypedHash
+      if (data.referrer) {
+        fields.referrer = data.referrer
+        fields.commissionPending = Math.floor(data.subTotal / 200)
+      }
     }
     // console.log(data)
     if (order) {

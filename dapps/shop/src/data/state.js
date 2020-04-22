@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import set from 'lodash/set'
 import pick from 'lodash/pick'
 import cloneDeep from 'lodash/cloneDeep'
+import isEqual from 'lodash/isEqual'
 
 import { Countries } from 'data/Countries'
 
@@ -22,6 +23,7 @@ const defaultState = {
     instructions: '',
     subTotal: 0,
     discount: 0,
+    donation: 0,
     total: 0,
     paymentMethod: {},
     discountObj: {}
@@ -83,16 +85,20 @@ function getReducer(key) {
     fbTrack(state, action)
     let newState = cloneDeep(state)
     if (action.type === 'addToCart') {
-      const { product, variant } = action.item
-      const existing = state.cart.items.findIndex(
+      const { product, variant, maxQuantity } = action.item
+      const existingIdx = state.cart.items.findIndex(
         i => i.product === product && i.variant === variant
       )
-      if (existing >= 0) {
-        const quantity = get(newState, `cart.items[${existing}].quantity`)
+      if (existingIdx >= 0) {
+        const quantity = get(newState, `cart.items[${existingIdx}].quantity`)
+        let newQuantity = quantity + 1
+        if (maxQuantity && newQuantity > maxQuantity) {
+          newQuantity = maxQuantity
+        }
         newState = set(
           newState,
-          `cart.items[${existing}].quantity`,
-          quantity + 1
+          `cart.items[${existingIdx}].quantity`,
+          newQuantity
         )
       } else {
         const lastIdx = state.cart.items.length
@@ -101,14 +107,18 @@ function getReducer(key) {
       newState = set(newState, 'shippingZones', [])
       newState = set(newState, 'cart.shipping')
     } else if (action.type === 'removeFromCart') {
-      const items = get(state, 'cart.items')
-      items.splice(action.item, 1)
+      const items = get(state, 'cart.items').filter(
+        i => !isEqual(i, action.item)
+      )
       newState = set(newState, 'cart.items', items)
       newState = set(newState, 'shippingZones', [])
       newState = set(newState, 'cart.shipping')
     } else if (action.type === 'updateCartQuantity') {
       const { quantity } = action
-      newState = set(newState, `cart.items[${action.item}].quantity`, quantity)
+      const idx = get(state, 'cart.items').findIndex(i =>
+        isEqual(i, action.item)
+      )
+      newState = set(newState, `cart.items[${idx}].quantity`, quantity)
       newState = set(newState, 'shippingZones', [])
       newState = set(newState, 'cart.shipping')
     } else if (action.type === 'setProducts') {
@@ -136,6 +146,7 @@ function getReducer(key) {
         'email',
         'firstName',
         'lastName',
+        'phone',
         'address1',
         'address2',
         'city',
@@ -165,22 +176,28 @@ function getReducer(key) {
     } else if (action.type === 'updatePaymentMethod') {
       newState = set(newState, `cart.paymentMethod`, action.method)
     } else if (action.type === 'orderComplete') {
-      newState = cloneDeep(defaultState)
+      newState = set(newState, 'cart', cloneDeep(defaultState.cart))
     } else if (action.type === 'setAuth') {
-      sessionStorage.admin = action.auth
       newState = set(newState, `admin`, action.auth)
     } else if (action.type === 'setPasswordAuthed') {
       newState = set(newState, `passwordAuthed`, action.authed)
     } else if (action.type === 'logout') {
-      delete sessionStorage.admin
-      newState = set(newState, 'admin', '')
+      newState = set(newState, 'admin', null)
     } else if (action.type === 'updateInstructions') {
       newState = set(newState, 'cart.instructions', action.value)
     } else if (action.type === 'setDiscount') {
       newState = set(newState, 'cart.discountObj', action.discount)
+    } else if (action.type === 'setDonation') {
+      if (String(action.amount).match(/^[0-9]+$/)) {
+        newState = set(newState, 'cart.donation', action.amount)
+      }
     } else if (action.type === 'removeDiscount') {
       newState = set(newState, 'cart.discountObj', {})
       newState = set(newState, 'cart.discount', 0)
+    } else if (action.type === 'setAffiliate') {
+      newState = set(newState, 'affiliate', action.affiliate)
+    } else if (action.type === 'setReferrer') {
+      newState = set(newState, 'referrer', action.referrer)
     }
 
     newState.cart.subTotal = newState.cart.items.reduce((total, item) => {
@@ -201,10 +218,15 @@ function getReducer(key) {
       }
     }
 
-    newState.cart.discount = discount
-    newState.cart.total = newState.cart.subTotal + shipping - discount
+    const donation = get(newState, 'cart.donation', 0)
 
-    localStorage[key] = JSON.stringify(pick(newState, 'cart'))
+    newState.cart.discount = discount
+    newState.cart.total =
+      newState.cart.subTotal + shipping - discount + donation
+
+    localStorage[key] = JSON.stringify(
+      pick(newState, 'cart', 'affiliate', 'referrer')
+    )
     // setStorage(key, pick(newState, 'cart'))
     // console.log('reduce', { action, state, newState })
     return cloneDeep(newState)

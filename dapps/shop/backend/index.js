@@ -1,2 +1,4 @@
 require('./app')
-require('./listener')
+if (process.env.LISTENER !== 'false') {
+  require('./listener')
+}
