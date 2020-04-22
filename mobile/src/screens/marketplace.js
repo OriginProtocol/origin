@@ -108,6 +108,18 @@ class MarketplaceScreen extends PureComponent {
       // Inject auth signature
       this.injectAuthSign()
     }
+
+    // Open external links in native browser
+    const newStateURL = get(this.props, 'navigation.state.params.dappUrl')
+    const oldStateURL = get(prevProps, 'navigation.state.params.dappUrl')
+    const dappUrl = get(this.props, 'settings.network.dappUrl')
+    if (
+      newStateURL &&
+      !newStateURL.startsWith(dappUrl) &&
+      newStateURL !== oldStateURL
+    ) {
+      this.openNativeDeepLink(newStateURL)
+    }
   }
 
   /* Enables left and right swiping to go forward/back in the WebView on Android.
@@ -826,7 +838,9 @@ class MarketplaceScreen extends PureComponent {
     let dappUrl = this.props.settings.network.dappUrl
     if (
       typeof this.props.navigation.state.params != 'undefined' &&
-      this.props.navigation.state.params.dappUrl
+      this.props.navigation.state.params.dappUrl &&
+      // Do not open external links
+      this.props.navigation.state.params.dappUrl.startsWith(dappUrl)
     ) {
       dappUrl = this.props.navigation.state.params.dappUrl
     }

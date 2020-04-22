@@ -7,6 +7,10 @@ import Link from 'components/Link'
 import formatPrice from 'utils/formatPrice'
 import useConfig from 'utils/useConfig'
 
+function altClick(e) {
+  return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
+}
+
 const ProductList = ({ products }) => {
   const history = useHistory()
   const match = useRouteMatch('/collections/:collection')
@@ -21,12 +25,14 @@ const ProductList = ({ products }) => {
         <div
           key={product.id}
           className="product"
-          onClick={() =>
-            history.push({
-              pathname: `${urlPrefix}/products/${product.id}`,
-              state: { scrollToTop: true }
-            })
-          }
+          onClick={e => {
+            const pathname = `${urlPrefix}/products/${product.id}`
+            if (altClick(e)) {
+              history.push({ pathname, state: { scrollToTop: true } })
+            } else {
+              window.open(`#${pathname}`, '_blank')
+            }
+          }}
         >
           <div
             className="pic"

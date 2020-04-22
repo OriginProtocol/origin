@@ -18,6 +18,9 @@ function formatAddress(data, prefix) {
   if (data[field('address1')]) {
     address.push(data[field('address1')])
   }
+  if (data[field('address2')]) {
+    address.push(data[field('address2')])
+  }
   let line3 = ''
   if (data[field('city')]) {
     line3 += data[field('city')]

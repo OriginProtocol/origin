@@ -4,12 +4,14 @@ import Paginate from 'components/Paginate'
 import useRest from 'utils/useRest'
 
 const AdminEvents = () => {
-  const { data = [], loading } = useRest('/events')
+  const { data = [], loading, error } = useRest('/events')
 
   return (
     <>
       <h3>Events</h3>
-      {loading ? (
+      {error ? (
+        'Error'
+      ) : loading ? (
         'Loading...'
       ) : (
         <table className="table admin-orders table-hover">

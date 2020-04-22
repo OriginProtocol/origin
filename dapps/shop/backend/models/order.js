@@ -57,6 +57,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       data: {
         type: DataTypes.TEXT
+      },
+      referrer: {
+        type: DataTypes.TEXT
+      },
+      commissionPending: {
+        type: DataTypes.INTEGER
+      },
+      commissionPaid: {
+        type: DataTypes.INTEGER
       }
     },
     {

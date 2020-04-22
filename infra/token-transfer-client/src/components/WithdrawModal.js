@@ -244,20 +244,17 @@ class WithdrawModal extends Component {
                   style={{ transform: 'scale(0.5)', marginTop: '-0.4rem' }}
                 />
                 <strong>
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
-                    now,
-                    'days'
-                  )}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(now, 'days')}
                   d{' '}
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
-                    now,
-                    'hours'
-                  ) % 24}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(now, 'hours') % 24}
                   h{' '}
-                  {moment(this.context.config.earlyLockupsEnabledUntil).diff(
-                    now,
-                    'minutes'
-                  ) % 60}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(now, 'minutes') % 60}
                   m
                 </strong>
               </p>

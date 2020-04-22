@@ -6,43 +6,49 @@ import useConfig from 'utils/useConfig'
 import Link from 'components/Link'
 import CartIcon from 'components/icons/Cart'
 import Search from './_Search'
+import AffiliateNav from './affiliates/NavBar'
 
 const Nav = () => {
-  const [{ cart }] = useStateValue()
+  const [{ cart, affiliate }] = useStateValue()
   const { config } = useConfig()
   if (config.singleProduct) {
     return <div className="nav-border" />
   }
 
   return (
-    <nav className="navbar navbar-expand-md">
-      <div className="container">
-        <form className="form-inline" onSubmit={e => e.preventDefault()}>
-          <Search />
-        </form>
-        <button className="navbar-toggler">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to="/cart" className="nav-link">
-                <CartIcon />
-                {`Cart${cart.items.length ? ` (${cart.items.length})` : ''}`}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link"
-                to={cart.items.length ? '/checkout' : '/cart'}
-              >
-                Check Out
-              </Link>
-            </li>
-          </ul>
+    <>
+      <AffiliateNav />
+      <nav
+        className={`navbar navbar-expand-md${affiliate ? ' border-top-0' : ''}`}
+      >
+        <div className="container bb">
+          <form className="form-inline" onSubmit={e => e.preventDefault()}>
+            <Search />
+          </form>
+          <button className="navbar-toggler">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/cart" className="nav-link">
+                  <CartIcon />
+                  {`Cart${cart.items.length ? ` (${cart.items.length})` : ''}`}
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  to={cart.items.length ? '/checkout' : '/cart'}
+                >
+                  Check Out
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   )
 }
 
@@ -53,7 +59,7 @@ require('react-styl')(`
     border-top: 5px solid black
   .navbar > .container
     position: relative
-    &::after
+    &.bb::after
       content: ""
       border-bottom: 1px solid #eee
       position: absolute

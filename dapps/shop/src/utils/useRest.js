@@ -20,7 +20,11 @@ function useRest(url, opts = {}) {
         })
         const raw = await fetch(myRequest)
         const res = await raw.json()
-        setData({ ...data, [url]: res })
+        if (res.error) {
+          setError(true)
+        } else {
+          setData({ ...data, [url]: res })
+        }
         setLoading(false)
       } catch (e) {
         setLoading(false)

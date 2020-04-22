@@ -23,20 +23,22 @@ const Login = () => {
           email: state.email,
           password: state.password
         })
-        console.log('Performing login...', `${config.backend}/auth/login`)
+
         const myRequest = new Request(`${config.backend}/auth/login`, {
           method: 'POST',
           headers: {
+            authorization: `bearer ${config.backendAuthToken}`,
             'content-type': 'application/json'
           },
           credentials: 'include',
           body
         })
         fetch(myRequest)
-          .then(res => {
+          .then(async res => {
             if (res.ok) {
               setState({ ...state, error: '' })
-              dispatch({ type: 'setAuth', auth: state.email })
+              const auth = await res.json()
+              dispatch({ type: 'setAuth', auth })
             } else {
               setState({ ...state, error: 'Unauthorized' })
             }
