@@ -7,8 +7,8 @@ const AdminCollections = () => {
   const { collections } = useCollections()
   return (
     <>
-      <h3>Collections</h3>
-      <table className="table" style={{ width: 'auto' }}>
+      <h3 className="mb-3">Collections</h3>
+      <table className="table collections">
         <thead>
           <tr>
             <th>Title</th>
@@ -31,3 +31,9 @@ const AdminCollections = () => {
 }
 
 export default AdminCollections
+
+require('react-styl')(`
+  .admin .collections
+    min-width: 220px
+    width: auto
+`)

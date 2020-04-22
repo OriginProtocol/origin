@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Redirect, Switch, Route, useLocation } from 'react-router-dom'
+import { Redirect, Switch, Route } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
-import Link from 'components/Link'
+import dataUrl from 'utils/dataUrl'
 
 import Products from './Products'
 import Collections from './Collections'
@@ -15,29 +15,36 @@ import Order from './order/Order'
 import Login from './Login'
 import Settings from './settings/Settings'
 import Events from './Events'
+import Menu from './_Menu'
 
 const Admin = () => {
   const { config } = useConfig()
-  const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState()
   useEffect(() => {
     fetch(`${config.backend}/auth`, {
       credentials: 'include',
       headers: {
         authorization: `bearer ${config.backendAuthToken}`
       }
-    }).then(async response => {
-      if (response.status === 200) {
-        const auth = await response.json()
-        dispatch({ type: 'setAuth', auth })
-      }
-      setLoading(false)
     })
+      .then(async response => {
+        if (response.status === 200) {
+          const auth = await response.json()
+          dispatch({ type: 'setAuth', auth })
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        setError(true)
+      })
   }, [])
 
   const [{ admin }, dispatch] = useStateValue()
 
-  if (loading) {
+  if (error) {
+    return <div className="fixed-loader">Admin Connection Error</div>
+  } else if (loading) {
     return <div className="fixed-loader">Loading...</div>
   }
 
@@ -45,99 +52,40 @@ const Admin = () => {
     return <Login />
   }
 
-  const SiteTitle = config.fullTitle || config.title
-
   return (
-    <div className="container admin">
-      <div className="mb-3 d-flex align-items-center justify-content-between">
-        <h1 className="m-0">{`${SiteTitle} Admin`}</h1>
-        <div>{`Welcome, ${admin.email}`}</div>
-      </div>
-      <div className="row">
-        <div className="col-3">
-          <h3>&nbsp;</h3>
-          <div className="categories">
-            <ul className="list-unstyled">
-              <li
-                className={
-                  pathname.indexOf('/admin/dashboard') === 0 ? 'active' : ''
-                }
-              >
-                <Link to="/admin/dashboard">Dashboard</Link>
-              </li>
-              <li
-                className={
-                  pathname.indexOf('/admin/orders') === 0 ? 'active' : ''
-                }
-              >
-                <Link to="/admin/orders">Orders</Link>
-              </li>
-              <li className={pathname === '/admin/products' ? 'active' : ''}>
-                <Link to="/admin/products">Products</Link>
-              </li>
-              <li className={pathname === '/admin/collections' ? 'active' : ''}>
-                <Link to="/admin/collections">Collections</Link>
-              </li>
-              <li
-                className={
-                  pathname.indexOf('/admin/discounts') === 0 ? 'active' : ''
-                }
-              >
-                <Link to="/admin/discounts">Discounts</Link>
-              </li>
-              {admin.role !== 'admin' ? null : (
-                <>
-                  <li
-                    className={
-                      pathname.indexOf('/admin/settings') === 0 ? 'active' : ''
-                    }
-                  >
-                    <Link to="/admin/settings">Settings</Link>
-                  </li>
-                  <li
-                    className={
-                      pathname.indexOf('/admin/events') === 0 ? 'active' : ''
-                    }
-                  >
-                    <Link to="/admin/events">Events</Link>
-                  </li>
-                </>
-              )}
-              <li className="db">
-                <a
-                  href="#logout"
-                  onClick={e => {
-                    e.preventDefault()
-
-                    fetch(`${config.backend}/auth/logout`, {
-                      method: 'POST',
-                      credentials: 'include'
-                    }).then(async response => {
-                      if (response.status === 200) {
-                        dispatch({ type: 'logout' })
-                      }
-                    })
-                  }}
-                >
-                  Logout
-                </a>
-              </li>
-            </ul>
-          </div>
+    <div className="admin">
+      <nav>
+        <div className="container">
+          <h1>
+            {config.logo ? (
+              <img src={`${dataUrl()}${config.logo}`} />
+            ) : (
+              config.title
+            )}
+            <div>Admin</div>
+          </h1>
+          <div>{`Welcome, ${admin.email}`}</div>
         </div>
-        <div className="col-9">
-          <Switch>
-            <Route path="/admin/discounts/:id" component={EditDiscount} />
-            <Route path="/admin/discounts" component={Discounts} />
-            <Route path="/admin/products" component={Products} />
-            <Route path="/admin/collections" component={Collections} />
-            <Route path="/admin/settings" component={Settings} />
-            <Route path="/admin/events" component={Events} />
-            <Route path="/admin/orders/:id" component={Order} />
-            <Route path="/admin/orders" component={Orders} />
-            <Route path="/admin/dashboard" component={Dashboard} />
-            <Redirect to="/admin/dashboard" />
-          </Switch>
+      </nav>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-3">
+            <Menu />
+          </div>
+          <div className="col-md-9">
+            <Switch>
+              <Route path="/admin/discounts/:id" component={EditDiscount} />
+              <Route path="/admin/discounts" component={Discounts} />
+              <Route path="/admin/products" component={Products} />
+              <Route path="/admin/collections" component={Collections} />
+              <Route path="/admin/settings" component={Settings} />
+              <Route path="/admin/events" component={Events} />
+              <Route path="/admin/orders/:id" component={Order} />
+              <Route path="/admin/orders" component={Orders} />
+              <Route path="/admin/dashboard" component={Dashboard} />
+              <Redirect to="/admin/dashboard" />
+            </Switch>
+          </div>
         </div>
       </div>
     </div>
@@ -155,8 +103,63 @@ require('react-styl')(`
     transform: translate(-50%, -50%)
 
   .admin
-    margin-top: 2rem
     margin-bottom: 5rem
+    -webkit-font-smoothing: antialiased
+    h1,h2,h3
+      color: #000
     h1
       font-size: 24px
+    nav
+      border-bottom: 1px solid #dfe2e6
+      padding: 1.25rem 0
+      margin-bottom: 4rem
+      color: #000
+      > .container
+        display: flex
+        align-items: center
+        justify-content: between
+        flex-wrap: wrap
+      h1
+        margin: 0
+        display: flex
+        flex: 1
+        font-size: 1rem
+        img
+          max-height: 2.5rem
+        div
+          display: flex
+          align-items: center
+          margin-left: 1rem
+          padding-left: 1rem
+          border-left: 1px solid #5666
+    .table
+      thead
+        th
+          background-color: #f8f8f8
+          font-size: 14px
+          color: #666
+          font-weight: normal
+          border-bottom-width: 1px
+          padding: 0.5rem 0.75rem
+    form
+      label:not(.form-check-label)
+        font-weight: 600
+    .admin-title
+      &.with-border
+        padding-bottom: 1rem
+        border-bottom: 1px solid #dfe2e6
+        margin-bottom: 1.5rem
+      .muted
+        color: #666
+      .chevron
+        margin: 0 1rem
+        &::before
+          content: ""
+          display: inline-block
+          width: 10px
+          height: 10px
+          border-width: 0 2px 2px 0
+          border-style: solid
+          border-color: #3b80ee
+          transform: rotate(-45deg) translateY(-4px);
 `)

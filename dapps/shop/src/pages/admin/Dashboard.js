@@ -7,6 +7,8 @@ import useOrders from 'utils/useOrders'
 import useProducts from 'utils/useProducts'
 import dataUrl from 'utils/dataUrl'
 
+import Chart from './_Chart'
+
 const AdminDashboard = () => {
   const { orders, loading } = useOrders()
   const { products } = useProducts()
@@ -44,10 +46,16 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <h3>Dashboard</h3>
-      <div className="mt-4 d-flex">
-        <h5>{`${orders.length} orders`}</h5>
-        <h5 className="ml-4">{`${formatPrice(totalSales)} revenue`}</h5>
+      <h3 className="mb-3">Dashboard</h3>
+      <div className="admin-dashboard-stats">
+        <div>
+          <div>Total orders</div>
+          <div>{orders.length}</div>
+        </div>
+        <div>
+          <div>Total revenue</div>
+          <div>{formatPrice(totalSales)}</div>
+        </div>
         {/* <h5 className="ml-4">{`${formatPrice(totalSales * 0.05)} profit`}</h5> */}
         {/* <select className="ml-auto">
           <option>All time</option>
@@ -57,12 +65,14 @@ const AdminDashboard = () => {
           <option>Today</option>
         </select> */}
       </div>
+      <div className="mt-4">
+        <Chart orders={orders} />
+      </div>
 
       <table className="table admin-products mt-4">
         <thead>
           <tr>
-            <th />
-            <th>Top Products</th>
+            <th colSpan="2">Top Products</th>
             <th className="text-center">
               <a
                 href="#"
@@ -101,8 +111,8 @@ const AdminDashboard = () => {
                 />
               </td>
               <td>
-                <div>{product.title}</div>
-                <div>{formatPrice(product.price)}</div>
+                <div className="title">{product.title}</div>
+                <div className="price">{formatPrice(product.price)}</div>
               </td>
               <td className="text-center">{product.orders}</td>
               <td className="text-center">{formatPrice(product.revenue)}</td>
@@ -117,4 +127,20 @@ const AdminDashboard = () => {
 export default AdminDashboard
 
 require('react-styl')(`
+  .admin-dashboard-stats
+    display: flex
+    color: #000
+    max-width: 600px
+    > div
+      flex: 1
+      border: 1px solid #dfe2e6
+      border-radius: 10px
+      padding: 0.875rem 1.5rem
+      &:not(:last-child)
+        margin-right: 1.5rem
+      > div:nth-child(1)
+        font-size: 16px
+      > div:nth-child(2)
+        font-size: 36px
+        font-weight: 600
 `)
