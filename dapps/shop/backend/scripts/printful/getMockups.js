@@ -74,9 +74,9 @@ async function getMockups({ PrintfulURL, apiAuth, OutputDir, id }) {
   const variantPrintfile = printFiles.result.variant_printfiles.find(
     p => p.variant_id === variantId
   )
-  // console.log(JSON.stringify(variantPrintfile, null, 2))
-  // console.log(JSON.stringify(printFiles.result.option_groups, null, 2))
-  // console.log(JSON.stringify(printFiles.result.options, null, 2))
+  console.log(JSON.stringify(variantPrintfile, null, 2))
+  console.log(JSON.stringify(printFiles.result.option_groups, null, 2))
+  console.log(JSON.stringify(printFiles.result.options, null, 2))
 
   const design = syncVariant.orderLineItem.design
   // console.log(JSON.stringify(design, null, 2))
@@ -116,6 +116,24 @@ async function getMockups({ PrintfulURL, apiAuth, OutputDir, id }) {
     })
   }
 
+  const mockupTask = {
+    variant_ids: [8554, 8355],
+    // variant_ids: [variantId],
+    format: 'jpg',
+    product_options: {
+      stitch_color: 'white',
+      inside_pocket: '1'
+    },
+    // option_groups: printFiles.result.option_groups,
+    // options: printFiles.result.options,
+    option_groups: ['Default'],
+    options: ['Back', 'Back waist'],
+    files: files
+  }
+
+  console.log(JSON.stringify(mockupTask, null, 4))
+  // return
+
   const res = await fetch(
     `${PrintfulURL}/mockup-generator/create-task/${productId}`,
     {
@@ -124,12 +142,7 @@ async function getMockups({ PrintfulURL, apiAuth, OutputDir, id }) {
         authorization: `Basic ${apiAuth}`
       },
       method: 'POST',
-      body: JSON.stringify({
-        variant_ids: [variantId],
-        format: 'jpg',
-        option_groups: printFiles.result.option_groups,
-        files
-      })
+      body: JSON.stringify(mockupTask)
     }
   )
   const json = await res.json()

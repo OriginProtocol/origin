@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import get from 'lodash/get'
 
 import { HashRouter, BrowserRouter } from 'react-router-dom'
 import Styl from 'react-styl'
@@ -27,7 +28,7 @@ const Providers = () => {
   }
   return (
     <Router>
-      <StateProvider storage={config.backendAuthToken}>
+      <StateProvider storage={get(config, 'backendAuthToken', 'dshop')}>
         <App config={config} />
       </StateProvider>
     </Router>

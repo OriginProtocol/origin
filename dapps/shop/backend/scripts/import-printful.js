@@ -17,6 +17,7 @@ const writeProductData = require('./printful/writeProductData')
 const writeInternalData = require('./printful/writeInternalData')
 
 program.requiredOption('-s, --site <site>', 'Site name')
+program.option('-p, --png', 'Use png instead pf jpg')
 
 if (!process.argv.slice(2).length) {
   program.outputHelp()
@@ -125,13 +126,13 @@ async function matchPrintfulToExisting({ OutputDir }) {
 
 async function start() {
   await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-  await writeProductData({ OutputDir })
-  await downloadPrintfulMockups({ OutputDir })
+  await writeProductData({ OutputDir, png: program.png })
+  await downloadPrintfulMockups({ OutputDir, png: program.png })
   await resizePrintfulMockups({ OutputDir })
 
   // await matchPrintfulToExisting({ OutputDir })
   // await writeInternalData({ OutputDir })
-  // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '153402138' })
+  // await getMockups({ PrintfulURL, apiAuth, OutputDir, id: '169354981' })
   // await writeShopifyToPrintful()
   // await writePrintfulIds()
 }

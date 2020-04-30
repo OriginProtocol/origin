@@ -2,6 +2,8 @@ const { getSiteConfig } = require('../config')
 const mjml2html = require('mjml')
 const nodemailer = require('nodemailer')
 const aws = require('aws-sdk')
+const fetch = require('node-fetch')
+const sharp = require('sharp')
 
 const cartData = require('./cartData')
 const encConf = require('./encryptedConfig')
@@ -53,7 +55,7 @@ async function sendMail(shopId, cart, skip) {
       port: 587,
       auth
     })
-  } else if (config.email === 'sendgrid') {
+  } else if (config.email === 'mailgun') {
     transporter = nodemailer.createTransport({
       host: config.mailgunSmtpServer,
       port: config.mailgunSmtpPort,
@@ -78,20 +80,34 @@ async function sendMail(shopId, cart, skip) {
   let publicURL = config.publicUrl
   const data = await getSiteConfig(dataURL)
   const items = await cartData(dataURL, cart.items)
+  const attachments = [],
+    orderItems = []
 
-  const orderItems = items.map(item => {
+  for (const item of items) {
     const img = item.variant.image || item.product.image
     const options = optionsForItem(item)
-    return orderItem({
-      img: `${dataURL}${item.product.id}/520/${img}`,
-      title: item.product.title,
-      quantity: item.quantity,
-      price: formatPrice(item.price),
-      options: options.length
-        ? `<div class="options">${options.join(', ')}</div>`
-        : ''
-    })
-  })
+    const cid = `${img.replace(/[^a-z]/g, '')}`
+
+    const imgStream = await fetch(`${dataURL}${item.product.id}/520/${img}`)
+    const imgBlob = await imgStream.arrayBuffer()
+    const content = await sharp(Buffer.from(imgBlob))
+      .resize(100)
+      .toBuffer()
+
+    attachments.push({ filename: img, content, cid })
+
+    orderItems.push(
+      orderItem({
+        img: `cid:${cid}`,
+        title: item.product.title,
+        quantity: item.quantity,
+        price: formatPrice(item.price),
+        options: options.length
+          ? `<div class="options">${options.join(', ')}</div>`
+          : ''
+      })
+    )
+  }
 
   const orderItemsTxt = items.map(item => {
     const options = optionsForItem(item)
@@ -170,7 +186,8 @@ async function sendMail(shopId, cart, skip) {
     to: `${vars.firstName} ${vars.lastName} <${vars.email}>`,
     subject: vars.subject,
     html: htmlOutput.html,
-    text: txtOutput
+    text: txtOutput,
+    attachments
   }
 
   const messageVendor = {
@@ -178,7 +195,8 @@ async function sendMail(shopId, cart, skip) {
     to: vars.supportEmail,
     subject: `[${vars.siteName}] Order #${cart.offerId}`,
     html: htmlOutputVendor.html,
-    text: txtOutput
+    text: txtOutput,
+    attachments
   }
 
   if (!skip) {

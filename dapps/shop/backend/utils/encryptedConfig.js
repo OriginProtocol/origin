@@ -21,6 +21,21 @@ const IV_LENGTH = 16
 const loadedConfigs = {}
 const loadedIVs = {}
 
+function genIV() {
+  return crypto.randomBytes(IV_LENGTH)
+}
+
+function getConfig(config) {
+  const [iv, configRaw] = config.split(':')
+  return decryptJSON(Buffer.from(iv, 'hex'), configRaw)
+}
+
+function setConfig(newConfig, existingConfig) {
+  const iv = existingConfig ? existingConfig.split(':')[0] : genIV()
+  const config = encryptJSON(iv, newConfig)
+  return `${iv.toString('hex')}:${config}`
+}
+
 /**
  * Get already loaded initialization vector or create one
  *
@@ -325,5 +340,7 @@ module.exports = {
   set,
   assign,
   get,
-  dump
+  dump,
+  getConfig,
+  setConfig
 }

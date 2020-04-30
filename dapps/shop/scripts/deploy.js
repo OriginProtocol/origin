@@ -14,7 +14,7 @@ if (!dataDir) {
   console.log('Usage: node deploy.js [data_dir]')
   process.exit()
 }
-if (!fs.existsSync(`${__dirname}/../data/${dataDir}`)) {
+if (dataDir !== 'prime' && !fs.existsSync(`${__dirname}/../data/${dataDir}`)) {
   console.log(`data/${dataDir} not found`)
   process.exit()
 }
@@ -73,7 +73,7 @@ async function go() {
 
   const hash = await deploy({
     remotePinners: ['pinata'],
-    // dnsProviders: argv.dns,
+    // dnsProviders: ['cloudflare'],
     siteDomain: dataDir,
     credentials: {
       // cloudflare: {
@@ -90,9 +90,7 @@ async function go() {
     }
   })
 
-  await prime(`https://gateway.pinata.cloud/ipfs/${hash}`)
-  await prime(`https://gateway.ipfs.io/ipfs/${hash}`)
-  await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`)
+  await primeAll(hash)
 
   await new Promise((resolve, reject) => {
     exec(`rm -rf public/${dataDir}`, (error, stdout) => {
@@ -102,4 +100,14 @@ async function go() {
   })
 }
 
-go()
+async function primeAll(hash) {
+  await prime(`https://gateway.pinata.cloud/ipfs/${hash}`)
+  await prime(`https://gateway.ipfs.io/ipfs/${hash}`)
+  await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`)
+}
+
+if (process.argv[2] === 'prime' && process.argv[3]) {
+  primeAll(process.argv[3])
+} else {
+  go()
+}

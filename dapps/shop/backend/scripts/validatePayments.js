@@ -16,7 +16,7 @@ async function validate(dataDir) {
     return
   }
 
-  const orders = await Order.findAll({ where: { shopId: shop.id }, limit: 250 })
+  const orders = await Order.findAll({ where: { shopId: shop.id }, limit: 500 })
   const encryptedHashes = orders.map(o => o.encryptedIpfsHash).filter(i => i)
   console.log(`Found ${encryptedHashes.length} orders with encrypted hashes`)
 

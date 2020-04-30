@@ -14,14 +14,17 @@ async function createSeller({ name, email, password }) {
     return { status: 409, error: 'Registration exists' }
   }
 
+  const numSellers = await Seller.count()
   const salt = await createSalt()
   const passwordHash = await hashPassword(salt, password)
 
   const seller = await Seller.create({
     name,
     email,
-    password: passwordHash
+    password: passwordHash,
+    superuser: numSellers === 0 ? true : false // First seller is superUser
   })
+
   return { seller }
 }
 

@@ -198,6 +198,8 @@ function getReducer(key) {
       newState = set(newState, 'affiliate', action.affiliate)
     } else if (action.type === 'setReferrer') {
       newState = set(newState, 'referrer', action.referrer)
+    } else if (action.type === 'setNetwork') {
+      newState = set(newState, 'network', action.network)
     }
 
     newState.cart.subTotal = newState.cart.items.reduce((total, item) => {

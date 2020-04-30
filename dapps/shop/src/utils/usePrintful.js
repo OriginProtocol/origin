@@ -4,9 +4,11 @@ import useConfig from 'utils/useConfig'
 function usePrintful(orderId, reload) {
   const { config } = useConfig()
   const [order, setOrder] = useState()
+  const [loading, setLoading] = useState()
 
   useEffect(() => {
     async function fetchOrder() {
+      setLoading(true)
       const url = `${config.backend}/orders/${orderId}/printful`
       const raw = await fetch(url, {
         credentials: 'include',
@@ -20,11 +22,12 @@ function usePrintful(orderId, reload) {
           setOrder(order)
         }
       }
+      setLoading(false)
     }
     fetchOrder()
   }, [reload])
 
-  return order
+  return { order, loading }
 }
 
 export default usePrintful

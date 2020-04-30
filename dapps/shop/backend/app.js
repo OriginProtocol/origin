@@ -66,7 +66,9 @@ app.use((err, req, res, next) => {
   })
 })
 
+require('./routes/networks')(app)
 require('./routes/auth')(app)
+require('./routes/shops')(app)
 require('./routes/affiliate')(app)
 require('./routes/uphold')(app)
 require('./routes/orders')(app)
@@ -114,6 +116,18 @@ app.get(
     }
   }
 )
+
+app.use(serveStatic(`${__dirname}/dist`, { index: false }))
+app.get('/', (req, res) => {
+  let html
+  try {
+    html = fs.readFileSync(`${__dirname}/dist/index.html`).toString()
+  } catch (e) {
+    return res.send('')
+  }
+  html = html.replace('DATA_DIR', '').replace('TITLE', 'Origin Dshop')
+  res.send(html)
+})
 
 app.get('*', (req, res, next) => {
   serveStatic(`${__dirname}/public/${req.hostname}`)(req, res, next)

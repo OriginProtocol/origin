@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       ipfs: DataTypes.STRING,
       ipfsApi: DataTypes.STRING,
       marketplaceContract: DataTypes.STRING,
-      marketplaceVersion: DataTypes.STRING
+      marketplaceVersion: DataTypes.STRING,
+      active: DataTypes.BOOLEAN,
+      config: DataTypes.TEXT
     },
     {
       timestamps: false,

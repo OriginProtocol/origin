@@ -135,7 +135,11 @@ const webpackConfig = {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')]
+    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')],
+    proxy: {
+      context: () => true,
+      target: 'http://0.0.0.0:3000'
+    }
   },
   watchOptions: {
     poll: 2000
@@ -153,10 +157,9 @@ const webpackConfig = {
       provider: process.env.PROVIDER,
       analytics: process.env.ANALYTICS,
       fbPixel: process.env.FB,
-      title: siteConfig.fullTitle,
+      title: siteConfig.metaTitle || siteConfig.fullTitle,
       metaDescription: siteConfig.metaDescription,
-      dataDir:
-        process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
+      dataDir: process.env.DATA_DIR,
       absolute
     }),
     new webpack.EnvironmentPlugin({
@@ -164,12 +167,10 @@ const webpackConfig = {
       NODE_ENV: process.env.NODE_ENV || 'development',
       MARKETPLACE_CONTRACT: localContractAddress,
       NETWORK: process.env.NETWORK || 'localhost',
-      DATA_DIR:
-        process.env.DATA_DIR || (process.env.CONTENT_CDN ? '' : 'example'),
+      DATA_DIR: process.env.DATA_DIR || '',
       CONTENT_CDN: process.env.CONTENT_CDN || '',
       CONTENT_HASH: process.env.CONTENT_HASH || '',
-      ABSOLUTE: process.env.ABSOLUTE || '',
-      BACKEND_AUTH_TOKEN: process.env.BACKEND_AUTH_TOKEN || ''
+      ABSOLUTE: process.env.ABSOLUTE || ''
     })
   ],
 

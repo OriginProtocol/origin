@@ -248,11 +248,8 @@ async function go() {
   console.log(`Assigned config OK`)
 
   const role = 'admin'
-  await SellerShop.create({
-    sellerId: seller.id,
-    shopId: shopResponse.shop.id,
-    role
-  })
+  const shopId = shopResponse.shop.id
+  await SellerShop.create({ sellerId: seller.id, shopId, role })
   console.log(`Added role OK`)
 
   // console.log(`Public PGP Key:`)
