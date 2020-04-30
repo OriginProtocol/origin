@@ -221,7 +221,7 @@ async function updateListing({
     throw new Error('Not enough balance')
   }
 
-  const { seller, proxy, owner, listing } = await _fetchListingInfo(
+  const { seller, proxy, listing } = await _fetchListingInfo(
     graphqlUrl,
     ipfsGatewayUrl,
     listingId
@@ -245,7 +245,7 @@ async function updateListing({
 
   // Update the listing on the marketplace contract.
   if (doIt) {
-    tx = await _sendTx({
+    await _sendTx({
       web3,
       marketplaceListingId,
       ipfsHashBytes,
@@ -314,6 +314,6 @@ updateListing({
   })
   .catch(err => {
     console.log('Failure: ', err)
-    logger.error('Exiting')
+    console.log('Exiting')
     process.exit(-1)
   })
