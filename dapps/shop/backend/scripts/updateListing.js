@@ -149,9 +149,6 @@ async function _sendTx({
   )
 
   if (proxyAddress) {
-    //
-    // Call update listing via the account's proxy.
-    ///
     console.log(`Updating listing via proxy at address ${proxyAddress}.`)
     const proxyContract = new web3.eth.Contract(proxyAbi, proxyAddress)
 
@@ -171,9 +168,6 @@ async function _sendTx({
       throw new Error('Failed updating the listing on the marketplace')
     }
   } else {
-    //
-    // Call update listing directly from the account.
-    //
     console.log(`Updating listing directly from address ${fromAddress}`)
     try {
       tx = await txToSend.send({ from: fromAddress, gas: 350000 })
