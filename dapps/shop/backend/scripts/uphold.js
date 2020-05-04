@@ -17,7 +17,9 @@ async function go() {
   cards.items.forEach(card => {
     // console.log(card)
     const norm = card.normalized.find(n => n.currency === 'USD')
-    console.log(`${card.label}: $${norm.balance} (${card.balance} ${card.currency})`)
+    console.log(
+      `${card.label}: $${norm.balance} (${card.balance} ${card.currency})`
+    )
   })
 
   // const usdCard = cards.items.find(c => c.label === 'USD account')
