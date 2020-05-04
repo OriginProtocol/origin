@@ -15,14 +15,14 @@ const shopConfig = {
   medium: '',
   facebook: '',
 
-  stripe: true,
+  stripe: false,
   beta: false,
   discountCodes: true,
 
   pgpPublicKey: '',
   contentCDN: '',
   contentHash: '',
-  stripeKey: 'pk_test_HBSUtNy4B8zLoqXIhNP8ZzV300DpIaVzHV',
+  stripeKey: '',
 
   networks: {
     '1': {
@@ -31,9 +31,8 @@ const shopConfig = {
       affiliate: '',
       arbitrator: '',
       backend: 'https://dshopapi.ogn.app',
-      ipfsGateway: 'https://ipfs.ogn.app',
-      ipfsApi: 'https://ipfs.ogn.app',
-      stripeKey: 'pk_live_2dszrjdgLWnPBuqyIdpriRZN00ejT1nFLR'
+      ipfsGateway: 'https://ipfs-prod.ogn.app',
+      ipfsApi: 'https://ipfs.ogn.app'
     },
     '4': {
       marketplaceContract: '0x3d608cce08819351ada81fc1550841ebc10686fd',

@@ -6,21 +6,12 @@ const Stripe = require('stripe')
 const { Shop } = require('../models')
 const { authShop } = require('./_auth')
 const encConf = require('../utils/encryptedConfig')
-const { WEB3_PK } = require('../utils/const')
-const { makeOffer } = require('../utils/orders')
+const makeOffer = require('./_makeOffer')
 
 const rawJson = bodyParser.raw({ type: 'application/json' })
 
 module.exports = function(app) {
   app.post('/pay', authShop, async (req, res) => {
-    if (!WEB3_PK) {
-      return res.status(400).send({
-        success: false,
-        message: 'CC payments unavailable'
-      })
-    }
-    const shopId = req.shop.id
-
     if (req.body.amount < 50) {
       return res.status(400).send({
         success: false,
@@ -28,29 +19,27 @@ module.exports = function(app) {
       })
     }
 
-    // Get API Key from config, and init Stripe
-    const stripeBackend = await encConf.get(shopId, 'stripeBackend')
-    if (!stripeBackend) {
+    const shopConfig = encConf.getConfig(req.shop.config)
+    if (!shopConfig.web3Pk || !shopConfig.stripeBackend) {
       return res.status(400).send({
         success: false,
         message: 'CC payments unavailable'
       })
     }
-    const stripe = Stripe(stripeBackend || '')
 
     console.log('Trying to make payment...')
+    const stripe = Stripe(shopConfig.stripeBackend)
     const paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: 'usd',
       statement_descriptor: req.shop.name,
       metadata: {
-        shopId,
+        shopId: req.shop.id,
+        shopStr: req.shop.authToken,
         listingId: req.shop.listingId,
         encryptedData: req.body.data
       }
     })
-
-    // console.log(paymentIntent)
 
     res.send({ success: true, client_secret: paymentIntent.client_secret })
   })
@@ -60,39 +49,29 @@ module.exports = function(app) {
   //    STRIPE_WEBHOOK_SECRET=xxx node backend/payment.js
   //    stripe trigger payment_intent.succeeded
 
-  app.post('/webhook', rawJson, async (req, res) => {
-    if (!WEB3_PK) {
-      return res.sendStatus(400)
-    }
-
-    let jasonBody, shopId, shop
+  async function handleWebhook(req, res, next) {
     try {
-      jasonBody = JSON.parse(req.body.toString())
-      shopId = get(jasonBody, 'data.object.metadata.shopId')
-      shop = await Shop.findOne({ where: { id: shopId } })
-      if (shop) {
-        shopId = shop.id
-      }
+      const json = JSON.parse(req.body.toString())
+      const id = get(json, 'data.object.metadata.shopId')
+      req.shop = await Shop.findOne({ where: { id } })
     } catch (err) {
       console.error('Error parsing body: ', err)
       return res.sendStatus(400)
     }
 
-    // TODO: use a validator instead
-    if (!shopId) {
+    if (!req.shop) {
       console.debug('Missing shopId from /webhook request')
       return res.sendStatus(400)
     }
 
-    // Get API Key from config, and init Stripe
-    const stripeBackend = await encConf.get(shopId, 'stripeBackend')
-    const stripe = Stripe(stripeBackend || '')
-    const webhookSecret = await encConf.get(shopId, 'stripeWebhookSecret')
+    const shopConfig = encConf.getConfig(req.shop.config)
+    const stripe = Stripe(shopConfig.stripeBackend)
 
     let event
-    const signature = req.headers['stripe-signature']
+    const sig = req.headers['stripe-signature']
     try {
-      event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret)
+      const secret = shopConfig.stripeWebhookSecret
+      event = stripe.webhooks.constructEvent(req.body, sig, secret)
     } catch (err) {
       console.log(`⚠️  Webhook signature verification failed.`)
       console.error(err)
@@ -106,15 +85,11 @@ module.exports = function(app) {
 
     console.log(JSON.stringify(event, null, 4))
 
-    const encryptedData = get(event, 'data.object.metadata.encryptedData')
-    const amount = get(event, 'data.object.amount') / 100
+    req.body.data = get(event, 'data.object.metadata.encryptedData')
+    req.amount = get(event, 'data.object.amount')
 
-    makeOffer({ shop, amount, encryptedData })
-      .then(() => res.sendStatus(200))
-      .catch(err => {
-        console.error(err)
-        res.status(500)
-        return
-      })
-  })
+    next()
+  }
+
+  app.post('/webhook', rawJson, handleWebhook, makeOffer)
 }

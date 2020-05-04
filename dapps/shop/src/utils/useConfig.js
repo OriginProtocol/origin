@@ -6,17 +6,9 @@ const { NETWORK } = process.env
 const NetID = NETWORK === 'mainnet' ? '1' : NETWORK === 'rinkeby' ? '4' : '999'
 
 const DefaultPaymentMethods = [
-  {
-    id: 'crypto',
-    label: 'Crypto Currency'
-  },
-  {
-    id: 'stripe',
-    label: 'Credit Card'
-  }
+  { id: 'crypto', label: 'Crypto Currency' },
+  { id: 'stripe', label: 'Credit Card' }
 ]
-
-const { BACKEND_AUTH_TOKEN } = process.env
 
 let config
 
@@ -26,6 +18,7 @@ function useConfig() {
 
   useEffect(() => {
     async function fetchConfig() {
+      config = { backend: '', firstTimeSetup: true }
       setLoading(true)
       try {
         const url = `${dataUrl()}config.json`
@@ -42,10 +35,10 @@ function useConfig() {
           }
           config.supportEmailPlain = supportEmailPlain
           const netConfig = config.networks[NetID] || {}
-          config = { ...config, ...netConfig, netId: NetID }
-          if (BACKEND_AUTH_TOKEN) {
-            config.backendAuthToken = BACKEND_AUTH_TOKEN
+          if (process.env.MARKETPLACE_CONTRACT) {
+            netConfig.marketplaceContract = process.env.MARKETPLACE_CONTRACT
           }
+          config = { ...config, ...netConfig, netId: NetID }
         } else {
           console.error(`Loading of config failed from ${url}`)
         }

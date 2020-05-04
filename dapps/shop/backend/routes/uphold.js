@@ -5,11 +5,26 @@ const makeOffer = require('./_makeOffer')
 const { Shop } = require('../models')
 const sortBy = require('lodash/sortBy')
 
+const UpholdEndpoints = {
+  production: {
+    api: 'https://api.uphold.com',
+    auth: 'https://www.uphold.com'
+  },
+  sandbox: {
+    api: 'https://sandbox-api.uphold.com',
+    auth: 'https://sandbox.uphold.com'
+  }
+}
+
 module.exports = function(app) {
   app.get('/uphold/authed', authShop, async (req, res) => {
+    const upholdApi = await encConf.get(req.shop.id, 'upholdApi')
+    if (!UpholdEndpoints[upholdApi]) {
+      return res.json({ authed: false, message: 'Uphold not configured' })
+    }
     const authToken = req.session.upholdAccessToken
     if (authToken) {
-      const response = await fetch('https://api-sandbox.uphold.com/v0/me', {
+      const response = await fetch(`${UpholdEndpoints[upholdApi].api}/v0/me`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -29,7 +44,7 @@ module.exports = function(app) {
       'user:read',
       'cards:read'
     ]
-    const baseUri = `https://sandbox.uphold.com/authorize/${clientId}`
+    const baseUri = `${UpholdEndpoints[upholdApi].auth}/authorize/${clientId}`
     res.json({
       authed: false,
       redirect: `${baseUri}?scope=${scopes.join(' ')}&state=${state}`
@@ -57,12 +72,17 @@ module.exports = function(app) {
       res.send(`<script>window.opener.postMessage('error', '*')</script>Err`)
       return
     }
+    const upholdApi = await encConf.get(shop.id, 'upholdApi')
+    if (!UpholdEndpoints[upholdApi]) {
+      console.log('Uphold not configured')
+      res.send(`<script>window.opener.postMessage('error', '*')</script>Err`)
+    }
 
     const clientId = await encConf.get(shop.id, 'upholdClient')
     const clientSecret = await encConf.get(shop.id, 'upholdSecret')
 
     const response = await fetch(
-      'https://api-sandbox.uphold.com/oauth2/token',
+      `${UpholdEndpoints[upholdApi].api}/oauth2/token`,
       {
         method: 'POST',
         headers: {
@@ -86,17 +106,24 @@ module.exports = function(app) {
   })
 
   app.get('/uphold/cards', authShop, async (req, res) => {
+    const upholdApi = await encConf.get(req.shop.id, 'upholdApi')
+    if (!UpholdEndpoints[upholdApi]) {
+      return res.json({ success: false, message: 'Uphold not configured' })
+    }
     const authToken = req.session.upholdAccessToken
     // console.log('Token', authToken)
     if (!authToken) {
       return res.json({ success: false })
     }
-    const response = await fetch('https://api-sandbox.uphold.com/v0/me/cards', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`
+    const response = await fetch(
+      `${UpholdEndpoints[upholdApi].api}/v0/me/cards`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       }
-    })
+    )
     const json = await response.json()
     const cards = json.map(card => {
       const { id, label, balance, currency, normalized } = card
@@ -119,6 +146,11 @@ module.exports = function(app) {
     '/uphold/pay',
     authShop,
     async (req, res, next) => {
+      const upholdApi = await encConf.get(req.shop.id, 'upholdApi')
+      if (!UpholdEndpoints[upholdApi]) {
+        return res.json({ success: false, message: 'Uphold not configured' })
+      }
+
       const authToken = req.session.upholdAccessToken
 
       if (!authToken) {
@@ -136,7 +168,7 @@ module.exports = function(app) {
 
       const upholdClient = await encConf.get(req.shop.id, 'upholdClient')
 
-      const url = `https://api-sandbox.uphold.com/v0/me/cards/${req.body.card}`
+      const url = `${UpholdEndpoints[upholdApi].api}/v0/me/cards/${req.body.card}`
       const response = await fetch(`${url}/transactions?commit=true`, {
         method: 'POST',
         headers: {

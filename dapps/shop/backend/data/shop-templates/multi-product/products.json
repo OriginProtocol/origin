@@ -1,0 +1,20 @@
+[
+  {
+    "id": "origin-logo-tee",
+    "title": "Origin Logo Tee",
+    "price": 2000,
+    "image": "img-0.png"
+  },
+  {
+    "id": "cut-out-the-middleman-baseball-tee",
+    "title": "Cut Out The Middleman Baseball Tee",
+    "price": 2000,
+    "image": "img-0.png"
+  },
+  {
+    "id": "origin-coffee-mug",
+    "title": "Origin Coffee Mug",
+    "price": 2500,
+    "image": "img-0.png"
+  }
+]

@@ -8,7 +8,8 @@ import formatAddress from 'utils/formatAddress'
 
 const AdminOrderDetails = ({ order }) => {
   const cart = get(order, 'data')
-  if (!cart) {
+  const userInfo = get(order, 'data.userInfo')
+  if (!userInfo) {
     return <div>Loading...</div>
   }
 
@@ -58,7 +59,6 @@ require('react-styl')(`
     .order-details
       display: flex
       flex-wrap: wrap-reverse
-      margin-top: 2rem
       color: #000
       > div:nth-child(2)
         flex: 2

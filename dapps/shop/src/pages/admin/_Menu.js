@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import Link from 'components/Link'
+import Menu from 'components/admin/Menu'
 import * as Icons from 'components/icons/Admin'
 
 const AdminMenu = () => {
@@ -13,7 +14,7 @@ const AdminMenu = () => {
   const active = path => (pathname.indexOf(path) === 0 ? 'active' : '')
 
   return (
-    <ul className="admin-menu list-unstyled">
+    <Menu>
       <li className={`dashboard ${active('/admin/dashboard')}`}>
         <Link to="/admin/dashboard">
           <Icons.Dashboard />
@@ -72,33 +73,8 @@ const AdminMenu = () => {
           Logout
         </a>
       </li>
-    </ul>
+    </Menu>
   )
 }
 
 export default AdminMenu
-
-require('react-styl')(`
-  .admin-menu
-    background-color: #f8f8f8
-    border-radius: 10px
-    padding: 0.75rem
-    margin-right: 0.5rem
-    li
-      a
-        display: flex
-        align-items: center
-        padding: 0.675rem 0.5rem
-        color: #666
-        line-height: 0
-        svg
-          margin-right: 0.5rem
-          fill: #666
-          display: inline-block
-          min-width: 20px
-      &.active a
-        color: #000
-        svg
-          fill: #3B80EE
-
-`)

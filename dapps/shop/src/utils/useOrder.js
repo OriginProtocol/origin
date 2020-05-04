@@ -41,7 +41,7 @@ function useOrder(orderId) {
       setOrder(order)
     }
     fetchOrder()
-  }, [])
+  }, [orderId])
 
   return { loading, order }
 }

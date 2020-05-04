@@ -1,5 +1,4 @@
-const omit = require('lodash/omit')
-const { Seller, Shop, SellerShop } = require('../models')
+const { Seller, Shop, Network } = require('../models')
 const {
   checkPassword,
   authShop,
@@ -7,13 +6,67 @@ const {
   authRole
 } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
-const { IS_PROD } = require('../utils/const')
 const encConf = require('../utils/encryptedConfig')
-const { validateConfig, validateShop } = require('../utils/validators')
+const { validateConfig } = require('../utils/validators')
 const get = require('lodash/get')
 
+async function checkSetup(req, res, next) {
+  let reason
+  const userCount = await Seller.count()
+  if (!userCount) {
+    return res.json({ success: false, reason: 'no-users' })
+  }
+
+  if (!req.session.sellerId) {
+    return res.json({ success: false, reason: 'not-logged-in' })
+  }
+
+  const user = await Seller.findOne({ where: { id: req.session.sellerId } })
+  if (!user) {
+    reason = 'not-logged-in'
+  } else if (!user.superuser) {
+    reason = 'not-superuser'
+  }
+
+  const activeNetwork = await Network.findOne({ where: { active: true } })
+  if (!activeNetwork) {
+    return res.json({ success: false, reason: reason || 'no-active-network' })
+  }
+  const networkConfig = await encConf.getConfig(activeNetwork.config)
+  console.log(networkConfig)
+
+  const shopCount = await Shop.count({
+    where: { networkId: activeNetwork.networkId }
+  })
+  const network = {
+    ipfs: activeNetwork.ipfs,
+    ipfsApi: activeNetwork.ipfsApi,
+    networkId: activeNetwork.networkId,
+    marketplaceContract: activeNetwork.marketplaceContract,
+    marketplaceVersion: activeNetwork.marketplaceVersion,
+    domain: networkConfig.domain
+  }
+  if (!shopCount) {
+    return res.json({
+      success: false,
+      reason: reason || 'no-shops',
+      network
+    })
+  }
+
+  if (!req.headers.authorization) {
+    return res.json({
+      success: false,
+      reason: reason || 'no-shop',
+      network
+    })
+  }
+
+  next()
+}
+
 module.exports = function(app) {
-  app.get('/auth', authSellerAndShop, (req, res) => {
+  app.get('/auth', checkSetup, authSellerAndShop, (req, res) => {
     if (!req.session.sellerId) {
       return res.json({ success: false })
     }
@@ -36,7 +89,7 @@ module.exports = function(app) {
         res.json({
           success: true,
           email: seller.email,
-          role: req.sellerShop.role,
+          role: req.sellerShop ? req.sellerShop.role : '',
           shops
         })
       })
@@ -48,6 +101,21 @@ module.exports = function(app) {
     const { email } = req.params
     const seller = await Seller.findOne({ where: { email } })
     return res.sendStatus(seller === null ? 404 : 204)
+  })
+
+  app.post('/superuser/login', async (req, res) => {
+    const email = get(req.body, 'email', '').toLowerCase()
+    const seller = await Seller.findOne({ where: { email, superuser: true } })
+    if (!seller) {
+      return res.status(404).send({ success: false, reason: 'no-such-user' })
+    }
+    const check = await checkPassword(req.body.password, seller.password)
+    if (check === true) {
+      req.session.sellerId = seller.id
+      res.json({ success: true, email: seller.email, role: 'superuser' })
+    } else {
+      res.json({ success: false, reason: 'incorrect-pass' })
+    }
   })
 
   app.post(
@@ -121,123 +189,6 @@ module.exports = function(app) {
     res.json({ success: false, destroy })
   })
 
-  app.get(
-    '/shop/users',
-    authSellerAndShop,
-    authRole('admin'),
-    async (req, res) => {
-      const users = await Seller.findAll({
-        attributes: ['id', 'name', 'email'],
-        include: {
-          model: Shop,
-          attributes: ['id'],
-          through: { attributes: ['role'] },
-          where: { id: req.shop.id }
-        }
-      })
-
-      res.json({
-        success: true,
-        users: users.map(user => {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: get(user, 'Shops[0].SellerShop.role')
-          }
-        })
-      })
-    }
-  )
-
-  app.get('/shop', async (req, res) => {
-    const { sellerId } = req.session
-
-    if (!sellerId) {
-      return res.status(400).json({ success: false })
-    }
-
-    const rows = await Shop.findAll({ where: { sellerId } })
-
-    const shops = []
-    for (const row of rows) {
-      const shopData = omit(row.dataValues, ['config', 'sellerId'])
-      shopData.dataUrl = await encConf.get(row.id, 'dataUrl')
-      shops.push(shopData)
-    }
-
-    res.json({
-      success: true,
-      shops
-    })
-  })
-
-  app.post('/shop', async (req, res) => {
-    if (!req.session.sellerId) {
-      return res.json({ success: false })
-    }
-
-    const shopObj = req.body
-
-    if (!validateShop(shopObj)) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Invalid shop data' })
-    }
-
-    const shop = await Shop.create({
-      ...shopObj,
-      sellerId: req.session.sellerId
-    })
-
-    res.json({ success: true, shop })
-  })
-
-  app.post(
-    '/shop/add-user',
-    authSellerAndShop,
-    authRole('admin'),
-    async (req, res, next) => {
-      const { seller, status, error } = await createSeller(req.body)
-
-      if (error) {
-        return res.status(status).json({ success: false, message: error })
-      }
-
-      if (!seller) {
-        return res.json({ success: false })
-      }
-
-      SellerShop.create({
-        sellerId: seller.id,
-        shopId: req.shop.id,
-        role: req.body.role
-      })
-        .then(() => {
-          res.json({ success: true })
-        })
-        .catch(err => {
-          console.error(err)
-          next(err)
-        })
-    }
-  )
-
-  app.delete(
-    '/shop',
-    authSellerAndShop,
-    authRole('admin'),
-    async (req, res) => {
-      await Shop.destroy({
-        where: {
-          id: req.body.id,
-          sellerId: req.session.sellerId
-        }
-      })
-      res.json({ success: true })
-    }
-  )
-
   app.get('/config', authSellerAndShop, authRole('admin'), async (req, res) => {
     const config = await encConf.dump(req.shop.id)
     return res.json({ success: true, config })
@@ -258,32 +209,6 @@ module.exports = function(app) {
 
       await encConf.assign(req.shop.id, config)
       return res.json({ success: true })
-    }
-  )
-
-  app.get(
-    '/config/dump',
-    authSellerAndShop,
-    authRole('admin'),
-    async (req, res) => {
-      if (!req.session.sellerId) {
-        return res.json({ success: false })
-      }
-      const { id } = req.shop
-
-      // Testing only
-      if (IS_PROD) return res.sendStatus(404)
-
-      const shop = await Shop.findOne({
-        where: { id, sellerId: req.session.sellerId }
-      })
-
-      if (!shop) {
-        return res.status(404)
-      }
-
-      const config = await encConf.dump(id)
-      return res.json({ success: true, config })
     }
   )
 

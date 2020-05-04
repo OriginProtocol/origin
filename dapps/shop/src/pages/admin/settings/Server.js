@@ -38,6 +38,7 @@ const defaultValues = {
   awsRegion: '',
   awsAccessKey: '',
   awsAccessSecret: '',
+  upholdApi: '',
   upholdClient: '',
   upholdSecret: ''
 }
@@ -284,18 +285,29 @@ const AdminSettings = () => {
             <input type="text" {...input('printful')} />
             {Feedback('printful')}
           </div>
-          <div className="row">
-            <div className="form-group col-md-6">
-              <label>Uphold Client</label>
-              <input type="text" {...input('upholdClient')} />
-              {Feedback('upholdClient')}
-            </div>
-            <div className="form-group col-md-6">
-              <label>Uphold Secret</label>
-              <input type="text" {...input('upholdSecret')} />
-              {Feedback('upholdSecret')}
-            </div>
+          <div className="form-group">
+            <label>Uphold payments</label>
+            <select {...input('upholdApi')}>
+              <option value="">Disabled</option>
+              <option value="production">Production</option>
+              <option value="sandbox">Sandbox</option>
+            </select>
+            {Feedback('upholdApi')}
           </div>
+          {!state.upholdApi ? null : (
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label>Uphold Client</label>
+                <input type="text" {...input('upholdClient')} />
+                {Feedback('upholdClient')}
+              </div>
+              <div className="form-group col-md-6">
+                <label>Uphold Secret</label>
+                <input type="text" {...input('upholdSecret')} />
+                {Feedback('upholdSecret')}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -5,6 +5,9 @@ import useConfig from 'utils/useConfig'
 import useIsMobile from 'utils/useIsMobile'
 import { useStateValue } from 'data/state'
 
+const checkBalance = (card, cart) =>
+  card && card.normalizedBalance * 100 >= cart.total
+
 const Uphold = ({ value, onChange }) => {
   const { config } = useConfig()
   const [{ cart }, dispatch] = useStateValue()
@@ -53,23 +56,19 @@ const Uphold = ({ value, onChange }) => {
       const json = await res.json()
       if (typeof json === 'object' && json[0]) {
         setUpholdCards(json)
-        onChange(json[0].id)
+        onChange({ id: json[0].id, hasBalance: checkBalance(json[0], cart) })
       }
     }
     getCards()
   }, [upholdAuth])
 
-  const selectedCard = upholdCards.find(c => c.id === value)
-  const hasBalance =
-    selectedCard && selectedCard.normalizedBalance * 100 >= cart.total
+  const selectedCard = upholdCards.find(c => c.id === get(value, 'id'))
+  const hasBalance = checkBalance(selectedCard, cart)
+  const inactive = paymentMethod === 'uphold' ? '' : ' inactive'
 
   return (
     <>
-      <label
-        className={`radio align-items-center${
-          paymentMethod === 'uphold' ? '' : ' inactive'
-        }`}
-      >
+      <label className={`radio align-items-center${inactive}`}>
         <input
           type="radio"
           name="paymentMethod"
@@ -87,7 +86,7 @@ const Uphold = ({ value, onChange }) => {
       {paymentMethod === 'uphold' && (
         <div className="pl-4 pb-3 pt-3">
           {upholdAuth ? (
-            <>
+            !upholdCards.length ? null : (
               <table className="table table-sm table-hover uphold-cards">
                 <thead>
                   <tr>
@@ -104,7 +103,7 @@ const Uphold = ({ value, onChange }) => {
                           <input
                             type="radio"
                             className="mr-2"
-                            checked={value === card.id}
+                            checked={get(value, 'id') === card.id}
                             onChange={() => onChange(card.id)}
                           />
                           <span
@@ -127,21 +126,7 @@ const Uphold = ({ value, onChange }) => {
                   })}
                 </tbody>
               </table>
-              {/* <select
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                className="form-control"
-              >
-                {upholdCards.map(card => {
-                  const label = `${card.label}: $${card.normalizedBalance} (${card.balance} ${card.currency})`
-                  return (
-                    <option key={card.id} value={card.id}>
-                      {label}
-                    </option>
-                  )
-                })}
-              </select> */}
-            </>
+            )
           ) : (
             <a
               href={redirect}
@@ -167,8 +152,11 @@ const Uphold = ({ value, onChange }) => {
               <img src="images/connect_with_uphold.svg" />
             </a>
           )}
-
-          {hasBalance || !upholdAuth || !upholdCards.length ? null : (
+          {!upholdCards.length ? (
+            <div className="alert alert-danger mt-1 mb-0">
+              No Uphold Cards found
+            </div>
+          ) : hasBalance || !upholdAuth ? null : (
             <div className="alert alert-danger mt-3 mb-0">
               Insufficient balance
             </div>

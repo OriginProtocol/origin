@@ -1,24 +1,19 @@
 {
-  "name": "Origin Shop",
+  "name": "Origin Dshop",
   "description": "A decentralized e-commerce store.",
-  "repository": "https://github.com/OriginProtocol/origin/dapps/shop",
+  "repository": "https://github.com/OriginProtocol/dshop",
   "logo": "https://www.originprotocol.com/static/img/origin-icon.png",
-  "keywords": ["ethereum", "node", "ipfs"],
+  "keywords": ["ethereum", "nodejs", "ipfs"],
   "addons": [
     {
       "plan": "heroku-postgresql:hobby-dev"
-    },
-    {
-      "plan": "mailgun:starter"
     }
   ],
   "env": {
-    "PROVIDER": {
-      "description": "Ethereum provider websocket",
+    "ENCRYPTION_KEY": {
+      "description": "DB Encryption Key",
+      "generator": "secret",
       "required": true
-    },
-    "WEB3_PK": {
-      "description": "Private Ethereum Key. Used to make offers on behalf of credit card users."
     }
   }
 }

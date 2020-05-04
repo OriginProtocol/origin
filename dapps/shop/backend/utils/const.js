@@ -54,7 +54,6 @@ const {
  * config.
  */
 const DATA_URL = null
-const PASSWORD_SALT_ROUNDS = 10
 const PRINTFUL_URL = 'https://api.printful.com'
 
 module.exports = {
@@ -64,7 +63,6 @@ module.exports = {
   NODE_ENV,
   IS_PROD,
   SESSION_SECRET,
-  PASSWORD_SALT_ROUNDS,
   WEB3_PK,
   PROVIDER_WS,
   PROVIDER,

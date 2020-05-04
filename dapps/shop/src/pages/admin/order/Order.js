@@ -11,18 +11,15 @@ import Printful from './Printful'
 
 const AdminOrder = () => {
   const match = useRouteMatch('/admin/orders/:orderId/:tab?')
-  const { orderId } = match.params
+  const { orderId, tab } = match.params
   const { order, loading } = useOrder(orderId)
   const [{ admin }] = useStateValue()
   const urlPrefix = `/admin/orders/${orderId}`
 
-  if (loading) {
-    return 'Loading...'
-  }
-  if (!order) {
-    return 'Order not found'
-  }
-  const cart = order.data
+  const offerSplit = orderId.split('-')
+  const listingId = offerSplit.slice(0, -1).join('-')
+  const offerId = Number(offerSplit[offerSplit.length - 1])
+
   return (
     <>
       <h3 className="admin-title">
@@ -30,9 +27,26 @@ const AdminOrder = () => {
           Orders
         </Link>
         <span className="chevron" />
-        {!cart.offerId ? null : `#${cart.offerId}`}
+        {`#${orderId}`}
+        <div style={{ fontSize: 18 }} className="ml-auto">
+          <Link
+            to={`/admin/orders/${listingId}-${offerId - 1}${
+              tab ? `/${tab}` : ''
+            }`}
+          >
+            &lt; Older
+          </Link>
+          <Link
+            className="ml-3"
+            to={`/admin/orders/${listingId}-${offerId + 1}${
+              tab ? `/${tab}` : ''
+            }`}
+          >
+            Newer &gt;
+          </Link>
+        </div>
       </h3>
-      <ul className="nav nav-tabs mt-3">
+      <ul className="nav nav-tabs mt-3 mb-4">
         <li className="nav-item">
           <NavLink className="nav-link" to={urlPrefix} exact>
             Details
@@ -53,15 +67,19 @@ const AdminOrder = () => {
           </li>
         )}
       </ul>
-      <Switch>
-        <Route path={`${urlPrefix}/printful`}>
-          <Printful />
-        </Route>
-        <Route path={`${urlPrefix}/payment`}>Payment</Route>
-        <Route>
-          <OrderDetails order={order} />
-        </Route>
-      </Switch>
+      {loading ? (
+        'Loading...'
+      ) : (
+        <Switch>
+          <Route path={`${urlPrefix}/printful`}>
+            <Printful />
+          </Route>
+          <Route path={`${urlPrefix}/payment`}>Payment</Route>
+          <Route>
+            <OrderDetails order={order} />
+          </Route>
+        </Switch>
+      )}
     </>
   )
 }
