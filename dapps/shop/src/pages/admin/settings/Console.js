@@ -104,7 +104,9 @@ const AdminConsole = () => {
 
           const encryptedData = await get(config.ipfsGateway, readHash, 10000)
 
-          const privateKey = await openpgp.key.readArmored(shopConfig.pgpPrivateKey)
+          const privateKey = await openpgp.key.readArmored(
+            shopConfig.pgpPrivateKey
+          )
           if (privateKey.err && privateKey.err.length) {
             throw privateKey.err[0]
           }

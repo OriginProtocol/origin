@@ -47,7 +47,7 @@ const FirstTime = () => {
         <ShopReady {...ready} />
       ) : (
         <CreateShop
-          next={(ready) => {
+          next={ready => {
             setReady(ready)
             setStep('shop-deployed')
           }}

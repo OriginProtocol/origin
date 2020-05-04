@@ -166,7 +166,7 @@ async function go() {
       const data = JSON.parse(parsed.data)
       console.log('onSuccess', data)
 
-      const files = await post(
+      await post(
         'https://www.printful.com/rpc/product-generator-rpc/get-generated-files',
         qs.stringify({ cacheKey: data })
       )
