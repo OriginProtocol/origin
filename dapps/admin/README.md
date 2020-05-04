@@ -2,7 +2,7 @@
 
 A UI leveraging `@origin/graphql`. View and manage listings and offers.
 
-Demo at [https://ogn.dev/admin](https://ogn.dev/admin)
+Demo at [https://admin.staging.originprotocol.com/#/marketplace](https://admin.staging.originprotocol.com/#/marketplace). 
 
 ## Usage
 
