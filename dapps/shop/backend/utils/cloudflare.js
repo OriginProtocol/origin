@@ -54,7 +54,7 @@ async function setRecords({ email, key, zone, subdomain, ipfsGateway, hash }) {
   }
 
   const dnslink = `_dnslink.${record}`
-  const txt = await findRecord(zoneObj.id, { type: 'TXT', name: dnslink })
+  const txt = await findRecord(cf, zoneObj.id, { type: 'TXT', name: dnslink })
   const content = `dnslink=/ipfs/${hash}`
   if (!txt) {
     console.log(`Adding TXT ${dnslink} to ${content}`)
@@ -78,9 +78,9 @@ module.exports = setRecords
 
 // setRecords({
 //   email: 'email@example.com',
-//   key: 'abc123'
+//   key: 'abc123',
 //   zone: 'example.com',
 //   subdomain: 'www',
 //   ipfsGateway: 'ipfs-prod.ogn.app',
-//   ipfsHash: ''
+//   hash: ''
 // })

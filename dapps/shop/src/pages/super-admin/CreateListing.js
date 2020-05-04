@@ -37,8 +37,7 @@ async function createListing({ title, network }) {
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const providerNetwork = await provider.getNetwork()
   if (providerNetwork.chainId !== network.networkId) {
-    console.log(`Network should be ${network.networkId}`)
-    return
+    throw new Error(`Network should be ${network.networkId}`)
   }
 
   const signer = provider.getSigner()
@@ -61,15 +60,23 @@ async function createListing({ title, network }) {
   return listingId
 }
 
-const CreateListing = ({ className, children, onCreated = () => {} }) => {
+const CreateListing = ({
+  className,
+  children,
+  onCreated = () => {},
+  onError
+}) => {
   const { config } = useConfig()
   const [{ admin }] = useStateValue()
   return (
     <button
+      type="button"
       className={className}
       onClick={e => {
         e.preventDefault()
-        createListing({ config, network: admin.network }).then(onCreated)
+        createListing({ config, network: admin.network })
+          .then(onCreated)
+          .catch(err => onError(err.message))
       }}
       children={children}
     />

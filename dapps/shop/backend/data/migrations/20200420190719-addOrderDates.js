@@ -11,6 +11,9 @@ module.exports = {
       const [orders] = await queryInterface.sequelize.query(orderQuery)
 
       const blockNums = orders.map(o => o.created_block)
+      if (!blockNums.length) {
+        return
+      }
       const blockQuery = `select block_number, timestamp from events where block_number IN (${blockNums})`
       const [events] = await queryInterface.sequelize.query(blockQuery)
 

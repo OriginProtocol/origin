@@ -20,27 +20,60 @@ async function genPGP() {
   return { pgpPrivateKeyPass, pgpPublicKey, pgpPrivateKey }
 }
 
+function validate(state) {
+  const newState = {}
+
+  if (!state.name) {
+    newState.nameError = 'Enter a Shop Name'
+  }
+  if (!state.dataDir) {
+    newState.dataDirError = 'Enter a Data Dir'
+  } else if (!state.dataDir.match(/^[a-z-]+$/)) {
+    newState.dataDirError = 'Use a-z characters only'
+  }
+  if (!state.hostname) {
+    newState.hostnameError = 'Enter a hostname'
+  } else if (!state.hostname.match(/^[a-zA-Z0-9-]+$/)) {
+    newState.hostnameError = 'Invalid hostname'
+  }
+  if (!state.listingId) {
+    newState.listingIdError = 'Enter a Listing ID'
+  }
+  if (!state.backend) {
+    newState.backendError = 'Enter a URL'
+  }
+  if (state.shopType === 'printful' && !state.printfulApi) {
+    newState.printfulApiError = 'Enter an API key'
+  }
+
+  const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+  return { valid, newState: { ...state, ...newState } }
+}
+
 const CreateShop = ({ next }) => {
   const { config } = useConfig()
   const [{ admin }] = useStateValue()
   const [advanced, setAdvanced] = useState(false)
   const [loading, setLoading] = useState(false)
   const [state, setStateRaw] = useState({
-    listingId: '999-001-29',
-    name: 'My Store',
-    dataDir: 'mystore',
-    hostname: 'mystore',
+    listingId: '999-001-1',
+    name: 'Test Store',
+    backend: get(window, 'location.origin'),
+    dataDir: 'data',
+    hostname: 'test',
     printfulApi: '',
     pgpPublicKey: '',
     pgpPrivateKey: '',
     pgpPrivateKeyPass: '',
-    web3Pk: ''
+    web3Pk: '',
+    shopType: 'multi-product'
   })
   const setState = newState => setStateRaw({ ...state, ...newState })
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
   useEffect(() => {
-    genPGP().then(pgpKeys => setStateRaw({ ...state, ...pgpKeys }))
+    genPGP().then(pgpKeys => setState(pgpKeys))
   }, [])
 
   return (
@@ -50,6 +83,15 @@ const CreateShop = ({ next }) => {
         className="sign-up"
         onSubmit={async e => {
           e.preventDefault()
+
+          const { valid, newState } = validate(state)
+          setState(newState)
+
+          if (!valid) {
+            window.scrollTo(0, 0)
+            return
+          }
+
           setLoading(true)
           const res = await fetch(`${config.backend}/shop`, {
             headers: { 'content-type': 'application/json' },
@@ -70,7 +112,7 @@ const CreateShop = ({ next }) => {
         <div className="form-group">
           <label>Hostname</label>
           <div className="input-group">
-            <input {...input('hostname')} placeholder="mystore" />
+            <input {...input('hostname')} placeholder="eg mystore" />
             <div className="input-group-append">
               <span className="input-group-text">
                 {`.${get(admin, 'network.domain')}`}
@@ -80,11 +122,26 @@ const CreateShop = ({ next }) => {
           {Feedback('hostname')}
         </div>
         <div className="form-group">
-          <label>Web3 PK (required for non-Eth payments)</label>
-          <input {...input('web3Pk')} type="password" />
-          {Feedback('web3Pk')}
+          <label>Existing Listing ID</label>
+          <div className="d-flex">
+            <div style={{ flex: 1 }}>
+              <input {...input('listingId')} placeholder="eg 1-001-123" />
+              {Feedback('listingId')}
+            </div>
+            <div className="mx-3 pt-1">or</div>
+            <div style={{ flex: 1 }}>
+              <CreateListing
+                className="btn btn-outline-primary w-100"
+                onCreated={listingId => setStateRaw({ ...state, listingId })}
+                onError={createListingError => setState({ createListingError })}
+              >
+                <span className="btn-content">Create Listing</span>
+              </CreateListing>
+              {Feedback('createListing')}
+            </div>
+          </div>
         </div>
-        {/* <div className="form-group">
+        <div className="form-group">
           <label>Logo</label>
           <div className="custom-file">
             <input
@@ -96,7 +153,7 @@ const CreateShop = ({ next }) => {
           </div>
           {Feedback('logo')}
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Favicon</label>
           <div className="custom-file">
             <input
@@ -108,10 +165,22 @@ const CreateShop = ({ next }) => {
           </div>
           {Feedback('favicon')}
         </div> */}
-        <div className="form-group">
-          <label>Printful API Key</label>
-          <input {...input('printfulApi')} placeholder="Printful API Key" />
-          {Feedback('printfulApi')}
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label>Shop type</label>
+            <select {...input('shopType')}>
+              <option value="printful">Printful</option>
+              <option value="single-product">Single Product</option>
+              <option value="multi-product">Multi Product</option>
+            </select>
+          </div>
+          {state.shopType !== 'printful' ? null : (
+            <div className="form-group col-md-6">
+              <label>Printful API Key</label>
+              <input type="password" {...input('printfulApi')} />
+              {Feedback('printfulApi')}
+            </div>
+          )}
         </div>
         <div className="mb-2">
           <a
@@ -127,29 +196,22 @@ const CreateShop = ({ next }) => {
         {!advanced ? null : (
           <>
             <div className="form-group">
-              <label>Existing Listing ID</label>
-              <div className="d-flex align-items-center">
-                <div style={{ flex: 1 }}>
-                  <input {...input('listingId')} placeholder="eg 1-001-123" />
-                  {Feedback('listingId')}
-                </div>
-                <div className="mx-3">or</div>
-                <div style={{ flex: 1 }}>
-                  <CreateListing
-                    className="btn btn-outline-primary w-100"
-                    onCreated={listingId =>
-                      setStateRaw({ ...state, listingId })
-                    }
-                  >
-                    <span className="btn-content">Create Listing</span>
-                  </CreateListing>
-                </div>
-              </div>
+              <label>Web3 PK (required for non-Eth payments)</label>
+              <input {...input('web3Pk')} type="password" />
+              {Feedback('web3Pk')}
             </div>
             <div className="form-group">
               <label>Data Dir</label>
-              <input {...input('dataDir')} placeholder="mystore" />
+              <input {...input('dataDir')} placeholder="data" />
               {Feedback('dataDir')}
+            </div>
+            <div className="form-group">
+              <label>Dshop API</label>
+              <input
+                {...input('backend')}
+                placeholder="eg https://dshopapi.ogn.app"
+              />
+              {Feedback('backend')}
             </div>
             <div className="form-group">
               <label>PGP Private Key Password</label>

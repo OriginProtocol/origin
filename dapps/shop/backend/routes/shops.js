@@ -1,16 +1,19 @@
 const omit = require('lodash/omit')
-const { Seller, Shop, SellerShop } = require('../models')
+const { Seller, Shop, SellerShop, Network } = require('../models')
 const { authSellerAndShop, authRole } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const encConf = require('../utils/encryptedConfig')
-const encryptedConfig = require('../utils/encryptedConfig')
 const { createShop } = require('../utils/shop')
+const setCloudflareRecords = require('../utils/cloudflare')
 const get = require('lodash/get')
+const set = require('lodash/set')
 const fs = require('fs')
 const os = require('os')
 const configs = require('../scripts/configs')
 const deploy = require('ipfs-deploy')
 const { exec } = require('child_process')
+const prime = require('../utils/primeIpfs')
+const ipfsClient = require('ipfs-http-client')
 
 const downloadProductData = require('../scripts/printful/downloadProductData')
 const downloadPrintfulMockups = require('../scripts/printful/downloadPrintfulMockups')
@@ -88,6 +91,9 @@ module.exports = function(app) {
         .json({ success: false, message: 'Invalid shop data' })
     }
 
+    const network = await Network.findOne({ where: { active: true } })
+    const networkConfig = encConf.getConfig(network.config)
+
     const shopId = shopResponse.shop.id
 
     const config = {
@@ -102,14 +108,14 @@ module.exports = function(app) {
     }
 
     console.log(`Created shop ${shopId}`)
-    await encryptedConfig.assign(shopId, config)
+    await encConf.assign(shopId, config)
     console.log(`Assigned config OK`)
 
     const role = 'admin'
     await SellerShop.create({ sellerId: req.session.sellerId, shopId, role })
     console.log(`Added role OK`)
 
-    const { dataDir, name, pgpPublicKey, printfulApi } = req.body
+    const { dataDir, name, pgpPublicKey, printfulApi, shopType } = req.body
 
     const OutputDir = `${os.tmpdir()}/dshop`
     await new Promise(resolve => exec(`rm -rf ${OutputDir}`, resolve))
@@ -126,23 +132,23 @@ module.exports = function(app) {
       )
     })
 
+    const networkName =
+      network.networkId === 1
+        ? 'mainnet'
+        : network.networkId === 4
+        ? 'rinkeby'
+        : 'localhost'
     const html = fs.readFileSync(`${OutputDir}/public/index.html`).toString()
     fs.writeFileSync(
       `${OutputDir}/public/index.html`,
-      html.replace('TITLE', name).replace('DATA_DIR', dataDir)
+      html
+        .replace('TITLE', name)
+        .replace('DATA_DIR', dataDir)
+        .replace('PROVIDER', network.provider)
+        .replace('NETWORK', networkName)
     )
 
-    if (printfulApi) {
-      const apiAuth = Buffer.from(printfulApi).toString('base64')
-      const PrintfulURL = 'https://api.printful.com'
-
-      await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-      await writeProductData({ OutputDir })
-      await downloadPrintfulMockups({ OutputDir })
-      await resizePrintfulMockups({ OutputDir })
-    }
-
-    const shopConfig = {
+    let shopConfig = {
       ...configs.shopConfig,
       title: name,
       fullTitle: name,
@@ -150,6 +156,38 @@ module.exports = function(app) {
       supportEmail: `${name} Store <${dataDir}@ogn.app>`,
       emailSubject: `Your ${name} Order`,
       pgpPublicKey: pgpPublicKey.replace(/\\r/g, '')
+    }
+    shopConfig = set(
+      shopConfig,
+      `networks[${network.networkId}].backend`,
+      req.body.backend
+    )
+    shopConfig = set(
+      shopConfig,
+      `networks[${network.networkId}].listingId`,
+      req.body.listingId
+    )
+
+    console.log(`Shop type: ${shopType}`)
+
+    if (shopType === 'printful' && printfulApi) {
+      const apiAuth = Buffer.from(printfulApi).toString('base64')
+      const PrintfulURL = 'https://api.printful.com'
+
+      await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
+      await writeProductData({ OutputDir })
+      await downloadPrintfulMockups({ OutputDir })
+      await resizePrintfulMockups({ OutputDir })
+    } else if (shopType === 'single-product' || shopType === 'multi-product') {
+      await new Promise((resolve, reject) => {
+        exec(
+          `cp -r ${__dirname}/../data/shop-templates/${shopType} ${OutputDir}/data`,
+          (error, stdout) => {
+            if (error) reject(error)
+            else resolve(stdout)
+          }
+        )
+      })
     }
 
     const shopConfigPath = `${OutputDir}/data/config.json`
@@ -168,25 +206,51 @@ module.exports = function(app) {
       )
     })
 
-    const hash = await deploy({
-      publicDirPath: `${OutputDir}/public`,
-      remotePinners: ['pinata'],
-      // dnsProviders: ['cloudflare'],
-      siteDomain: dataDir,
-      credentials: {
-        // cloudflare: {
-        //   apiToken: process.env.CLOUDFLARE_TOKEN,
-        //   zone: process.env.CLOUDFLARE_ZONE,
-        //   record: process.env.CLOUDFLARE_RECORD
-        // },
-        pinata: {
-          apiKey: process.env.PINATA_KEY,
-          secretApiKey: process.env.PINATA_SECRET
+    let hash
+    const publicDirPath = `${OutputDir}/public`
+    if (networkConfig.pinataKey) {
+      hash = await deploy({
+        publicDirPath,
+        remotePinners: ['pinata'],
+        siteDomain: dataDir,
+        credentials: {
+          pinata: {
+            apiKey: networkConfig.pinataKey,
+            secretApiKey: networkConfig.pinataSecret
+          }
         }
-      }
-    })
+      })
 
-    res.json({ success: true, hash })
+      await prime(`https://gateway.pinata.cloud/ipfs/${hash}`, publicDirPath)
+      await prime(`https://gateway.ipfs.io/ipfs/${hash}`, publicDirPath)
+      await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`, publicDirPath)
+    } else if (network.ipfsApi.indexOf('localhost') > 0) {
+      const ipfs = ipfsClient(network.ipfsApi)
+      const allFiles = []
+      const glob = ipfsClient.globSource(publicDirPath, { recursive: true })
+      for await (const file of ipfs.add(glob)) {
+        allFiles.push(file)
+      }
+      hash = String(allFiles[allFiles.length - 1].cid)
+    }
+
+    let domain
+    if (networkConfig.cloudflareApiKey) {
+      const subdomain = req.body.hostname
+      const zone = networkConfig.domain
+      domain = `https://${subdomain}.${zone}`
+
+      await setCloudflareRecords({
+        email: networkConfig.cloudflareEmail,
+        key: networkConfig.cloudflareApiKey,
+        ipfsGateway: 'ipfs-prod.ogn.app',
+        zone,
+        subdomain,
+        hash
+      })
+    }
+
+    res.json({ success: true, hash, domain, gateway: network.ipfs })
   })
 
   app.post(

@@ -47,12 +47,12 @@ const SuperAdmin = () => {
     return <div className="fixed-loader">Loading...</div>
   }
 
-  if (!admin.success && admin.reason) {
-    return <FirstTime />
-  }
-
   if (!admin) {
     return <Login />
+  }
+
+  if (!admin.success && admin.reason) {
+    return <FirstTime />
   }
 
   return (

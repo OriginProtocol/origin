@@ -14,6 +14,10 @@ in a Postgres database.
 - [Test Data](docs/index.md#manual-testing)
 - [Backend Web API](docs/api.md)
 
+## Deploy to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Deploy to Heroku script
 
 Make sure your `.env` file has all the values you want to see configured. Make

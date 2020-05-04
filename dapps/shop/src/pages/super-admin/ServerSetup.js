@@ -7,7 +7,7 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 const Defaults = {
   '1': {
     ipfs: 'https://ipfs-prod.ogn.app',
-    ipfsApi: 'https://ipfs-prod.ogn.app',
+    ipfsApi: 'https://ipfs.ogn.app',
     marketplaceContract: '0x698Ff47B84837d3971118a369c570172EE7e54c2',
     marketplaceVersion: '001',
     provider: '',
@@ -15,7 +15,7 @@ const Defaults = {
   },
   '4': {
     ipfs: 'https://ipfs-prod.ogn.app',
-    ipfsApi: 'https://ipfs-prod.ogn.app',
+    ipfsApi: 'https://ipfs.ogn.app',
     marketplaceContract: '0x3D608cCe08819351adA81fC1550841ebc10686fd',
     marketplaceVersion: '001',
     provider: '',
@@ -32,12 +32,10 @@ const Defaults = {
   }
 }
 
-const ServerSetup = ({ next }) => {
-  const { config } = useConfig()
-  const [, dispatch] = useStateValue()
-  const [advanced, setAdvanced] = useState(false)
-  const [state, setStateRaw] = useState({
-    netId: '999',
+function initialState() {
+  const netId = window.location.href.indexOf('https') === 0 ? '1' : '999'
+  return {
+    netId,
     domain: '',
     provider: '',
     providerWs: '',
@@ -49,8 +47,43 @@ const ServerSetup = ({ next }) => {
     ipfsApi: '',
     marketplaceContract: '',
     marketplaceVersion: '',
-    ...Defaults['999']
-  })
+    ...Defaults[netId]
+  }
+}
+
+function validate(state) {
+  const newState = {}
+
+  if (!state.provider) {
+    newState.providerError = 'Enter a WS provider'
+  } else if (!state.provider.match(/^https?:\/\//)) {
+    newState.providerError = 'Should start https:// or http://'
+  }
+  if (!state.providerWs) {
+    newState.providerWsError = 'Enter a WS provider'
+  } else if (!state.providerWs.match(/^wss?:\/\//)) {
+    newState.providerWsError = 'Should start wss:// or ws://'
+  }
+  if (!state.domain) {
+    newState.domainError = 'Enter a root domain'
+  }
+  if (!state.ipfs) {
+    newState.ipfsError = 'Enter an IPFS Gateway'
+  }
+  if (!state.ipfsApi) {
+    newState.ipfsApiError = 'IPFS API required'
+  }
+
+  const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+  return { valid, newState: { ...state, ...newState } }
+}
+
+const ServerSetup = ({ next }) => {
+  const { config } = useConfig()
+  const [, dispatch] = useStateValue()
+  const [advanced, setAdvanced] = useState(false)
+  const [state, setStateRaw] = useState(initialState())
   const setState = newState => setStateRaw({ ...state, ...newState })
   const input = formInput(state, newState => setState(newState))
   const Feedback = formFeedback(state)
@@ -68,6 +101,14 @@ const ServerSetup = ({ next }) => {
         className="sign-up"
         onSubmit={e => {
           e.preventDefault()
+
+          const { valid, newState } = validate(state)
+          setState(newState)
+
+          if (!valid) {
+            window.scrollTo(0, 0)
+            return
+          }
 
           const network = Object.keys(state)
             .filter(k => k.indexOf('Error') < 0)
@@ -140,7 +181,7 @@ const ServerSetup = ({ next }) => {
           </div>
           <div className="form-group col-md-6">
             <label>Pinata Secret</label>
-            <input {...input('pinataSecret')} />
+            <input type="password" {...input('pinataSecret')} />
             {Feedback('pinataSecret')}
           </div>
         </div>
@@ -152,7 +193,7 @@ const ServerSetup = ({ next }) => {
           </div>
           <div className="form-group col-md-6">
             <label>Cloudflare API Key</label>
-            <input {...input('cloudflareApiKey')} />
+            <input type="password" {...input('cloudflareApiKey')} />
             {Feedback('cloudflareApiKey')}
           </div>
         </div>

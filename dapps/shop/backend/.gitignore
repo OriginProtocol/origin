@@ -3,4 +3,3 @@ node_modules
 data/*.db
 scripts/output
 tstEmail.js
-dist

@@ -38,20 +38,30 @@ async function checkSetup(req, res, next) {
   const shopCount = await Shop.count({
     where: { networkId: activeNetwork.networkId }
   })
+  const network = {
+    ipfs: activeNetwork.ipfs,
+    ipfsApi: activeNetwork.ipfsApi,
+    networkId: activeNetwork.networkId,
+    marketplaceContract: activeNetwork.marketplaceContract,
+    marketplaceVersion: activeNetwork.marketplaceVersion,
+    domain: networkConfig.domain
+  }
   if (!shopCount) {
     return res.json({
       success: false,
       reason: reason || 'no-shops',
-      network: {
-        ipfs: activeNetwork.ipfs,
-        ipfsApi: activeNetwork.ipfsApi,
-        networkId: activeNetwork.networkId,
-        marketplaceContract: activeNetwork.marketplaceContract,
-        marketplaceVersion: activeNetwork.marketplaceVersion,
-        domain: networkConfig.domain
-      }
+      network
     })
   }
+
+  if (!req.headers.authorization) {
+    return res.json({
+      success: false,
+      reason: reason || 'no-shop',
+      network
+    })
+  }
+
   next()
 }
 
@@ -79,7 +89,7 @@ module.exports = function(app) {
         res.json({
           success: true,
           email: seller.email,
-          role: req.sellerShop.role,
+          role: req.sellerShop ? req.sellerShop.role : '',
           shops
         })
       })
