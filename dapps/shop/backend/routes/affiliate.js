@@ -31,8 +31,15 @@ function authAffiliate(req, res, next) {
  * Formats a BigQuery product row into a dshop product obj
  */
 function bqProductFormatter(product) {
-  // product ID is only in the IPFS path returned
-  const id = product.ipfs_path.split('/')[2]
+  const makeId = (product) => {
+    // product ID is only in the IPFS path returned
+    const productId = product.ipfs_path.split('/')[2]
+    // listing ID is part of the "product_id" returned by BQ
+    const listingId = product.product_id.split(':')[0]
+    return `${listingId}-${productId}`
+  }
+
+  const id = makeId(product)
   const {
     price,
     title,
