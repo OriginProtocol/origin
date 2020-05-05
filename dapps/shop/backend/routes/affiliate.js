@@ -66,7 +66,7 @@ function bqProductFormatter(product) {
 async function fetchAffiliateProducts(listingId) {
   const bq = new BigQuery()
 
-  let where = 'parent_external_id IS NULL'
+  let where = `parent_external_id  = ''`
 
   if (listingId) {
     where += ` AND STARTS_WITH(product_id, '${listingId}')`
