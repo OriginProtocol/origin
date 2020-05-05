@@ -53,7 +53,7 @@ function bqProductFormatter(product) {
 
   return {
     id,
-    data: `/ips/${product.ipfs_path}`,
+    data: `/ipfs/${product.ipfs_path}`,
     price,
     title,
     image
