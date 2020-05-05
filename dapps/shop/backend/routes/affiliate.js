@@ -1,8 +1,11 @@
-const { authShop } = require('./_auth')
+const { BigQuery } = require('@google-cloud/bigquery')
 const util = require('ethereumjs-util')
 const dayjs = require('dayjs')
 
+const { authShop } = require('./_auth')
 const { Order } = require('../models')
+
+const BQ_PRODUCTS_TABLE = 'origin-214503.dshop.products'
 
 function authAffiliate(req, res, next) {
   try {
@@ -22,6 +25,62 @@ function authAffiliate(req, res, next) {
     return res.json({ authed: false })
   }
   next()
+}
+
+/**
+ * Formats a BigQuery product row into a dshop product obj
+ */
+function bqProductFormatter(product) {
+  // product ID is only in the IPFS path returned
+  const id = product.ipfs_path.split('/')[2]
+  const {
+    price,
+    title,
+    image
+  } = product
+
+  return {
+    id,
+    data: `/ips/${product.ipfs_path}`,
+    price,
+    title,
+    image
+  }
+}
+
+/**
+ * Get the products from BigQuery for a specific shop
+ */
+async function fetchAffiliateProducts(listingId) {
+  const bq = new BigQuery()
+
+  const query = `SELECT shop_id, product_id, ipfs_path, external_id,
+    parent_external_id, title, description, price, image, option1, option2,
+    option3
+    FROM ${BQ_PRODUCTS_TABLE}
+    WHERE STARTS_WITH(product_id, '${listingId}')
+    ORDER BY block_number DESC;`
+
+  const [job] = await bq.createQueryJob({ query })
+  const [rows] = await job.getQueryResults()
+
+  if (!rows) return []
+
+  let dupeCount = 0
+  const seen = []
+
+  const ret =  rows.filter(row => {
+    if (seen.includes(row.ips_path)) {
+      dupeCount += 1
+      return false
+    }
+    seen.push(row.ips_path)
+    return true
+  }).map(row => bqProductFormatter(row))
+
+  console.debug(`Removed ${dupeCount} duplicate rows`)
+
+  return ret
 }
 
 module.exports = function(app) {
@@ -52,5 +111,10 @@ module.exports = function(app) {
     })
 
     res.send(results)
+  })
+
+  app.get('/affiliate/products', authShop, async (req, res) => {
+    const products = await fetchAffiliateProducts(req.shop.dataValues.listingId)
+    res.json(products)
   })
 }
