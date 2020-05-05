@@ -77,7 +77,8 @@ async function fetchAffiliateProducts(listingId) {
     FROM ${BQ_PRODUCTS_TABLE}
     WHERE ${where}
     GROUP BY ${grouped}
-    ORDER BY block_number, product_id;`
+    ORDER BY block_number, product_id
+    LIMIT 50;`
 
   const [job] = await bq.createQueryJob({ query })
   const [rows] = await job.getQueryResults()
