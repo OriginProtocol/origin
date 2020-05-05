@@ -61,8 +61,7 @@ function bqProductFormatter(product) {
 async function fetchAffiliateProducts(listingId) {
   const bq = new BigQuery()
 
-  const grouped = `product_id, ipfs_path, title, price, image, option1, option2,
-    option3`
+  const grouped = `product_id, ipfs_path, title, price, image`
   const query = `SELECT MAX(block_number) as block_number, ${grouped}
     FROM ${BQ_PRODUCTS_TABLE}
     WHERE STARTS_WITH(product_id, '${listingId}')
