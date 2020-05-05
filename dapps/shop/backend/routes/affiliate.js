@@ -70,14 +70,23 @@ async function fetchAffiliateProducts(listingId) {
   const query = `SELECT MAX(block_number) as block_number, ${grouped}
     FROM ${BQ_PRODUCTS_TABLE}
     WHERE STARTS_WITH(product_id, '${listingId}')
-    GROUP BY ${grouped};`
-
+    GROUP BY ${grouped}
+    ORDER BY block_number, product_id;`
+  console.log(query)
   const [job] = await bq.createQueryJob({ query })
   const [rows] = await job.getQueryResults()
 
   if (!rows) return []
 
-  return  rows.map(row => bqProductFormatter(row))
+  const seen = new Set()
+
+  return  rows.filter(row => {
+    if (seen.has(row.ipfs_path)) {
+      return false
+    }
+    seen.add(row.ipfs_path)
+    return true
+  }).map(row => bqProductFormatter(row))
 }
 
 module.exports = function(app) {
