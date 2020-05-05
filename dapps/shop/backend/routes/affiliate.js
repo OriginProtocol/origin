@@ -2,7 +2,7 @@ const { BigQuery } = require('@google-cloud/bigquery')
 const util = require('ethereumjs-util')
 const dayjs = require('dayjs')
 
-const { authShop } = require('./_auth')
+const { authShop, optionalAuthShop } = require('./_auth')
 const { Order } = require('../models')
 
 const BQ_PRODUCTS_TABLE = 'origin-214503.dshop.products'
@@ -66,10 +66,16 @@ function bqProductFormatter(product) {
 async function fetchAffiliateProducts(listingId) {
   const bq = new BigQuery()
 
+  let where = 'parent_external_id IS NULL'
+
+  if (listingId) {
+    where += ` AND STARTS_WITH(product_id, '${listingId}')`
+  }
+
   const grouped = `product_id, ipfs_path, title, price, image`
   const query = `SELECT MAX(block_number) as block_number, ${grouped}
     FROM ${BQ_PRODUCTS_TABLE}
-    WHERE STARTS_WITH(product_id, '${listingId}')
+    WHERE ${where}
     GROUP BY ${grouped}
     ORDER BY block_number, product_id;`
 
@@ -119,8 +125,9 @@ module.exports = function(app) {
     res.send(results)
   })
 
-  app.get('/affiliate/products', authShop, async (req, res) => {
-    const products = await fetchAffiliateProducts(req.shop.dataValues.listingId)
+  app.get('/affiliate/products', optionalAuthShop, async (req, res) => {
+    const listingId = req.shop ? req.shop.dataValues.listingId : null
+    const products = await fetchAffiliateProducts(listingId)
     res.json(products)
   })
 }
