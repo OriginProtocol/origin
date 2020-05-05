@@ -54,33 +54,20 @@ function bqProductFormatter(product) {
 async function fetchAffiliateProducts(listingId) {
   const bq = new BigQuery()
 
-  const query = `SELECT shop_id, product_id, ipfs_path, external_id,
+  const grouped = `shop_id, product_id, ipfs_path, external_id,
     parent_external_id, title, description, price, image, option1, option2,
-    option3
+    option3`
+  const query = `SELECT MAX(block_number) as block_number, ${grouped}
     FROM ${BQ_PRODUCTS_TABLE}
     WHERE STARTS_WITH(product_id, '${listingId}')
-    ORDER BY block_number DESC;`
+    GROUP BY ${grouped};`
 
   const [job] = await bq.createQueryJob({ query })
   const [rows] = await job.getQueryResults()
 
   if (!rows) return []
 
-  let dupeCount = 0
-  const seen = []
-
-  const ret =  rows.filter(row => {
-    if (seen.includes(row.ips_path)) {
-      dupeCount += 1
-      return false
-    }
-    seen.push(row.ips_path)
-    return true
-  }).map(row => bqProductFormatter(row))
-
-  console.debug(`Removed ${dupeCount} duplicate rows`)
-
-  return ret
+  return  rows.map(row => bqProductFormatter(row))
 }
 
 module.exports = function(app) {
