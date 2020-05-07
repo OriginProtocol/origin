@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect, Switch, Route } from 'react-router-dom'
-import Styl from 'react-styl'
+import get from 'lodash/get'
+// import Styl from 'react-styl'
 import 'components/admin/Styles'
 
 import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
 
-import Login from 'components/admin/Login'
+import Login from './Login'
 import Menu from './_Menu'
-import FirstTime from './FirstTime'
+import FirstTime from './setup/FirstTime'
 
-const Dashboard = () => <div>Dashboard</div>
-const Shops = () => <div>Shops</div>
-const Settings = () => <div>Settings</div>
+import Shops from './shops/Shops'
+import NewShop from './shops/NewShop'
+import Dashboard from './Dashboard'
+import Settings from './Settings'
 
 const SuperAdmin = () => {
   const { config } = useConfig()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
+  const [reloadAuth, setReloadAuth] = useState(0)
 
   const [{ admin }, dispatch] = useStateValue()
 
   useEffect(() => {
-    if (!window.backendAdminCss) {
-      // Need to re-add stylesheet as this component is lazy loaded
-      Styl.addStylesheet()
-      window.backendAdminCss = true
-    }
+    // if (!window.backendAdminCss) {
+    //   // Need to re-add stylesheet as this component is lazy loaded
+    //   Styl.addStylesheet()
+    //   window.backendAdminCss = true
+    // }
 
-    fetch(`${config.backend}/auth`, { credentials: 'include' })
+    fetch(`${config.backend}/superuser/auth`, { credentials: 'include' })
       .then(async response => {
         if (response.status === 200) {
           const auth = await response.json()
@@ -39,7 +42,7 @@ const SuperAdmin = () => {
       .catch(() => {
         setError(true)
       })
-  }, [])
+  }, [reloadAuth])
 
   if (error) {
     return <div className="fixed-loader">Admin Connection Error</div>
@@ -47,12 +50,11 @@ const SuperAdmin = () => {
     return <div className="fixed-loader">Loading...</div>
   }
 
-  if (!admin) {
-    return <Login />
-  }
-
-  if (!admin.success && admin.reason) {
-    return <FirstTime />
+  if (!get(admin, 'success')) {
+    if (!admin || admin.reason === 'not-logged-in') {
+      return <Login next={() => setReloadAuth(reloadAuth + 1)} />
+    }
+    return <FirstTime next={() => setReloadAuth(reloadAuth + 1)} />
   }
 
   return (
@@ -62,7 +64,7 @@ const SuperAdmin = () => {
           <div className="container">
             <h1>
               <img src="images/dshop-logo.svg" />
-              <div>Admin</div>
+              <div>Super Admin</div>
             </h1>
             <div>{`Welcome, ${admin.email}`}</div>
           </div>
@@ -74,6 +76,7 @@ const SuperAdmin = () => {
             </div>
             <div className="col-md-9">
               <Switch>
+                <Route path="/super-admin/shops/new" component={NewShop} />
                 <Route path="/super-admin/shops" component={Shops} />
                 <Route path="/super-admin/settings" component={Settings} />
                 <Route path="/super-admin/dashboard" component={Dashboard} />

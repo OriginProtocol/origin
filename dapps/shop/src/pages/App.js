@@ -26,7 +26,7 @@ const App = ({ location, config }) => {
     const href = window.location.href
     if (
       href.match(/^http:/) &&
-      !href.match(/^http:\/\/(localhost|([0-9]+\.))/)
+      !href.match(/^http:\/\/([a-z0-9.-]*localhost|([0-9]+\.))/)
     ) {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
