@@ -1,5 +1,5 @@
 const omit = require('lodash/omit')
-const { Seller, Shop, SellerShop, Network } = require('../models')
+const { Seller, Shop, SellerShop, Network, Sequelize } = require('../models')
 const { authSellerAndShop, authRole } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const encConf = require('../utils/encryptedConfig')
@@ -66,15 +66,43 @@ module.exports = function(app) {
       shops.push(shopData)
     }
 
-    res.json({
-      success: true,
-      shops
-    })
+    res.json({ success: true, shops })
   })
 
   app.post('/shop', async (req, res) => {
     if (!req.session.sellerId) {
       return res.json({ success: false, reason: 'not authed' })
+    }
+
+    const existingShop = await Shop.findOne({
+      where: {
+        [Sequelize.Op.or]: [
+          { listingId: req.body.listingId },
+          { authToken: req.body.dataDir }
+        ]
+      }
+    })
+    if (existingShop) {
+      const field =
+        existingShop.listingId === req.body.listingId ? 'listingId' : 'dataDir'
+      return res.json({
+        success: false,
+        reason: 'invalid',
+        field,
+        message: 'Already exists'
+      })
+    }
+
+    const network = await Network.findOne({ where: { active: true } })
+    const networkConfig = encConf.getConfig(network.config)
+    const netAndVersion = `${network.networkId}-${network.marketplaceVersion}`
+    if (req.body.listingId.indexOf(netAndVersion) !== 0) {
+      return res.json({
+        success: false,
+        reason: 'invalid',
+        field: 'listingId',
+        message: `Must start with ${netAndVersion}`
+      })
     }
 
     const shopResponse = await createShop({
@@ -90,9 +118,6 @@ module.exports = function(app) {
         .status(400)
         .json({ success: false, message: 'Invalid shop data' })
     }
-
-    const network = await Network.findOne({ where: { active: true } })
-    const networkConfig = encConf.getConfig(network.config)
 
     const shopId = shopResponse.shop.id
 
@@ -116,6 +141,10 @@ module.exports = function(app) {
     console.log(`Added role OK`)
 
     const { dataDir, name, pgpPublicKey, printfulApi, shopType } = req.body
+
+    if (shopType === 'blank') {
+      return res.json({ success: true })
+    }
 
     const OutputDir = `${os.tmpdir()}/dshop`
     await new Promise(resolve => exec(`rm -rf ${OutputDir}`, resolve))

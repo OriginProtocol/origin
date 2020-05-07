@@ -21,40 +21,39 @@ const ProductList = ({ products }) => {
   return (
     <div className="products">
       {products.length ? null : <div>No Products!</div>}
-      {products.map(product => (
-        <div
-          key={product.id}
-          className="product"
-          onClick={e => {
-            const pathname = `${urlPrefix}/products/${product.id}`
-            if (altClick(e)) {
-              history.push({ pathname, state: { scrollToTop: true } })
-            } else {
-              window.open(`#${pathname}`, '_blank')
-            }
-          }}
-        >
+      {products.map(product => {
+        let img = `${dataUrl()}${product.id}/520/${product.image}`
+        if (product.data) {
+          img = `${config.ipfsGateway}${product.data}/520/${product.image}`
+        }
+        return (
           <div
-            className="pic"
-            style={{
-              backgroundImage: `url(${dataUrl()}${product.id}/520/${
-                product.image
-              })`
+            key={product.id}
+            className="product"
+            onClick={e => {
+              const pathname = `${urlPrefix}/products/${product.id}`
+              if (altClick(e)) {
+                history.push({ pathname, state: { scrollToTop: true } })
+              } else {
+                window.open(`#${pathname}`, '_blank')
+              }
             }}
-          />
-          <div className="product-body">
-            <Link to={`${urlPrefix}/products/${product.id}`}>
-              {product.title}
-            </Link>
-            <div className="price">
-              {formatPrice(product.price)}
-              {config.freeShipping ? (
-                <span className="shipping">FREE Shipping</span>
-              ) : null}
+          >
+            <div className="pic" style={{ backgroundImage: `url(${img})` }} />
+            <div className="product-body">
+              <Link to={`${urlPrefix}/products/${product.id}`}>
+                {product.title}
+              </Link>
+              <div className="price">
+                {formatPrice(product.price)}
+                {config.freeShipping ? (
+                  <span className="shipping">FREE Shipping</span>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -8,26 +8,34 @@ import formatPrice from 'utils/formatPrice'
 
 import useOrders from 'utils/useOrders'
 
+function filterOrders(orders, search) {
+  if (!search) {
+    return orders
+  }
+  search = search.toLowerCase()
+  // Filter by order ids, eg: "ids:1-001-123-456,1-001-123-789"
+  if (search.startsWith('ids:')) {
+    const ids = search.substr(4).split(',')
+    return orders.filter(o => ids.indexOf(o.orderId) >= 0)
+  }
+  // Otherwise do a basic text search on the order JSON
+  return orders.filter(o => {
+    const lowered = JSON.stringify(o).toLowerCase()
+    return lowered.indexOf(search) >= 0
+  })
+}
+
 const AdminOrders = () => {
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [csv, setCsv] = useState(false)
   const searchRef = useRef(null)
   const { orders, loading, reload } = useOrders()
+  const filteredOrders = filterOrders(orders, search)
 
   useEffect(() => {
     searchRef.current.addEventListener('search', e => setSearch(e.target.value))
   }, [searchRef])
-
-  let filteredOrders = orders
-  if (search) {
-    filteredOrders = orders.filter(
-      o =>
-        JSON.stringify(o)
-          .toLowerCase()
-          .indexOf(search) >= 0
-    )
-  }
 
   return (
     <>
@@ -67,6 +75,12 @@ const AdminOrders = () => {
   )
 }
 
+function customerName(order) {
+  const firstName = get(order, 'data.userInfo.firstName', '')
+  const lastName = get(order, 'data.userInfo.lastName', '')
+  return `${firstName} ${lastName}`
+}
+
 const AdminOrdersTable = ({ orders }) => {
   const history = useHistory()
 
@@ -92,12 +106,7 @@ const AdminOrdersTable = ({ orders }) => {
           >
             <td>{order.orderId}</td>
             <td>{dayjs(order.createdAt).format('MMM D, h:mm A')}</td>
-            <td>{`${get(order, 'data.userInfo.firstName', '')} ${get(
-              order,
-              'data.userInfo.lastName',
-              ''
-            )}`}</td>
-            {/* <td>{dayjs(order.createdAt).format('MMM D, h:mm A')}</td> */}
+            <td>{customerName(order)}</td>
             <td>{get(order, 'data.paymentMethod.label')}</td>
             {/* <td>{order.status}</td> */}
             <td>{formatPrice(get(order, 'data.total'))}</td>

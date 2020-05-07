@@ -12,6 +12,7 @@ import SimilarProducts from 'components/SimilarProducts'
 import SizeGuide from './product/SizeGuide'
 import formatPrice from 'utils/formatPrice'
 import useIsMobile from 'utils/useIsMobile'
+import useProducts from 'utils/useProducts'
 import useConfig from 'utils/useConfig'
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
@@ -47,6 +48,7 @@ const Product = ({ history, location, match }) => {
   const [{ collections }, dispatch] = useStateValue()
   const isMobile = useIsMobile()
   const { config } = useConfig()
+  const { products } = useProducts()
   const opts = queryString.parse(location.search)
 
   useEffect(() => {
@@ -66,8 +68,19 @@ const Product = ({ history, location, match }) => {
       }
       setState(newState)
     }
-    fetchProduct(match.params.id).then(setData)
-  }, [match.params.id])
+    if (config.isAffiliate) {
+      if (products.length) {
+        const product = products.find(p => p.id === match.params.id)
+        const url = `${config.ipfsGateway}${product.data}/data.json`
+        fetch(url).then(async res => {
+          const json = await res.json()
+          setData({ ...product, ...json })
+        })
+      }
+    } else {
+      fetchProduct(match.params.id).then(setData)
+    }
+  }, [match.params.id, products.length])
 
   function addToCart(product, variant) {
     setState({ addedToCart: true })
@@ -121,9 +134,16 @@ const Product = ({ history, location, match }) => {
   }
 
   const productOptions = productData.options || []
-  const pics = productData.images.map(
-    i => `${dataUrl()}${productData.id}/orig/${i}`
-  )
+  let pics = []
+  if (config.isAffiliate) {
+    pics = productData.images.map(
+      i => `${config.ipfsGateway}${productData.data}/orig/${i}`
+    )
+  } else {
+    pics = productData.images.map(
+      i => `${dataUrl()}${productData.id}/orig/${i}`
+    )
+  }
   const lg = isMobile ? ' btn-lg' : ''
   let onSale
   if (productData.onSale) {
@@ -239,10 +259,20 @@ const Product = ({ history, location, match }) => {
               </>
             ) : variant ? (
               <button
-                onClick={() => addToCart(productData, variant)}
+                onClick={() => {
+                  if (config.isAffiliate) {
+                    window.open(productData.link)
+                  } else {
+                    addToCart(productData, variant)
+                  }
+                }}
                 className={`btn btn-outline-primary${lg}`}
               >
-                {onSale ? 'Pre-Order' : 'Add to Cart'}
+                {onSale
+                  ? 'Pre-Order'
+                  : config.isAffiliate
+                  ? 'View Product'
+                  : 'Add to Cart'}
               </button>
             ) : (
               <button className={`btn btn-outline-primary disabled${lg}`}>
