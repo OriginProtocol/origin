@@ -15,6 +15,7 @@
   "author": "Nick Poulden <nick@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
+    "@google-cloud/bigquery": "^4.7.0",
     "aws-sdk": "^2.572.0",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
