@@ -1,8 +1,11 @@
-const { authShop } = require('./_auth')
+const { BigQuery } = require('@google-cloud/bigquery')
 const util = require('ethereumjs-util')
 const dayjs = require('dayjs')
 
+const { authShop, optionalAuthShop } = require('./_auth')
 const { Order } = require('../models')
+
+const BQ_PRODUCTS_TABLE = 'origin-214503.dshop.products'
 
 function authAffiliate(req, res, next) {
   try {
@@ -22,6 +25,75 @@ function authAffiliate(req, res, next) {
     return res.json({ authed: false })
   }
   next()
+}
+
+/**
+ * Formats a BigQuery product row into a dshop product obj
+ */
+function bqProductFormatter(product) {
+  const listingIdFromProductId = (id) => {
+    const parts = id.split('-')
+    parts.pop()
+    return parts.join('-')
+  }
+  const makeId = (product) => {
+    // product ID is only in the IPFS path returned
+    const productId = product.ipfs_path.split('/')[2]
+    // listing ID is part of the "product_id" returned by BQ
+    const listingId = listingIdFromProductId(product.product_id)
+    return `${listingId}-${productId}`
+  }
+
+  const id = makeId(product)
+  const {
+    price,
+    title,
+    image
+  } = product
+
+  return {
+    id,
+    data: `/ipfs/${product.ipfs_path}`,
+    price,
+    title,
+    image
+  }
+}
+
+/**
+ * Get the products from BigQuery for a specific shop
+ */
+async function fetchAffiliateProducts(listingId) {
+  const bq = new BigQuery()
+
+  let where = `parent_external_id  = ''`
+
+  if (listingId) {
+    where += ` AND STARTS_WITH(product_id, '${listingId}')`
+  }
+
+  const grouped = `product_id, ipfs_path, title, price, image`
+  const query = `SELECT MAX(block_number) as block_number, ${grouped}
+    FROM ${BQ_PRODUCTS_TABLE}
+    WHERE ${where}
+    GROUP BY ${grouped}
+    ORDER BY block_number DESC, product_id
+    LIMIT 50;`
+
+  const [job] = await bq.createQueryJob({ query })
+  const [rows] = await job.getQueryResults()
+
+  if (!rows) return []
+
+  const seen = new Set()
+
+  return  rows.filter(row => {
+    if (seen.has(row.ipfs_path)) {
+      return false
+    }
+    seen.add(row.ipfs_path)
+    return true
+  }).map(row => bqProductFormatter(row))
 }
 
 module.exports = function(app) {
@@ -52,5 +124,11 @@ module.exports = function(app) {
     })
 
     res.send(results)
+  })
+
+  app.get('/affiliate/products', optionalAuthShop, async (req, res) => {
+    const listingId = req.shop ? req.shop.dataValues.listingId : null
+    const products = await fetchAffiliateProducts(listingId)
+    res.json(products)
   })
 }
