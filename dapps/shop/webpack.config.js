@@ -132,12 +132,10 @@ const webpackConfig = {
     port: 9000,
     host: '0.0.0.0',
     historyApiFallback: true,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
+    headers: { 'Access-Control-Allow-Origin': '*' },
     contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')],
     proxy: {
-      context: () => true,
+      context: (path, req) => !(path.match(/^\//) && req.method === 'GET'),
       target: 'http://0.0.0.0:3000'
     }
   },

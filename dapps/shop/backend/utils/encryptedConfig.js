@@ -26,6 +26,7 @@ function genIV() {
 }
 
 function getConfig(config) {
+  if (!config) return {}
   const [iv, configRaw] = config.split(':')
   return decryptJSON(Buffer.from(iv, 'hex'), configRaw)
 }

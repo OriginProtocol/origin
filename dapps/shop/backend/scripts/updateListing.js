@@ -1,4 +1,9 @@
 // A script that updates a shop's marketplace listing data.
+// Example:
+//  node updateListing.js --providerUrl=https://eth-mainnet.alchemyapi.io/v2/<key>
+//    --pk=<private_key> --networkId=1 --listingId=1-001-233
+//    --shopIpfsHash=QmYGvG7kcSsYo3JcwSFysZ2CvunzwXxfQfZQZ4jrrEmPwC
+//    --gasPriceMultiplier=1.3 --doIt=true
 
 const fetch = require('node-fetch')
 const lget = require('lodash/get')
@@ -126,6 +131,23 @@ async function _fetchListingInfo(graphqlUrl, ipfsGatewayUrl, listingId) {
   }
 }
 
+async function _calcGasPrice(web3, gasPriceMultiplier = null) {
+  // Get default gas price from web3 which is determined by the
+  // last few blocks median gas price.
+  const medianGasPrice = await web3.eth.getGasPrice()
+  if (!gasPriceMultiplier) {
+    console.log('Using median gas price of', medianGasPrice)
+    return medianGasPrice
+  }
+
+  // Apply our ratio.
+  const gasPrice = Math.round(medianGasPrice * gasPriceMultiplier)
+  console.log(
+    `Using median gas price of ${medianGasPrice} * ${gasPriceMultiplier} = ${gasPrice}`
+  )
+  return gasPrice
+}
+
 /**
  * Calls the marketplace contract updateListing method, either directly or via the account's proxy.
  */
@@ -135,7 +157,8 @@ async function _sendTx({
   ipfsHashBytes,
   fromAddress,
   proxyAddress,
-  marketplaceContractAddress
+  marketplaceContractAddress,
+  gasPrice
 }) {
   let tx
   const marketplaceContract = new web3.eth.Contract(
@@ -162,7 +185,7 @@ async function _sendTx({
     )
 
     try {
-      tx = await wrapTxToSend.send({ from: fromAddress, gas: 500000 })
+      tx = await wrapTxToSend.send({ from: fromAddress, gas: 500000, gasPrice })
     } catch (e) {
       console.log('Send tx via proxy error:', e)
       throw new Error('Failed updating the listing on the marketplace')
@@ -170,7 +193,7 @@ async function _sendTx({
   } else {
     console.log(`Updating listing directly from address ${fromAddress}`)
     try {
-      tx = await txToSend.send({ from: fromAddress, gas: 350000 })
+      tx = await txToSend.send({ from: fromAddress, gas: 350000, gasPrice })
     } catch (e) {
       console.log('Send tx error:', e)
       throw new Error('Failed updating the listing on the marketplace')
@@ -186,6 +209,7 @@ async function updateListing({
   providerUrl,
   pk,
   networkId,
+  gasPriceMultiplier,
   doIt
 }) {
   const {
@@ -237,6 +261,8 @@ async function updateListing({
     console.log('Would upload new listing data to IPFS')
   }
 
+  const gasPrice = await _calcGasPrice(web3, gasPriceMultiplier)
+
   // Update the listing on the marketplace contract.
   if (doIt) {
     await _sendTx({
@@ -245,7 +271,8 @@ async function updateListing({
       ipfsHashBytes,
       fromAddress: account.address,
       proxyAddress: useProxy ? proxy : null,
-      marketplaceContractAddress
+      marketplaceContractAddress,
+      gasPrice
     })
   } else {
     console.log('Would call the contract to update the listing.')
@@ -268,6 +295,7 @@ const config = {
   shopIpfsHash: args['--shopIpfsHash'],
   providerUrl: args['--providerUrl'],
   pk: args['--pk'],
+  gasPriceMultiplier: args['--gasPriceMultiplier'],
   doIt: args['--doIt'] === 'true' || false
 }
 console.log('Config:', config)
@@ -300,6 +328,7 @@ updateListing({
   providerUrl,
   pk,
   networkId,
+  gasPriceMultiplier: config.gasPriceMultiplier,
   doIt: config.doIt
 })
   .then(() => {

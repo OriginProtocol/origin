@@ -4,13 +4,12 @@ import { useStateValue } from 'data/state'
 
 import { DshopLogo } from 'components/icons/Admin'
 
-import Login from './Login'
 import SignUp from './SignUp'
 import ServerSetup from './ServerSetup'
-import CreateShop from './CreateShop'
+import CreateShop from '../shops/CreateShop'
 import ShopReady from './ShopReady'
 
-const FirstTime = () => {
+const FirstTime = ({ next }) => {
   const [{ admin }] = useStateValue()
   const [step, setStep] = useState('no-shops')
   const [ready, setReady] = useState()
@@ -39,19 +38,20 @@ const FirstTime = () => {
       {/* {error ? <div>{error}</div> : null} */}
       {step === 'sign-up' ? (
         <SignUp next={() => setStep('server-setup')} />
-      ) : step === 'login' ? (
-        <Login />
       ) : step === 'server-setup' ? (
         <ServerSetup next={() => setStep('create-shop')} />
       ) : step === 'shop-deployed' ? (
-        <ShopReady {...ready} />
+        <ShopReady {...ready} next={next} />
       ) : (
-        <CreateShop
-          next={ready => {
-            setReady(ready)
-            setStep('shop-deployed')
-          }}
-        />
+        <>
+          <div className="mb-4">Create a Shop:</div>
+          <CreateShop
+            next={ready => {
+              setReady(ready)
+              setStep('shop-deployed')
+            }}
+          />
+        </>
       )}
     </div>
   )

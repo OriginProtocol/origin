@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { DshopLogo } from 'components/icons/Admin'
+
 import useConfig from 'utils/useConfig'
 
 const Login = ({ next }) => {
@@ -11,23 +13,20 @@ const Login = ({ next }) => {
   })
 
   return (
-    <>
+    <div className="container admin-first-time">
+      <DshopLogo />
       <div className="mb-4">Welcome to Dshop! Sign in to continue.</div>
       <form
         className="sign-up"
         onSubmit={e => {
           e.preventDefault()
 
-          const body = JSON.stringify({
-            email: state.email,
-            password: state.password
-          })
-
+          const { email, password } = state
           fetch(`${config.backend}/superuser/login`, {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             credentials: 'include',
-            body
+            body: JSON.stringify({ email, password })
           })
             .then(async res => {
               console.log({ ok: res.ok })
@@ -69,7 +68,7 @@ const Login = ({ next }) => {
           Login
         </button>
       </form>
-    </>
+    </div>
   )
 }
 

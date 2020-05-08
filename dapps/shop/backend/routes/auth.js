@@ -9,64 +9,10 @@ const { createSeller } = require('../utils/sellers')
 const encConf = require('../utils/encryptedConfig')
 const { validateConfig } = require('../utils/validators')
 const get = require('lodash/get')
-
-async function checkSetup(req, res, next) {
-  let reason
-  const userCount = await Seller.count()
-  if (!userCount) {
-    return res.json({ success: false, reason: 'no-users' })
-  }
-
-  if (!req.session.sellerId) {
-    return res.json({ success: false, reason: 'not-logged-in' })
-  }
-
-  const user = await Seller.findOne({ where: { id: req.session.sellerId } })
-  if (!user) {
-    reason = 'not-logged-in'
-  } else if (!user.superuser) {
-    reason = 'not-superuser'
-  }
-
-  const activeNetwork = await Network.findOne({ where: { active: true } })
-  if (!activeNetwork) {
-    return res.json({ success: false, reason: reason || 'no-active-network' })
-  }
-  const networkConfig = await encConf.getConfig(activeNetwork.config)
-  console.log(networkConfig)
-
-  const shopCount = await Shop.count({
-    where: { networkId: activeNetwork.networkId }
-  })
-  const network = {
-    ipfs: activeNetwork.ipfs,
-    ipfsApi: activeNetwork.ipfsApi,
-    networkId: activeNetwork.networkId,
-    marketplaceContract: activeNetwork.marketplaceContract,
-    marketplaceVersion: activeNetwork.marketplaceVersion,
-    domain: networkConfig.domain
-  }
-  if (!shopCount) {
-    return res.json({
-      success: false,
-      reason: reason || 'no-shops',
-      network
-    })
-  }
-
-  if (!req.headers.authorization) {
-    return res.json({
-      success: false,
-      reason: reason || 'no-shop',
-      network
-    })
-  }
-
-  next()
-}
+const omit = require('lodash/omit')
 
 module.exports = function(app) {
-  app.get('/auth', checkSetup, authSellerAndShop, (req, res) => {
+  app.get('/auth', authSellerAndShop, (req, res) => {
     if (!req.session.sellerId) {
       return res.json({ success: false })
     }
@@ -94,6 +40,45 @@ module.exports = function(app) {
         })
       })
     })
+  })
+
+  app.get('/superuser/auth', async (req, res) => {
+    const userCount = await Seller.count()
+    if (!userCount) {
+      return res.json({ success: false, reason: 'no-users' })
+    }
+
+    if (!req.session.sellerId) {
+      return res.json({ success: false, reason: 'not-logged-in' })
+    }
+
+    const user = await Seller.findOne({ where: { id: req.session.sellerId } })
+    if (!user) {
+      return res.json({ success: false, reason: 'not-logged-in' })
+    } else if (!user.superuser) {
+      return res.json({ success: false, reason: 'not-superuser' })
+    }
+
+    const allNetworks = await Network.findAll()
+    const networks = allNetworks.map(n => {
+      const net = { ...encConf.getConfig(n.config), ...n.dataValues }
+      return omit(net, ['config'])
+    })
+    const network = networks.find(n => n.active)
+    if (!network) {
+      return res.json({ success: false, reason: 'no-active-network' })
+    }
+
+    const { networkId } = network
+    const shops = await Shop.findAll({
+      where: { networkId },
+      order: [['createdAt', 'desc']]
+    })
+    if (!shops.length) {
+      return res.json({ success: false, reason: 'no-shops', networks, network })
+    }
+
+    res.json({ success: true, email: user.email, networks, network, shops })
   })
 
   app.get('/auth/:email', async (req, res) => {

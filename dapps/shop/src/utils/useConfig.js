@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react'
 
 import dataUrl from 'utils/dataUrl'
 
-const { NETWORK } = process.env
-const NetID = NETWORK === 'mainnet' ? '1' : NETWORK === 'rinkeby' ? '4' : '999'
-
 const DefaultPaymentMethods = [
   { id: 'crypto', label: 'Crypto Currency' },
   { id: 'stripe', label: 'Credit Card' }
@@ -21,6 +18,8 @@ function useConfig() {
       config = { backend: '', firstTimeSetup: true }
       setLoading(true)
       try {
+        const net = localStorage.ognNetwork || process.env.NETWORK
+        const NetID = net === 'mainnet' ? '1' : net === 'rinkeby' ? '4' : '999'
         const url = `${dataUrl()}config.json`
         console.debug(`Loading config from ${url}...`)
         const raw = await fetch(url)
@@ -33,6 +32,7 @@ function useConfig() {
           if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
             supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
           }
+
           config.supportEmailPlain = supportEmailPlain
           const netConfig = config.networks[NetID] || {}
           if (process.env.MARKETPLACE_CONTRACT) {
