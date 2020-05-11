@@ -13,7 +13,10 @@ const abi = [
 ]
 
 /**
- * Returns the most recent listing data's IPFS hash.
+ * Gets a marketplace listing's most recent IPFS hash by querying the ethereum network
+ * for relevant logs.
+ * Note: In the future we may want to consider storing the listing's most recent
+ * hash in the shop back-end DB.
  *
  * @param {Object} provider: ether.js provider.
  * @param {Object} contract: ether.js contract object for the marketplace.
@@ -30,12 +33,15 @@ async function _getListingLatestIpfsHash(
   seller,
   listingId
 ) {
+  // Create a filter to get the ListingCreated events for the listing.
   const listingCreatedFilter = contract.filters.ListingCreated(
     seller,
     listingId,
     null
   )
   listingCreatedFilter.fromBlock = contractEpoch || 0
+
+  // Create a filter to get the ListingUpdated events for the listing.
   const listingUpdatedFilter = contract.filters.ListingCreated(
     seller,
     listingId,
@@ -43,6 +49,7 @@ async function _getListingLatestIpfsHash(
   )
   listingUpdatedFilter.fromBlock = contractEpoch || 0
 
+  // Get all the ListingCreated|Updated events and keep only the most recent.
   const listingCreatedEvents = await provider.getLogs(listingCreatedFilter)
   const listingUpdatedEvents = await provider.getLogs(listingUpdatedFilter)
   let latestEvent
@@ -55,6 +62,8 @@ async function _getListingLatestIpfsHash(
       `Failed getting the listing's latest IPFS hash from contract's events`
     )
   }
+
+  // The IPFS hash for the listing is encoded as bytes32 in the logs data field.
   const bytes32Hash = latestEvent.data
   return getIpfsHashFromBytes32(bytes32Hash)
 }
@@ -94,6 +103,7 @@ async function updateListing(config, shopIpfsHash) {
   const signer = provider.getSigner()
   const address = await signer.getAddress()
 
+  // The index of the listing on the markerplace contract is the 3rd element in the listingId.
   const parts = config.listingId.split('-')
   const marketplaceListingId = parseInt(parts[2])
   console.log(
