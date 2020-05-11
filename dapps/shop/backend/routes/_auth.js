@@ -81,10 +81,18 @@ async function authShop(req, res, next) {
   })
 }
 
+async function optionalAuthShop(req, res, next) {
+  if (req.headers.authorization) {
+    return authShop(req, res, next)
+  }
+  next()
+}
+
 module.exports = {
   createSalt,
   hashPassword,
   checkPassword,
+  optionalAuthShop,
   authShop,
   authSellerAndShop,
   authRole,
