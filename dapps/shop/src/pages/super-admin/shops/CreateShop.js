@@ -6,6 +6,8 @@ import { useStateValue } from 'data/state'
 import CreateListing from './CreateListing'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
+import ShopReady from './ShopReady'
+
 async function genPGP() {
   const randomArray = Array.from(crypto.getRandomValues(new Uint32Array(5)))
   const pgpPrivateKeyPass = randomArray.map(n => n.toString(36)).join('')
@@ -28,8 +30,8 @@ function validate(state) {
   }
   if (!state.dataDir) {
     newState.dataDirError = 'Enter a Data Dir'
-  } else if (!state.dataDir.match(/^[a-z-]+$/)) {
-    newState.dataDirError = 'Use a-z characters only'
+  } else if (!state.dataDir.match(/^[a-z0-9-]+$/)) {
+    newState.dataDirError = 'Use alpha-numeric characters only'
   }
   if (!state.hostname) {
     newState.hostnameError = 'Enter a hostname'
@@ -53,8 +55,9 @@ function validate(state) {
 
 const CreateShop = ({ next }) => {
   const { config } = useConfig()
-  const [{ admin }] = useStateValue()
+  const [{ admin }, dispatch] = useStateValue()
   const [advanced, setAdvanced] = useState(false)
+  const [ready, setReady] = useState()
   const [loading, setLoading] = useState(false)
   const [state, setStateRaw] = useState({
     listingId: '',
@@ -76,6 +79,16 @@ const CreateShop = ({ next }) => {
     genPGP().then(pgpKeys => setState(pgpKeys))
   }, [])
 
+  if (!admin) {
+    return
+  }
+  if (ready) {
+    return <ShopReady {...ready} next={next} />
+  }
+
+  const netId = get(admin, 'network.networkId')
+  const listingPrefix = `${netId}-${get(admin, 'network.marketplaceVersion')}-`
+
   return (
     <form
       className="sign-up"
@@ -95,7 +108,10 @@ const CreateShop = ({ next }) => {
           headers: { 'content-type': 'application/json' },
           credentials: 'include',
           method: 'POST',
-          body: JSON.stringify(state)
+          body: JSON.stringify({
+            ...state,
+            listingId: `${listingPrefix}${state.listingId}`
+          })
         })
         const json = await res.json()
         setLoading(false)
@@ -105,7 +121,8 @@ const CreateShop = ({ next }) => {
             window.scrollTo(0, 0)
           }
         } else {
-          next(json)
+          dispatch({ type: 'reload', target: 'auth' })
+          setReady(json)
         }
       }}
     >
@@ -130,7 +147,12 @@ const CreateShop = ({ next }) => {
         <label>Existing Listing ID</label>
         <div className="d-flex">
           <div style={{ flex: 1 }}>
-            <input {...input('listingId')} placeholder="eg 1-001-123" />
+            <div className="input-group">
+              <div className="input-group-prepend">
+                <span className="input-group-text">{listingPrefix}</span>
+              </div>
+              <input {...input('listingId')} />
+            </div>
             {Feedback('listingId')}
           </div>
           <div className="mx-3 pt-1">or</div>

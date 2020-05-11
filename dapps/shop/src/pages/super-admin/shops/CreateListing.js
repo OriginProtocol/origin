@@ -52,8 +52,7 @@ async function createListing({ title, network }) {
   const listingId = await new Promise(resolve => {
     const eventFilter = contract.filters.ListingCreated(address, null, null)
     contract.on(eventFilter, (party, listingId) => {
-      const { networkId, marketplaceVersion } = network
-      resolve(`${networkId}-${marketplaceVersion}-${Number(listingId)}`)
+      resolve(listingId)
     })
   })
 

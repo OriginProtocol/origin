@@ -4,6 +4,8 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 
+import PasswordField from 'components/admin/PasswordField'
+
 function validate(state) {
   const newState = {}
 
@@ -66,23 +68,6 @@ async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
   const plaintext = await openpgp.decrypt(options)
 
   return plaintext.data === msg ? '✅' : '❌'
-}
-
-const PasswordField = ({ input, field }) => {
-  const [hide, setHide] = useState(true)
-  return (
-    <div className="input-group">
-      <input type={hide ? 'password' : 'text'} {...input(field)} />
-      <div className="input-group-append">
-        <button
-          type="button"
-          className="btn btn-outline-secondary"
-          onClick={() => setHide(!hide)}
-          children={hide ? '🔒' : '🔓'}
-        />
-      </div>
-    </div>
-  )
 }
 
 const AdminSettings = () => {

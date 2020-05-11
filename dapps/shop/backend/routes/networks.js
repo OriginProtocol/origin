@@ -40,13 +40,25 @@ module.exports = function(app) {
   })
 
   app.get('/networks/:netId', authSuperUser, async (req, res) => {
-    const network = await Network.findOne({
-      where: { networkId: req.params.netId }
-    })
+    const where = { networkId: req.params.netId }
+    const network = await Network.findOne({ where })
     if (!network) {
       return res.json({ success: false, reason: 'no-network' })
     }
-    console.log(network)
+    if (!network.config) {
+      return res.json({ success: false, reason: 'no-network-config' })
+    }
+
+    const config = getConfig(network.config)
+    res.json({ network, config })
+  })
+
+  app.put('/networks/:netId', authSuperUser, async (req, res) => {
+    const where = { networkId: req.params.netId }
+    const network = await Network.findOne({ where })
+    if (!network) {
+      return res.json({ success: false, reason: 'no-network' })
+    }
     if (!network.config) {
       return res.json({ success: false, reason: 'no-network-config' })
     }

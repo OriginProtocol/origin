@@ -135,7 +135,11 @@ const webpackConfig = {
     headers: { 'Access-Control-Allow-Origin': '*' },
     contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')],
     proxy: {
-      context: (path, req) => !(path.match(/^\//) && req.method === 'GET'),
+      context: path => {
+        if (path.match(/^\/$/)) return false
+        if (path.match(/^\/(dist|fonts|images)/)) return false
+        return true
+      },
       target: 'http://0.0.0.0:3000'
     }
   },

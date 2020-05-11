@@ -20,9 +20,8 @@ const SuperAdmin = () => {
   const { config } = useConfig()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
-  const [reloadAuth, setReloadAuth] = useState(0)
 
-  const [{ admin }, dispatch] = useStateValue()
+  const [{ admin, reload }, dispatch] = useStateValue()
 
   useEffect(() => {
     // if (!window.backendAdminCss) {
@@ -42,7 +41,7 @@ const SuperAdmin = () => {
       .catch(() => {
         setError(true)
       })
-  }, [reloadAuth])
+  }, [reload.auth])
 
   if (error) {
     return <div className="fixed-loader">Admin Connection Error</div>
@@ -52,9 +51,11 @@ const SuperAdmin = () => {
 
   if (!get(admin, 'success')) {
     if (!admin || admin.reason === 'not-logged-in') {
-      return <Login next={() => setReloadAuth(reloadAuth + 1)} />
+      return <Login next={() => dispatch({ type: 'reload', target: 'auth' })} />
     }
-    return <FirstTime next={() => setReloadAuth(reloadAuth + 1)} />
+    return (
+      <FirstTime next={() => dispatch({ type: 'reload', target: 'auth' })} />
+    )
   }
 
   return (

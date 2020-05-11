@@ -1,6 +1,8 @@
 import React from 'react'
 
-const ShopReady = ({ hash, domain, gateway, next }) => {
+import Link from 'components/Link'
+
+const ShopReady = ({ hash, domain, gateway }) => {
   const gatewayUrl = `${gateway}/ipfs/${hash}/`
   return (
     <>
@@ -21,11 +23,13 @@ const ShopReady = ({ hash, domain, gateway, next }) => {
           </a>
         </div>
       ) : null}
-      <button
-        className="btn btn-primary btn-lg mt-2"
-        onClick={() => next()}
-        children="View Admin"
-      />
+      <div className="mt-3">
+        <Link
+          className="btn btn-primary btn-lg mt-2"
+          to="/super-admin/shops"
+          children="Continue"
+        />
+      </div>
     </>
   )
 }

@@ -29,7 +29,6 @@ const Login = ({ next }) => {
             body: JSON.stringify({ email, password })
           })
             .then(async res => {
-              console.log({ ok: res.ok })
               if (res.ok) {
                 setState({ ...state, error: '' })
                 // const auth = await res.json()
