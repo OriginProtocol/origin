@@ -42,7 +42,7 @@ First create a listing on shoporigin.com and make a note of the listing ID.
    # Start local
    DATA_DIR=mystore yarn start
 
-   # Useful URL:
+   # The following routes should be up:
      - Shop: http://0.0.0.0:9000/#
      - Admin: http://0.0.0.0:9000/#/admin
      - Super admin: http://0.0.0.0:9000/#/super-admin
