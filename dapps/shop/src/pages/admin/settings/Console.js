@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+
 import { get } from '@origin/ipfs'
 
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
+import { updateListing } from 'utils/listing'
 
 const AdminConsole = () => {
   const { config } = useConfig()
@@ -10,6 +12,7 @@ const AdminConsole = () => {
   const [encryptedData, setEncryptedData] = useState('')
   const [orderId, setOrderId] = useState('')
   const [readHash, setReadHash] = useState('')
+  const [shopIpfsHash, setShopIpfsHash] = useState('')
 
   return (
     <div className="mt-4">
@@ -127,6 +130,35 @@ const AdminConsole = () => {
           style={{ maxWidth: 300 }}
           value={readHash}
           onChange={e => setReadHash(e.target.value)}
+        />
+        <button type="submit" className="btn btn-outline-primary ml-3">
+          Submit
+        </button>
+      </form>
+
+      <label className="mt-4 font-weight-bold">Emit ListingUpdated event</label>
+      <form
+        className="d-flex"
+        onSubmit={async e => {
+          e.preventDefault()
+          if (!shopIpfsHash) {
+            return
+          }
+          {
+            /* TODO: add UI feedback (a toast?) to show success/error. */
+          }
+          console.log('Calling ListingUpdated...')
+          updateListing({ config, shopIpfsHash })
+            .then(() => console.log('Listing updated successfully'))
+            .catch(err => console.error('Listing update failed', err.message))
+        }}
+      >
+        <input
+          className="form-control"
+          placeholder="IPFS Hash"
+          style={{ maxWidth: 300 }}
+          value={shopIpfsHash}
+          onChange={e => setShopIpfsHash(e.target.value)}
         />
         <button type="submit" className="btn btn-outline-primary ml-3">
           Submit
