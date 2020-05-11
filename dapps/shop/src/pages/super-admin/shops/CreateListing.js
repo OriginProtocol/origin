@@ -1,8 +1,6 @@
 import React from 'react'
-import ethers from 'ethers'
-import { post } from '@origin/ipfs'
-import { useStateValue } from 'data/state'
 
+import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
 import { createListing } from 'utils/listing'
 

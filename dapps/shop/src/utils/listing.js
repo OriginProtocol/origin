@@ -2,7 +2,7 @@
 
 import ethers from 'ethers'
 
-import { get, getIpfsHashFromBytes32, post } from '@origin/ipfs'
+import { getIpfsHashFromBytes32, post } from '@origin/ipfs'
 
 // Marketplace contract ABI.
 const abi = [
@@ -47,7 +47,7 @@ const baseListing = {
  * @returns {Promise<string>} IPFS hash
  * @private
  */
-async function _getListingLatestIpfsHash(
+export async function getListingLatestIpfsHash(
   provider,
   contract,
   contractEpoch,
@@ -165,7 +165,6 @@ export async function updateListing({ config, shopIpfsHash }) {
   }
 
   const signer = provider.getSigner()
-  const address = await signer.getAddress()
 
   // The index of the listing on the markerplace contract is the 3rd element in the listingId.
   const parts = config.listingId.split('-')
@@ -182,7 +181,8 @@ export async function updateListing({ config, shopIpfsHash }) {
    In the future we could load the previous data and only update the fields
    we need to. This would look like this:
 
-    const ipfsHash = await _getListingLatestIpfsHash(
+    const address = await signer.getAddress()
+    const ipfsHash = await getListingLatestIpfsHash(
       provider,
       contract,
       config.marketplaceEpoch,
