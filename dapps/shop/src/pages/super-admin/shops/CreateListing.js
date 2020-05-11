@@ -6,7 +6,6 @@ import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
 import { createListing } from 'utils/listing'
 
-
 const CreateListing = ({
   className,
   children,

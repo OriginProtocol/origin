@@ -6,7 +6,6 @@ import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 import { updateListing } from 'utils/listing'
 
-
 const AdminConsole = () => {
   const { config } = useConfig()
   const { shopConfig } = useShopConfig()
@@ -145,7 +144,9 @@ const AdminConsole = () => {
           if (!shopIpfsHash) {
             return
           }
-          {/* TODO: add UI feedback (a toast?) to show success/error. */}
+          {
+            /* TODO: add UI feedback (a toast?) to show success/error. */
+          }
           console.log('Calling ListingUpdated...')
           updateListing({ config, shopIpfsHash })
             .then(() => console.log('Listing updated successfully'))

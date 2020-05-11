@@ -1,8 +1,8 @@
 // Misc utilities related to handling marketplace listings.
 
-import ethers from "ethers"
+import ethers from 'ethers'
 
-import {get, getIpfsHashFromBytes32, post} from "@origin/ipfs"
+import { get, getIpfsHashFromBytes32, post } from '@origin/ipfs'
 
 // Marketplace contract ABI.
 const abi = [
@@ -89,7 +89,6 @@ async function _getListingLatestIpfsHash(
   return getIpfsHashFromBytes32(bytes32Hash)
 }
 
-
 /**
  * Create a new listing on the marketplace contract.
  *
@@ -141,7 +140,7 @@ export async function createListing({ title, network }) {
  * @returns {Promise<void>}
  */
 export async function updateListing({ config, shopIpfsHash }) {
-  console.log("updateListing CONFIG=", config)
+  console.log('updateListing CONFIG=', config)
   if (!shopIpfsHash) {
     console.error('shop IPFS hash not provided')
     return
@@ -195,7 +194,11 @@ export async function updateListing({ config, shopIpfsHash }) {
 
   // Create listing data using the base listing template.
   // Include a custom title and shopIpfsHash.
-  const updatedListingData = { ...baseListing, title: config.title, shopIpfsHash }
+  const updatedListingData = {
+    ...baseListing,
+    title: config.title,
+    shopIpfsHash
+  }
 
   // Upload the listing's JSON data to IPFS.
   const bytes32Hash = await post(config.ipfsApi, updatedListingData)
