@@ -177,8 +177,33 @@ module.exports = function(app) {
         .replace('NETWORK', networkName)
     )
 
-    let shopConfig = {
-      ...configs.shopConfig,
+    let shopConfig = { ...configs.shopConfig }
+
+    console.log(`Shop type: ${shopType}`)
+    const allowedTypes = ['single-product', 'multi-product', 'affiliate']
+
+    if (shopType === 'printful' && printfulApi) {
+      const apiAuth = Buffer.from(printfulApi).toString('base64')
+      const PrintfulURL = 'https://api.printful.com'
+
+      await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
+      await writeProductData({ OutputDir })
+      await downloadPrintfulMockups({ OutputDir })
+      await resizePrintfulMockups({ OutputDir })
+    } else if (allowedTypes.indexOf(shopType) >= 0) {
+      const shopTpl = `${__dirname}/../data/shop-templates/${shopType}`
+      const config = fs.readFileSync(`${shopTpl}/config.json`).toString()
+      shopConfig = JSON.parse(config)
+      await new Promise((resolve, reject) => {
+        exec(`cp -r ${shopTpl} ${OutputDir}/data`, (error, stdout) => {
+          if (error) reject(error)
+          else resolve(stdout)
+        })
+      })
+    }
+
+    shopConfig = {
+      ...shopConfig,
       title: name,
       fullTitle: name,
       backendAuthToken: dataDir,
@@ -196,28 +221,6 @@ module.exports = function(app) {
       `networks[${network.networkId}].listingId`,
       req.body.listingId
     )
-
-    console.log(`Shop type: ${shopType}`)
-
-    if (shopType === 'printful' && printfulApi) {
-      const apiAuth = Buffer.from(printfulApi).toString('base64')
-      const PrintfulURL = 'https://api.printful.com'
-
-      await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
-      await writeProductData({ OutputDir })
-      await downloadPrintfulMockups({ OutputDir })
-      await resizePrintfulMockups({ OutputDir })
-    } else if (shopType === 'single-product' || shopType === 'multi-product') {
-      await new Promise((resolve, reject) => {
-        exec(
-          `cp -r ${__dirname}/../data/shop-templates/${shopType} ${OutputDir}/data`,
-          (error, stdout) => {
-            if (error) reject(error)
-            else resolve(stdout)
-          }
-        )
-      })
-    }
 
     const shopConfigPath = `${OutputDir}/data/config.json`
     fs.writeFileSync(shopConfigPath, JSON.stringify(shopConfig, null, 2))

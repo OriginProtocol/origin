@@ -54,9 +54,9 @@ function validate(state) {
   return { valid, newState: { ...state, ...newState } }
 }
 
-const CreateShop = ({ next }) => {
+const CreateShop = () => {
   const { config } = useConfig()
-  const [{ admin }, dispatch] = useStateValue()
+  const [{ admin }] = useStateValue()
   const [advanced, setAdvanced] = useState(false)
   const [ready, setReady] = useState()
   const [loading, setLoading] = useState(false)
@@ -92,7 +92,7 @@ const CreateShop = ({ next }) => {
     return
   }
   if (ready) {
-    return <ShopReady {...ready} next={next} />
+    return <ShopReady {...ready} />
   }
 
   const netId = get(admin, 'network.networkId')
@@ -130,7 +130,6 @@ const CreateShop = ({ next }) => {
             window.scrollTo(0, 0)
           }
         } else {
-          dispatch({ type: 'reload', target: 'auth' })
           setReady(json)
         }
       }}
@@ -149,6 +148,7 @@ const CreateShop = ({ next }) => {
             <option value="printful">Printful</option>
             <option value="single-product">Single Product</option>
             <option value="multi-product">Multi Product</option>
+            <option value="affiliate">Affiliate</option>
           </select>
         </div>
       </div>

@@ -59,7 +59,12 @@ function bqProductFormatter(product) {
  * Get the products from BigQuery for a specific shop
  */
 async function fetchAffiliateProducts({ listingId, credentials, table }) {
-  const bq = new BigQuery({ projectId: credentials.project_id, credentials })
+  let bq
+  if (credentials) {
+    bq = new BigQuery({ projectId: credentials.project_id, credentials })
+  } else {
+    bq = new BigQuery()
+  }
 
   let where = `parent_external_id  = ''`
 
@@ -125,24 +130,22 @@ module.exports = function(app) {
 
   app.get('/affiliate/products', authShop, async (req, res) => {
     const shopConfig = encConf.getConfig(req.shop.config)
-    if (!shopConfig.bigQueryTable || !shopConfig.bigQueryCredentials) {
-      console.log('BigQuery not configured')
-      return res.json([])
-    }
     // const listingId = req.shop ? req.shop.dataValues.listingId : null
 
     let credentials
     try {
       credentials = JSON.parse(shopConfig.bigQueryCredentials)
     } catch (e) {
-      console.log('Error parsing BigQuery credentials')
+      console.log('No BigQuery credentials found in shop config')
+    }
+
+    const table = shopConfig.bigQueryTable || process.env.BIG_QUERY_TABLE
+    if (!table) {
+      console.log('No BigQuery table configured')
       return res.json([])
     }
 
-    const products = await fetchAffiliateProducts({
-      credentials,
-      table: shopConfig.bigQueryTable
-    })
+    const products = await fetchAffiliateProducts({ credentials, table })
     res.json(products)
   })
 }

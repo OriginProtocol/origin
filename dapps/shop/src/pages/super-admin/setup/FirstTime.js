@@ -11,7 +11,6 @@ import CreateShop from '../shops/CreateShop'
 const FirstTime = () => {
   const [{ admin }] = useStateValue()
   const [step, setStep] = useState('no-shops')
-  // const [error, setError] = useState()
 
   useEffect(() => {
     if (admin.reason === 'no-active-network') {
@@ -22,7 +21,6 @@ const FirstTime = () => {
       setStep('sign-up')
     } else if (admin.reason) {
       setStep('login')
-      // setError(admin.reason)
     }
   }, [admin.reason])
 
@@ -33,7 +31,6 @@ const FirstTime = () => {
   return (
     <div className="container admin-first-time">
       <DshopLogo />
-      {/* {error ? <div>{error}</div> : null} */}
       {step === 'sign-up' ? (
         <SignUp next={() => setStep('server-setup')} />
       ) : step === 'server-setup' ? (
@@ -41,7 +38,7 @@ const FirstTime = () => {
       ) : (
         <>
           <div className="mb-4">Create a Shop:</div>
-          <CreateShop next={() => {}} />
+          <CreateShop />
         </>
       )}
     </div>

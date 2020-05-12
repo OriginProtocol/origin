@@ -116,19 +116,12 @@ export async function createListing({ title, network }) {
   const contract = new ethers.Contract(network.marketplaceContract, abi, signer)
 
   const tx = await contract.createListing(bytes32Hash, 0, address)
-  await tx.wait()
+  const receipt = await tx.wait()
 
-  // Listen for the ListingCreated event emitted as part of the listing creation.
-  // The event includes the listing Id.
-  const listingId = await new Promise(resolve => {
-    const eventFilter = contract.filters.ListingCreated(address, null, null)
-    contract.on(eventFilter, (party, listingId) => {
-      const { networkId, marketplaceVersion } = network
-      resolve(`${networkId}-${marketplaceVersion}-${Number(listingId)}`)
-    })
-  })
-
-  return listingId
+  const listingCreated = receipt.events.find(e => e.event === 'ListingCreated')
+  if (listingCreated) {
+    return listingCreated.args.listingID.toNumber()
+  }
 }
 
 /**

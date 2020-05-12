@@ -45,7 +45,7 @@ const SuperAdmin = () => {
 
   if (error) {
     return <div className="fixed-loader">Admin Connection Error</div>
-  } else if (loading) {
+  } else if (loading && !admin) {
     return <div className="fixed-loader">Loading...</div>
   }
 
