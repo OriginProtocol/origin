@@ -49,12 +49,21 @@ First create a listing on shoporigin.com and make a note of the listing ID.
 ```
 
 ## Troubleshooting
+### Vips error
 If you encounter this error on MacOS while running `yarn install`:
 ```
 ../src/common.cc:25:10: fatal error: 'vips/vips8' file not found
 ```
 Try to install vips manually by running:
 ```brew install vips```
+
+### js-ipfs error
+If you encounter this error while using the admin to create a new shop:
+```
+UnhandledPromiseRejectionWarning: Error: Invalid version, must be a number equal to 1 or 0
+    at Function.validateCID
+```
+Upgrade the ipfs package to 0.43.2 or higher under packages/origin/services/package.json
 
 ## Build
 
