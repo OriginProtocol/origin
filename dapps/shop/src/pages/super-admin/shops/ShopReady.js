@@ -1,7 +1,12 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 
-const ShopReady = ({ hash, domain, gateway, next }) => {
+import { useStateValue } from 'data/state'
+
+const ShopReady = ({ hash, domain, gateway }) => {
   const gatewayUrl = `${gateway}/ipfs/${hash}/`
+  const history = useHistory()
+  const [, dispatch] = useStateValue()
   return (
     <>
       Your shop is ready!
@@ -21,11 +26,17 @@ const ShopReady = ({ hash, domain, gateway, next }) => {
           </a>
         </div>
       ) : null}
-      <button
-        className="btn btn-primary btn-lg mt-2"
-        onClick={() => next()}
-        children="View Admin"
-      />
+      <div className="mt-3">
+        <button
+          type="button"
+          className="btn btn-primary btn-lg mt-2"
+          children="Continue"
+          onClick={() => {
+            dispatch({ type: 'reload', target: 'auth' })
+            history.push('/super-admin/shops')
+          }}
+        />
+      </div>
     </>
   )
 }

@@ -7,13 +7,10 @@ import { DshopLogo } from 'components/icons/Admin'
 import SignUp from './SignUp'
 import ServerSetup from './ServerSetup'
 import CreateShop from '../shops/CreateShop'
-import ShopReady from './ShopReady'
 
-const FirstTime = ({ next }) => {
+const FirstTime = () => {
   const [{ admin }] = useStateValue()
   const [step, setStep] = useState('no-shops')
-  const [ready, setReady] = useState()
-  // const [error, setError] = useState()
 
   useEffect(() => {
     if (admin.reason === 'no-active-network') {
@@ -24,33 +21,24 @@ const FirstTime = ({ next }) => {
       setStep('sign-up')
     } else if (admin.reason) {
       setStep('login')
-      // setError(admin.reason)
     }
   }, [admin.reason])
 
-  if (!step) {
+  if (!step || !admin) {
     return null
   }
 
   return (
     <div className="container admin-first-time">
       <DshopLogo />
-      {/* {error ? <div>{error}</div> : null} */}
       {step === 'sign-up' ? (
         <SignUp next={() => setStep('server-setup')} />
       ) : step === 'server-setup' ? (
         <ServerSetup next={() => setStep('create-shop')} />
-      ) : step === 'shop-deployed' ? (
-        <ShopReady {...ready} next={next} />
       ) : (
         <>
           <div className="mb-4">Create a Shop:</div>
-          <CreateShop
-            next={ready => {
-              setReady(ready)
-              setStep('shop-deployed')
-            }}
-          />
+          <CreateShop />
         </>
       )}
     </div>
@@ -76,4 +64,5 @@ require('react-styl')(`
     .sign-up
       display: flex
       flex-direction: column
+      max-width: 400px
 `)

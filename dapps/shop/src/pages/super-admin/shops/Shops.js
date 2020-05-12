@@ -1,7 +1,6 @@
 import React from 'react'
 import get from 'lodash/get'
 import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
 
@@ -10,7 +9,6 @@ import Link from 'components/Link'
 
 const AdminShops = () => {
   const [{ admin }] = useStateValue()
-  const history = useHistory()
 
   const shops = get(admin, 'shops', [])
 
@@ -22,7 +20,7 @@ const AdminShops = () => {
           Create shop
         </Link>
       </div>
-      <table className="table admin-discounts table-hover">
+      <table className="table admin-discounts">
         <thead>
           <tr>
             <th>Name</th>
@@ -35,9 +33,9 @@ const AdminShops = () => {
           {shops.map(shop => (
             <tr
               key={shop.id}
-              onClick={() => {
-                history.push(`/admin/super-admin/${shop.id}`)
-              }}
+              // onClick={() => {
+              //   history.push(`/admin/super-admin/shops/${shop.id}`)
+              // }}
             >
               <td>{shop.name}</td>
               <td>{shop.listingId}</td>

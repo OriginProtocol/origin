@@ -14,7 +14,7 @@ const NewShop = () => {
         {'New'}
       </h3>
       <div style={{ maxWidth: 400 }}>
-        <CreateShop next={() => {}} />
+        <CreateShop />
       </div>
     </>
   )

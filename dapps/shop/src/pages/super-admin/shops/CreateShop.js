@@ -5,6 +5,9 @@ import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import CreateListing from './CreateListing'
 import { formInput, formFeedback } from 'utils/formHelpers'
+import PasswordField from 'components/admin/PasswordField'
+
+import ShopReady from './ShopReady'
 
 async function genPGP() {
   const randomArray = Array.from(crypto.getRandomValues(new Uint32Array(5)))
@@ -28,8 +31,8 @@ function validate(state) {
   }
   if (!state.dataDir) {
     newState.dataDirError = 'Enter a Data Dir'
-  } else if (!state.dataDir.match(/^[a-z-]+$/)) {
-    newState.dataDirError = 'Use a-z characters only'
+  } else if (!state.dataDir.match(/^[a-z0-9-]+$/)) {
+    newState.dataDirError = 'Use alpha-numeric characters only'
   }
   if (!state.hostname) {
     newState.hostnameError = 'Enter a hostname'
@@ -51,10 +54,11 @@ function validate(state) {
   return { valid, newState: { ...state, ...newState } }
 }
 
-const CreateShop = ({ next }) => {
+const CreateShop = () => {
   const { config } = useConfig()
   const [{ admin }] = useStateValue()
   const [advanced, setAdvanced] = useState(false)
+  const [ready, setReady] = useState()
   const [loading, setLoading] = useState(false)
   const [state, setStateRaw] = useState({
     listingId: '',
@@ -75,6 +79,24 @@ const CreateShop = ({ next }) => {
   useEffect(() => {
     genPGP().then(pgpKeys => setState(pgpKeys))
   }, [])
+  useEffect(() => {
+    const hostname = state.name
+      .toLowerCase()
+      .replace(/[^a-z0-9- ]/g, '')
+      .replace(/ +/g, '-')
+      .replace(/-$/, '')
+    setState({ hostname, dataDir: hostname })
+  }, [state.name])
+
+  if (!admin) {
+    return
+  }
+  if (ready) {
+    return <ShopReady {...ready} />
+  }
+
+  const netId = get(admin, 'network.networkId')
+  const listingPrefix = `${netId}-${get(admin, 'network.marketplaceVersion')}-`
 
   return (
     <form
@@ -95,7 +117,10 @@ const CreateShop = ({ next }) => {
           headers: { 'content-type': 'application/json' },
           credentials: 'include',
           method: 'POST',
-          body: JSON.stringify(state)
+          body: JSON.stringify({
+            ...state,
+            listingId: `${listingPrefix}${state.listingId}`
+          })
         })
         const json = await res.json()
         setLoading(false)
@@ -105,32 +130,38 @@ const CreateShop = ({ next }) => {
             window.scrollTo(0, 0)
           }
         } else {
-          next(json)
+          setReady(json)
         }
       }}
     >
-      <div className="form-group">
-        <label>Shop Name</label>
-        <input {...input('name')} placeholder="eg My Store" />
-        {Feedback('name')}
-      </div>
-      <div className="form-group">
-        <label>Hostname</label>
-        <div className="input-group">
-          <input {...input('hostname')} placeholder="eg mystore" />
-          <div className="input-group-append">
-            <span className="input-group-text">
-              {`.${get(admin, 'network.domain')}`}
-            </span>
-          </div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label>Shop Name</label>
+          <input {...input('name')} placeholder="eg My Store" />
+          {Feedback('name')}
         </div>
-        {Feedback('hostname')}
+
+        <div className="form-group col-md-6">
+          <label>Shop type</label>
+          <select {...input('shopType')}>
+            <option value="blank">Blank Template</option>
+            <option value="printful">Printful</option>
+            <option value="single-product">Single Product</option>
+            <option value="multi-product">Multi Product</option>
+            <option value="affiliate">Affiliate</option>
+          </select>
+        </div>
       </div>
       <div className="form-group">
         <label>Existing Listing ID</label>
         <div className="d-flex">
           <div style={{ flex: 1 }}>
-            <input {...input('listingId')} placeholder="eg 1-001-123" />
+            <div className="input-group">
+              <div className="input-group-prepend">
+                <span className="input-group-text">{listingPrefix}</span>
+              </div>
+              <input {...input('listingId')} />
+            </div>
             {Feedback('listingId')}
           </div>
           <div className="mx-3 pt-1">or</div>
@@ -146,7 +177,7 @@ const CreateShop = ({ next }) => {
           </div>
         </div>
       </div>
-      <div className="form-group">
+      {/* <div className="form-group">
         <label>Logo</label>
         <div className="custom-file">
           <input type="file" {...input('logo')} className="custom-file-input" />
@@ -154,7 +185,7 @@ const CreateShop = ({ next }) => {
         </div>
         {Feedback('logo')}
       </div>
-      {/* <div className="form-group">
+      <div className="form-group">
           <label>Favicon</label>
           <div className="custom-file">
             <input
@@ -166,24 +197,15 @@ const CreateShop = ({ next }) => {
           </div>
           {Feedback('favicon')}
         </div> */}
-      <div className="form-row">
-        <div className="form-group col-md-6">
-          <label>Shop type</label>
-          <select {...input('shopType')}>
-            <option value="blank">Blank Template</option>
-            <option value="printful">Printful</option>
-            <option value="single-product">Single Product</option>
-            <option value="multi-product">Multi Product</option>
-          </select>
-        </div>
-        {state.shopType !== 'printful' ? null : (
+      {state.shopType !== 'printful' ? null : (
+        <div className="form-row">
           <div className="form-group col-md-6">
             <label>Printful API Key</label>
             <input type="password" {...input('printfulApi')} />
             {Feedback('printfulApi')}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="mb-2">
         <a
           href="#"
@@ -199,8 +221,20 @@ const CreateShop = ({ next }) => {
         <>
           <div className="form-group">
             <label>Web3 PK (required for non-Eth payments)</label>
-            <input {...input('web3Pk')} type="password" />
+            <PasswordField field="web3Pk" input={input} />
             {Feedback('web3Pk')}
+          </div>
+          <div className="form-group">
+            <label>Hostname</label>
+            <div className="input-group">
+              <input {...input('hostname')} placeholder="eg mystore" />
+              <div className="input-group-append">
+                <span className="input-group-text">
+                  {`.${get(admin, 'network.domain')}`}
+                </span>
+              </div>
+            </div>
+            {Feedback('hostname')}
           </div>
           <div className="form-group">
             <label>Data Dir</label>
@@ -217,7 +251,7 @@ const CreateShop = ({ next }) => {
           </div>
           <div className="form-group">
             <label>PGP Private Key Password</label>
-            <input {...input('pgpPrivateKeyPass')} />
+            <PasswordField input={input} field="pgpPrivateKeyPass" />
             {Feedback('pgpPrivateKeyPass')}
           </div>
           <div className="form-group">

@@ -4,6 +4,8 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 
+import PasswordField from 'components/admin/PasswordField'
+
 function validate(state) {
   const newState = {}
 
@@ -40,7 +42,9 @@ const defaultValues = {
   awsAccessSecret: '',
   upholdApi: '',
   upholdClient: '',
-  upholdSecret: ''
+  upholdSecret: '',
+  bigQueryCredentials: '',
+  bigQueryTable: ''
 }
 
 async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
@@ -66,23 +70,6 @@ async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
   const plaintext = await openpgp.decrypt(options)
 
   return plaintext.data === msg ? '✅' : '❌'
-}
-
-const PasswordField = ({ input, field }) => {
-  const [hide, setHide] = useState(true)
-  return (
-    <div className="input-group">
-      <input type={hide ? 'password' : 'text'} {...input(field)} />
-      <div className="input-group-append">
-        <button
-          type="button"
-          className="btn btn-outline-secondary"
-          onClick={() => setHide(!hide)}
-          children={hide ? '🔒' : '🔓'}
-        />
-      </div>
-    </div>
-  )
 }
 
 const AdminSettings = () => {
@@ -387,6 +374,17 @@ const AdminSettings = () => {
         {Feedback('pgpPrivateKeyPass')}
       </div>
       <div className="form-group">{`Keys match: ${keyValid}`}</div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label>Big Query Table</label>
+          <input {...input('bigQueryTable')} />
+        </div>
+        <div className="form-group col-md-6">
+          <label>Big Query Credentials</label>
+          <textarea rows="4" {...input('bigQueryCredentials')} />
+        </div>
+      </div>
+
       <div className="actions">
         <button type="submit" className="btn btn-primary">
           Save
