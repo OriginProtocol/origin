@@ -1,9 +1,8 @@
 import React from 'react'
-import ethers from 'ethers'
-import { post } from '@origin/ipfs'
-import { useStateValue } from 'data/state'
 
+import { useStateValue } from 'data/state'
 import useConfig from 'utils/useConfig'
+<<<<<<< HEAD
 
 const abi = [
   'function createListing(bytes32, uint256, address)',
@@ -58,6 +57,9 @@ async function createListing({ title, network }) {
 
   return listingId
 }
+=======
+import { createListing } from 'utils/listing'
+>>>>>>> master
 
 const CreateListing = ({
   className,
