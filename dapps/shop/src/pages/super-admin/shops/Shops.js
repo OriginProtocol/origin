@@ -1,7 +1,6 @@
 import React from 'react'
 import get from 'lodash/get'
 import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
 
 import { useStateValue } from 'data/state'
 
@@ -10,7 +9,6 @@ import Link from 'components/Link'
 
 const AdminShops = () => {
   const [{ admin }] = useStateValue()
-  const history = useHistory()
 
   const shops = get(admin, 'shops', [])
 
