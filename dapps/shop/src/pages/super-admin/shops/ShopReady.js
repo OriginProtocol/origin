@@ -34,7 +34,6 @@ const ShopReady = ({ hash, domain, gateway }) => {
           onClick={() => {
             dispatch({ type: 'reload', target: 'auth' })
             history.push('/super-admin/shops')
-
           }}
         />
       </div>
