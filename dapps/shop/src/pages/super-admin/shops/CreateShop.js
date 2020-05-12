@@ -5,6 +5,7 @@ import useConfig from 'utils/useConfig'
 import { useStateValue } from 'data/state'
 import CreateListing from './CreateListing'
 import { formInput, formFeedback } from 'utils/formHelpers'
+import PasswordField from 'components/admin/PasswordField'
 
 import ShopReady from './ShopReady'
 
@@ -78,6 +79,14 @@ const CreateShop = ({ next }) => {
   useEffect(() => {
     genPGP().then(pgpKeys => setState(pgpKeys))
   }, [])
+  useEffect(() => {
+    const hostname = state.name
+      .toLowerCase()
+      .replace(/[^a-z0-9- ]/g, '')
+      .replace(/ +/g, '-')
+      .replace(/-$/, '')
+    setState({ hostname, dataDir: hostname })
+  }, [state.name])
 
   if (!admin) {
     return
@@ -126,22 +135,22 @@ const CreateShop = ({ next }) => {
         }
       }}
     >
-      <div className="form-group">
-        <label>Shop Name</label>
-        <input {...input('name')} placeholder="eg My Store" />
-        {Feedback('name')}
-      </div>
-      <div className="form-group">
-        <label>Hostname</label>
-        <div className="input-group">
-          <input {...input('hostname')} placeholder="eg mystore" />
-          <div className="input-group-append">
-            <span className="input-group-text">
-              {`.${get(admin, 'network.domain')}`}
-            </span>
-          </div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label>Shop Name</label>
+          <input {...input('name')} placeholder="eg My Store" />
+          {Feedback('name')}
         </div>
-        {Feedback('hostname')}
+
+        <div className="form-group col-md-6">
+          <label>Shop type</label>
+          <select {...input('shopType')}>
+            <option value="blank">Blank Template</option>
+            <option value="printful">Printful</option>
+            <option value="single-product">Single Product</option>
+            <option value="multi-product">Multi Product</option>
+          </select>
+        </div>
       </div>
       <div className="form-group">
         <label>Existing Listing ID</label>
@@ -168,7 +177,7 @@ const CreateShop = ({ next }) => {
           </div>
         </div>
       </div>
-      <div className="form-group">
+      {/* <div className="form-group">
         <label>Logo</label>
         <div className="custom-file">
           <input type="file" {...input('logo')} className="custom-file-input" />
@@ -176,7 +185,7 @@ const CreateShop = ({ next }) => {
         </div>
         {Feedback('logo')}
       </div>
-      {/* <div className="form-group">
+      <div className="form-group">
           <label>Favicon</label>
           <div className="custom-file">
             <input
@@ -188,24 +197,15 @@ const CreateShop = ({ next }) => {
           </div>
           {Feedback('favicon')}
         </div> */}
-      <div className="form-row">
-        <div className="form-group col-md-6">
-          <label>Shop type</label>
-          <select {...input('shopType')}>
-            <option value="blank">Blank Template</option>
-            <option value="printful">Printful</option>
-            <option value="single-product">Single Product</option>
-            <option value="multi-product">Multi Product</option>
-          </select>
-        </div>
-        {state.shopType !== 'printful' ? null : (
+      {state.shopType !== 'printful' ? null : (
+        <div className="form-row">
           <div className="form-group col-md-6">
             <label>Printful API Key</label>
             <input type="password" {...input('printfulApi')} />
             {Feedback('printfulApi')}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="mb-2">
         <a
           href="#"
@@ -221,8 +221,20 @@ const CreateShop = ({ next }) => {
         <>
           <div className="form-group">
             <label>Web3 PK (required for non-Eth payments)</label>
-            <input {...input('web3Pk')} type="password" />
+            <PasswordField field="web3Pk" input={input} />
             {Feedback('web3Pk')}
+          </div>
+          <div className="form-group">
+            <label>Hostname</label>
+            <div className="input-group">
+              <input {...input('hostname')} placeholder="eg mystore" />
+              <div className="input-group-append">
+                <span className="input-group-text">
+                  {`.${get(admin, 'network.domain')}`}
+                </span>
+              </div>
+            </div>
+            {Feedback('hostname')}
           </div>
           <div className="form-group">
             <label>Data Dir</label>
@@ -239,7 +251,7 @@ const CreateShop = ({ next }) => {
           </div>
           <div className="form-group">
             <label>PGP Private Key Password</label>
-            <input {...input('pgpPrivateKeyPass')} />
+            <PasswordField input={input} field="pgpPrivateKeyPass" />
             {Feedback('pgpPrivateKeyPass')}
           </div>
           <div className="form-group">

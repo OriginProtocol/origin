@@ -138,6 +138,8 @@ const webpackConfig = {
       context: path => {
         if (path.match(/^\/$/)) return false
         if (path.match(/^\/(dist|fonts|images)/)) return false
+        if (process.env.DATA_DIR && path.indexOf(process.env.DATA_DIR) >= 0)
+          return false
         return true
       },
       target: 'http://0.0.0.0:3000'

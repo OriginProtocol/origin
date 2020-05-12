@@ -6,7 +6,7 @@ const startListener = require('../listener')
 module.exports = function(app) {
   app.post('/networks', authSuperUser, async (req, res) => {
     const networkObj = {
-      networkId: req.body.netId,
+      networkId: req.body.networkId,
       provider: req.body.provider,
       providerWs: req.body.providerWs,
       ipfs: req.body.ipfs,
@@ -24,7 +24,7 @@ module.exports = function(app) {
     }
 
     const existing = await Network.findOne({
-      where: { networkId: req.body.netId }
+      where: { networkId: networkObj.networkId }
     })
     if (existing) {
       await Network.update(networkObj, {

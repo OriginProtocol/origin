@@ -67,4 +67,5 @@ require('react-styl')(`
     .sign-up
       display: flex
       flex-direction: column
+      max-width: 400px
 `)

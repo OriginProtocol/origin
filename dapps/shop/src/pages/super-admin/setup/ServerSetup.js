@@ -33,9 +33,9 @@ const Defaults = {
 }
 
 function initialState() {
-  const netId = window.location.href.indexOf('https') === 0 ? '1' : '999'
+  const networkId = window.location.href.indexOf('https') === 0 ? '1' : '999'
   return {
-    netId,
+    networkId,
     domain: '',
     provider: '',
     providerWs: '',
@@ -47,7 +47,7 @@ function initialState() {
     ipfsApi: '',
     marketplaceContract: '',
     marketplaceVersion: '',
-    ...Defaults[netId]
+    ...Defaults[networkId]
   }
 }
 
@@ -89,10 +89,10 @@ const ServerSetup = ({ next }) => {
   const Feedback = formFeedback(state)
 
   useEffect(() => {
-    if (Defaults[state.netId]) {
-      setState(Defaults[state.netId])
+    if (Defaults[state.networkId]) {
+      setState(Defaults[state.networkId])
     }
-  }, [state.netId])
+  }, [state.networkId])
 
   return (
     <>
@@ -126,11 +126,7 @@ const ServerSetup = ({ next }) => {
             .then(async res => {
               if (res.ok) {
                 dispatch({ type: 'setNetwork', network })
-                // setState({ ...state, error: '' })
-                // const auth = await res.json()
                 next()
-                // } else {
-                //   setState({ ...state, error: 'Unauthorized' })
               }
             })
             .catch(err => {
@@ -142,12 +138,12 @@ const ServerSetup = ({ next }) => {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label>Ethereum Network</label>
-            <select {...input('netId')}>
+            <select {...input('networkId')}>
               <option value="1">Mainnet</option>
               <option value="4">Rinkeby</option>
               <option value="999">Localhost</option>
             </select>
-            {Feedback('netId')}
+            {Feedback('networkId')}
           </div>
           <div className="form-group col-md-6">
             <label>Root Domain</label>

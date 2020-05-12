@@ -22,6 +22,7 @@
     "@babel/plugin-transform-flow-strip-types": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
+    "@google-cloud/bigquery": "^4.7.0",
     "@origin/contracts": "^0.8.6",
     "@origin/graphql": "^0.1.1",
     "@origin/ipfs": "^0.1.0",

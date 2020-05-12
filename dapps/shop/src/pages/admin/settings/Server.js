@@ -42,7 +42,9 @@ const defaultValues = {
   awsAccessSecret: '',
   upholdApi: '',
   upholdClient: '',
-  upholdSecret: ''
+  upholdSecret: '',
+  bigQueryCredentials: '',
+  bigQueryTable: ''
 }
 
 async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
@@ -372,6 +374,17 @@ const AdminSettings = () => {
         {Feedback('pgpPrivateKeyPass')}
       </div>
       <div className="form-group">{`Keys match: ${keyValid}`}</div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label>Big Query Table</label>
+          <input {...input('bigQueryTable')} />
+        </div>
+        <div className="form-group col-md-6">
+          <label>Big Query Credentials</label>
+          <textarea rows="4" {...input('bigQueryCredentials')} />
+        </div>
+      </div>
+
       <div className="actions">
         <button type="submit" className="btn btn-primary">
           Save
