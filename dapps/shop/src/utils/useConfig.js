@@ -19,7 +19,7 @@ function useConfig() {
       setLoading(true)
       try {
         const net = localStorage.ognNetwork || process.env.NETWORK
-        const NetID = net === 'mainnet' ? '1' : net === 'rinkeby' ? '4' : '999'
+        const netId = net === 'mainnet' ? '1' : net === 'rinkeby' ? '4' : '999'
         const url = `${dataUrl()}config.json`
         console.debug(`Loading config from ${url}...`)
         const raw = await fetch(url)
@@ -34,11 +34,12 @@ function useConfig() {
           }
 
           config.supportEmailPlain = supportEmailPlain
-          const netConfig = config.networks[NetID] || {}
-          if (process.env.MARKETPLACE_CONTRACT) {
+          const netConfig = config.networks[netId] || {}
+          if (netId === '999' && process.env.MARKETPLACE_CONTRACT) {
+            // Use the address of the marketplace contract deployed on the local test network.
             netConfig.marketplaceContract = process.env.MARKETPLACE_CONTRACT
           }
-          config = { ...config, ...netConfig, netId: NetID }
+          config = { ...config, ...netConfig, netId }
         } else {
           console.error(`Loading of config failed from ${url}`)
         }
