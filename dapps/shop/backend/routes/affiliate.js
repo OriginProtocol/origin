@@ -4,7 +4,7 @@ const dayjs = require('dayjs')
 
 const { authShop } = require('./_auth')
 const { Order } = require('../models')
-const encConf = require('../utils/encryptedConfig')
+const { getConfig } = require('../utils/encryptedConfig')
 
 function authAffiliate(req, res, next) {
   try {
@@ -129,7 +129,7 @@ module.exports = function(app) {
   })
 
   app.get('/affiliate/products', authShop, async (req, res) => {
-    const shopConfig = encConf.getConfig(req.shop.config)
+    const shopConfig = getConfig(req.shop.config)
     // const listingId = req.shop ? req.shop.dataValues.listingId : null
 
     let credentials

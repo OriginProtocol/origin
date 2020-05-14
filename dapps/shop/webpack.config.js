@@ -42,6 +42,28 @@ if (isProduction) {
 
 const absolute = process.env.ABSOLUTE ? true : false // Absolute js / css files
 
+const apiPaths = `
+  uphold
+  pay
+  webhook
+  events
+  transactions
+  shop
+  orders
+  shipping
+  networks
+  discounts
+  check-discount
+  auth
+  superuser
+  config
+  password
+  affiliate`
+  .split('\n')
+  .map(i => i.trim())
+  .filter(i => i)
+  .map(p => `/${p}`)
+
 const webpackConfig = {
   entry: {
     app: './src/index.js'
@@ -131,17 +153,13 @@ const webpackConfig = {
   devServer: {
     port: 9000,
     host: '0.0.0.0',
+    disableHostCheck: true,
     historyApiFallback: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
     contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')],
     proxy: {
-      context: path => {
-        if (path.match(/^\/$/)) return false
-        if (path.match(/^\/(dist|fonts|images)/)) return false
-        if (process.env.DATA_DIR && path.indexOf(process.env.DATA_DIR) >= 0)
-          return false
-        return true
-      },
+      // If requesting a backend api, proxy it
+      context: path => apiPaths.some(api => path.indexOf(api) === 0),
       target: 'http://0.0.0.0:3000'
     }
   },
