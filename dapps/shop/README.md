@@ -4,8 +4,6 @@ An experimental decentralized e-commerce store served entirely from IPFS.
 
 ## Create your store
 
-First create a listing on shoporigin.com and make a note of the listing ID.
-
 ```sh
    # Clone and install
    git clone https://github.com/OriginProtocol/origin.git origin-store
