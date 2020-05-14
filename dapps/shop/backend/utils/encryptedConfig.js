@@ -32,7 +32,10 @@ function getConfig(config) {
 }
 
 function setConfig(newConfig, existingConfig) {
-  const iv = existingConfig ? existingConfig.split(':')[0] : genIV()
+  let iv = genIV()
+  if (existingConfig) {
+    iv = Buffer.from(existingConfig.split(':')[0], 'hex')
+  }
   const config = encryptJSON(iv, newConfig)
   return `${iv.toString('hex')}:${config}`
 }

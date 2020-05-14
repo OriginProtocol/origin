@@ -11,6 +11,7 @@ const AdminShops = () => {
   const [{ admin }] = useStateValue()
 
   const shops = get(admin, 'shops', [])
+  const localData = get(admin, 'network.deployDir') ? true : false
 
   return (
     <>
@@ -40,7 +41,21 @@ const AdminShops = () => {
               <td>{shop.name}</td>
               <td>{shop.listingId}</td>
               <td>{dayjs(shop.createdAt).format('MMM D, h:mm A')}</td>
-              <td>{shop.authToken}</td>
+              <td>
+                {localData ? (
+                  <a
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault()
+                      sessionStorage.dataDir = shop.authToken
+                      window.open(location.origin)
+                    }}
+                    children={shop.authToken}
+                  />
+                ) : (
+                  shop.authToken
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

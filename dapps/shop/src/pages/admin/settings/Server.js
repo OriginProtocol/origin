@@ -28,6 +28,7 @@ const defaultValues = {
   pgpPublicKey: '',
   pgpPrivateKey: '',
   pgpPrivateKeyPass: '',
+  web3Pk: '',
 
   email: 'disabled',
   sendgridApiKey: '',
@@ -374,6 +375,11 @@ const AdminSettings = () => {
         {Feedback('pgpPrivateKeyPass')}
       </div>
       <div className="form-group">{`Keys match: ${keyValid}`}</div>
+      <div className="form-group">
+        <label>Web3 PK (used to make offers for non-crypto payments)</label>
+        <PasswordField field="web3Pk" input={input} />
+        {Feedback('web3Pk')}
+      </div>
       <div className="form-row">
         <div className="form-group col-md-6">
           <label>Big Query Table</label>

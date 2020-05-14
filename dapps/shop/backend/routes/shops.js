@@ -1,13 +1,14 @@
 const omit = require('lodash/omit')
 const { Seller, Shop, SellerShop, Network, Sequelize } = require('../models')
-const { authSellerAndShop, authRole } = require('./_auth')
+const { authSellerAndShop, authRole, authSuperUser } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
-const encConf = require('../utils/encryptedConfig')
+const { getConfig, setConfig } = require('../utils/encryptedConfig')
 const { createShop } = require('../utils/shop')
 const setCloudflareRecords = require('../utils/cloudflare')
 const get = require('lodash/get')
 const set = require('lodash/set')
 const fs = require('fs')
+const path = require('path')
 const os = require('os')
 const configs = require('../scripts/configs')
 const deploy = require('ipfs-deploy')
@@ -61,19 +62,43 @@ module.exports = function(app) {
 
     const shops = []
     for (const row of rows) {
-      const shopData = omit(row.dataValues, ['config', 'sellerId'])
-      shopData.dataUrl = await encConf.get(row.id, 'dataUrl')
-      shops.push(shopData)
+      const shopConfig = getConfig(row.dataValues.config)
+      shops.push({
+        ...omit(row.dataValues, ['config', 'sellerId']),
+        dataUrl: shopConfig.dataUrl
+      })
     }
 
     res.json({ success: true, shops })
   })
 
-  app.post('/shop', async (req, res) => {
-    if (!req.session.sellerId) {
-      return res.json({ success: false, reason: 'not authed' })
+  app.post('/shop/sync-printful', authSuperUser, authSellerAndShop, async (req, res) => {
+    const shop = req.shop
+    const network = await Network.findOne({ where: { active: true } })
+    if (!network) {
+      return res.json({ success: false, reason: 'no-active-network' })
     }
 
+    const { printful } = getConfig(shop.config)
+    if (!printful) {
+      return res.json({ success: false, reason: 'no-printful-api-key' })
+    }
+
+    const networkConfig = getConfig(network.config)
+    if (!networkConfig.deployDir) {
+      return res.json({ success: false, reason: 'no-local-deploy-dir' })
+    }
+    const OutputDir = `${networkConfig.deployDir}/${shop.authToken}`
+
+    await downloadProductData({ OutputDir, printfulApi: printful })
+    await writeProductData({ OutputDir })
+    await downloadPrintfulMockups({ OutputDir })
+    await resizePrintfulMockups({ OutputDir })
+
+    res.json({ success: true })
+  })
+
+  app.post('/shop', authSuperUser, async (req, res) => {
     const existingShop = await Shop.findOne({
       where: {
         [Sequelize.Op.or]: [
@@ -82,6 +107,7 @@ module.exports = function(app) {
         ]
       }
     })
+
     if (existingShop) {
       const field =
         existingShop.listingId === req.body.listingId ? 'listingId' : 'dataDir'
@@ -94,7 +120,7 @@ module.exports = function(app) {
     }
 
     const network = await Network.findOne({ where: { active: true } })
-    const networkConfig = encConf.getConfig(network.config)
+    const networkConfig = getConfig(network.config)
     const netAndVersion = `${network.networkId}-${network.marketplaceVersion}`
     if (req.body.listingId.indexOf(netAndVersion) !== 0) {
       return res.json({
@@ -106,10 +132,20 @@ module.exports = function(app) {
     }
 
     const shopResponse = await createShop({
+      sellerId: req.session.sellerId,
       listingId: req.body.listingId,
       name: req.body.name,
       authToken: req.body.dataDir,
-      sellerId: req.session.sellerId
+      config: setConfig({
+        dataUrl: `https://${req.body.hostname}/${req.body.dataDir}/`,
+        publicUrl: '',
+        printful: req.body.printfulApi,
+        stripeBackend: '',
+        stripeWebhookSecret: '',
+        pgpPublicKey: req.body.pgpPublicKey,
+        pgpPrivateKey: req.body.pgpPrivateKey,
+        pgpPrivateKeyPass: req.body.pgpPrivateKeyPass
+      })
     })
 
     if (!shopResponse.shop) {
@@ -120,21 +156,7 @@ module.exports = function(app) {
     }
 
     const shopId = shopResponse.shop.id
-
-    const config = {
-      dataUrl: `https://${req.body.hostname}/${req.body.dataDir}/`,
-      publicUrl: '',
-      printful: req.body.printfulApi,
-      stripeBackend: '',
-      stripeWebhookSecret: '',
-      pgpPublicKey: req.body.pgpPublicKey,
-      pgpPrivateKey: req.body.pgpPrivateKey,
-      pgpPrivateKeyPass: req.body.pgpPrivateKeyPass
-    }
-
     console.log(`Created shop ${shopId}`)
-    await encConf.assign(shopId, config)
-    console.log(`Assigned config OK`)
 
     const role = 'admin'
     await SellerShop.create({ sellerId: req.session.sellerId, shopId, role })
@@ -146,8 +168,13 @@ module.exports = function(app) {
       return res.json({ success: true })
     }
 
-    const OutputDir = `${os.tmpdir()}/dshop`
-    await new Promise(resolve => exec(`rm -rf ${OutputDir}`, resolve))
+    let OutputDir
+    if (!networkConfig.deployDir) {
+      OutputDir = `${os.tmpdir()}/dshop`
+      await new Promise(resolve => exec(`rm -rf ${OutputDir}`, resolve))
+    } else {
+      OutputDir = `${networkConfig.deployDir}/${dataDir}`
+    }
     fs.mkdirSync(OutputDir, { recursive: true })
     console.log(`Outputting to ${OutputDir}`)
 
@@ -178,15 +205,17 @@ module.exports = function(app) {
     )
 
     let shopConfig = { ...configs.shopConfig }
+    const existingConfig = fs.existsSync(`${OutputDir}/data/config.json`)
+    if (existingConfig) {
+      const config = fs.readFileSync(`${OutputDir}/data/config.json`).toString()
+      shopConfig = JSON.parse(config)
+    }
 
     console.log(`Shop type: ${shopType}`)
     const allowedTypes = ['single-product', 'multi-product', 'affiliate']
 
     if (shopType === 'printful' && printfulApi) {
-      const apiAuth = Buffer.from(printfulApi).toString('base64')
-      const PrintfulURL = 'https://api.printful.com'
-
-      await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
+      await downloadProductData({ OutputDir, printfulApi })
       await writeProductData({ OutputDir })
       await downloadPrintfulMockups({ OutputDir })
       await resizePrintfulMockups({ OutputDir })
@@ -202,25 +231,21 @@ module.exports = function(app) {
       })
     }
 
-    shopConfig = {
-      ...shopConfig,
-      title: name,
-      fullTitle: name,
-      backendAuthToken: dataDir,
-      supportEmail: `${name} Store <${dataDir}@ogn.app>`,
-      emailSubject: `Your ${name} Order`,
-      pgpPublicKey: pgpPublicKey.replace(/\\r/g, '')
+    if (!existingConfig) {
+      shopConfig = {
+        ...shopConfig,
+        title: name,
+        fullTitle: name,
+        backendAuthToken: dataDir,
+        supportEmail: `${name} Store <${dataDir}@ogn.app>`,
+        emailSubject: `Your ${name} Order`,
+        pgpPublicKey: pgpPublicKey.replace(/\\r/g, '')
+      }
     }
-    shopConfig = set(
-      shopConfig,
-      `networks[${network.networkId}].backend`,
-      req.body.backend
-    )
-    shopConfig = set(
-      shopConfig,
-      `networks[${network.networkId}].listingId`,
-      req.body.listingId
-    )
+
+    const netPath = `networks[${network.networkId}]`
+    shopConfig = set(shopConfig, `${netPath}.backend`, req.body.backend)
+    shopConfig = set(shopConfig, `${netPath}.listingId`, req.body.listingId)
 
     const shopConfigPath = `${OutputDir}/data/config.json`
     fs.writeFileSync(shopConfigPath, JSON.stringify(shopConfig, null, 2))
@@ -230,7 +255,7 @@ module.exports = function(app) {
 
     await new Promise((resolve, reject) => {
       exec(
-        `mv ${OutputDir}/data ${OutputDir}/public/${dataDir}`,
+        `cp -r ${OutputDir}/data ${OutputDir}/public/${dataDir}`,
         (error, stdout) => {
           if (error) reject(error)
           else resolve(stdout)
@@ -238,9 +263,20 @@ module.exports = function(app) {
       )
     })
 
+    if (networkConfig.deployDir) {
+      const rootPath = path.normalize(`${__dirname}/../../data/${dataDir}`)
+      if (!fs.existsSync(rootPath)) {
+        console.log('Creating symlink')
+        fs.symlinkSync(
+          path.normalize(`${networkConfig.deployDir}/${dataDir}/data`),
+          rootPath
+        )
+      }
+    }
+
     let hash
     const publicDirPath = `${OutputDir}/public`
-    if (networkConfig.pinataKey) {
+    if (networkConfig.pinataKey && networkConfig.pinataSecret) {
       hash = await deploy({
         publicDirPath,
         remotePinners: ['pinata'],
@@ -252,7 +288,9 @@ module.exports = function(app) {
           }
         }
       })
-
+      if (!hash) {
+        return res.json({ success: false, reason: 'ipfs-error' })
+      }
       await prime(`https://gateway.pinata.cloud/ipfs/${hash}`, publicDirPath)
       await prime(`https://gateway.ipfs.io/ipfs/${hash}`, publicDirPath)
       await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`, publicDirPath)
@@ -266,12 +304,12 @@ module.exports = function(app) {
       hash = String(allFiles[allFiles.length - 1].cid)
     }
 
+    const subdomain = req.body.hostname
+    const zone = networkConfig.domain
     let domain
-    if (networkConfig.cloudflareApiKey) {
-      const subdomain = req.body.hostname
-      const zone = networkConfig.domain
-      domain = `https://${subdomain}.${zone}`
 
+    if (networkConfig.cloudflareApiKey) {
+      domain = `https://${subdomain}.${zone}`
       await setCloudflareRecords({
         email: networkConfig.cloudflareEmail,
         key: networkConfig.cloudflareApiKey,
