@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/bigquery": "^4.7.0",
+    "@google-cloud/dns": "^2.0.0",
     "aws-sdk": "^2.572.0",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",

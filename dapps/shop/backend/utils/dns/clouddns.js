@@ -1,21 +1,24 @@
 /**
  * DNS utilities for GCP CLoud DNS
- *
- * NOTE: This uses system-level creds since it's super-admin infra
  */
 
 const { DNS } = require('@google-cloud/dns')
 
 let CACHED_CLIENT
+const DEFAULT_TTL = 300 // 5 minutes
 
 /**
  * Return a Google Cloud DNS API client
  *
  * @returns {DNS}
  */
-function getClient() {
+function getClient(credentials) {
   if (CACHED_CLIENT) return CACHED_CLIENT
-  CACHED_CLIENT = new DNS()
+  if (!credentials) throw new Error('Must supply GCP credentails')
+  if (typeof credentials === 'string') credentials = JSON.parse(credentials)
+
+  CACHED_CLIENT = new DNS({ projectId: credentials.project_id, credentials })
+
   return CACHED_CLIENT
 }
 
@@ -83,6 +86,7 @@ async function addCNAME(zone, name, target) {
   const rec = zone.record('CNAME', {
     name,
     data: target,
+    ttl: DEFAULT_TTL
   })
   return await zone.addRecords(rec)
 }
@@ -102,6 +106,7 @@ async function addTXT(zone, name, txt) {
   const rec = zone.record('TXT', {
     name,
     data: txt,
+    ttl: DEFAULT_TTL
   })
   return await zone.addRecords(rec)
 }
@@ -128,15 +133,21 @@ async function addDNSLink(zone, name, ipfsHash) {
  * Ref: https://googleapis.dev/nodejs/dns/latest/Change.html
  *
  * @param {object} args
+ * @param {string} args.credentials - The JSON Google service account
+ *  credentials
+ * @param {string} args.zone - The DNS zone we're adding records to
  * @param {string} args.subdomain - The name of the record we're setting
  * @param {string} args.ipfsGateway - The IFPS gateway to use for DNSLink
  * @param {string} args.hash - The IPFS hash to use for DNSLink
  * @returns {array} of Change
  */
-async function setRecords({ zone, subdomain, ipfsGateway, hash }) {
+async function setRecords({ credentials, zone, subdomain, ipfsGateway, hash }) {
   const fqSubdomain = append(`${subdomain}.${zone}`, '.')
   zone = append(zone, '.')
   ipfsGateway = append(ipfsGateway, '.')
+
+  // Configure the client with given credentials
+  getClient(credentials)
 
   const zoneObj = await getZone(zone)
 

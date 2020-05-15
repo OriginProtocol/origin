@@ -5,6 +5,7 @@ const { createSeller } = require('../utils/sellers')
 const encConf = require('../utils/encryptedConfig')
 const { createShop } = require('../utils/shop')
 const setCloudflareRecords = require('../utils/dns/cloudflare')
+const setCloudDNSRecords = require('../utils/dns/clouddns')
 const get = require('lodash/get')
 const set = require('lodash/set')
 const fs = require('fs')
@@ -267,22 +268,33 @@ module.exports = function(app) {
     }
 
     let domain
-    if (networkConfig.cloudflareApiKey) {
+    if (networkConfig.cloudflareApiKey || networkConfig.gcpCredentials) {
       const subdomain = req.body.hostname
       const zone = networkConfig.domain
       domain = `https://${subdomain}.${zone}`
 
-      await setCloudflareRecords({
-        email: networkConfig.cloudflareEmail,
-        key: networkConfig.cloudflareApiKey,
+      const opts = {
         ipfsGateway: 'ipfs-prod.ogn.app',
         zone,
         subdomain,
         hash
-      })
+      }
+
+      if (networkConfig.cloudflareApiKey) {
+        await setCloudflareRecords({
+          ...opts,
+          email: networkConfig.cloudflareEmail,
+          key: networkConfig.cloudflareApiKey,
+        })
+      } else if (networkConfig.gcpCredentials) {
+        await setCloudDNSRecords({
+          ...opts,
+          credentials: networkConfig.gcpCredentials
+        })
+      }
     }
 
-    res.json({ success: true, hash, domain, gateway: network.ipfs })
+    return res.json({ success: true, hash, domain, gateway: network.ipfs })
   })
 
   app.post(

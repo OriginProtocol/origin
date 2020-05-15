@@ -24,6 +24,7 @@ const defaultValues = {
   pinataSecret: '',
   cloudflareEmail: '',
   cloudflareApiKey: '',
+  gcpCredentials: '',
   domain: '',
   web3Pk: ''
 
@@ -46,13 +47,13 @@ const SuperAdminSettings = () => {
   const setState = newState => setStateRaw({ ...state, ...newState })
 
   useEffect(() => {
-    fetch(`${config.backend}/network/${networkConfig.networkId}`, {
+    fetch(`${config.backend}/networks/${networkConfig.networkId}`, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include'
     }).then(async res => {
       if (res.ok) {
         const json = await res.json()
-        setState(json)
+        setState(json.config)
       }
     })
   }, [])
@@ -70,7 +71,7 @@ const SuperAdminSettings = () => {
 
         if (valid) {
           setSaving('saving')
-          const url = `${config.backend}/network/${networkConfig.networkId}`
+          const url = `${config.backend}/networks/${networkConfig.networkId}`
           const raw = await fetch(url, {
             headers: { 'content-type': 'application/json' },
             credentials: 'include',
@@ -132,6 +133,17 @@ const SuperAdminSettings = () => {
               <label>Cloudflare API Key</label>
               <PasswordField field="cloudflareApiKey" input={input} />
               {Feedback('cloudflareApiKey')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6">
+          <div className="form-row">
+            <div className="form-group col-md-12">
+              <label>GCP Service Account Credentials</label>
+              <textarea {...input('gcpCredentials')}></textarea>
+              {Feedback('gcpCredentials')}
             </div>
           </div>
         </div>

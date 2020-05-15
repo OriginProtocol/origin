@@ -44,7 +44,7 @@
     "express-basic-auth": "^1.2.0",
     "flexsearch": "^0.6.30",
     "graphql-tag": "^2.10.1",
-    "ipfs-http-client": "^44.0.1",
+    "ipfs-http-client": "^44.0.3",
     "mjml": "^4.5.1",
     "nodemailer": "^6.3.1",
     "openpgp": "^4.6.2",
