@@ -51,7 +51,7 @@ function containsRecord(records, name) {
 }
 
 /**
- * Get a speific Zone
+ * Get a specific Zone
  *
  * Ref: https://googleapis.dev/nodejs/dns/latest/Zone.html
  *
@@ -64,7 +64,7 @@ async function getZone(DNSName) {
 
   for (let i=0; i<zones.length; i++) {
     const dnsName = zones[i].metadata.dnsName
-    if (dnsName == DNSName) {
+    if (dnsName === DNSName) {
       return zones[i]
     }
   }
@@ -156,9 +156,9 @@ async function setRecords({ credentials, zone, subdomain, ipfsGateway, hash }) {
     return
   }
 
-  const records = zoneObj.getRecords({ maxResults: 250 })
+  const records = await zoneObj.getRecords({ maxResults: 250 })
 
-  if (await containsRecord(records, fqSubdomain)) {
+  if (containsRecord(records, fqSubdomain)) {
     console.warning(`${fqSubdomain} already exists`)
     return
   }
