@@ -164,6 +164,32 @@ const AdminConsole = () => {
           Submit
         </button>
       </form>
+
+      <label className="mt-4 font-weight-bold">Sync Printful</label>
+      <form
+        className="d-flex"
+        onSubmit={async e => {
+          e.preventDefault()
+          fetch(`${config.backend}/shop/sync-printful`, {
+            headers: {
+              authorization: `bearer ${config.backendAuthToken}`,
+              'content-type': 'application/json'
+            },
+            credentials: 'include',
+            method: 'POST'
+          }).then(saveRes => {
+            if (!saveRes.ok) {
+              console.log('Not OK')
+              return
+            }
+            console.log('OK')
+          })
+        }}
+      >
+        <button type="submit" className="btn btn-outline-primary">
+          Sync
+        </button>
+      </form>
     </div>
   )
 }

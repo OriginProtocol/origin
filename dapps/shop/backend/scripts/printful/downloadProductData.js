@@ -4,7 +4,11 @@ const getProducts = require('./getProducts')
 const getProduct = require('./getProduct')
 const getProductIds = require('./getProductIds')
 
-async function downloadProductData({ OutputDir, PrintfulURL, apiAuth }) {
+const PrintfulURL = 'https://api.printful.com'
+
+async function downloadProductData({ OutputDir, printfulApi }) {
+  const apiAuth = Buffer.from(printfulApi).toString('base64')
+
   fs.mkdirSync(`${OutputDir}/data-printful`, { recursive: true })
   await getProducts({ PrintfulURL, apiAuth, OutputDir })
   const ids = await getProductIds({ OutputDir })

@@ -3,7 +3,9 @@ const CONTENT_HASH = process.env.CONTENT_HASH || ''
 
 let DATA_DIR
 try {
-  DATA_DIR = document.querySelector('link[rel="data-dir"]').getAttribute('href')
+  DATA_DIR =
+    document.querySelector('link[rel="data-dir"]').getAttribute('href') ||
+    sessionStorage.dataDir
 } catch (e) {
   /* Ignore */
 }

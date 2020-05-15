@@ -133,7 +133,6 @@ export async function createListing({ title, network }) {
  * @returns {Promise<void>}
  */
 export async function updateListing({ config, shopIpfsHash }) {
-  console.log('updateListing CONFIG=', config)
   if (!shopIpfsHash) {
     console.error('shop IPFS hash not provided')
     return

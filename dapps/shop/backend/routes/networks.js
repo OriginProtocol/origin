@@ -2,6 +2,8 @@ const { authSuperUser } = require('./_auth')
 const { Network } = require('../models')
 const { getConfig, setConfig } = require('../utils/encryptedConfig')
 const startListener = require('../listener')
+const omit = require('lodash/omit')
+const pick = require('lodash/pick')
 
 module.exports = function(app) {
   app.post('/networks', authSuperUser, async (req, res) => {
@@ -46,12 +48,9 @@ module.exports = function(app) {
     if (!network) {
       return res.json({ success: false, reason: 'no-network' })
     }
-    if (!network.config) {
-      return res.json({ success: false, reason: 'no-network-config' })
-    }
 
     const config = getConfig(network.config)
-    res.json({ network, config })
+    res.json({ ...omit(network.dataValues, 'config'), ...config })
   })
 
   app.put('/networks/:netId', authSuperUser, async (req, res) => {
@@ -60,11 +59,29 @@ module.exports = function(app) {
     if (!network) {
       return res.json({ success: false, reason: 'no-network' })
     }
-    if (!network.config) {
-      return res.json({ success: false, reason: 'no-network-config' })
+
+    const config = pick(req.body, [
+      'pinataKey',
+      'pinataSecret',
+      'cloudflareEmail',
+      'cloudflareApiKey',
+      'domain',
+      'deployDir'
+    ])
+
+    const result = await Network.update(
+      {
+        config: setConfig(config, network.dataValues.config),
+        ipfs: req.body.ipfs,
+        ipfsApi: req.body.ipfsApi
+      },
+      { where }
+    )
+
+    if (!result || result[0] < 1) {
+      return res.json({ success: false })
     }
 
-    const config = getConfig(network.config)
-    res.json({ network, config })
+    res.json({ success: true })
   })
 }

@@ -5,10 +5,15 @@ const Stripe = require('stripe')
 
 const { Shop } = require('../models')
 const { authShop } = require('./_auth')
-const encConf = require('../utils/encryptedConfig')
+const { getConfig } = require('../utils/encryptedConfig')
 const makeOffer = require('./_makeOffer')
 
 const rawJson = bodyParser.raw({ type: 'application/json' })
+
+// Stripe CLI for testing webhook:
+//    stripe login
+//    stripe listen --forward-to localhost:3000/webhook
+// Update stripe webhook in shop server config
 
 module.exports = function(app) {
   app.post('/pay', authShop, async (req, res) => {
@@ -19,7 +24,7 @@ module.exports = function(app) {
       })
     }
 
-    const shopConfig = encConf.getConfig(req.shop.config)
+    const shopConfig = getConfig(req.shop.config)
     if (!shopConfig.web3Pk || !shopConfig.stripeBackend) {
       return res.status(400).send({
         success: false,
@@ -44,11 +49,6 @@ module.exports = function(app) {
     res.send({ success: true, client_secret: paymentIntent.client_secret })
   })
 
-  // Stripe CLI for testing webhook:
-  //    stripe listen --forward-to localhost:3000/webhook
-  //    STRIPE_WEBHOOK_SECRET=xxx node backend/payment.js
-  //    stripe trigger payment_intent.succeeded
-
   async function handleWebhook(req, res, next) {
     try {
       const json = JSON.parse(req.body.toString())
@@ -64,7 +64,7 @@ module.exports = function(app) {
       return res.sendStatus(400)
     }
 
-    const shopConfig = encConf.getConfig(req.shop.config)
+    const shopConfig = getConfig(req.shop.config)
     const stripe = Stripe(shopConfig.stripeBackend)
 
     let event

@@ -10,8 +10,8 @@ import PasswordField from 'components/admin/PasswordField'
 function validate(state) {
   const newState = {}
 
-  if (!state.dataUrl) {
-    newState.dataUrlError = 'Enter a data URL'
+  if (!state.domain) {
+    newState.domainError = 'Enter a domain'
   }
 
   const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -26,7 +26,8 @@ const defaultValues = {
   cloudflareApiKey: '',
   gcpCredentials: '',
   domain: '',
-  web3Pk: ''
+  web3Pk: '',
+  deployDir: ''
 
   // provider: '',
   // providerWs: '',
@@ -103,10 +104,6 @@ const SuperAdminSettings = () => {
             <PasswordField field="web3Pk" input={input} />
             {Feedback('web3Pk')}
           </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-6">
           <div className="form-row">
             <div className="form-group col-md-6">
               <label>Pinata Key</label>
@@ -119,10 +116,6 @@ const SuperAdminSettings = () => {
               {Feedback('pinataSecret')}
             </div>
           </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-6">
           <div className="form-row">
             <div className="form-group col-md-6">
               <label>Cloudflare Email</label>
@@ -134,6 +127,29 @@ const SuperAdminSettings = () => {
               <PasswordField field="cloudflareApiKey" input={input} />
               {Feedback('cloudflareApiKey')}
             </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <label>IPFS Gateway</label>
+              <input
+                {...input('ipfs')}
+                placeholder="eg https://ipfs-prod.ogn.app"
+              />
+              {Feedback('ipfs')}
+            </div>
+            <div className="form-group col-md-6">
+              <label>IPFS API</label>
+              <input
+                {...input('ipfsApi')}
+                placeholder="eg https://ipfs-prod.ogn.app"
+              />
+              {Feedback('ipfsApi')}
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Deployment Dir (leave empty for tmp dir)</label>
+            <input {...input('deployDir')} />
+            {Feedback('deployDir')}
           </div>
         </div>
       </div>

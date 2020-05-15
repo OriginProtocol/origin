@@ -3,7 +3,7 @@ const Web3 = require('web3')
 const { ListingID } = require('../utils/id')
 const { Network } = require('../models')
 const { post, getBytes32FromIpfsHash } = require('../utils/_ipfs')
-const encConf = require('../utils/encryptedConfig')
+const { getConfig } = require('../utils/encryptedConfig')
 const abi = require('../utils/_abi')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -21,7 +21,7 @@ async function makeOffer(req, res) {
     return res.json({ error: `Could not find network ${req.shop.networkId}` })
   }
 
-  const shopConfig = encConf.getConfig(req.shop.config)
+  const shopConfig = getConfig(req.shop.config)
   if (!shopConfig.web3Pk) {
     return res.json({ error: 'No PK configured' })
   }

@@ -39,6 +39,10 @@ async function writeProductData({ OutputDir, png }) {
     )
     const product = JSON.parse(productRaw)
     const externalId = syncProduct.sync_product.id
+    if (!product.variants) {
+      console.log(`Could not find variants on product ${productId}`)
+      continue
+    }
 
     const existingProduct = existingProducts.find(
       p => p.externalId === externalId
