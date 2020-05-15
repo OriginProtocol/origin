@@ -35,22 +35,6 @@ function append(s, e) {
 }
 
 /**
- * Looks for a record within a set of records matching name
- *
- * Ref: https://googleapis.dev/nodejs/dns/latest/Record.html
- *
- * @param {Array} of Record
- * @param {string} name of DNS record
- * @returns {boolean} if a record matching name was found
- */
-function containsRecord(records, name) {
-  for (let i=0; i<records.length; i++) {
-    if (records[i].name == name) return true
-  }
-  return false
-}
-
-/**
  * Get a specific Zone
  *
  * Ref: https://googleapis.dev/nodejs/dns/latest/Zone.html
@@ -158,7 +142,11 @@ async function setRecords({ credentials, zone, subdomain, ipfsGateway, hash }) {
 
   const records = await zoneObj.getRecords({ maxResults: 250 })
 
-  if (containsRecord(records, fqSubdomain)) {
+  if (
+    records
+    && records.length > 0
+    && records[0].some(rec => rec.name == fqSubdomain)
+  ) {
     console.warning(`${fqSubdomain} already exists`)
     return
   }

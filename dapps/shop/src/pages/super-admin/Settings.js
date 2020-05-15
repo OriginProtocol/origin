@@ -54,7 +54,7 @@ const SuperAdminSettings = () => {
     }).then(async res => {
       if (res.ok) {
         const json = await res.json()
-        setState(json.config)
+        setState(json)
       }
     })
   }, [])
