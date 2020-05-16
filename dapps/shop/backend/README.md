@@ -59,6 +59,7 @@ ensure this does not happen.
     heroku config:set PROVIDER=https://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
     heroku config:set PROVIDER_WS=wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
     heroku config:set ENCRYPTION_KEY=randomstring
+    heroku config:set REDIS_URL=redis://URL:PORT
 
     # If you're taking credit card orders, provide a private key. Offers on the
     # Origin Marketplace contract will be made with this account.

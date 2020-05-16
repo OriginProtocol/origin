@@ -12,6 +12,8 @@ const { sequelize } = require('./models')
 const encConf = require('./utils/encryptedConfig')
 const app = express()
 
+require('./queues').runProcessors()
+
 const ORIGIN_WHITELIST_ENABLED = false
 const ORIGIN_WHITELIST = []
 const BODYPARSER_EXCLUDES = ['/webhook']
@@ -76,6 +78,7 @@ require('./routes/printful')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
 require('./routes/tx')(app)
+require('./queues/ui.js')(app)
 
 app.get(
   '(/collections/:collection)?/products/:product',

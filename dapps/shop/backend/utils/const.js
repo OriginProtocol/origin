@@ -44,6 +44,7 @@ const {
   WEB3_PK,
   PROVIDER,
   PROVIDER_WS,
+  REDIS_URL,
   IPFS_GATEWAY, // IFPS gateway oerride
   SUPPORT_EMAIL_OVERRIDE
 } = process.env
@@ -66,6 +67,7 @@ module.exports = {
   WEB3_PK,
   PROVIDER_WS,
   PROVIDER,
+  REDIS_URL,
   IPFS_GATEWAY,
   NETWORK,
   NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,
