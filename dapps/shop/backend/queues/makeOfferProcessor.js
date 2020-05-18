@@ -89,8 +89,8 @@ function createOfferJson(lid, amount, encryptedData) {
     listingType: 'unit',
     unitsPurchased: 1,
     totalPrice: {
-      amount: amount / 100,
-      currency: 'fiat-USD'
+      amount: 0,
+      currency: 'encrypted'
     },
     commission: { currency: 'OGN', amount: '0' },
     finalizes: 60 * 60 * 24 * 14, // 2 weeks after offer accepted
