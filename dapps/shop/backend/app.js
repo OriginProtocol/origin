@@ -78,7 +78,7 @@ require('./routes/printful')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
 require('./routes/tx')(app)
-require('./queues/ui.js')(app)
+require('./queues/ui')(app)
 
 app.get(
   '(/collections/:collection)?/products/:product',
