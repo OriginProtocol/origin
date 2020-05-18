@@ -27,7 +27,7 @@ async function processor(job) {
   const { shopId, amount, encryptedData } = job.data
   const shop = await getShop(shopId)
   job.log('Load encrypted shop config')
-  const shopConfig = await getShopConfig(shop)
+  const shopConfig = getShopConfig(shop)
   const network = await getNetwork(shop.networkId)
 
   job.log('Creating offer')
@@ -74,7 +74,7 @@ async function getNetwork(networkId) {
   return network
 }
 
-async function getShopConfig(shop) {
+function getShopConfig(shop) {
   const shopConfig = encConf.getConfig(shop.config)
   if (!shopConfig.web3Pk) {
     throw new Error('No PK configured for shop')
