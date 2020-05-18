@@ -7,7 +7,7 @@
 
 const { REDIS_URL } = require('../utils/const')
 
-const Queue = REDIS_URL ? require('bull') : require('./fallbackQueue')
+const Queue = REDIS_URL ? require('bullmq') : require('./fallbackQueue')
 const backendUrl = REDIS_URL ? REDIS_URL : undefined
 const queueOpts = {}
 
