@@ -8,6 +8,12 @@ When using cryptocurrencies, the user facing dshop requires no connection to the
 
 Currently there are few docs on working with the dshop.
 
+Details:
+
+- [Order Flow](backend/docs/order.md)
+
+Other docs:
+
 - [Main README](../README.md)
 - [Backend README](backend/README.md)
 - [Backend docs](backend/docs/README.md)
