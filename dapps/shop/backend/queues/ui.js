@@ -12,8 +12,7 @@ const { authSellerAndShop, authRole } = require('../routes/_auth')
 function noUi(app) {
   app.get('/admin/queue', authSellerAndShop, authRole('admin'), function(
     req,
-    res,
-    next
+    res
   ) {
     res.send('Redis is not configured. Queuing disabled.')
   })

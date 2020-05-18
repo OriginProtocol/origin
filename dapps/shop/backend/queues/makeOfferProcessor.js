@@ -31,7 +31,8 @@ async function processor(job) {
   const network = await getNetwork(shop.networkId)
 
   job.log('Creating offer')
-  const offer = createOfferJson(shop.listingId, amount, encryptedData)
+  const lid = ListingID.fromFQLID(shop.listingId)
+  const offer = createOfferJson(lid, amount, encryptedData)
   const ires = await postOfferIPFS(network, offer)
 
   job.log('Submitting Offer')
@@ -40,7 +41,7 @@ async function processor(job) {
   const walletAddress = account.address
   job.log(`using walletAddress ${walletAddress}`)
   job.log('Sending to marketplace')
-  const tx = await offerToMarketplace(network, offer, ires)
+  const tx = await offerToMarketplace(lid, network, walletAddress, offer, ires)
   job.log(tx)
 
   // TODO: Code to prevent duplicate txs
@@ -63,7 +64,7 @@ async function getNetwork(networkId) {
     where: { networkId: networkId, active: true }
   })
   if (!network) {
-    throw new Error(`Could not find network ${shop.networkId}`)
+    throw new Error(`Could not find network ${networkId}`)
   }
   if (!network.marketplaceContract) {
     throw new Error(
@@ -81,8 +82,7 @@ async function getShopConfig(shop) {
   return shopConfig
 }
 
-function createOfferJson(listingId, amount, encryptedData) {
-  const lid = ListingID.fromFQLID(listingId)
+function createOfferJson(lid, amount, encryptedData) {
   return {
     schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
     listingId: lid.toString(),
@@ -107,7 +107,7 @@ async function postOfferIPFS(network, offer) {
   }
 }
 
-async function offerToMarketplace(network, offer, ires) {
+async function offerToMarketplace(lid, network, walletAddress, offer, ires) {
   const Marketplace = new web3.eth.Contract(abi, network.marketplaceContract)
   const tx = await Marketplace.methods
     .makeOffer(
