@@ -23,31 +23,42 @@ function attachToQueue() {
  * @param {*} job
  */
 async function processor(job) {
-  job.log('Started processing')
+  log = (progress, str) => {
+    job.log(str)
+    job.progress(progress)
+  }
+
   const { shopId, amount, encryptedData } = job.data
   const shop = await getShop(shopId)
-  job.log('Load encrypted shop config')
+  log(5, 'Load encrypted shop config')
   const shopConfig = getShopConfig(shop)
   const network = await getNetwork(shop.networkId)
 
-  job.log('Creating offer')
+  log(10, 'Creating offer')
   const lid = ListingID.fromFQLID(shop.listingId)
   const offer = createOfferJson(lid, amount, encryptedData)
   const ires = await postOfferIPFS(network, offer)
 
-  job.log('Submitting Offer')
+  log(20, 'Submitting Offer')
   const web3 = new Web3(network.provider)
   const account = web3.eth.accounts.wallet.add(shopConfig.web3Pk)
   const walletAddress = account.address
-  job.log(`using walletAddress ${walletAddress}`)
-  job.log('Sending to marketplace')
-  const tx = await offerToMarketplace(web3, lid, network, walletAddress, offer, ires)
-  job.log(tx)
+  log(22, `using walletAddress ${walletAddress}`)
+  log(25, 'Sending to marketplace')
+  const tx = await offerToMarketplace(
+    web3,
+    lid,
+    network,
+    walletAddress,
+    offer,
+    ires
+  )
+  log(50, JSON.stringify(tx))
 
   // TODO: Code to prevent duplicate txs
   // TODO Record tx and wait for TX to go through the blockchain
 
-  job.log('Submitting Offer')
+  log(100, 'Finished')
 }
 
 async function getShop(id) {
@@ -107,20 +118,26 @@ async function postOfferIPFS(network, offer) {
   }
 }
 
-async function offerToMarketplace(web3, lid, network, walletAddress, offer, ires) {
+async function offerToMarketplace(
+  web3,
+  lid,
+  network,
+  walletAddress,
+  offer,
+  ires
+) {
   const Marketplace = new web3.eth.Contract(abi, network.marketplaceContract)
-  const tx = await Marketplace.methods
-    .makeOffer(
-      lid.listingId,
-      getBytes32FromIpfsHash(ires),
-      offer.finalizes,
-      ZeroAddress, // Affiliate
-      '0',
-      '0',
-      ZeroAddress,
-      walletAddress // Arbitrator
-    )
-    .send({ from: walletAddress, gas: 350000 })
+  const offerTx = Marketplace.methods.makeOffer(
+    lid.listingId,
+    getBytes32FromIpfsHash(ires),
+    offer.finalizes,
+    ZeroAddress, // Affiliate
+    '0',
+    '0',
+    ZeroAddress,
+    walletAddress // Arbitrator
+  )
+  const tx = await offerTx.send({ from: walletAddress, gas: 350000 })
   return tx
 }
 
