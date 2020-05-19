@@ -3,6 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'ShopDeployment',
     {
       shopId: DataTypes.INTEGER,
+      domain: DataTypes.STRING,
+      ipfsGateway: DataTypes.STRING,
       ipfsHash: DataTypes.STRING
     },
     {

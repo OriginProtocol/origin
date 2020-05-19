@@ -11,6 +11,8 @@ module.exports = {
           type: Sequelize.INTEGER,
           references: { model: 'shops', key: 'id' }
         },
+        domain: Sequelize.STRING,
+        ipfs_gateway: Sequelize.STRING,
         ipfs_hash: Sequelize.STRING,
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE

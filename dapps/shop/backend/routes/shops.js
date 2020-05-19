@@ -291,9 +291,10 @@ module.exports = function(app) {
     }
 
     // Deploy the shop to IPFS.
-    let hash
+    let hash, ipfsGateway
     const publicDirPath = `${OutputDir}/public`
     if (networkConfig.pinataKey && networkConfig.pinataSecret) {
+      ipfsGateway = 'https://gateway.pinata.cloud'
       hash = await deploy({
         publicDirPath,
         remotePinners: ['pinata'],
@@ -308,10 +309,12 @@ module.exports = function(app) {
       if (!hash) {
         return res.json({ success: false, reason: 'ipfs-error' })
       }
+      console.log(`Deployed shop on Pinata. Hash=${hash}`)
       await prime(`https://gateway.pinata.cloud/ipfs/${hash}`, publicDirPath)
       await prime(`https://gateway.ipfs.io/ipfs/${hash}`, publicDirPath)
       await prime(`https://ipfs-prod.ogn.app/ipfs/${hash}`, publicDirPath)
     } else if (network.ipfsApi.indexOf('localhost') > 0) {
+      ipfsGateway = network.ipfsApi
       const ipfs = ipfsClient(network.ipfsApi)
       const allFiles = []
       const glob = ipfsClient.globSource(publicDirPath, { recursive: true })
@@ -319,21 +322,13 @@ module.exports = function(app) {
         allFiles.push(file)
       }
       hash = String(allFiles[allFiles.length - 1].cid)
+      console.log(`Deployed shop on local IPFS. Hash=${hash}`)
     } else {
       console.log(
         'Shop not deployed to IPFS: Pinata not configured and not a dev environment.'
       )
     }
-    if (hash) {
-      // Record the IPFS hash for the store in the shop_deployments DB table.
-      await ShopDeployment.create({
-        shopId,
-        ipfsHash: hash
-      })
-      console.log(
-        `Inserted a row in shop_deployments. shop_id=${shopId} ipfs_hash=${hash}`
-      )
-    }
+
 
     let domain
     if (networkConfig.cloudflareApiKey || networkConfig.gcpCredentials) {
@@ -361,6 +356,15 @@ module.exports = function(app) {
         })
       }
     }
+
+    // Record the deployment in the DB.
+    const deployment = await ShopDeployment.create({
+      shopId,
+      domain,
+      ipfsGateway,
+      ipfsHash: hash
+    })
+    console.log(`Recorded deployment in DB. id=${deployment.id}`, domain, ipfsGateway, hash)
 
     return res.json({ success: true, hash, domain, gateway: network.ipfs })
   })
