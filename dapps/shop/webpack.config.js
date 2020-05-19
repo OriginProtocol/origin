@@ -42,28 +42,6 @@ if (isProduction) {
 
 const absolute = process.env.ABSOLUTE ? true : false // Absolute js / css files
 
-const apiPaths = `
-  uphold
-  pay
-  webhook
-  events
-  transactions
-  shop
-  orders
-  shipping
-  networks
-  discounts
-  check-discount
-  auth
-  superuser
-  config
-  password
-  affiliate`
-  .split('\n')
-  .map(i => i.trim())
-  .filter(i => i)
-  .map(p => `/${p}`)
-
 const webpackConfig = {
   entry: {
     app: './src/index.js'
@@ -157,9 +135,20 @@ const webpackConfig = {
     historyApiFallback: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
     contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'data')],
+    // Below is so proxy does not take precedence. See https://github.com/webpack/webpack-dev-server/issues/1132#issuecomment-340639565
+    features: [
+      'before',
+      'setup',
+      'headers',
+      'middleware',
+      'contentBaseFiles',
+      'proxy',
+      'middleware',
+      'magicHtml'
+    ],
     proxy: {
       // If requesting a backend api, proxy it
-      context: path => apiPaths.some(api => path.indexOf(api) === 0),
+      context: () => true,
       target: 'http://0.0.0.0:3000'
     }
   },
