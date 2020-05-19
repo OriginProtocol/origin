@@ -3,7 +3,7 @@
  */
 
 const { REDIS_URL } = require('../utils/const')
-const { authSellerAndShop, authRole } = require('../routes/_auth')
+const { authSuperUser } = require('../routes/_auth')
 
 /**
  * If we are not using bull for a queue, don't setup the UI for it.
@@ -36,7 +36,7 @@ function bullBoardUI(app) {
   setQueues(allQueues)
 
   // Use the UI
-  app.use('/queue', authSellerAndShop, authRole('admin'), UI)
+  app.use('/super-admin/queue', authSuperUser, UI)
 }
 
 module.exports = function(app) {

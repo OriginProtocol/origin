@@ -41,7 +41,7 @@ async function processor(job) {
   const walletAddress = account.address
   job.log(`using walletAddress ${walletAddress}`)
   job.log('Sending to marketplace')
-  const tx = await offerToMarketplace(lid, network, walletAddress, offer, ires)
+  const tx = await offerToMarketplace(web3, lid, network, walletAddress, offer, ires)
   job.log(tx)
 
   // TODO: Code to prevent duplicate txs
@@ -107,7 +107,7 @@ async function postOfferIPFS(network, offer) {
   }
 }
 
-async function offerToMarketplace(lid, network, walletAddress, offer, ires) {
+async function offerToMarketplace(web3, lid, network, walletAddress, offer, ires) {
   const Marketplace = new web3.eth.Contract(abi, network.marketplaceContract)
   const tx = await Marketplace.methods
     .makeOffer(
