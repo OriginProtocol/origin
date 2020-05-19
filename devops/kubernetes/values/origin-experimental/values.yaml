@@ -1,2 +1,4 @@
 dshopBackendMainnetHost: api.ogn.app
+dshopBackendMainnetDBInstance: origin-214503:us-west1:dshop-mainnet0
 dshopBackendRinkebyHost: rinkebyapi.ogn.app
+dshopBackendRinkebyDBInstance: origin-214503:us-west1:dshop-rinkeby0

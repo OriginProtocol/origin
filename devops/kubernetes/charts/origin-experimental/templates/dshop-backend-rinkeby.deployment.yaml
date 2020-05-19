@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ template "dshopBackendRinkeby.fullname" . }}
   labels:
@@ -12,11 +12,11 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: dshop-backend-rinkeby
 spec:
+  replicas: {{ default 1 .Values.dshopBackendRinkebyReplicas }}
   selector:
     matchLabels:
       app: {{ template "dshopBackendRinkeby.fullname" . }}
   serviceName: {{ template "dshopBackendRinkeby.fullname" . }}
-  replicas: 1
   template:
     metadata:
       labels:
@@ -27,31 +27,35 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dshopBackendRinkebyImage }}:{{ .Values.dshopBackendRinkebyImageTag }}"
         imagePullPolicy: Always
         env:
-          - name: ENVKEY
+          - name: ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
                 name: {{ template "dshopBackendRinkeby.fullname" . }}
-                key: ENVKEY
+                key: ENCRYPTION_KEY
           - name: DATABASE_URL
-            value: "sqlite:/data/dshop/net_rinkeby.db"
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "dshopBackendRinkeby.fullname" . }}
+                key: DATABASE_URL
         port:
           - name: http
             containerPort: 3000
-        volumeMounts:
-          - mountPath: /data/dshop
-            name: {{ template "dshopBackendRinkeby.fullname" . }}-data
         resources:
           requests:
             memory: 1Gi
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ template "dshopBackendRinkeby.fullname" . }}-data
-      labels:
-        app: {{ template "dshopBackendRinkeby.fullname" . }}
-    spec:
-      accessModes:
-        - ReadWriteOnce  # Read-write for a single node only
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances={{ .Values.dshopBackendRinkebyDBInstance }}=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: dshop-cloudsql-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      volumes:
+        - name: dshop-cloudsql-credentials
+          secret:
+            secretName: dshop-cloudsql-credentials
