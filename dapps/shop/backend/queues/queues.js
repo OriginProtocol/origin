@@ -3,6 +3,8 @@
  *
  * If no REDIS_URL defined, will fallback to prossing jobs as the jobs are
  * submitted, without using a queue.
+ *
+ * Example REDIS_URL=redis://0.0.0.0:6379
  */
 
 const { REDIS_URL } = require('../utils/const')

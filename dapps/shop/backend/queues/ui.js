@@ -10,10 +10,7 @@ const { authSuperUser } = require('../routes/_auth')
  * @param {*} app
  */
 function noUi(app) {
-  app.get('/admin/queue', authSellerAndShop, authRole('admin'), function(
-    req,
-    res
-  ) {
+  app.get('/super-admin/queue', authSuperUser, function(req, res) {
     res.send('Redis is not configured. Queuing disabled.')
   })
 }
@@ -23,8 +20,7 @@ function noUi(app) {
  * @param {*} app
  */
 function bullBoardUI(app) {
-  const { UI } = require('bull-board')
-  const { setQueues } = require('bull-board')
+  const { UI, setQueues } = require('bull-board')
   const queues = require('./queues')
 
   // Add all queues to the UI

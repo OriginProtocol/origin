@@ -23,7 +23,7 @@ function attachToQueue() {
  * @param {*} job
  */
 async function processor(job) {
-  log = (progress, str) => {
+  const log = (progress, str) => {
     job.log(str)
     job.progress(progress)
   }
