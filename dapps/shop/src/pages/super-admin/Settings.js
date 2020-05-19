@@ -24,6 +24,7 @@ const defaultValues = {
   pinataSecret: '',
   cloudflareEmail: '',
   cloudflareApiKey: '',
+  gcpCredentials: '',
   domain: '',
   web3Pk: '',
   deployDir: ''
@@ -149,6 +150,17 @@ const SuperAdminSettings = () => {
             <label>Deployment Dir (leave empty for tmp dir)</label>
             <input {...input('deployDir')} />
             {Feedback('deployDir')}
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6">
+          <div className="form-row">
+            <div className="form-group col-md-12">
+              <label>GCP Service Account Credentials</label>
+              <textarea {...input('gcpCredentials')}></textarea>
+              {Feedback('gcpCredentials')}
+            </div>
           </div>
         </div>
       </div>

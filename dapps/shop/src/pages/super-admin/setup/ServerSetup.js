@@ -22,8 +22,8 @@ const Defaults = {
     providerWs: ''
   },
   '999': {
-    ipfs: 'http://localhost:8080',
-    ipfsApi: 'http://localhost:5002',
+    ipfs: process.env.IPFS_GATEWAY || 'http://localhost:8080',
+    ipfsApi: process.env.IPFS_API || 'http://localhost:5002',
     marketplaceContract: process.env.MARKETPLACE_CONTRACT,
     marketplaceVersion: '001',
     domain: 'localhost',
@@ -43,6 +43,7 @@ function initialState() {
     pinataSecret: '',
     cloudflareEmail: '',
     cloudflareApiKey: '',
+    gcpCredentials: '',
     ipfs: '',
     ipfsApi: '',
     marketplaceContract: '',
@@ -191,6 +192,13 @@ const ServerSetup = ({ next }) => {
             <label>Cloudflare API Key</label>
             <input type="password" {...input('cloudflareApiKey')} />
             {Feedback('cloudflareApiKey')}
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-md-12">
+            <label>GCP Service Account Credentials</label>
+            <textarea {...input('gcpCredentials')}></textarea>
+            {Feedback('gcpCredentials')}
           </div>
         </div>
         <div className="mb-2 justify-content-center d-flex">

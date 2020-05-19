@@ -21,6 +21,7 @@ module.exports = function(app) {
         pinataSecret: req.body.pinataSecret,
         cloudflareEmail: req.body.cloudflareEmail,
         cloudflareApiKey: req.body.cloudflareApiKey,
+        gcpCredentials: req.body.gcpCredentials,
         domain: req.body.domain
       })
     }
