@@ -28,9 +28,6 @@ program.parse(process.argv)
 
 const OutputDir = `${__dirname}/output/${program.site}`
 
-const apiAuth = Buffer.from(process.env.PRINTFUL).toString('base64')
-const PrintfulURL = 'https://api.printful.com'
-
 async function getProductSyncIds(id) {
   const productRaw = fs.readFileSync(
     `${OutputDir}/data-printful/product-${id}.json`
@@ -125,7 +122,7 @@ async function matchPrintfulToExisting({ OutputDir }) {
 }
 
 async function start() {
-  await downloadProductData({ OutputDir, PrintfulURL, apiAuth })
+  await downloadProductData({ OutputDir, printfulApi: process.env.PRINTFUL })
   await writeProductData({ OutputDir, png: program.png })
   await downloadPrintfulMockups({ OutputDir, png: program.png })
   await resizePrintfulMockups({ OutputDir })
