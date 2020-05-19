@@ -22,6 +22,7 @@ COPY $DSHOP_BACKEND_DIR/data/migrations ./data/migrations
 COPY $DSHOP_BACKEND_DIR/models ./models
 COPY $DSHOP_BACKEND_DIR/scripts ./scripts
 COPY $DSHOP_BACKEND_DIR/dist ./dist
+COPY $DSHOP_BACKEND_DIR/queues ./queues
 
 RUN yarn install
 CMD npm run migrate && node index.js
