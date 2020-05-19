@@ -16,14 +16,19 @@ module.exports = function(app) {
     res.json(req.order)
   })
 
-  app.post('/orders/:orderId/email', authSellerAndShop, findOrder, async (req, res) => {
-    try {
-      await sendMail(req.shop.id, JSON.parse(req.order.data))
-      res.json({ success: true })
-    } catch(e) {
-      res.json({ success: false })
+  app.post(
+    '/orders/:orderId/email',
+    authSellerAndShop,
+    findOrder,
+    async (req, res) => {
+      try {
+        await sendMail(req.shop.id, JSON.parse(req.order.data))
+        res.json({ success: true })
+      } catch (e) {
+        res.json({ success: false })
+      }
     }
-  })
+  )
 
   app.post('/orders/create', authSellerAndShop, (req, res) => {
     const { encryptedData } = req.body

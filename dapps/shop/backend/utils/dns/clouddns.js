@@ -46,7 +46,7 @@ async function getZone(DNSName) {
   const dns = getClient()
   const [zones] = await dns.getZones({ maxResults: 50 })
 
-  for (let i=0; i<zones.length; i++) {
+  for (let i = 0; i < zones.length; i++) {
     const dnsName = zones[i].metadata.dnsName
     if (dnsName === DNSName) {
       return zones[i]
@@ -143,9 +143,9 @@ async function setRecords({ credentials, zone, subdomain, ipfsGateway, hash }) {
   const records = await zoneObj.getRecords({ maxResults: 250 })
 
   if (
-    records
-    && records.length > 0
-    && records[0].some(rec => rec.name === fqSubdomain)
+    records &&
+    records.length > 0 &&
+    records[0].some(rec => rec.name === fqSubdomain)
   ) {
     console.warning(`${fqSubdomain} already exists`)
     return

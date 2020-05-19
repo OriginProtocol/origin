@@ -1,5 +1,12 @@
 const omit = require('lodash/omit')
-const { Seller, Shop, SellerShop, Network, Sequelize } = require('../models')
+const {
+  Seller,
+  Shop,
+  ShopDeployment,
+  SellerShop,
+  Network,
+  Sequelize
+} = require('../models')
 const { authSellerAndShop, authRole, authSuperUser } = require('./_auth')
 const { createSeller } = require('../utils/sellers')
 const { getConfig, setConfig } = require('../utils/encryptedConfig')
@@ -73,32 +80,40 @@ module.exports = function(app) {
     res.json({ success: true, shops })
   })
 
-  app.post('/shop/sync-printful', authSuperUser, authSellerAndShop, async (req, res) => {
-    const shop = req.shop
-    const network = await Network.findOne({ where: { active: true } })
-    if (!network) {
-      return res.json({ success: false, reason: 'no-active-network' })
+  app.post(
+    '/shop/sync-printful',
+    authSuperUser,
+    authSellerAndShop,
+    async (req, res) => {
+      const shop = req.shop
+      const network = await Network.findOne({ where: { active: true } })
+      if (!network) {
+        return res.json({ success: false, reason: 'no-active-network' })
+      }
+
+      const { printful } = getConfig(shop.config)
+      if (!printful) {
+        return res.json({ success: false, reason: 'no-printful-api-key' })
+      }
+
+      const networkConfig = getConfig(network.config)
+      if (!networkConfig.deployDir) {
+        return res.json({ success: false, reason: 'no-local-deploy-dir' })
+      }
+      const OutputDir = `${networkConfig.deployDir}/${shop.authToken}`
+
+      await downloadProductData({ OutputDir, printfulApi: printful })
+      await writeProductData({ OutputDir })
+      await downloadPrintfulMockups({ OutputDir })
+      await resizePrintfulMockups({ OutputDir })
+
+      res.json({ success: true })
     }
+  )
 
-    const { printful } = getConfig(shop.config)
-    if (!printful) {
-      return res.json({ success: false, reason: 'no-printful-api-key' })
-    }
-
-    const networkConfig = getConfig(network.config)
-    if (!networkConfig.deployDir) {
-      return res.json({ success: false, reason: 'no-local-deploy-dir' })
-    }
-    const OutputDir = `${networkConfig.deployDir}/${shop.authToken}`
-
-    await downloadProductData({ OutputDir, printfulApi: printful })
-    await writeProductData({ OutputDir })
-    await downloadPrintfulMockups({ OutputDir })
-    await resizePrintfulMockups({ OutputDir })
-
-    res.json({ success: true })
-  })
-
+  /**
+   * Creates a new shop.
+   */
   app.post('/shop', authSuperUser, async (req, res) => {
     const existingShop = await Shop.findOne({
       where: {
@@ -275,6 +290,7 @@ module.exports = function(app) {
       }
     }
 
+    // Deploy the shop to IPFS.
     let hash
     const publicDirPath = `${OutputDir}/public`
     if (networkConfig.pinataKey && networkConfig.pinataSecret) {
@@ -303,6 +319,20 @@ module.exports = function(app) {
         allFiles.push(file)
       }
       hash = String(allFiles[allFiles.length - 1].cid)
+    } else {
+      console.log(
+        'Shop not deployed to IPFS: Pinata not configured and not a dev environment.'
+      )
+    }
+    if (hash) {
+      // Record the IPFS hash for the store in the shop_deployments DB table.
+      await ShopDeployment.create({
+        shopId,
+        ipfsHash: hash
+      })
+      console.log(
+        `Inserted a row in shop_deployments. shop_id=${shopId} ipfs_hash=${hash}`
+      )
     }
 
     let domain
@@ -322,7 +352,7 @@ module.exports = function(app) {
         await setCloudflareRecords({
           ...opts,
           email: networkConfig.cloudflareEmail,
-          key: networkConfig.cloudflareApiKey,
+          key: networkConfig.cloudflareApiKey
         })
       } else if (networkConfig.gcpCredentials) {
         await setCloudDNSRecords({
