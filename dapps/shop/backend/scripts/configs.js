@@ -22,7 +22,7 @@ const shopConfig = {
   pgpPublicKey: '',
   contentCDN: '',
   contentHash: '',
-  stripeKey: '',
+  stripePublishableKey: '',
 
   networks: {
     '1': {

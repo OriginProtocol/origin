@@ -20,7 +20,7 @@
   "pgpPublicKey": "-----BEGIN PGP PUBLIC KEY BLOCK-----\n\nXXXX\n-----END PGP PUBLIC KEY BLOCK-----\n",
   "contentCDN": "",
   "contentHash": "",
-  "stripeKey": "",
+  "stripePublishableKey": "",
 
   "networks": {
     "1": {

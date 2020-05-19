@@ -26,14 +26,15 @@ const Checkout = () => {
       history.push('/cart')
       return
     }
+    const stripePublishableKey = config.stripePublishableKey || config.stripeKey
     if (window.Stripe) {
-      setStripe(window.Stripe(config.stripeKey))
+      setStripe(window.Stripe(stripePublishableKey))
     } else {
-      if (config.stripe && config.stripeKey) {
+      if (config.stripe && stripePublishableKey) {
         const script = document.createElement('script')
         script.src = 'https://js.stripe.com/v3/'
         script.addEventListener('load', () => {
-          setStripe(window.Stripe(config.stripeKey))
+          setStripe(window.Stripe(stripePublishableKey))
         })
         document.head.appendChild(script)
       }
