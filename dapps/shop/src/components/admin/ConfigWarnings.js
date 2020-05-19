@@ -1,8 +1,8 @@
 import React, { useState }  from 'react'
 
 const ConfigWarning = ({ config }) => {
-  const [errors, setErrors] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [errors, setErrors] = useState([])
+  const [isChecked, setIsChecked] = useState(false)
   if(config && (isChecked == false)){
     if(config.stripeKey != undefined){
       errors.push(`
