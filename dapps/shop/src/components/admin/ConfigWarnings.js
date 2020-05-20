@@ -1,24 +1,27 @@
-import React, { useState }  from 'react'
+import React, { useState } from 'react'
 
 const ConfigWarning = ({ config }) => {
   const [errors, setErrors] = useState([])
   const [isChecked, setIsChecked] = useState(false)
-  if(config && (isChecked == false)){
-    if(config.stripeKey != undefined){
+  if (config && isChecked == false) {
+    if (config.stripeKey != undefined) {
       errors.push(`
         The 'stripeKey' field has been deprecated in the shop's public config file.
-        Please rename this field to 'stripePublishableKey'.`)  
+        Please rename this field to 'stripePublishableKey'.`)
     }
     setErrors(errors)
     setIsChecked(true)
   }
-  return <div className="warnings">
-    {errors.map((e,i)=><div key={i}>{e}</div>)}
-  </div>
+  return (
+    <div className="warnings">
+      {errors.map((e, i) => (
+        <div key={i}>{e}</div>
+      ))}
+    </div>
+  )
 }
 
 export default ConfigWarning
-
 
 require('react-styl')(`
 
