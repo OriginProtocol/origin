@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ template "dshopBackendMainnet.fullname" . }}
   labels:
@@ -37,6 +37,8 @@ spec:
               secretKeyRef:
                 name: {{ template "dshopBackendMainnet.fullname" . }}
                 key: DATABASE_URL
+          - name: REDIS_URL
+            value: redis://localhost:6379/0
         port:
           - name: http
             containerPort: 3000
@@ -55,7 +57,26 @@ spec:
         - name: dshop-cloudsql-credentials
           mountPath: /secrets/cloudsql
           readOnly: true
+      - name: redis
+        image: redis:6.0
+        command: ["/bin/sh","-c"]
+        args: ["mkdir -p /data/redis && redis-server --dir /data/redis "]
+        volumeMounts:
+          - mountPath: /data
+            name: {{ template "dshopBackendMainnet.fullname" . }}-redis
       volumes:
         - name: dshop-cloudsql-credentials
           secret:
             secretName: dshop-cloudsql-credentials
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "dshopBackendMainnet.fullname" . }}-redis
+      labels:
+        app: {{ template "dshopBackendMainnet.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce  # Read-write for a single node only
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
