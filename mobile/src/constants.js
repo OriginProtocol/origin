@@ -1,6 +1,6 @@
 'use strict'
 
-export const VERSION = '0.31.2'
+export const VERSION = '0.32.1'
 
 class Enum extends Array {
   constructor(...args) {
