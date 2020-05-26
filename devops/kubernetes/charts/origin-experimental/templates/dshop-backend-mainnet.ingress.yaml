@@ -23,11 +23,16 @@ spec:
     - secretName: "{{ .Values.dshopBackendMainnetHost }}"
       hosts:
         - {{ .Values.dshopBackendMainnetHost }}
+    - secretName: "backendapi.ogn.app"
+      hosts:
+        - "backendapi.ogn.app"
   rules:
   - host: {{ .Values.dshopBackendMainnetHost }}
-    http:
+    http: &http_rules
       paths:
         - path: /
           backend:
             serviceName: {{ template "dshopBackendMainnet.fullname" . }}
             servicePort: 3000
+  - host: "backendapi.ogn.app"
+    http: *http_rules
