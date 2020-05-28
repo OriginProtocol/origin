@@ -1,4 +1,5 @@
 import { spawn } from 'child_process'
+import fs from 'fs'
 
 import services from '@origin/services'
 let localContractAddress
@@ -10,6 +11,11 @@ try {
 }
 
 async function start() {
+  // Make life easier by creating a .env if one doesn't exist
+  if (!fs.existsSync(`${__dirname}/.env`)) {
+    fs.copyFileSync(`${__dirname}/dev.env`, `${__dirname}/.env`)
+  }
+
   let shuttingDown = false
 
   const shutdownAll = async () => {

@@ -1,0 +1,67 @@
+{
+  "id": "cut-out-the-middleman-baseball-tee",
+  "title": "Cut Out The Middleman Baseball Tee",
+  "description": "¾ Sleeve raglan shirt<br/>Poly-cotton blend (50% polyester, 50% combed cotton)<br/><br/>This is a unisex shirt but sizes are listed in men's.",
+  "price": 2000,
+  "available": true,
+  "options": ["Size"],
+  "images": ["img-0.png"],
+  "image": "img-0.png",
+  "variants": [
+    {
+      "id": 0,
+      "title": "Cut Out The Middleman Baseball Tee",
+      "option1": "XS",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["XS"],
+      "price": 2000
+    },
+    {
+      "id": 1,
+      "title": "Cut Out The Middleman Baseball Tee",
+      "option1": "Small",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Small"],
+      "price": 2000
+    },
+    {
+      "id": 2,
+      "title": "Cut Out The Middleman Baseball Tee",
+      "option1": "Medium",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Medium"],
+      "price": 2000
+    },
+    {
+      "id": 3,
+      "title": "Cut Out The Middleman Baseball Tee",
+      "option1": "Large",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["Large"],
+      "price": 2000
+    },
+    {
+      "id": 4,
+      "title": "Cut Out The Middleman Baseball Tee",
+      "option1": "XL",
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "options": ["XL"],
+      "price": 2000
+    }
+  ]
+}

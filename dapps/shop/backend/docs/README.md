@@ -11,6 +11,8 @@ These are the available environment variables:
 - `NETWORK` ['mainnet', 'rinkeby', 'dev']
 - `IPFS_GATEWAY` - IFPS gateway override. Ignores shop configs if set.
 - `SESSION_SECRET` - String used as salt to encrypt session data.  Defaults to random.
+- `REDIS_URL` - Connection string for Redis. If empty, shop will skip queuing and retrying tasks.
+- `DATABASE_URL` - Database connection. If empty will use a local SQLite database.
 
 ## Single Tenant Configuration
 

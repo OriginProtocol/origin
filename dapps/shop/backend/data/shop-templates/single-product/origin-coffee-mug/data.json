@@ -1,0 +1,23 @@
+{
+  "id": "origin-coffee-mug",
+  "title": "Origin Coffee Mug",
+  "description": "11 oz Origin Coffee Mug\n\nDishwasher and microwave safe",
+  "price": 2500,
+  "available": true,
+  "images": ["img-0.png", "img-1.png"],
+  "image": "img-0.png",
+  "variants": [
+    {
+      "id": 0,
+      "title": "Origin Coffee Mug",
+      "option1": null,
+      "option2": null,
+      "option3": null,
+      "image": "img-0.png",
+      "available": true,
+      "name": "Origin Coffee Mug",
+      "options": [],
+      "price": 2500
+    }
+  ]
+}

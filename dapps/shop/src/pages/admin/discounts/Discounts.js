@@ -32,9 +32,9 @@ const AdminDiscounts = () => {
   const { data: discounts = [], loading } = useRest('/discounts')
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center">
-        <h3>Discounts</h3>
-        <Link to="/admin/discounts/new" className="btn btn-primary btn-sm">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3 className="m-0">Discounts</h3>
+        <Link to="/admin/discounts/new" className="btn btn-primary">
           Create discount
         </Link>
       </div>

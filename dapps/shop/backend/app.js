@@ -12,6 +12,8 @@ const { sequelize } = require('./models')
 const encConf = require('./utils/encryptedConfig')
 const app = express()
 
+require('./queues').runProcessors()
+
 const ORIGIN_WHITELIST_ENABLED = false
 const ORIGIN_WHITELIST = []
 const BODYPARSER_EXCLUDES = ['/webhook']
@@ -66,7 +68,9 @@ app.use((err, req, res, next) => {
   })
 })
 
+require('./routes/networks')(app)
 require('./routes/auth')(app)
+require('./routes/shops')(app)
 require('./routes/affiliate')(app)
 require('./routes/uphold')(app)
 require('./routes/orders')(app)
@@ -74,6 +78,7 @@ require('./routes/printful')(app)
 require('./routes/stripe')(app)
 require('./routes/discounts')(app)
 require('./routes/tx')(app)
+require('./queues/ui')(app)
 
 app.get(
   '(/collections/:collection)?/products/:product',
@@ -114,6 +119,18 @@ app.get(
     }
   }
 )
+
+app.use(serveStatic(`${__dirname}/dist`, { index: false }))
+app.get('/', (req, res) => {
+  let html
+  try {
+    html = fs.readFileSync(`${__dirname}/dist/index.html`).toString()
+  } catch (e) {
+    return res.send('')
+  }
+  html = html.replace('DATA_DIR', '').replace('TITLE', 'Origin Dshop')
+  res.send(html)
+})
 
 app.get('*', (req, res, next) => {
   serveStatic(`${__dirname}/public/${req.hostname}`)(req, res, next)

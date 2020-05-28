@@ -13,7 +13,9 @@ async function writeInternalData({ OutputDir }) {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
         'x-csrf-token': auth.csrf,
-        cookie: auth.cookie
+        cookie: Object.keys(auth.cookie)
+          .map(k => `${k}=${auth.cookie[k]}`)
+          .join('; ')
       },
       body: `syncProductId=${row.id}&syncedOnly=0&currency=USD&currentPage=1`,
       method: 'POST'

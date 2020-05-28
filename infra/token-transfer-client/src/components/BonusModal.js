@@ -288,9 +288,9 @@ class BonusModal extends React.Component {
   renderTitle() {
     let titleText
     if (this.props.isEarlyLockup) {
-      titleText = `Special offer for ${moment.utc(this.props.nextVest.date).format(
-        'MMMM'
-      )} vesting`
+      titleText = `Special offer for ${moment
+        .utc(this.props.nextVest.date)
+        .format('MMMM')} vesting`
     } else {
       titleText = 'Earn Bonus Tokens'
     }
@@ -371,20 +371,17 @@ class BonusModal extends React.Component {
               <div className="col">
                 This offer expires in{' '}
                 <strong>
-                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
-                    moment(),
-                    'days'
-                  )}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(moment(), 'days')}
                   d{' '}
-                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
-                    moment(),
-                    'hours'
-                  ) % 24}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(moment(), 'hours') % 24}
                   h{' '}
-                  {moment.utc(this.context.config.earlyLockupsEnabledUntil).diff(
-                    moment(),
-                    'minutes'
-                  ) % 60}
+                  {moment
+                    .utc(this.context.config.earlyLockupsEnabledUntil)
+                    .diff(moment(), 'minutes') % 60}
                   m
                 </strong>
               </div>

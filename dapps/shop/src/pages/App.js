@@ -8,6 +8,7 @@ import Checkout from './checkout/Loader'
 import Order from './OrderLoader'
 import Password from './Password'
 import Admin from './admin/Admin'
+import SuperAdmin from './super-admin/SuperAdmin'
 
 import dataUrl from 'utils/dataUrl'
 import { useStateValue } from 'data/state'
@@ -25,7 +26,7 @@ const App = ({ location, config }) => {
     const href = window.location.href
     if (
       href.match(/^http:/) &&
-      !href.match(/^http:\/\/(localhost|([0-9]+\.))/)
+      !href.match(/^http:\/\/([a-z0-9.-]*localhost|([0-9]+\.))/)
     ) {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
@@ -74,9 +75,6 @@ const App = ({ location, config }) => {
       css.appendChild(document.createTextNode(config.css))
       document.head.appendChild(css)
     }
-    if (config && config.fullTitle) {
-      document.title = config.fullTitle
-    }
     if (config && config.favicon) {
       const favicon = document.querySelector('link[rel="icon"]')
       favicon.href = `${dataUrl()}${config.favicon}`
@@ -87,13 +85,19 @@ const App = ({ location, config }) => {
     return null
   }
 
-  if (config.passwordProtected && !passwordAuthed && !isAdmin && !isOrder) {
+  const passwordProtected = get(config, 'passwordProtected')
+  if (passwordProtected && !passwordAuthed && !isAdmin && !isOrder) {
     return <Password />
+  }
+
+  if (get(config, 'firstTimeSetup')) {
+    return <SuperAdmin />
   }
 
   return (
     <Switch>
       <Route path="/admin" component={Admin}></Route>
+      <Route path="/super-admin" component={SuperAdmin}></Route>
       <Route path="/order/:tx" component={Order}></Route>
       <Route path="/checkout" component={Checkout}></Route>
       <Route path="/password" component={Password}></Route>
@@ -112,6 +116,11 @@ require('react-styl')(`
     color: #333
     &:hover,&:focus
       color: #333
-      opacity: 0.7
       text-decoration: none
+  .fixed-loader
+    position: fixed
+    left: 50%
+    top: 50%
+    font-size: 2rem
+    transform: translate(-50%, -50%)
 `)

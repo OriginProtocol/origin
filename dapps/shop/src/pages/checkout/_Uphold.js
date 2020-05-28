@@ -5,12 +5,20 @@ import useConfig from 'utils/useConfig'
 import useIsMobile from 'utils/useIsMobile'
 import { useStateValue } from 'data/state'
 
+const checkBalance = (card, cart) =>
+  card && card.normalizedBalance * 100 >= cart.total
+
+function formatBalance(balance) {
+  return String(balance).replace(/^([0-9]+\.[0-9]{4}).*/, '$1')
+}
+
 const Uphold = ({ value, onChange }) => {
   const { config } = useConfig()
   const [{ cart }, dispatch] = useStateValue()
   const isMobile = useIsMobile()
-  const [upholdAuth, setUpholdAuth] = useState()
+  const [upholdAuth, setUpholdAuth] = useState({ authed: false })
   const [redirect, setRedirect] = useState()
+  const [reloadAuth, setReloadAuth] = useState(0)
   const [upholdCards, setUpholdCards] = useState([])
   const paymentMethods = get(config, 'paymentMethods', [])
   const paymentMethod = get(cart, 'paymentMethod.id')
@@ -33,10 +41,10 @@ const Uphold = ({ value, onChange }) => {
       })
       const json = await res.json()
       setRedirect(json.redirect)
-      setUpholdAuth(json.authed ? true : false)
+      setUpholdAuth(json)
     }
     checkAuthed()
-  }, [config])
+  }, [config, reloadAuth])
 
   useEffect(() => {
     if (!upholdAuth) {
@@ -53,23 +61,29 @@ const Uphold = ({ value, onChange }) => {
       const json = await res.json()
       if (typeof json === 'object' && json[0]) {
         setUpholdCards(json)
-        onChange(json[0].id)
+        onChange({ id: json[0].id, hasBalance: checkBalance(json[0], cart) })
       }
     }
     getCards()
   }, [upholdAuth])
 
-  const selectedCard = upholdCards.find(c => c.id === value)
-  const hasBalance =
-    selectedCard && selectedCard.normalizedBalance * 100 >= cart.total
+  useEffect(() => {
+    const selectedCard = upholdCards.find(c => c.id === get(value, 'id'))
+    if (selectedCard) {
+      onChange({
+        id: selectedCard.id,
+        hasBalance: checkBalance(selectedCard, cart)
+      })
+    }
+  }, [cart.total])
+
+  const selectedCard = upholdCards.find(c => c.id === get(value, 'id'))
+  const hasBalance = checkBalance(selectedCard, cart)
+  const inactive = paymentMethod === 'uphold' ? '' : ' inactive'
 
   return (
     <>
-      <label
-        className={`radio align-items-center${
-          paymentMethod === 'uphold' ? '' : ' inactive'
-        }`}
-      >
+      <label className={`radio align-items-center${inactive}`}>
         <input
           type="radio"
           name="paymentMethod"
@@ -82,12 +96,34 @@ const Uphold = ({ value, onChange }) => {
           }
         />
         Uphold
+        {upholdAuth.authed ? (
+          <div className="uphold-logout">
+            {`Logged into Uphold as ${upholdAuth.name}. `}
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                fetch(`${config.backend}/uphold/logout`, {
+                  credentials: 'include',
+                  headers: {
+                    authorization: `bearer ${config.backendAuthToken}`
+                  },
+                  method: 'POST'
+                }).then(() => {
+                  setReloadAuth(reloadAuth + 1)
+                })
+              }}
+            >
+              Logout
+            </a>
+          </div>
+        ) : null}
       </label>
 
       {paymentMethod === 'uphold' && (
         <div className="pl-4 pb-3 pt-3">
-          {upholdAuth ? (
-            <>
+          {upholdAuth.authed ? (
+            !upholdCards.length ? null : (
               <table className="table table-sm table-hover uphold-cards">
                 <thead>
                   <tr>
@@ -99,13 +135,26 @@ const Uphold = ({ value, onChange }) => {
                 <tbody>
                   {upholdCards.map(card => {
                     return (
-                      <tr key={card.id} onClick={() => onChange(card.id)}>
+                      <tr
+                        key={card.id}
+                        onClick={() =>
+                          onChange({
+                            id: card.id,
+                            hasBalance: checkBalance(card, cart)
+                          })
+                        }
+                      >
                         <td>
                           <input
                             type="radio"
                             className="mr-2"
-                            checked={value === card.id}
-                            onChange={() => onChange(card.id)}
+                            checked={get(value, 'id') === card.id}
+                            onChange={() =>
+                              onChange({
+                                id: card.id,
+                                hasBalance: checkBalance(card, cart)
+                              })
+                            }
                           />
                           <span
                             className={`uphold-currency currency--${card.currency.toLowerCase()}`}
@@ -119,29 +168,17 @@ const Uphold = ({ value, onChange }) => {
                           )}
                         </td>
                         {isMobile ? null : (
-                          <td>{`${card.balance} ${card.currency}`}</td>
+                          <td>{`${formatBalance(card.balance)} ${
+                            card.currency
+                          }`}</td>
                         )}
-                        <td>{`$ ${card.normalizedBalance} USD`}</td>
+                        <td>{`$ ${card.normalizedBalance.toFixed(2)} USD`}</td>
                       </tr>
                     )
                   })}
                 </tbody>
               </table>
-              {/* <select
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                className="form-control"
-              >
-                {upholdCards.map(card => {
-                  const label = `${card.label}: $${card.normalizedBalance} (${card.balance} ${card.currency})`
-                  return (
-                    <option key={card.id} value={card.id}>
-                      {label}
-                    </option>
-                  )
-                })}
-              </select> */}
-            </>
+            )
           ) : (
             <a
               href={redirect}
@@ -149,14 +186,12 @@ const Uphold = ({ value, onChange }) => {
                 e.preventDefault()
                 const w = window.open(redirect, '', 'width=330,height=400')
                 const finish = e => {
-                  console.log('Got data', e.data)
+                  // console.log('Got data', e.data)
                   if (!String(e.data).match(/ok/)) {
                     return
                   }
-                  setUpholdAuth(true)
-
                   window.removeEventListener('message', finish, false)
-
+                  setReloadAuth(reloadAuth + 1)
                   if (!w.closed) {
                     w.close()
                   }
@@ -167,12 +202,11 @@ const Uphold = ({ value, onChange }) => {
               <img src="images/connect_with_uphold.svg" />
             </a>
           )}
-
-          {hasBalance || !upholdAuth || !upholdCards.length ? null : (
+          {!upholdAuth.authed ? null : !upholdCards.length || !hasBalance ? (
             <div className="alert alert-danger mt-3 mb-0">
-              Insufficient balance
+              Insufficient balance on Uphold
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </>
@@ -182,6 +216,11 @@ const Uphold = ({ value, onChange }) => {
 export default Uphold
 
 require('react-styl')(`
+  .uphold-logout
+    font-size: 0.875rem
+    margin-left: auto
+    margin-right: 0.5rem
+    color: #666
   .uphold-cards
     tr
       cursor: pointer

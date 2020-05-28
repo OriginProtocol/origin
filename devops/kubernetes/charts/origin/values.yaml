@@ -4,7 +4,7 @@ clusterIssuer: letsencrypt-prod
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
-ipfsImageTag: "v0.4.21"
+ipfsImageTag: "v0.5.1"
 
 # origin-bridge
 bridgeImage: origin-bridge

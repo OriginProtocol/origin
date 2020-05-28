@@ -3,10 +3,9 @@ const fetch = require('node-fetch')
 
 const { authSellerAndShop, authShop } = require('./_auth')
 const encConf = require('../utils/encryptedConfig')
-const { PRINTFUL_URL } = require('../utils/const')
 const { findOrder } = require('../utils/orders')
 
-const PrintfulURL = PRINTFUL_URL
+const PrintfulURL = 'https://api.printful.com'
 
 module.exports = function(app) {
   app.get(

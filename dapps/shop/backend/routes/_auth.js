@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt')
-const { PASSWORD_SALT_ROUNDS } = require('../utils/const')
 const get = require('lodash/get')
 
 const { Shop, Seller } = require('../models')
+
+const PASSWORD_SALT_ROUNDS = 10
 
 async function createSalt() {
   return await bcrypt.genSalt(PASSWORD_SALT_ROUNDS)
@@ -38,10 +39,8 @@ async function authSellerAndShop(req, res, next) {
     return res.status(401).json({ success: false, message: 'No auth token' })
   }
 
-  Shop.findOne({
-    include: { model: Seller, where: { id: sellerId } },
-    where: { authToken }
-  }).then(shop => {
+  const include = { model: Seller, where: { id: sellerId } }
+  Shop.findOne({ where: { authToken }, include }).then(shop => {
     if (!shop) {
       return res.status(401).json({ success: false, message: 'Unauthorized' })
     }
@@ -51,6 +50,19 @@ async function authSellerAndShop(req, res, next) {
 
     next()
   })
+}
+
+async function authSuperUser(req, res, next) {
+  if (!req.session.sellerId) {
+    return res.status(401).json({ success: false, message: 'Not logged in' })
+  }
+  const seller = await Seller.findOne({
+    where: { id: req.session.sellerId, superuser: true }
+  })
+  if (!seller) {
+    return res.status(401).json({ success: false, message: 'Not logged in' })
+  }
+  next()
 }
 
 async function authShop(req, res, next) {
@@ -69,11 +81,20 @@ async function authShop(req, res, next) {
   })
 }
 
+async function optionalAuthShop(req, res, next) {
+  if (req.headers.authorization) {
+    return authShop(req, res, next)
+  }
+  next()
+}
+
 module.exports = {
   createSalt,
   hashPassword,
   checkPassword,
+  optionalAuthShop,
   authShop,
   authSellerAndShop,
-  authRole
+  authRole,
+  authSuperUser
 }

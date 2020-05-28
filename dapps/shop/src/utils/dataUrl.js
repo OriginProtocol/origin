@@ -1,6 +1,14 @@
 const CONTENT_CDN = process.env.CONTENT_CDN || ''
 const CONTENT_HASH = process.env.CONTENT_HASH || ''
-const DATA_DIR = process.env.DATA_DIR || ''
+
+let DATA_DIR
+try {
+  DATA_DIR =
+    document.querySelector('link[rel="data-dir"]').getAttribute('href') ||
+    sessionStorage.dataDir
+} catch (e) {
+  /* Ignore */
+}
 
 const CDN = CONTENT_CDN.split(',').reduce((m, o) => {
   const [from, to] = o.split('#')

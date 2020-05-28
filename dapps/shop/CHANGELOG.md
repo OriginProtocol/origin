@@ -1,6 +1,15 @@
 # Changelog
 
-Friday April 17th 2020
+## Monday April 20th 2020
+
+- Add createdAt to orders DB
+- Admin sales chart
+- Admin manually create order from encrypted IPFS hash
+- Break out makeOffer in backend
+- Discord webhook
+- Prettier admin order details
+
+## Friday April 17th 2020
 
 - Optional phone number entry on checkout
 - Max order quantity on products

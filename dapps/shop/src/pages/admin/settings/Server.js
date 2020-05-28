@@ -4,6 +4,8 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useShopConfig from 'utils/useShopConfig'
 
+import PasswordField from 'components/admin/PasswordField'
+
 function validate(state) {
   const newState = {}
 
@@ -26,6 +28,7 @@ const defaultValues = {
   pgpPublicKey: '',
   pgpPrivateKey: '',
   pgpPrivateKeyPass: '',
+  web3Pk: '',
 
   email: 'disabled',
   sendgridApiKey: '',
@@ -38,8 +41,11 @@ const defaultValues = {
   awsRegion: '',
   awsAccessKey: '',
   awsAccessSecret: '',
+  upholdApi: '',
   upholdClient: '',
-  upholdSecret: ''
+  upholdSecret: '',
+  bigQueryCredentials: '',
+  bigQueryTable: ''
 }
 
 async function testKey({ msg, pgpPublicKey, pgpPrivateKey, pass }) {
@@ -169,7 +175,7 @@ const AdminSettings = () => {
 
         <div className="form-group col-md-6">
           <label>Password protect site</label>
-          <input type="text" {...input('password')} />
+          <PasswordField field="password" input={input} />
           {Feedback('password')}
         </div>
       </div>
@@ -199,7 +205,7 @@ const AdminSettings = () => {
             <>
               <div className="form-group">
                 <label>Sendgrid API Key</label>
-                <input type="text" {...input('sendgridApiKey')} />
+                <PasswordField field="sendgridApiKey" input={input} />
                 {Feedback('sendgridApiKey')}
               </div>
               <div className="row">
@@ -210,7 +216,7 @@ const AdminSettings = () => {
                 </div>
                 <div className="form-group col-6">
                   <label>Password</label>
-                  <input type="text" {...input('sendgridPassword')} />
+                  <PasswordField field="sendgridPassword" input={input} />
                   {Feedback('sendgridPassword')}
                 </div>
               </div>
@@ -238,7 +244,7 @@ const AdminSettings = () => {
                 </div>
                 <div className="form-group col-6">
                   <label>Password</label>
-                  <input type="text" {...input('mailgunSmtpPassword')} />
+                  <PasswordField field="mailgunSmtpPassword" input={input} />
                   {Feedback('mailgunSmtpPassword')}
                 </div>
               </div>
@@ -259,7 +265,7 @@ const AdminSettings = () => {
                 </div>
                 <div className="form-group col-6">
                   <label>Secret</label>
-                  <input type="text" {...input('awsAccessSecret')} />
+                  <PasswordField field="awsAccessSecret" input={input} />
                   {Feedback('awsAccessSecret')}
                 </div>
               </div>
@@ -270,32 +276,43 @@ const AdminSettings = () => {
           <div className="row">
             <div className="form-group col-md-6">
               <label>Stripe Backend</label>
-              <input type="text" {...input('stripeBackend')} />
+              <PasswordField field="stripeBackend" input={input} />
               {Feedback('stripeBackend')}
             </div>
             <div className="form-group col-md-6">
               <label>Webhook Secret</label>
-              <input type="text" {...input('stripeWebhookSecret')} />
+              <PasswordField field="stripeWebhookSecret" input={input} />
               {Feedback('stripeWebhookSecret')}
             </div>
           </div>
           <div className="form-group">
             <label>Printful API Key</label>
-            <input type="text" {...input('printful')} />
+            <PasswordField field="printful" input={input} />
             {Feedback('printful')}
           </div>
-          <div className="row">
-            <div className="form-group col-md-6">
-              <label>Uphold Client</label>
-              <input type="text" {...input('upholdClient')} />
-              {Feedback('upholdClient')}
-            </div>
-            <div className="form-group col-md-6">
-              <label>Uphold Secret</label>
-              <input type="text" {...input('upholdSecret')} />
-              {Feedback('upholdSecret')}
-            </div>
+          <div className="form-group">
+            <label>Uphold payments</label>
+            <select {...input('upholdApi')}>
+              <option value="">Disabled</option>
+              <option value="production">Production</option>
+              <option value="sandbox">Sandbox</option>
+            </select>
+            {Feedback('upholdApi')}
           </div>
+          {!state.upholdApi ? null : (
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label>Uphold Client</label>
+                <input type="text" {...input('upholdClient')} />
+                {Feedback('upholdClient')}
+              </div>
+              <div className="form-group col-md-6">
+                <label>Uphold Secret</label>
+                <PasswordField field="upholdSecret" input={input} />
+                {Feedback('upholdSecret')}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -354,10 +371,26 @@ const AdminSettings = () => {
       </div>
       <div className="form-group">
         <label>PGP Private Key Password</label>
-        <input type="text" {...input('pgpPrivateKeyPass')} />
+        <PasswordField field="pgpPrivateKeyPass" input={input} />
         {Feedback('pgpPrivateKeyPass')}
       </div>
       <div className="form-group">{`Keys match: ${keyValid}`}</div>
+      <div className="form-group">
+        <label>Web3 PK (used to make offers for non-crypto payments)</label>
+        <PasswordField field="web3Pk" input={input} />
+        {Feedback('web3Pk')}
+      </div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label>Big Query Table</label>
+          <input {...input('bigQueryTable')} />
+        </div>
+        <div className="form-group col-md-6">
+          <label>Big Query Credentials</label>
+          <textarea rows="4" {...input('bigQueryCredentials')} />
+        </div>
+      </div>
+
       <div className="actions">
         <button type="submit" className="btn btn-primary">
           Save

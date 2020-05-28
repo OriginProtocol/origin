@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import sortBy from 'lodash/sortBy'
+import dayjs from 'dayjs'
 
 import formatPrice from 'utils/formatPrice'
 
@@ -7,21 +8,48 @@ import useOrders from 'utils/useOrders'
 import useProducts from 'utils/useProducts'
 import dataUrl from 'utils/dataUrl'
 
+import Chart from './_Chart'
+
 const AdminDashboard = () => {
   const { orders, loading } = useOrders()
   const { products } = useProducts()
   const [sort, setSort] = useState('orders')
+  const [range, setRange] = useState('all-time')
 
   if (loading) {
     return 'Loading...'
   }
 
-  const totalSales = orders
-    .filter(o => o.data && o.data.total)
-    .reduce((m, o) => {
-      m += o.data.total
-      return m
-    }, 0)
+  const startOfDay = dayjs().startOf('day')
+  const filteredSales = orders.filter(i => {
+    if (!i || !i.data || !i.data.total) return false
+    const createdDay = dayjs(i.createdAt).startOf('day')
+    if (
+      range === '7-days' &&
+      createdDay.isBefore(startOfDay.subtract(7, 'days'))
+    ) {
+      return false
+    } else if (
+      range === '30-days' &&
+      createdDay.isBefore(startOfDay.subtract(30, 'days'))
+    ) {
+      return false
+    } else if (range === 'today' && createdDay.isBefore(startOfDay)) {
+      return false
+    } else if (
+      range === 'yesterday' &&
+      (createdDay.isBefore(startOfDay.subtract(1, 'days')) ||
+        createdDay.isAfter(startOfDay))
+    ) {
+      return false
+    }
+    return true
+  })
+
+  const totalSales = filteredSales.reduce((m, o) => {
+    m += o.data.total
+    return m
+  }, 0)
 
   const topProductsRaw = orders
     .map(o => o.data.items)
@@ -44,25 +72,42 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <h3>Dashboard</h3>
-      <div className="mt-4 d-flex">
-        <h5>{`${orders.length} orders`}</h5>
-        <h5 className="ml-4">{`${formatPrice(totalSales)} revenue`}</h5>
+      <div className="d-flex mb-3 align-items-center">
+        <h3 className="m-0">Dashboard</h3>
+        <div className="ml-auto">
+          Range:
+          <select
+            className="ml-2"
+            value={range}
+            onChange={e => setRange(e.target.value)}
+          >
+            <option value="all-time">All time</option>
+            <option value="30-days">Last 30 days</option>
+            <option value="7-days">Last 7 days</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="today">Today</option>
+          </select>
+        </div>
+      </div>
+      <div className="admin-dashboard-stats">
+        <div>
+          <div>Total orders</div>
+          <div>{filteredSales.length}</div>
+        </div>
+        <div>
+          <div>Total revenue</div>
+          <div>{formatPrice(totalSales)}</div>
+        </div>
         {/* <h5 className="ml-4">{`${formatPrice(totalSales * 0.05)} profit`}</h5> */}
-        {/* <select className="ml-auto">
-          <option>All time</option>
-          <option>Last 30 days</option>
-          <option>Last 7 days</option>
-          <option>Yesterday</option>
-          <option>Today</option>
-        </select> */}
+      </div>
+      <div className="mt-4">
+        <Chart orders={orders} />
       </div>
 
       <table className="table admin-products mt-4">
         <thead>
           <tr>
-            <th />
-            <th>Top Products</th>
+            <th colSpan="2">Top Products</th>
             <th className="text-center">
               <a
                 href="#"
@@ -101,8 +146,8 @@ const AdminDashboard = () => {
                 />
               </td>
               <td>
-                <div>{product.title}</div>
-                <div>{formatPrice(product.price)}</div>
+                <div className="title">{product.title}</div>
+                <div className="price">{formatPrice(product.price)}</div>
               </td>
               <td className="text-center">{product.orders}</td>
               <td className="text-center">{formatPrice(product.revenue)}</td>
@@ -117,4 +162,20 @@ const AdminDashboard = () => {
 export default AdminDashboard
 
 require('react-styl')(`
+  .admin-dashboard-stats
+    display: flex
+    color: #000
+    max-width: 600px
+    > div
+      flex: 1
+      border: 1px solid #dfe2e6
+      border-radius: 10px
+      padding: 0.875rem 1.5rem
+      &:not(:last-child)
+        margin-right: 1.5rem
+      > div:nth-child(1)
+        font-size: 16px
+      > div:nth-child(2)
+        font-size: 36px
+        font-weight: 600
 `)

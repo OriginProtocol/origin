@@ -2,71 +2,32 @@ module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define(
     'Order',
     {
-      shopId: {
-        type: DataTypes.INTEGER
-      },
-      networkId: {
-        type: DataTypes.INTEGER
-      },
+      shopId: DataTypes.INTEGER,
+      networkId: DataTypes.INTEGER,
       orderId: {
         type: DataTypes.STRING,
         unique: true,
         primaryKey: true
       },
-      ipfsHash: {
-        type: DataTypes.STRING
-      },
-      encryptedIpfsHash: {
-        type: DataTypes.STRING
-      },
-      createdBlock: {
-        type: DataTypes.INTEGER
-      },
-      updatedBlock: {
-        type: DataTypes.INTEGER
-      },
-      status: {
-        type: DataTypes.INTEGER
-      },
-      statusStr: {
-        type: DataTypes.STRING
-      },
-      currency: {
-        type: DataTypes.STRING
-      },
-      value: {
-        type: DataTypes.STRING
-      },
-      commission: {
-        type: DataTypes.STRING
-      },
-      buyer: {
-        type: DataTypes.STRING
-      },
-      affiliate: {
-        type: DataTypes.STRING
-      },
-      arbitrator: {
-        type: DataTypes.STRING
-      },
-      finalizes: {
-        type: DataTypes.STRING
-      },
-      notes: {
-        type: DataTypes.TEXT
-      },
-      data: {
-        type: DataTypes.TEXT
-      },
-      referrer: {
-        type: DataTypes.TEXT
-      },
-      commissionPending: {
-        type: DataTypes.INTEGER
-      },
-      commissionPaid: {
-        type: DataTypes.INTEGER
-      }
+      ipfsHash: DataTypes.STRING,
+      encryptedIpfsHash: DataTypes.STRING,
+      createdBlock: DataTypes.INTEGER,
+      updatedBlock: DataTypes.INTEGER,
+      status: DataTypes.INTEGER,
+      statusStr: DataTypes.STRING,
+      currency: DataTypes.STRING,
+      value: DataTypes.STRING,
+      commission: DataTypes.STRING,
+      buyer: DataTypes.STRING,
+      affiliate: DataTypes.STRING,
+      arbitrator: DataTypes.STRING,
+      finalizes: DataTypes.STRING,
+      notes: DataTypes.TEXT,
+      data: DataTypes.TEXT,
+      referrer: DataTypes.TEXT,
+      commissionPending: DataTypes.INTEGER,
+      commissionPaid: DataTypes.INTEGER,
+      createdAt: DataTypes.DATE
     },
     {
       underscored: true,

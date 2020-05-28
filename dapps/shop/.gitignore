@@ -7,5 +7,6 @@ public/*
 /data/*
 !/data/example*
 backend/scripts/output*
+backend/dist
 TODO
 .env*
