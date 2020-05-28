@@ -9,7 +9,6 @@ const isEqual = require('lodash/isEqual')
 
 const { Op, Network, Shop } = require('./models')
 const { handleLog } = require('./utils/handleLog')
-const { CONTRACTS } = require('./utils/const')
 
 const web3 = new Web3()
 
@@ -66,20 +65,18 @@ async function connectWS({ network, listingIds }) {
     console.log('No recorded block found')
   }
 
-  const contractVersion = '001' // Hardcoded for now
-  const address = get(CONTRACTS, `${networkId}.marketplace.${contractVersion}`)
+  const contractVersion = network.marketplaceVersion
+  const address = network.marketplaceContract
 
+  const allListings = listingIds.join(', ')
   console.log(`Connecting to ${providerWs} (netId ${networkId})`)
-  console.log(
-    `Watching listings ${listingIds.join(', ')} on contract ${address}`
-  )
+  console.log(`Watching listings ${allListings} on contract ${address}`)
 
   if (ws) {
     clearTimeout(pingTimeout)
     ws.close()
   }
 
-  console.log('Trying to connect...')
   ws = new ReconnectingWebSocket(providerWs, [], { WebSocket })
 
   function heartbeat() {
@@ -96,7 +93,6 @@ async function connectWS({ network, listingIds }) {
   ws.addEventListener('close', function clear() {
     console.log('WS closed.')
   })
-
   ws.addEventListener('open', function open() {
     console.log('WS open.')
     heartbeat()
@@ -183,22 +179,18 @@ async function getListingIds({ network }) {
   return shops.map(shop => shop.listingId.split('-')[2])
 }
 
-async function start(networkId) {
-  if (!networkId) {
-    console.log('Usage: node listener.js [networkId]')
-    process.exit()
-  }
-
-  const network = await Network.findOne({ where: { networkId } })
+async function start() {
+  const network = await Network.findOne({ where: { active: true } })
   if (!network) {
-    console.log('No network found in DB')
-    process.exit()
+    console.log('Listener disabled: no active network found.')
+    return
   }
 
+  console.log(`Starting listener on network ${network.networkId}.`)
   web3.setProvider(network.provider)
 
   const listingIds = await getListingIds({ network })
   connectWS({ network, listingIds })
 }
 
-start(process.argv[2] || process.env.NETWORK_ID || '999')
+module.exports = start

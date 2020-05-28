@@ -44,7 +44,7 @@ const Content = () => {
 
   return (
     <main>
-      {config.singleProduct ? (
+      {config.singleProduct || config.isAffiliate ? (
         Routes
       ) : (
         <div className="row">

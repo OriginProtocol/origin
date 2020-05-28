@@ -14,6 +14,10 @@ in a Postgres database.
 - [Test Data](docs/index.md#manual-testing)
 - [Backend Web API](docs/api.md)
 
+## Deploy to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Deploy to Heroku script
 
 Make sure your `.env` file has all the values you want to see configured. Make
@@ -55,6 +59,7 @@ ensure this does not happen.
     heroku config:set PROVIDER=https://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
     heroku config:set PROVIDER_WS=wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID
     heroku config:set ENCRYPTION_KEY=randomstring
+    heroku config:set REDIS_URL=redis://URL:PORT
 
     # If you're taking credit card orders, provide a private key. Offers on the
     # Origin Marketplace contract will be made with this account.
@@ -91,3 +96,8 @@ Export key pair in base64 with no newlines:
 Add new migration:
 
     npx sequelize migration:generate --name migrationName --migrations-path=./data/migrations
+
+## Sync Repos
+
+    npm run build:dist
+    rsync -rv --exclude=.git --exclude=.gitignore --exclude=scripts/output --exclude=backend/data/dshop.db --exclude=/node_modules --delete backend/ DESTINATION

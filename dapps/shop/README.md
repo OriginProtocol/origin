@@ -4,8 +4,6 @@ An experimental decentralized e-commerce store served entirely from IPFS.
 
 ## Create your store
 
-First create a listing on shoporigin.com and make a note of the listing ID.
-
 ```sh
    # Clone and install
    git clone https://github.com/OriginProtocol/origin.git origin-store
@@ -27,9 +25,48 @@ First create a listing on shoporigin.com and make a note of the listing ID.
 
    # Edit config in data/mystore/config.json
 
+   # By default, the back-end uses Sqlite. If you want to use Postgres, do the following:
+   - Create a new dshop database. For example under psql:
+   #> CREATE DATABASE dshop;
+   - Set DATABASE_URL to point to your newly created DB. For example:
+   export DATABASE_URL="postgres://origin:origin@localhost/dshop"
+   - Create the DB schema by running the migrations
+   cd backend
+   yarn run migration
+
+   # The backend uses redis for queues. While you can skip this,
+   # it's highly recommended to run a local redis so your testing
+   # matches production behavior
+   export REDIS_URL=redis://localhost:6379/
+
+   # Optional: If you want to use the super-admin to create new shops, build the bundle.
+   yarn run build:dist
+
    # Start local
    DATA_DIR=mystore yarn start
+
+   # The following routes should be up:
+     - Shop: http://0.0.0.0:9000/#
+     - Admin: http://0.0.0.0:9000/#/admin
+     - Super admin: http://0.0.0.0:9000/#/super-admin
 ```
+
+## Troubleshooting
+### Vips error
+If you encounter this error on MacOS while running `yarn install`:
+```
+../src/common.cc:25:10: fatal error: 'vips/vips8' file not found
+```
+Try to install vips manually by running:
+```brew install vips```
+
+### js-ipfs error
+If you encounter this error while using the admin to create a new shop:
+```
+UnhandledPromiseRejectionWarning: Error: Invalid version, must be a number equal to 1 or 0
+    at Function.validateCID
+```
+Upgrade the ipfs package to 0.43.2 or higher under packages/origin/services/package.json
 
 ## Build
 

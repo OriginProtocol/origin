@@ -8,18 +8,19 @@ const Defaults = {
   '999': {
     ipfsGateway: 'http://localhost:8080',
     ipfsApi: 'http://localhost:5002',
-    provider: 'ws://localhost:8545'
+    provider: 'ws://localhost:8545',
+    marketplaceContract: process.env.MARKETPLACE_CONTRACT
   },
   '4': {
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsApi: 'https://ipfs.staging.originprotocol.com',
-    marketplace: '0x3d608cce08819351ada81fc1550841ebc10686fd',
+    marketplaceContract: '0x3d608cce08819351ada81fc1550841ebc10686fd',
     fetchPastLogs: true
   },
   '1': {
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsApi: 'https://ipfs.originprotocol.com',
-    marketplace: '0x698ff47b84837d3971118a369c570172ee7e54c2',
+    marketplaceContract: '0x698ff47b84837d3971118a369c570172ee7e54c2',
     fetchPastLogs: true
   }
 }

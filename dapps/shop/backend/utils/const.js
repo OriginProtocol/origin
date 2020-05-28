@@ -44,6 +44,7 @@ const {
   WEB3_PK,
   PROVIDER,
   PROVIDER_WS,
+  REDIS_URL,
   IPFS_GATEWAY, // IFPS gateway oerride
   SUPPORT_EMAIL_OVERRIDE
 } = process.env
@@ -54,7 +55,6 @@ const {
  * config.
  */
 const DATA_URL = null
-const PASSWORD_SALT_ROUNDS = 10
 const PRINTFUL_URL = 'https://api.printful.com'
 
 module.exports = {
@@ -64,10 +64,10 @@ module.exports = {
   NODE_ENV,
   IS_PROD,
   SESSION_SECRET,
-  PASSWORD_SALT_ROUNDS,
   WEB3_PK,
   PROVIDER_WS,
   PROVIDER,
+  REDIS_URL,
   IPFS_GATEWAY,
   NETWORK,
   NETWORK_ID: NETWORK_NAME_TO_ID[NETWORK] || 999,

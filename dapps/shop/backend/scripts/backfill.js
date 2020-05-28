@@ -195,5 +195,7 @@ function go() {
 }
 
 module.exports = {
-  go, fetchEvents, handleEvents
+  go,
+  fetchEvents,
+  handleEvents
 }

@@ -21,9 +21,16 @@ module.exports = {
           queryInterface.sequelize
             .query('SELECT id AS shop_id, seller_id FROM shops')
             .then(([rows]) => {
-              const toInsert = rows.map(r => ({ ...r, role: 'admin' }))
-              const insert = queryInterface.bulkInsert('seller_shop', toInsert)
-              resolve(insert)
+              if (rows.length) {
+                const toInsert = rows.map(r => ({ ...r, role: 'admin' }))
+                const insert = queryInterface.bulkInsert(
+                  'seller_shop',
+                  toInsert
+                )
+                resolve(insert)
+              } else {
+                resolve()
+              }
             })
         })
       ])

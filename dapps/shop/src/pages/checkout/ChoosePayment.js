@@ -80,7 +80,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
   const [submit, setSubmit] = useState()
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
-  const [upholdCard, setUpholdCard] = useState()
+  const [upholdCard, setUpholdCard] = useState({})
   const [paymentReq, setPaymentReq] = useState()
   const [{ cart, referrer }, dispatch] = useStateValue()
   const [approveOfferTx, setApproveOfferTx] = useState()
@@ -209,7 +209,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         setApproveOfferTx(true)
         setAuth(auth)
         makeOffer({ variables })
-      } else if (paymentMethod === 'uphold') {
+      } else if (paymentMethod === 'uphold' && upholdCard.hasBalance) {
         fetch(`${config.backend}/uphold/pay`, {
           method: 'POST',
           credentials: 'include',
@@ -218,7 +218,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            card: upholdCard,
+            card: upholdCard.id,
             data: hash,
             amount: cart.total / 100
           })
@@ -268,6 +268,8 @@ const CreditCardForm = injectStripe(({ stripe }) => {
     if (token) {
       paymentAmount = <Price price={price} target={token} />
     }
+  } else if (paymentMethod === 'uphold' && !upholdCard.hasBalance) {
+    disabled = true
   }
 
   return (

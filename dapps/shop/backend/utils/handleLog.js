@@ -8,6 +8,7 @@ const abi = require('./_abi')
 const sendMail = require('./emailer')
 const { upsertEvent, getEventObj } = require('./events')
 const encConf = require('./encryptedConfig')
+const discordWebhook = require('./discordWebhook')
 const { Order, Shop } = require('../models')
 
 const web3 = new Web3()
@@ -141,6 +142,7 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
       updatedBlock: event.blockNumber
     }
     if (event.eventName === 'OfferCreated') {
+      fields.createdAt = new Date(event.timestamp * 1000)
       fields.createdBlock = event.blockNumber
       fields.ipfsHash = event.ipfsHash
       fields.encryptedIpfsHash = encrypedHash
@@ -165,6 +167,12 @@ async function insertOrderFromEvent({ offerId, event, shop }) {
 
     console.log('sendMail', data)
     sendMail(shop.id, data)
+    discordWebhook({
+      orderId: offerId,
+      shopName: shop.name,
+      total: `$${(data.total / 100).toFixed(2)}`,
+      items: data.items.map(i => i.title).filter(t => t)
+    })
   } catch (e) {
     console.error(e)
     const fields = {

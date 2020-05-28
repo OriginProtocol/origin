@@ -11,6 +11,4 @@ function findOrder(req, res, next) {
   })
 }
 
-module.exports = {
-  findOrder
-}
+module.exports = { findOrder }

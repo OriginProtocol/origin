@@ -2,21 +2,10 @@ import { useEffect, useState } from 'react'
 
 import dataUrl from 'utils/dataUrl'
 
-const { NETWORK } = process.env
-const NetID = NETWORK === 'mainnet' ? '1' : NETWORK === 'rinkeby' ? '4' : '999'
-
 const DefaultPaymentMethods = [
-  {
-    id: 'crypto',
-    label: 'Crypto Currency'
-  },
-  {
-    id: 'stripe',
-    label: 'Credit Card'
-  }
+  { id: 'crypto', label: 'Crypto Currency' },
+  { id: 'stripe', label: 'Credit Card' }
 ]
-
-const { BACKEND_AUTH_TOKEN } = process.env
 
 let config
 
@@ -26,8 +15,11 @@ function useConfig() {
 
   useEffect(() => {
     async function fetchConfig() {
+      config = { backend: '', firstTimeSetup: true }
       setLoading(true)
       try {
+        const net = localStorage.ognNetwork || process.env.NETWORK
+        const netId = net === 'mainnet' ? '1' : net === 'rinkeby' ? '4' : '999'
         const url = `${dataUrl()}config.json`
         console.debug(`Loading config from ${url}...`)
         const raw = await fetch(url)
@@ -40,12 +32,14 @@ function useConfig() {
           if (supportEmailPlain.match(/<([^>]+)>/)[1]) {
             supportEmailPlain = supportEmailPlain.match(/<([^>]+)>/)[1]
           }
+
           config.supportEmailPlain = supportEmailPlain
-          const netConfig = config.networks[NetID] || {}
-          config = { ...config, ...netConfig, netId: NetID }
-          if (BACKEND_AUTH_TOKEN) {
-            config.backendAuthToken = BACKEND_AUTH_TOKEN
+          const netConfig = config.networks[netId] || {}
+          if (netId === '999' && process.env.MARKETPLACE_CONTRACT) {
+            // Use the address of the marketplace contract deployed on the local test network.
+            netConfig.marketplaceContract = process.env.MARKETPLACE_CONTRACT
           }
+          config = { ...config, ...netConfig, netId }
         } else {
           console.error(`Loading of config failed from ${url}`)
         }

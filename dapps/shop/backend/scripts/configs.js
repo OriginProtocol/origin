@@ -15,34 +15,36 @@ const shopConfig = {
   medium: '',
   facebook: '',
 
-  stripe: true,
+  stripe: false,
   beta: false,
   discountCodes: true,
 
   pgpPublicKey: '',
   contentCDN: '',
   contentHash: '',
-  stripeKey: 'pk_test_HBSUtNy4B8zLoqXIhNP8ZzV300DpIaVzHV',
+  stripeKey: '',
 
   networks: {
     '1': {
       marketplaceContract: '0x698ff47b84837d3971118a369c570172ee7e54c2',
+      marketplaceEpoch: 8582597,
       listingId: '1-001-X',
       affiliate: '',
       arbitrator: '',
       backend: 'https://dshopapi.ogn.app',
-      ipfsGateway: 'https://ipfs.ogn.app',
-      ipfsApi: 'https://ipfs.ogn.app',
-      stripeKey: 'pk_live_2dszrjdgLWnPBuqyIdpriRZN00ejT1nFLR'
+      ipfsGateway: 'https://ipfs-prod.ogn.app',
+      ipfsApi: 'https://ipfs.ogn.app'
     },
     '4': {
       marketplaceContract: '0x3d608cce08819351ada81fc1550841ebc10686fd',
+      marketplaceEpoch: 5119455,
       listingId: '4-001-XXX',
       backend: 'https://example.herokuapp.com',
       ipfsGateway: 'https://ipfs.staging.originprotocol.com',
       ipfsApi: 'https://ipfs.staging.originprotocol.com'
     },
     '999': {
+      marketplaceEpoch: 0,
       listingId: '999-001-2',
       backend: 'http://0.0.0.0:3000',
       ipfsGateway: 'http://localhost:8080',

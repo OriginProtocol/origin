@@ -1,9 +1,18 @@
 const fs = require('fs')
 const sortBy = require('lodash/sortBy')
+const get = require('lodash/get')
 
-async function writeProductData({ OutputDir }) {
+async function writeProductData({ OutputDir, png }) {
   const productsRaw = fs.readFileSync(`${OutputDir}/printful-products.json`)
   const products = JSON.parse(productsRaw).reverse()
+  let customImages = {}
+  try {
+    const customImagesRaw = fs.readFileSync(`${OutputDir}/custom-images.json`)
+    customImages = JSON.parse(customImagesRaw)
+  } catch (e) {
+    /* Ignore */
+  }
+
   let existingProducts = []
   try {
     const existingProductsRaw = fs.readFileSync(
@@ -30,6 +39,10 @@ async function writeProductData({ OutputDir }) {
     )
     const product = JSON.parse(productRaw)
     const externalId = syncProduct.sync_product.id
+    if (!product.variants) {
+      console.log(`Could not find variants on product ${productId}`)
+      continue
+    }
 
     const existingProduct = existingProducts.find(
       p => p.externalId === externalId
@@ -43,8 +56,9 @@ async function writeProductData({ OutputDir }) {
         .toLowerCase()
         .replace(/[^0-9a-z -]/g, '')
         .replace(/ +/g, '-')
-        .replace(/^-+/, '')
         .replace(/--+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-$/, '')
       const origHandle = handle
 
       for (let n = 1; productsOut.find(p => p.id === handle); n++) {
@@ -54,13 +68,17 @@ async function writeProductData({ OutputDir }) {
 
     const colors = [],
       sizes = [],
-      images = [],
+      images = get(customImages, `[${handle}].images`, []),
       variantImages = {},
       printfulSyncIds = {}
     syncProduct.sync_variants.forEach((syncVariant, idx) => {
       const vId = syncVariant.product.variant_id
       printfulSyncIds[vId] = syncVariant.id
       const v = product.variants.find(v => v.id === vId)
+      if (!v) {
+        console.log(`Could not find variant ${vId} on product ${row.id}`)
+        return
+      }
       const color = v.color
       const size = v.size
       if (color && colors.indexOf(color) < 0) {
@@ -74,13 +92,11 @@ async function writeProductData({ OutputDir }) {
         if (allImages[img.preview_url] === undefined) {
           const splitImg = img.preview_url.split('/')
           const file = splitImg[splitImg.length - 1].replace('_preview', '')
-          downloadImages.push({
-            id: `${handle}`,
-            file,
-            url: img.preview_url
-          })
-          allImages[img.preview_url] = file.replace('.png', '.jpg')
-          images.push(file.replace('.png', '.jpg'))
+          const url = img.preview_url
+          downloadImages.push({ id: `${handle}`, file, url })
+          const fileWithExt = png ? file : file.replace('.png', '.jpg')
+          allImages[img.preview_url] = fileWithExt
+          images.push(fileWithExt)
         }
         variantImages[idx] = allImages[img.preview_url]
       }

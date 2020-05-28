@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import useConfig from 'utils/useConfig'
 import useRest from 'utils/useRest'
+import Link from 'components/Link'
 
 const times = Array(48)
   .fill(0)
@@ -71,7 +72,13 @@ const AdminEditDiscount = () => {
 
   return (
     <>
-      <h3 className="mb-3">{title}</h3>
+      <h3 className="admin-title with-border">
+        <Link to="/admin/discounts" className="muted">
+          Discounts
+        </Link>
+        <span className="chevron" />
+        {title}
+      </h3>
       <form
         onSubmit={async e => {
           e.preventDefault()

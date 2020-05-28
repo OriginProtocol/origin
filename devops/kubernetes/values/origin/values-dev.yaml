@@ -55,7 +55,7 @@ cronImageTag: 'd4da76a'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '4e95559'
+adminImageTag: 'ff22671'
 
 # origin-relayer
 relayerImage: origin-relayer
@@ -67,11 +67,11 @@ graphqlImageTag: 'c305873'
 
 # origin-token-transfer-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '3c311d8'
+t3ClientImageTag: 'eda6ccb'
 
 # origin-token-transfer-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '8f7f180'
+t3ServerImageTag: '567a800'
 
 # origin-auth
 authImage: origin-auth
