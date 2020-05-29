@@ -28,7 +28,7 @@ const DShopBanner = () => {
             target="_blank"
             rel="noreferrer noopener"
           >
-            Request a demo
+            Try Dshop
           </a>
         ) : (
           <div className="btn btn-link">Learn more</div>
