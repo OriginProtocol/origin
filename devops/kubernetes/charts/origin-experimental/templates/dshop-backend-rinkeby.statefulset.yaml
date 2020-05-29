@@ -39,6 +39,11 @@ spec:
                 key: DATABASE_URL
           - name: REDIS_URL
             value: redis://localhost:6379/0
+          - name: DSHOP_CACHE
+            value: /data/dshop
+        volumeMounts:
+        - name: "{{ template "dshopBackendRinkeby.fullname" . }}-dshop-cache"
+          mountPath: /data/dshop
         port:
           - name: http
             containerPort: 3000
@@ -80,3 +85,14 @@ spec:
       resources:
         requests:
           storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
+  - metadata:
+      name: "{{ template "dshopBackendRinkeby.fullname" . }}-dshop-cache"
+      labels:
+        app: {{ template "dshopBackendRinkeby.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce  # Read-write for a single node only
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}
