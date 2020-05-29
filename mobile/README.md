@@ -62,6 +62,9 @@ To run the mobile app on your phone, you need to both start the Metro builder se
 
 If you want to use a physical device in combination with the marketplace DApp running on your local machine (i.e. `Localhost` setting in network selection) make sure you set the `HOST` environment variable to your internal network IP address (e.g. 10.10.10.1).
 
+### Build
+Make sure to set the env var MAINNET_PROVIDER_URL and RINKEBY_PROVIDER_URL. They are used [here](./src/constant.js)
+
 ### Tips
 
 > Is there a way to remotely debug the app?
