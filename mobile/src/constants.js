@@ -37,15 +37,13 @@ export const NETWORKS = [
     id: 1,
     name: 'Mainnet',
     dappUrl: 'https://shoporigin.com/#/',
-    provider:
-      'https://eth-mainnet.alchemyapi.io/v2/snPxmbyVLjq1Sq32Z4pAal7FXwe941uf'
+    provider: process.env.MAINNET_PROVIDER_URL
   },
   {
     id: 4,
     name: 'Rinkeby',
     dappUrl: 'https://dapp.staging.originprotocol.com/#/',
-    provider:
-      'https://eth-rinkeby.alchemyapi.io/v2/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
+    provider: process.env.RINKEBY_PROVIDER_URL
   },
   {
     id: 2222,
