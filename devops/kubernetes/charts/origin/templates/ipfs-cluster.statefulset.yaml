@@ -67,7 +67,7 @@ spec:
           {{- end }}
       - name: {{ template "ipfsCluster.fullname" . }}
         image: "{{ .Values.ipfsClusterImage }}:{{ .Values.ipfsClusterImageTag }}"
-        command: ["ipfs-cluster-service", "daemon"]
+        command: ["sh", "/custom/entrypoint.sh"]
         ports:
         - containerPort: 9094
           name: clusterapi
@@ -98,6 +98,10 @@ spec:
         volumeMounts:
           - mountPath: /data/ipfs-cluster
             name: {{ template "ipfsCluster.fullname" . }}-cluster-data
+      volumes:
+      - name: configure-script
+        configMap:
+          name: ipfs-cluster-set-bootstrap-conf
   volumeClaimTemplates:
   - metadata:
       name: {{ template "ipfsCluster.fullname" . }}-cluster-data
