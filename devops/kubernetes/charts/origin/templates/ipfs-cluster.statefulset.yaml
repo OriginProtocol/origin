@@ -26,7 +26,7 @@ spec:
     spec:
       initContainers:
         - name: configure-ipfs
-          image: "ipfs/go-ipfs:v0.4.18"
+          image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
           command: ["sh", "/custom/configure-ipfs.sh"]
           volumeMounts:
             - mountPath: /data/ipfs
@@ -48,7 +48,7 @@ spec:
             value: "http://127.0.0.1:5001"
           - name: IPFS_GATEWAY_URL
             value: "http://127.0.0.1:8080"
-      - name: {{ template "ipfsCluster.fullname" . }}
+      - name: ipfs
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
         command: ["/usr/local/bin/start_ipfs", "daemon", "--migrate"]
         ports:
