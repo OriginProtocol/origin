@@ -70,6 +70,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s-%s" .Release.Name "ipfs-proxy" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "ipfsCluster.fullname" -}}
+{{- printf "%s-%s" .Release.Name "ipfs-cluster" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "messaging.fullname" -}}
 {{- printf "%s-%s" .Release.Name "messaging" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
