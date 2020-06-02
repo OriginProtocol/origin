@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ipfsCluster.fullname" . }}-bootstrap-conf
+  labels:
+    app: {{ template "ipfsCluster.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ipfs-cluster
+data:
+  # Ref: https://cluster.ipfs.io/documentation/guides/k8s/
+  entrypoint.sh: |
+    #!/bin/sh
+    user=ipfs
+
+    # This is a custom entrypoint for k8s designed to connect to the bootstrap
+    # node running in the cluster. It has been set up using a configmap to
+    # allow changes on the fly.
+
+
+    if [ ! -f /data/ipfs-cluster/service.json ]; then
+      ipfs-cluster-service init
+    fi
+
+    PEER_HOSTNAME=`cat /proc/sys/kernel/hostname`
+
+    grep -q ".*$SVC_NAME-0.*" /proc/sys/kernel/hostname
+    if [ $? -eq 0 ]; then
+      CLUSTER_ID=${BOOTSTRAP_PEER_ID} \
+      CLUSTER_PRIVATEKEY=${BOOTSTRAP_PEER_PRIV_KEY} \
+      exec ipfs-cluster-service daemon --upgrade
+    else
+      BOOTSTRAP_ADDR=/dns4/${SVC_NAME}-0/tcp/9096/ipfs/${BOOTSTRAP_PEER_ID}
+
+      if [ -z $BOOTSTRAP_ADDR ]; then
+        exit 1
+      fi
+      # Only ipfs user can get here
+      exec ipfs-cluster-service daemon --upgrade --bootstrap $BOOTSTRAP_ADDR --leave
+    fi
+
+  configure-ipfs.sh: |
+    #!/bin/sh
+    set -e
+    set -x
+    user=ipfs
+    # This is a custom entrypoint for k8s designed to run ipfs nodes in an appropriate
+    # setup for production scenarios.
+
+    mkdir -p /data/ipfs && chown -R ipfs /data/ipfs
+
+    if [ -f /data/ipfs/config ]; then
+      if [ -f /data/ipfs/repo.lock ]; then
+        rm /data/ipfs/repo.lock
+      fi
+      exit 0
+    fi
+
+    ipfs init --profile=badgerds,server
+    ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
+    ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
+    ipfs config --json Swarm.ConnMgr.HighWater 2000
+    ipfs config --json Datastore.BloomFilterSize 1048576
+    ipfs config Datastore.StorageMax 100GB
