@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: ipfs-cluster
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: {{ template "ipfsCluster.fullname" . }}
