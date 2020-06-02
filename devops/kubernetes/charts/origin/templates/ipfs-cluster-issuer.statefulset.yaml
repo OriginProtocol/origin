@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "ipfs-cluster-issuer.fullname" . }}
+  labels:
+    app: {{ template "ipfs-cluster-issuer.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ipfs-cluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "ipfs-cluster-issuer.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ipfs-cluster-issuer.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: ipfs-cluster-issuer
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.ipfsIssuerImage }}:{{ .Values.ipfsIssuerImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        env:
+          # TODO: Does this need an lb? or an sts for each cluster sts?
+          - name: SERVER_ENDPOINT
+            value: "{{ template "ipfsCluster.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8080"
+        volumeMounts:
+          - name: {{ template "ipfs-cluster-issuer.fullname" . }}-data
+            mountPath: /etc/resty-auto-ssl
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "ipfs-cluster-issuer.fullname" . }}-data
+    spec:
+      storageClassName: "standard"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi

@@ -74,6 +74,15 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s-%s" .Release.Name "ipfs-cluster" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "ipfsCluster.host" -}}
+{{- $prefix := "fs" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "messaging.fullname" -}}
 {{- printf "%s-%s" .Release.Name "messaging" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

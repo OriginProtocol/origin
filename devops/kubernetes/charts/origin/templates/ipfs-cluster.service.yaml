@@ -23,6 +23,7 @@ spec:
       port: 5001
     - name: gateway
       port: 8080
+    # ipfsproxy here is the ipfs-cluster API proxy
     - name: ipfsproxy
       port: 9095
     - name: clusterswarm
