@@ -16,7 +16,7 @@ spec:
   selector:
     matchLabels:
       app: {{ template "ipfsCluster.fullname" . }}
-  serviceName: {{ template "ipfsCluster.fullname" . }}
+  serviceName: {{ template "ipfsCluster.fullname" . }}-headless
   template:
     metadata:
       labels:
@@ -24,19 +24,28 @@ spec:
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
     spec:
+      dnsConfig:
+        searches:
+          - {{ template "ipfsCluster.fullname" . }}-headless.{{ .Release.Name }}.svc.cluster.local
+          - {{ .Release.Name }}.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
       initContainers:
-        - name: configure-ipfs
-          image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
-          command: ["sh", "/custom/configure-ipfs.sh"]
-          volumeMounts:
-            - mountPath: /data/ipfs
-            {{- if eq .Release.Namespace "prod" }}
-              name: {{ template "ipfsCluster.fullname" . }}-data-ssd
-            {{ else }}
-              name: {{ template "ipfsCluster.fullname" . }}-data
-            {{- end }}
-            - name: configure-script
-              mountPath: /custom
+      - name: configure-ipfs
+        image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
+        command: ["sh", "/custom/configure-ipfs.sh"]
+        env:
+          - name: IPFS_PATH
+            value: /data/ipfs
+        volumeMounts:
+          - mountPath: /data/ipfs
+          {{- if eq .Release.Namespace "prod" }}
+            name: {{ template "ipfsCluster.fullname" . }}-data-ssd
+          {{ else }}
+            name: {{ template "ipfsCluster.fullname" . }}-data
+          {{- end }}
+          - name: configure-script
+            mountPath: /custom
       containers:
       - name: {{ template "ipfsProxy.fullname" . }}
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.ipfsProxyImage }}:{{ .Values.ipfsProxyImageTag }}"
@@ -58,6 +67,9 @@ spec:
           name: api
         - containerPort: 8080
           name: gateway
+        env:
+          - name: IPFS_PATH
+            value: /data/ipfs
         volumeMounts:
           - mountPath: /data/ipfs
           {{- if eq .Release.Namespace "prod" }}
@@ -98,10 +110,12 @@ spec:
         volumeMounts:
           - mountPath: /data/ipfs-cluster
             name: {{ template "ipfsCluster.fullname" . }}-cluster-data
+          - mountPath: /custom
+            name: configure-script
       volumes:
       - name: configure-script
         configMap:
-          name: ipfs-cluster-set-bootstrap-conf
+          name: {{ template "ipfsCluster.fullname" . }}-bootstrap-conf
   volumeClaimTemplates:
   - metadata:
       name: {{ template "ipfsCluster.fullname" . }}-cluster-data
