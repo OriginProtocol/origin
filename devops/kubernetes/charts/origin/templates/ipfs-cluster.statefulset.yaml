@@ -54,7 +54,7 @@ spec:
           - containerPort: 9999
         env:
           - name: IPFS_API_URL
-            value: "http://127.0.0.1:5001"
+            value: "http://127.0.0.1:9095"
           - name: IPFS_GATEWAY_URL
             value: "http://127.0.0.1:8080"
       - name: ipfs
