@@ -57,6 +57,11 @@ spec:
             value: "http://127.0.0.1:9095"
           - name: IPFS_GATEWAY_URL
             value: "http://127.0.0.1:8080"
+          - name: SHARED_SECRETS
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "ipfsCluster.fullname" . }}
+                key: SHARED_SECRETS
       - name: ipfs
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
         command: ["/usr/local/bin/start_ipfs", "daemon", "--migrate"]
