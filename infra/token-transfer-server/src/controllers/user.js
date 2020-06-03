@@ -7,6 +7,8 @@ const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const { isValidTotp } = require('../validators')
 
+const { User } = require('../models')
+
 /**
  * Returns the authenticated user.
  */
@@ -92,5 +94,12 @@ router.post(
       .end()
   })
 )
+
+router.get('/user-stats', async (req, res) => {
+  return res.status(200)
+    .send({
+      userCount: await User.count()
+    })
+})
 
 module.exports = router
