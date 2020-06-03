@@ -129,8 +129,17 @@ function handleAPIRequest(req, res) {
 
   if (req.headers['authorization']) {
     const parts = req.headers['authorization'].split(' ')
-    if (parts.length === 2 && parts[0] === 'Bearer') {
-      if (config.SHARED_SECRETS.split(',').includes(parts[1])) {
+    if (parts.length === 2 && ['Bearer', 'Basic'].includes(parts[0])) {
+      let token = parts[1]
+      if (parts[0] === 'Basic') {
+        if (!parts[1].includes(':')) {
+          res.writeHead(401, { Connection: 'close' })
+          res.end()
+          return
+        }
+        token = parts[1].split(':')[1]
+      }
+      if (config.SHARED_SECRETS.split(',').includes(token)) {
         proxy.web(req, res, {
           target: config.IPFS_API_URL,
           selfHandleResponse: true
