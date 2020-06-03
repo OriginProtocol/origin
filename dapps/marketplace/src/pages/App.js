@@ -42,6 +42,7 @@ import { applyConfiguration } from 'utils/marketplaceCreator'
 import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
 import { setReferralCode } from 'utils/growthTools'
+import DShopBanner from 'components/DShopBanner'
 
 class App extends Component {
   state = {
@@ -122,6 +123,7 @@ class App extends Component {
         {isTestBuild ? (
           <div className="test-build-badge">TEST BUILD</div>
         ) : null}
+        <DShopBanner />
         {!hideNavbar && (
           <Nav
             onShowHelp={() => window.openZendeskChat()}
