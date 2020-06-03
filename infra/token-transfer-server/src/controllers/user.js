@@ -96,10 +96,9 @@ router.post(
 )
 
 router.get('/user-stats', async (req, res) => {
-  return res.status(200)
-    .send({
-      userCount: await User.count()
-    })
+  return res.status(200).send({
+    userCount: await User.count()
+  })
 })
 
 module.exports = router
