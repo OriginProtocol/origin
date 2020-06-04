@@ -29,7 +29,6 @@ spec:
         ports:
           - containerPort: 80
         env:
-          # TODO: Does this need an lb? or an sts for each cluster sts?
           - name: SERVER_ENDPOINT
             value: "{{ template "ipfsCluster.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8080"
         volumeMounts:

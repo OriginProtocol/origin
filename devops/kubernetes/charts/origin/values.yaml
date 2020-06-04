@@ -77,3 +77,5 @@ authImageTag: latest
 # origin-ipfs-issuer
 ipfsIssuerImage: origin-dapp-creator-issuer
 ipfsIssuerImageTag: latest
+
+ipfsProxySharedSecrets: ""

@@ -34,6 +34,10 @@ spec:
     - secretName: fs.ogn.app
       hosts:
         - fs.ogn.app
+    {{- else }}
+    - secretName: "fs.{{ .Release.Namespace }}.ogn.app"
+      hosts:
+        - "fs.{{ .Release.Namespace }}.ogn.app"
     {{- end }}
   rules:
     - host: {{ template "ipfsCluster.host" . }}
@@ -43,6 +47,10 @@ spec:
             backend:
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999  # ipfs-proxy
+          - path: /ipfs
+            backend:
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 8080
           - path: /ipns
             backend:
               serviceName: {{ template "ipfsCluster.fullname" . }}
@@ -55,6 +63,30 @@ spec:
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9095
+          - path: /api/v0/object/links
+            backend: *api_service
+          - path: /api/v0/object/patch/add-link
+            backend: *api_service
+          - path: /api/v0/object/patch/rm-link
+            backend: *api_service
+          - path: /ipfs
+            backend:
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 8080
+          - path: /ipns
+            backend:
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 8080
+    {{- else }}
+    - host: "fs.{{ .Release.Namespace }}.ogn.app"
+      http:
+        paths:
+          - path: /api/v0/add
+            backend: &api_service
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 9999
+          - path: /api/v0/pin/add
+            backend: *api_service
           - path: /api/v0/object/links
             backend: *api_service
           - path: /api/v0/object/patch/add-link
