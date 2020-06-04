@@ -59,10 +59,16 @@ spec:
     - host: fs.ogn.app
       http:
         paths:
+          - path: /
+            backend:
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 9999  # ipfs-proxy
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
-              servicePort: 9095
+              servicePort: 9999
+          - path: /api/v0/id
+            backend: *api_service
           - path: /api/v0/object/links
             backend: *api_service
           - path: /api/v0/object/patch/add-link
@@ -81,10 +87,18 @@ spec:
     - host: "fs.{{ .Release.Namespace }}.ogn.app"
       http:
         paths:
+          - path: /
+            backend:
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 9999  # ipfs-proxy
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999
+          - path: /api/v0/pin/ls
+            backend: *api_service
+          - path: /api/v0/id
+            backend: *api_service
           - path: /api/v0/pin/add
             backend: *api_service
           - path: /api/v0/object/links
