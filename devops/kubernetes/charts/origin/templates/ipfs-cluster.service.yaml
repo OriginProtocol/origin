@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ipfsCluster.fullname" . }}
+  labels:
+    app: {{ template "ipfsCluster.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ipfs-cluster
+spec:
+  type: NodePort
+  selector:
+    app: {{ template "ipfsCluster.fullname" . }}
+  ports:
+    # Most external usage is through ipfs-proxy, but ipns uses 8080
+    - name: swarm
+      port: 4001
+    - name: api
+      port: 5001
+    - name: gateway
+      port: 8080
+    # ipfsproxy here is the ipfs-cluster API proxy
+    - name: ipfsproxy
+      port: 9095
+    - name: clusterswarm
+      port: 9096
+    - name: proxy
+      port: 9999

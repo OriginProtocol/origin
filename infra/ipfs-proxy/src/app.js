@@ -119,6 +119,40 @@ function handleFileDownload(req, res) {
   })
 }
 
+function handleAPIRequest(req, res) {
+  // Proxy API requests to API endpoint
+  if (typeof config.SHARED_SECRETS === 'undefined') {
+    res.writeHead(401, { Connection: 'close' })
+    res.end()
+    return
+  }
+
+  if (req.headers['authorization']) {
+    const parts = req.headers['authorization'].split(' ')
+    if (parts.length === 2 && ['Bearer', 'Basic'].includes(parts[0])) {
+      let token = parts[1]
+      if (parts[0] === 'Basic') {
+        if (!parts[1].includes(':')) {
+          res.writeHead(401, { Connection: 'close' })
+          res.end()
+          return
+        }
+        token = parts[1].split(':')[1]
+      }
+      if (config.SHARED_SECRETS.split(',').includes(token)) {
+        proxy.web(req, res, {
+          target: config.IPFS_API_URL,
+          selfHandleResponse: true
+        })
+        return
+      }
+    }
+  }
+
+  res.writeHead(401, { Connection: 'close' })
+  res.end()
+}
+
 const proxy = httpProxy.createProxyServer({})
 
 // Validate downloads. It is necessary to inspect the file type for downloads
@@ -153,7 +187,9 @@ const server = http
     logger.info(req.url)
     if (req.url.startsWith('/api/v0/add')) {
       handleFileUpload(req, res)
-    } else if (req.url.startsWith('/ipfs')) {
+    } else if (req.url.startsWith('/api/v0')) {
+      handleAPIRequest(req, res)
+    } else if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
       handleFileDownload(req, res)
     } else {
       res.writeHead(404, { Connection: 'close' })
