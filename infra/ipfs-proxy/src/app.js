@@ -28,7 +28,7 @@ const clusterEndpointPrefixes = [
   '/add',
   '/allocations',
   '/pins',
-  '/health',
+  '/health'
 ]
 
 const validVideoTypes = ['video/mp4']
@@ -51,8 +51,8 @@ function isValidVideo(buffer) {
 
 function isClusterAPIRequest(req) {
   return (
-    config.IPFS_CLUSTER_API_URL
-    && clusterEndpointPrefixes.some(pref => req.url.startsWith(pref))
+    config.IPFS_CLUSTER_API_URL &&
+    clusterEndpointPrefixes.some(pref => req.url.startsWith(pref))
   )
 }
 
