@@ -139,12 +139,15 @@ function handleFileDownload(req, res) {
 function handleAPIRequest(req, res, opts) {
   // Proxy API requests to API endpoint
   if (typeof config.SHARED_SECRETS === 'undefined') {
+    console.debug('SHARED_SECRETS is not defined')
     res.writeHead(401, { Connection: 'close' })
     res.end()
     return
   }
 
   const url = opts && opts.url ? opts.url : config.IPFS_API_URL
+
+  console.log('Authorization:', req.headers['authorization'])
 
   if (req.headers['authorization']) {
     const parts = req.headers['authorization'].split(' ')
@@ -155,6 +158,7 @@ function handleAPIRequest(req, res, opts) {
       if (parts[0] === 'Basic') {
         const authString = Buffer.from(parts[1], 'base64').toString('ascii')
         if (!authString.includes(':')) {
+          console.debug(`401: auth string bad formatting: ${authString}`)
           res.writeHead(401, { Connection: 'close' })
           res.end()
           return
@@ -174,6 +178,7 @@ function handleAPIRequest(req, res, opts) {
     }
   }
 
+  console.debug('401: fallback')
   res.writeHead(401, { Connection: 'close' })
   res.end()
 }
@@ -217,9 +222,7 @@ const server = http
     } else if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
       handleFileDownload(req, res)
     } else {
-      console.log('')
       if (isClusterAPIRequest(req)) {
-        console.log('handleAPIRequest for proxy')
         handleAPIRequest(req, res, { url: config.IPFS_CLUSTER_API_URL })
       } else {
         res.writeHead(404, { Connection: 'close' })
