@@ -7,7 +7,7 @@ const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const { isValidTotp } = require('../validators')
 
-const { User } = require('../models')
+const { Lockup } = require('../models')
 
 /**
  * Returns the authenticated user.
@@ -97,7 +97,9 @@ router.post(
 
 router.get('/user-stats', async (req, res) => {
   return res.status(200).send({
-    userCount: await User.count()
+    userCount: await Lockup.count({
+      distinct: true
+    })
   })
 })
 
