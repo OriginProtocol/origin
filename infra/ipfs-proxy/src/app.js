@@ -189,7 +189,7 @@ const server = http
       handleFileUpload(req, res)
     } else if (req.url.startsWith('/api/v0')) {
       handleAPIRequest(req, res)
-    } else  if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
+    } else if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
       handleFileDownload(req, res)
     } else {
       res.writeHead(404, { Connection: 'close' })
