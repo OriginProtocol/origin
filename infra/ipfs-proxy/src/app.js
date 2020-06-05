@@ -129,17 +129,23 @@ function handleAPIRequest(req, res) {
 
   if (req.headers['authorization']) {
     const parts = req.headers['authorization'].split(' ')
+
     if (parts.length === 2 && ['Bearer', 'Basic'].includes(parts[0])) {
       let token = parts[1]
+
       if (parts[0] === 'Basic') {
-        if (!parts[1].includes(':')) {
+        const authString = Buffer.from(parts[1], 'base64').toString('ascii')
+        if (!authString.includes(':')) {
           res.writeHead(401, { Connection: 'close' })
           res.end()
           return
         }
-        token = parts[1].split(':')[1]
+        token = authString.split(':')[1].trim()
       }
-      if (config.SHARED_SECRETS.split(',').includes(token)) {
+
+      const secrets = config.SHARED_SECRETS.split(',')
+
+      if (secrets.includes(token)) {
         proxy.web(req, res, {
           target: config.IPFS_API_URL,
           selfHandleResponse: true
