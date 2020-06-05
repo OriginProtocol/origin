@@ -53,6 +53,8 @@ spec:
         ports:
           - containerPort: 9999
         env:
+          - name: IPFS_CLUSTER_API_URL
+            value: "http://127.0.0.1:9094"
           - name: IPFS_API_URL
             value: "http://127.0.0.1:9095"
           - name: IPFS_GATEWAY_URL
