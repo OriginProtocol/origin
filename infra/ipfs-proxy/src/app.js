@@ -56,8 +56,9 @@ function isClusterAPIRequest(req) {
   )
 }
 
-function handleFileUpload(req, res) {
+function handleFileUpload(req, res, opts) {
   let busboy
+  const url = opts && opts.url ? opts.url : config.IPFS_API_URL
 
   try {
     busboy = new Busboy({
@@ -97,9 +98,9 @@ function handleFileUpload(req, res) {
         res.end()
         req.unpipe(req.busboy)
       } else {
-        const url = config.IPFS_API_URL + req.url
+        const fullURL = url + req.url
         request
-          .post(url)
+          .post(fullURL)
           .set(req.headers)
           .attach('file', buffer)
           .then(
@@ -139,15 +140,13 @@ function handleFileDownload(req, res) {
 function handleAPIRequest(req, res, opts) {
   // Proxy API requests to API endpoint
   if (typeof config.SHARED_SECRETS === 'undefined') {
-    console.debug('SHARED_SECRETS is not defined')
+    logger.debug('SHARED_SECRETS is not defined')
     res.writeHead(401, { Connection: 'close' })
     res.end()
     return
   }
 
   const url = opts && opts.url ? opts.url : config.IPFS_API_URL
-
-  console.log('Authorization:', req.headers['authorization'])
 
   if (req.headers['authorization']) {
     const parts = req.headers['authorization'].split(' ')
@@ -158,7 +157,7 @@ function handleAPIRequest(req, res, opts) {
       if (parts[0] === 'Basic') {
         const authString = Buffer.from(parts[1], 'base64').toString('ascii')
         if (!authString.includes(':')) {
-          console.debug(`401: auth string bad formatting: ${authString}`)
+          logger.debug(`401: auth string bad formatting: ${authString}`)
           res.writeHead(401, { Connection: 'close' })
           res.end()
           return
@@ -178,7 +177,7 @@ function handleAPIRequest(req, res, opts) {
     }
   }
 
-  console.debug('401: fallback')
+  logger.debug('401: Unauthorized')
   res.writeHead(401, { Connection: 'close' })
   res.end()
 }
@@ -222,7 +221,9 @@ const server = http
     } else if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
       handleFileDownload(req, res)
     } else {
-      if (isClusterAPIRequest(req)) {
+      if (req.url.startsWith('/add')) {
+        handleFileUpload(req, res, { url: config.IPFS_CLUSTER_API_URL })
+      } else if (isClusterAPIRequest(req)) {
         handleAPIRequest(req, res, { url: config.IPFS_CLUSTER_API_URL })
       } else {
         res.writeHead(404, { Connection: 'close' })
