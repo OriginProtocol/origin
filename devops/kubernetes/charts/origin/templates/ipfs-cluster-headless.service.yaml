@@ -23,6 +23,8 @@ spec:
       port: 5001
     - name: gateway
       port: 8080
+    - name: clusterapi
+      port: 9094
     # ipfsproxy here is the ipfs-cluster API proxy
     - name: ipfsproxy
       port: 9095

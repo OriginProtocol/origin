@@ -26,6 +26,9 @@ data:
       ipfs-cluster-service init
     fi
 
+    # Listen on port 9094 (Cluster REST API) on all interfaces
+    sed -i -e 's/\/ip4\/127.0.0.1\/tcp\/9094/\/ip4\/0.0.0.0\/tcp\/9094/' /data/ipfs-cluster/service.json
+
     PEER_HOSTNAME=`cat /proc/sys/kernel/hostname`
 
     grep -q ".*$SVC_NAME-0.*" /proc/sys/kernel/hostname

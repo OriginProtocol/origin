@@ -63,6 +63,16 @@ spec:
             backend:
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999  # ipfs-proxy
+          - path: /add
+            backend: &cluster_api_service
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 9094
+          - path: /id
+            backend: *cluster_api_service
+          - path: /version
+            backend: *cluster_api_service
+          - path: /pins
+            backend: *cluster_api_service
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
@@ -91,6 +101,16 @@ spec:
             backend:
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999  # ipfs-proxy
+          - path: /add
+            backend: &cluster_api_service
+              serviceName: {{ template "ipfsCluster.fullname" . }}
+              servicePort: 9999
+          - path: /id
+            backend: *cluster_api_service
+          - path: /version
+            backend: *cluster_api_service
+          - path: /pins
+            backend: *cluster_api_service
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
