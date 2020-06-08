@@ -76,9 +76,12 @@ function handleFileUpload(req, res, opts) {
   }
 
   busboy.on('file', function(fieldname, file) {
+    logger.debug(`New file: ${fieldname}`)
+
     file.fileRead = []
 
     file.on('data', function(chunk) {
+      logger.debug('.chunk')
       file.fileRead.push(chunk)
     })
 
