@@ -99,12 +99,14 @@ function handleFileUpload(req, res, opts) {
         req.unpipe(req.busboy)
       } else {
         const fullURL = url + req.url
+        logger.debug(`Sending file to ${fullURL}`)
         request
           .post(fullURL)
           .set(req.headers)
           .attach('file', buffer)
           .then(
             response => {
+              logger.debug(`Upload complete`)
               let responseData = response.text
               if (response.headers['content-encoding'] === 'gzip') {
                 // Compress the response so the header is correct if necessary
@@ -222,8 +224,10 @@ const server = http
       handleFileDownload(req, res)
     } else {
       if (req.url.startsWith('/add')) {
+        logger.debug(`ipfs-cluster /add`)
         handleFileUpload(req, res, { url: config.IPFS_CLUSTER_API_URL })
       } else if (isClusterAPIRequest(req)) {
+        logger.debug(`ipfs-cluster request`)
         handleAPIRequest(req, res, { url: config.IPFS_CLUSTER_API_URL })
       } else {
         res.writeHead(404, { Connection: 'close' })
