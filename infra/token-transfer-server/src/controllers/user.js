@@ -103,14 +103,16 @@ router.get('/user-stats', async (req, res) => {
       where: {
         end: {
           [Op.gt]: Date.now()
-        }
+        },
+        confirmed: true
       }
     }),
     lockupSum: await Lockup.sum('amount', {
       where: {
         end: {
           [Op.gt]: Date.now()
-        }
+        },
+        confirmed: true
       }
     })
   })
