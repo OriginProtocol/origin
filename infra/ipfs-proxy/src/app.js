@@ -64,7 +64,7 @@ function handleFileUpload(req, res, opts) {
     busboy = new Busboy({
       headers: req.headers,
       limits: {
-        fileSize: 2 * 1024 * 1024
+        fileSize: 5 * 1024 * 1024
       }
     })
   } catch (error) {
@@ -92,7 +92,7 @@ function handleFileUpload(req, res, opts) {
     file.on('end', function() {
       const buffer = Buffer.concat(file.fileRead)
 
-      if (!isValidFile(buffer)) {
+      if (opts.validate !== false && !isValidFile(buffer)) {
         logger.warn(`Upload of invalid file type attempted`)
         res.writeHead(415, { Connection: 'close' })
         res.end()
@@ -225,7 +225,10 @@ const server = http
     } else {
       if (req.url.startsWith('/add')) {
         logger.debug(`ipfs-cluster /add`)
-        handleFileUpload(req, res, { url: config.IPFS_CLUSTER_API_URL })
+        handleFileUpload(req, res, {
+          url: config.IPFS_CLUSTER_API_URL,
+          validate: false
+        })
       } else if (isClusterAPIRequest(req)) {
         logger.debug(`ipfs-cluster request`)
         handleAPIRequest(req, res, { url: config.IPFS_CLUSTER_API_URL })
