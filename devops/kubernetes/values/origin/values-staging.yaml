@@ -6,11 +6,11 @@ bridgeImageTag: '2aa3dbe'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '8f97e58'
+dappImageTag: '7eb7ea0'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '07b319f'
+ipfsProxyImageTag: '3393817'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -83,3 +83,4 @@ authImageTag: '7eb224a'
 
 # origin-ipfs-issuer
 ipfsIssuerIp: '35.230.9.58'
+ipfsClusterIssuerIp: '34.105.25.179'
