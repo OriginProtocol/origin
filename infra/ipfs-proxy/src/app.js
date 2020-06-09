@@ -21,6 +21,16 @@ const validImageTypes = [
   'image/icon'
 ]
 
+const clusterEndpointPrefixes = [
+  '/id',
+  '/version',
+  '/peers',
+  '/add',
+  '/allocations',
+  '/pins',
+  '/health'
+]
+
 const validVideoTypes = ['video/mp4']
 
 function isValidFile(buffer) {
@@ -39,6 +49,52 @@ function isValidVideo(buffer) {
   return file && validVideoTypes.includes(file.mime)
 }
 
+function isClusterAPIRequest(req) {
+  return (
+    config.IPFS_CLUSTER_API_URL &&
+    clusterEndpointPrefixes.some(pref => req.url.startsWith(pref))
+  )
+}
+
+function authenticatedRequest(func, req, res, opts) {
+  if (typeof config.SHARED_SECRETS === 'undefined') {
+    logger.debug('SHARED_SECRETS is not defined')
+    res.writeHead(401, { Connection: 'close' })
+    res.end()
+    return
+  }
+
+  if (req.headers['authorization']) {
+    const parts = req.headers['authorization'].split(' ')
+    if (parts.length === 2 && ['Bearer', 'Basic'].includes(parts[0])) {
+      let token = parts[1]
+
+      if (parts[0] === 'Basic') {
+        const authString = Buffer.from(parts[1], 'base64').toString('ascii')
+        if (!authString.includes(':')) {
+          logger.debug(`401: auth string bad formatting: ${authString}`)
+          res.writeHead(401, { Connection: 'close' })
+          res.end()
+          return
+        }
+        token = authString.split(':')[1].trim()
+      }
+
+      const secrets = config.SHARED_SECRETS.split(',')
+
+      if (secrets.includes(token)) {
+        func(req, res, opts)
+        return
+      }
+    }
+  }
+
+  logger.debug(`401: not authenticated`)
+  res.writeHead(401, { Connection: 'close' })
+  res.end()
+  return
+}
+
 function handleFileUpload(req, res) {
   let busboy
 
@@ -46,7 +102,7 @@ function handleFileUpload(req, res) {
     busboy = new Busboy({
       headers: req.headers,
       limits: {
-        fileSize: 2 * 1024 * 1024
+        fileSize: 3 * 1024 * 1024
       }
     })
   } catch (error) {
@@ -58,6 +114,8 @@ function handleFileUpload(req, res) {
   }
 
   busboy.on('file', function(fieldname, file) {
+    logger.debug(`New file: ${fieldname}`)
+
     file.fileRead = []
 
     file.on('data', function(chunk) {
@@ -81,6 +139,7 @@ function handleFileUpload(req, res) {
         req.unpipe(req.busboy)
       } else {
         const url = config.IPFS_API_URL + req.url
+        logger.debug(`Sending file to ${url}`)
         request
           .post(url)
           .set(req.headers)
@@ -111,11 +170,25 @@ function handleFileUpload(req, res) {
   req.pipe(busboy)
 }
 
-function handleFileDownload(req, res) {
-  // Proxy download requests to gateway
+function handleForward(req, res, opts) {
+  // Simple HTTP request proxy forward
   proxy.web(req, res, {
-    target: config.IPFS_GATEWAY_URL,
+    target: opts && opts.url ? opts.url : config.IPFS_GATEWAY_URL,
     selfHandleResponse: true
+  })
+}
+
+function handleGatewayForward(req, res, opts) {
+  // Proxy Gateway requests
+  handleForward(req, res, {
+    url: opts && opts.url ? opts.url : config.IPFS_GATEWAY_URL
+  })
+}
+
+function handleAPIForward(req, res, opts) {
+  // Proxy API requests to API endpoint
+  handleForward(req, res, {
+    url: opts && opts.url ? opts.url : config.IPFS_API_URL
   })
 }
 
@@ -134,7 +207,7 @@ proxy.on('proxyRes', (proxyResponse, req, res) => {
   proxyResponse.on('end', () => {
     buffer = Buffer.concat(buffer)
 
-    if (isValidFile(buffer)) {
+    if (isValidFile(buffer) || isClusterAPIRequest(req)) {
       res.writeHead(proxyResponse.statusCode, proxyResponse.headers)
       res.end(buffer)
     } else {
@@ -153,11 +226,24 @@ const server = http
     logger.info(req.url)
     if (req.url.startsWith('/api/v0/add')) {
       handleFileUpload(req, res)
-    } else if (req.url.startsWith('/ipfs')) {
-      handleFileDownload(req, res)
+    } else if (req.url.startsWith('/api/v0')) {
+      authenticatedRequest(handleAPIForward, req, res)
+    } else if (req.url.startsWith('/ipfs') || req.url.startsWith('/ipns')) {
+      handleGatewayForward(req, res)
     } else {
-      res.writeHead(404, { Connection: 'close' })
-      res.end()
+      if (req.url.startsWith('/add')) {
+        authenticatedRequest(handleAPIForward, req, res, {
+          url: config.IPFS_CLUSTER_API_URL,
+          validate: false
+        })
+      } else if (isClusterAPIRequest(req)) {
+        authenticatedRequest(handleAPIForward, req, res, {
+          url: config.IPFS_CLUSTER_API_URL
+        })
+      } else {
+        res.writeHead(404, { Connection: 'close' })
+        res.end()
+      }
     }
   })
   .listen(config.IPFS_PROXY_PORT, config.IPFS_PROXY_ADDRESS)
@@ -165,6 +251,9 @@ const server = http
 logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
 logger.debug(`Proxying to IPFS gateway ${config.IPFS_GATEWAY_URL}`)
 logger.debug(`Proxying to IPFS API ${config.IPFS_API_URL}`)
+if (config.IPFS_CLUSTER_API_URL) {
+  logger.debug(`Proxying to IPFS Cluster API ${config.IPFS_CLUSTER_API_URL}`)
+}
 
 process.on('SIGINT', function() {
   logger.debug('\nGracefully shutting down from SIGINT (Ctrl+C)')
