@@ -66,7 +66,7 @@ spec:
           - path: /add
             backend: &cluster_api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
-              servicePort: 9094
+              servicePort: 9999
           - path: /id
             backend: *cluster_api_service
           - path: /version
