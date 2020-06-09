@@ -78,3 +78,4 @@ authImageTag: latest
 
 # origin-ipfs-issuer
 ipfsIssuerIp: '35.247.86.209'
+ipfsClusterIssuerIp: '35.230.101.134'
