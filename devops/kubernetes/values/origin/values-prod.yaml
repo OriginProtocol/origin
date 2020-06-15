@@ -2,44 +2,47 @@ databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '916795e'
+bridgeImageTag: '2a06e0e'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'cca4e4b'
+dappImageTag: 'f36a068'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'ff20be8'
+ipfsProxyImageTag: '96331fc'
 
+# origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '28438d2'
+faucetImageTag: '1268860'
 
+# event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '9509a68'
+eventlistenerImageTag: 'f31f88f'
 
+# origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '6e22b35'
+discoveryImageTag: 'c1ee3c5'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'latest'
+growthImageTag: 'd7aa6d3'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '3104d23'
+messagingImageTag: 'c77fdce'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'latest'
+notificationsImageTag: 'adc42f1'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: 'latest'
+creatorClientImageTag: '4452b3b'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'latest'
+creatorServerImageTag: '04f0822'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -48,33 +51,33 @@ creatorIssuerIp: '35.185.236.254'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: 'latest'
+linkingImageTag: 'a0d9e2f'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'latest'
+cronImageTag: 'f31f88f'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'latest'
+relayerImageTag: '346f915'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'latest'
+graphqlImageTag: 'f31f88f'
 
 ipfsLoadBalancerIP: 35.233.189.126
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: 'latest'
+t3ClientImageTag: 'aed297d'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'latest'
+t3ServerImageTag: '13443c8'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: latest
+authImageTag: '97d7515'
 
 # origin-ipfs-issuer
 ipfsIssuerIp: '35.247.86.209'
