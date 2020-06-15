@@ -7,6 +7,8 @@ const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const { isValidTotp } = require('../validators')
 
+const { Lockup, Sequelize: { Op } } = require('../models')
+
 /**
  * Returns the authenticated user.
  */
@@ -92,5 +94,28 @@ router.post(
       .end()
   })
 )
+
+router.get('/user-stats', async (req, res) => {
+  return res.status(200).send({
+    userCount: await Lockup.count({
+      distinct: true,
+      col: 'userId',
+      where: {
+        end: {
+          [Op.gt]: Date.now()
+        },
+        confirmed: true
+      }
+    }),
+    lockupSum: await Lockup.sum('amount', {
+      where: {
+        end: {
+          [Op.gt]: Date.now()
+        },
+        confirmed: true
+      }
+    })
+  })
+})
 
 module.exports = router

@@ -46,6 +46,10 @@ spec:
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
               servicePort: 9999  # ipfs-proxy
+          - path: /ipfs
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080
           - path: /ipns
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
