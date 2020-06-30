@@ -21,11 +21,11 @@ http {
   # Initial setup tasks.
   init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
-      auto_ssl:set("ca", "https://acme-v01.api.letsencrypt.org/directory")
+      auto_ssl:set("ca", "https://acme-v02.api.letsencrypt.org/directory")
 
       --- Allow all domains
       auto_ssl:set("allow_domain", function(domain)
-	return true
+        return true
       end)
 
       auto_ssl:init()
@@ -45,9 +45,9 @@ http {
       client_max_body_size 128k;
 
       location / {
-	content_by_lua_block {
-	  auto_ssl:hook_server()
-	}
+        content_by_lua_block {
+          auto_ssl:hook_server()
+        }
       }
   }
 
@@ -56,10 +56,10 @@ http {
 
     # Access for LetsEncrypt
     location /.well-known/acme-challenge/ {
-	auth_basic off;
-	content_by_lua_block {
-	    auto_ssl:challenge_server()
-	}
+      auth_basic off;
+      content_by_lua_block {
+          auto_ssl:challenge_server()
+      }
     }
 
     # Force HTTPS
@@ -73,7 +73,7 @@ http {
 
     # Dynamic handler for issuing or returning certs for SNI domains.
     ssl_certificate_by_lua_block {
-	auto_ssl:ssl_certificate()
+      auto_ssl:ssl_certificate()
     }
 
     # Define a fallback certificate so nginx can start
