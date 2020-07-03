@@ -19,3 +19,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- define "dshopBackendRinkeby.fullname" -}}
 {{- printf "%s-%s" .Release.Name "dshop-backend-rinkeby" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "dshopRedisRinkeby.fullname" -}}
+{{- printf "%s-%s" .Release.Name "dshop-redis-rinkeby" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
