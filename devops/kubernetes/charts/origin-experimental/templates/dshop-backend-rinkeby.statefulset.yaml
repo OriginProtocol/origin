@@ -32,6 +32,11 @@ spec:
               secretKeyRef:
                 name: {{ template "dshopBackendRinkeby.fullname" . }}
                 key: ENCRYPTION_KEY
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "dshopBackendRinkeby.fullname" . }}
+                key: SESSION_SECRET
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
