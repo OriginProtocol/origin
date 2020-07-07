@@ -38,7 +38,7 @@ spec:
                 name: {{ template "dshopBackendRinkeby.fullname" . }}
                 key: DATABASE_URL
           - name: REDIS_URL
-            value: redis://localhost:6379/0
+            value: "redis://{{ template "dshopRedisRinkeby.fullname" . }}-0.{{ template "dshopRedisRinkeby.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
             value: /data/dshop
         volumeMounts:
