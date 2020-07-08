@@ -91,7 +91,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
+          storage: "8Gi" #{{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
   - metadata:
       name: "{{ template "dshopBackendMainnet.fullname" . }}-dshop-cache"
       labels:
@@ -102,4 +102,4 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}
+          storage: "50Gi" #{{ default "50Gi" .Values.dshopBackendStorageRequestSize }}

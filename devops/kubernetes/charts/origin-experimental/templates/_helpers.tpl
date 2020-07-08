@@ -12,6 +12,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 (by the DNS naming spec).
 */}}
 
+{{- define "dshopBackendStorage.fullname" -}}
+{{- printf "dshop-backend-storage" -}}
+{{- end -}}
+
 {{- define "dshopBackendMainnet.fullname" -}}
 {{- printf "%s-%s" .Release.Name "dshop-backend-mainnet" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
