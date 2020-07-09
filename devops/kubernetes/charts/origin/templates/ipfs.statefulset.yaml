@@ -40,7 +40,7 @@ spec:
         command: ["/usr/local/bin/start_ipfs", "daemon", "--migrate"]
         env:
           - name: IPFS_LOGGING
-            value: info
+            value: ERROR
         ports:
         - containerPort: 4001
           name: swarm

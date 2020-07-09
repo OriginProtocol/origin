@@ -24,4 +24,7 @@ envsubst '$SERVER_ENDPOINT' \
 
 echo "CONTACT_EMAIL='support@originprotocol.com'" > /etc/resty-auto-ssl/letsencrypt/conf.d/dehydrated.conf
 
+# If this CA isn't used, it will fail as v1 has been depreciated
+echo "CA=\"https://acme-v02.api.letsencrypt.org/directory\"" > /etc/resty-auto-ssl/letsencrypt/conf.d/ca.sh
+
 exec "$@"

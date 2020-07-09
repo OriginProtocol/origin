@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "dshopRedisMainnet.fullname" . }}
+  labels:
+    app: {{ template "dshopRedisMainnet.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: dshop-backend-mainnet
+spec:
+  replicas: {{ default 2 .Values.dshopRedisMainnetReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "dshopRedisMainnet.fullname" . }}
+  serviceName: {{ template "dshopRedisMainnet.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "dshopRedisMainnet.fullname" . }}
+    spec:
+      initContainers:
+      - name: configure-redis
+        image: "{{ .Values.dshopRedisImage }}:{{ .Values.dshopRedisImageTag }}"
+        command: ["/bin/bash", "/config/bootstrap-pod.sh"]
+        env:
+          - name: NAMESPACE
+            value: experimental
+          - name: STS_NAME
+            value: {{ template "dshopRedisMainnet.fullname" . }}
+        volumeMounts:
+          - mountPath: /data
+            name: {{ template "dshopRedisMainnet.fullname" . }}-redis
+          - mountPath: /config
+            name: config
+            readOnly: false
+      containers:
+      - name: redis
+        image: "{{ .Values.dshopRedisImage }}:{{ .Values.dshopRedisImageTag }}"
+        command: ["redis-server",  "/config/redis.conf"]
+        volumeMounts:
+          - mountPath: /data
+            name: {{ template "dshopRedisMainnet.fullname" . }}-redis
+          - mountPath: /config
+            name: config
+            readOnly: false
+        port:
+          - name: redis
+            containerPort: 6379
+          - name: gossip
+            containerPort: 16379
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "dshopRedisMainnet.fullname" . }}
+          items: 
+          - key: redis.conf
+            path: redis.conf
+          - key: bootstrap-pod.sh
+            path: bootstrap-pod.sh
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "dshopRedisMainnet.fullname" . }}-redis
+      labels:
+        app: {{ template "dshopRedisMainnet.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce  # Read-write for a single node only
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: {{ default "8Gi" .Values.dshopRedisStorageSize }}

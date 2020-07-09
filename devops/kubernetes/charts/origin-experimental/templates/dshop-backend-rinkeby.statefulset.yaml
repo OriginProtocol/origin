@@ -32,15 +32,22 @@ spec:
               secretKeyRef:
                 name: {{ template "dshopBackendRinkeby.fullname" . }}
                 key: ENCRYPTION_KEY
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "dshopBackendRinkeby.fullname" . }}
+                key: SESSION_SECRET
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
                 name: {{ template "dshopBackendRinkeby.fullname" . }}
                 key: DATABASE_URL
           - name: REDIS_URL
-            value: redis://localhost:6379/0
+            value: "redis://{{ template "dshopRedisRinkeby.fullname" . }}-0.{{ template "dshopRedisRinkeby.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
             value: /data/dshop
+          - name: LOG_LEVEL
+            value: {{ default "INFO" .Values.dshopBackendRinkebyLogLevel }}
         volumeMounts:
         - name: "{{ template "dshopBackendRinkeby.fullname" . }}-dshop-cache"
           mountPath: /data/dshop

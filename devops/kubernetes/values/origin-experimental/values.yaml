@@ -4,3 +4,4 @@ dshopBackendMainnetRedisURL: redis://localhost:6379/0
 dshopBackendRinkebyHost: rinkebyapi.ogn.app
 dshopBackendRinkebyDBInstance: origin-214503:us-west1:dshop-rinkeby0
 dshopBackendRinkebyRedisURL: redis://localhost:6379/0
+dshopBackendRinkebyLogLevel: DEBUG

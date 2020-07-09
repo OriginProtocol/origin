@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "dshopRedisRinkeby.fullname" . }}
+  labels:
+    app: {{ template "dshopRedisRinkeby.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: dshop-backend-rinkeby
+data:
+  redis.conf: |+
+    dir /data/redis
+    cluster-enabled yes
+    cluster-require-full-coverage no
+    cluster-node-timeout 15000
+    cluster-config-file nodes.conf
+    cluster-migration-barrier 1 
+
+    # Restoring with RDB with appendonly https://stackoverflow.com/a/23233940/402412
+    appendonly yes
+
+    # Other cluster members need to be able to connect
+    protected-mode no
+
+  bootstrap-pod.sh: |+
+    #!/bin/sh
+    set -e
+
+    # Create the data dir
+    mkdir -p /data/redis
+
+    # Find which member of the Stateful Set this pod is running
+    ORDINAL=$(hostname | rev | cut -d- -f1)
+
+    # Only restore if the dump file exists and restore wasn't explicity disabled
+    if [[ -z "$DISABLE_RESTORE" && -f /data/redis/restore.rdb ]]; then
+      echo "Restore redis dump found.  Restoring..."
+      # move original data over if it exists
+      [[ -f /data/redis/dump.rdb ]] && mv /data/redis/dump.rdb /data/redis/dump.rdb.backup
+      [[ -f /data/redis/appendonly.aof ]] && mv /data/redis/appendonly.aof /data/redis/appendonly.aof.backup
+
+      # Move restore dump to where it will be loaded
+      mv /data/redis/restore.rdb /data/redis/dump.rdb
+    fi
+
+    # Launch a server instance so we can configure it
+    redis-server /config/redis.conf &
+
+    # TODO: Wait until redis-server process is ready
+    sleep 1
+
+    if [ $ORDINAL = "0" ]; then
+      echo "This is the MASTER node"
+
+      # The first member of the cluster should control all slots initially
+      redis-cli cluster addslots $(seq 0 16383)
+
+    else
+      echo "This is the SLAVE node. Master: $STS_NAME-0.$STS_NAME.$NAMESPACE.svc.cluster.local"
+
+      # Other members of the cluster join as slaves
+      MASTER_IP=$(echo "print inet_ntoa(scalar(gethostbyname('$STS_NAME-0.$STS_NAME.$NAMESPACE.svc.cluster.local')))" | perl -MSocket)
+      redis-cli cluster meet $MASTER_IP 6379
+      sleep 1
+
+      # Become the slave of a random master node
+      MASTER_ID=$(redis-cli --csv cluster slots | cut -d, -f 5 | sed -e 's/^"//'  -e 's/"$//')
+      redis-cli cluster replicate $MASTER_ID
+    fi

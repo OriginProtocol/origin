@@ -79,6 +79,8 @@ spec:
               servicePort: 9999
           - path: /api/v0/id
             backend: *api_service
+          - path: /api/v0/dns
+            backend: *api_service
           - path: /api/v0/object/links
             backend: *api_service
           - path: /api/v0/object/patch/add-link
@@ -118,6 +120,8 @@ spec:
           - path: /api/v0/pin/ls
             backend: *api_service
           - path: /api/v0/id
+            backend: *api_service
+          - path: /api/v0/dns
             backend: *api_service
           - path: /api/v0/pin/add
             backend: *api_service
