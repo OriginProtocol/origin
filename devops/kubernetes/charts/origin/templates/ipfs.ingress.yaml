@@ -64,6 +64,8 @@ spec:
             backend: &api_service
               serviceName: {{ template "ipfs.fullname" . }}
               servicePort: 5001
+          - path: /api/v0/dns
+            backend: *api_service
           - path: /api/v0/object/links
             backend: *api_service
           - path: /api/v0/object/patch/add-link
