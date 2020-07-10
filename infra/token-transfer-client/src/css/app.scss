@@ -717,3 +717,38 @@ input, select {
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
+
+.dashboard-banner {
+    margin: -20px -20px 20px -20px;
+    padding: 1rem;
+    line-height: 35px;
+    font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-banner {
+    margin: -30px -30px 30px -30px !important;
+  }
+}
+
+.dashboard-banner svg {
+  margin-top: -5px;
+}
+
+[data-theme="dark"] .dashboard-banner {
+  background-color: white;
+  color: #212529;
+}
+
+[data-theme="light"] .dashboard-banner {
+  background-color: #223f57;
+  color: white;
+}
+
+[data-theme="light"] .dashboard-banner a {
+  color: #3698ff;
+}
+
+[data-theme="dark"] .dashboard-banner .arrow path {
+  fill: #223f57;
+}
