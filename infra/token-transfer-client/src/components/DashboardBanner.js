@@ -16,7 +16,11 @@ const DashboardBanner = () => {
           <b>300+</b> investors have locked up <b>20m+</b> tokens
         </div>
         <div className="col-11 offset-md-1 col-lg-2 offset-lg-0 text-lg-right text-nowrap">
-          <a href="https://originprotocol.com/dashboard" target="blank">
+          <a
+            href="https://originprotocol.com/dashboard"
+            target="blank"
+            rel="noopener noreferrer"
+          >
             Visit OGN Dashboard &rsaquo;
           </a>
         </div>
