@@ -10,6 +10,7 @@ import { getSessionExpired } from '@/reducers/session'
 import { setSessionExpired } from '@/actions/session'
 
 import AccountActions from '@/components/AccountActions'
+import DashboardBanner from '@/components/DashboardBanner'
 import Navigation from '@/components/Navigation'
 import Modal from '@/components/Modal'
 import { ThemeProvider } from '@/providers/theme'
@@ -62,6 +63,7 @@ const PrivateRoute = ({
                       user={user}
                     />
                     <div id="main" className={expandSidebar ? 'd-none' : ''}>
+                      <DashboardBanner />
                       <div className="d-none d-md-block">
                         {user && <AccountActions user={user} />}
                       </div>
