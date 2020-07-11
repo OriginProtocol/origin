@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: backend
-    #app.kubernetes.io/part-of: dshop-backend-rinkeby
 spec:
  capacity:
    storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}

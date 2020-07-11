@@ -59,6 +59,18 @@ spec:
         resources:
           requests:
             memory: 1Gi
+        startupProbe:
+          httpGet:
+            path: /health/started
+            port: 3000
+          failureThreshold: 10
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health/status
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
