@@ -46,9 +46,9 @@ spec:
                 key: DATABASE_URL
           - name: SENTRY_DSN
             valueFrom:
-            secretKeyRef:
-              name: {{ template "dshopBackendMainnet.fullname" . }}
-              key: SENTRY_DSN
+              secretKeyRef:
+                name: {{ template "dshopBackendMainnet.fullname" . }}
+                key: SENTRY_DSN
           - name: REDIS_URL
             value: "redis://{{ template "dshopRedisMainnet.fullname" . }}-0.{{ template "dshopRedisMainnet.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
