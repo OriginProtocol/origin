@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: dshop-backend-mainnet
 spec:
-  replicas: {{ default 1 .Values.dshopBackendMainnetReplicas }}
+  replicas: {{ default 2 .Values.dshopBackendMainnetReplicas }}
   selector:
     matchLabels:
       app: {{ template "dshopBackendMainnet.fullname" . }}
@@ -45,18 +45,30 @@ spec:
           - name: REDIS_URL
             value: "redis://{{ template "dshopRedisMainnet.fullname" . }}-0.{{ template "dshopRedisMainnet.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
-            value: /data/dshop
+            value: /data/dshop-cache/mainnet
           - name: LOG_LEVEL
             value: {{ default "INFO" .Values.dshopBackendMainnetLogLevel }}
         volumeMounts:
-        - name: "{{ template "dshopBackendMainnet.fullname" . }}-dshop-cache"
-          mountPath: /data/dshop
+        - name: "{{ template "dshopBackendMainnet.fullname" . }}-shared-cache"
+          mountPath: /data/dshop-cache
         port:
           - name: http
             containerPort: 3000
         resources:
           requests:
             memory: 1Gi
+        startupProbe:
+          httpGet:
+            path: /health/started
+            port: 3000
+          failureThreshold: 10
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health/status
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
@@ -69,37 +81,11 @@ spec:
         - name: dshop-cloudsql-credentials
           mountPath: /secrets/cloudsql
           readOnly: true
-      - name: redis
-        image: redis:6.0
-        command: ["/bin/sh","-c"]
-        args: ["mkdir -p /data/redis && redis-server --dir /data/redis "]
-        volumeMounts:
-          - mountPath: /data
-            name: {{ template "dshopBackendMainnet.fullname" . }}-redis
       volumes:
         - name: dshop-cloudsql-credentials
           secret:
             secretName: dshop-cloudsql-credentials
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ template "dshopBackendMainnet.fullname" . }}-redis
-      labels:
-        app: {{ template "dshopBackendMainnet.fullname" . }}
-    spec:
-      accessModes:
-        - ReadWriteOnce  # Read-write for a single node only
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
-  - metadata:
-      name: "{{ template "dshopBackendMainnet.fullname" . }}-dshop-cache"
-      labels:
-        app: {{ template "dshopBackendMainnet.fullname" . }}
-    spec:
-      accessModes:
-        - ReadWriteOnce  # Read-write for a single node only
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}
+        - name: "{{ template "dshopBackendMainnet.fullname" . }}-shared-cache"
+          persistentVolumeClaim:
+            claimName: "{{ template "dshopBackendStorage.fullname" . }}"
+            readOnly: false

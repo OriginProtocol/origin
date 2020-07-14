@@ -2,13 +2,15 @@ containerRegistry: gcr.io/origin-214503
 
 clusterIssuer: letsencrypt-prod
 
-dshopBackendMainnetReplicas: 1
+dshopBackendMainnetReplicas: 3
 dshopBackendMainnetImage: dshop-backend
 dshopBackendMainnetImageTag: mainnet
 
-dshopBackendRinkebyReplicas: 1
+dshopBackendRinkebyReplicas: 2
 dshopBackendRinkebyImage: dshop-backend
 dshopBackendRinkebyImageTag: latest
+
+dshopBackendStorageRequestSize: 1T
 
 dshopRedisImage: redis
 dshopRedisImageTag: 6.0
