@@ -81,14 +81,6 @@ spec:
         - name: dshop-cloudsql-credentials
           mountPath: /secrets/cloudsql
           readOnly: true
-      # Redis (depreciated)
-      # - name: redis
-      #   image: redis:6.0
-      #   command: ["/bin/sh","-c"]
-      #   args: ["mkdir -p /data/redis && redis-server --dir /data/redis "]
-      #   volumeMounts:
-      #     - mountPath: /data
-      #       name: {{ template "dshopBackendRinkeby.fullname" . }}-redis
       volumes:
         - name: dshop-cloudsql-credentials
           secret:
@@ -97,45 +89,3 @@ spec:
           persistentVolumeClaim:
             claimName: "{{ template "dshopBackendStorage.fullname" . }}"
             readOnly: false
-
-  #volumeClaimTemplates:
-
-  # Redis storage (depreciated)
-  # - metadata:
-  #     name: {{ template "dshopBackendRinkeby.fullname" . }}-redis
-  #     labels:
-  #       app: {{ template "dshopBackendRinkeby.fullname" . }}
-  #   spec:
-  #     accessModes:
-  #       - ReadWriteOnce  # Read-write for a single node only
-  #     storageClassName: "standard"
-  #     resources:
-  #       requests:
-  #         storage: {{ default "8Gi" .Values.dshopBackendStorageRequestSize }}
-
-  # Regular PVC for dshop storage (old)
-  # - metadata:
-  #     name: "{{ template "dshopBackendRinkeby.fullname" . }}-dshop-cache"
-  #     labels:
-  #       app: {{ template "dshopBackendRinkeby.fullname" . }}
-  #   spec:
-  #     accessModes:
-  #       - ReadWriteOnce  # Read-write for a single node only
-  #     storageClassName: "standard"
-  #     resources:
-  #       requests:
-  #         storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}
-
-  # Shared GCP Filestore
-  # - metadata:
-  #     name: "{{ template "dshopBackendRinkeby.fullname" . }}-shared-cache"
-  #     labels:
-  #       app: {{ template "dshopBackendRinkeby.fullname" . }}
-  #   spec:
-  #     accessModes:
-  #       - ReadWriteMany  # Read-write for many nodes
-  #     storageClassName: ""
-  #     volumeName: {{ template "dshopBackendStorage.fullname" . }}
-  #     resources:
-  #       requests:
-  #         storage: {{ default "50Gi" .Values.dshopBackendRinkebyCacheSize }}
