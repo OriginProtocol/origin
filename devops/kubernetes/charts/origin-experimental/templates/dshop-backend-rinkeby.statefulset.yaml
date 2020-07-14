@@ -27,8 +27,8 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dshopBackendRinkebyImage }}:{{ .Values.dshopBackendRinkebyImageTag }}"
         imagePullPolicy: Always
         env:
-          - name: NAMESPACE
-            value: "rinkeby"
+          - name: ENVIRONMENT
+            value: "staging"
           - name: ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:

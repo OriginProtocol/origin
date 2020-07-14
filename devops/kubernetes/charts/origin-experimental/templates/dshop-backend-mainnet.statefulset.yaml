@@ -27,8 +27,8 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dshopBackendMainnetImage }}:{{ .Values.dshopBackendMainnetImageTag }}"
         imagePullPolicy: Always
         env:
-          - name: NAMESPACE
-            value: mainnet
+          - name: ENVIRONMENT
+            value: prod
           - name: ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
