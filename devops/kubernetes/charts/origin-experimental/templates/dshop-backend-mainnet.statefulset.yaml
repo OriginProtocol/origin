@@ -27,6 +27,8 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dshopBackendMainnetImage }}:{{ .Values.dshopBackendMainnetImageTag }}"
         imagePullPolicy: Always
         env:
+          - name: NAMESPACE
+            value: mainnet
           - name: ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
@@ -42,6 +44,11 @@ spec:
               secretKeyRef:
                 name: {{ template "dshopBackendMainnet.fullname" . }}
                 key: DATABASE_URL
+          - name: SENTRY_DSN
+            valueFrom:
+            secretKeyRef:
+              name: {{ template "dshopBackendMainnet.fullname" . }}
+              key: SENTRY_DSN
           - name: REDIS_URL
             value: "redis://{{ template "dshopRedisMainnet.fullname" . }}-0.{{ template "dshopRedisMainnet.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
