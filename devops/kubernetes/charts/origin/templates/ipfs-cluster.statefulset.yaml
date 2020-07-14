@@ -64,6 +64,11 @@ spec:
               secretKeyRef:
                 name: {{ template "ipfsCluster.fullname" . }}
                 key: SHARED_SECRETS
+          - name: BASIC_AUTH_PW
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "ipfsCluster.fullname" . }}
+                key: BASIC_AUTH_PW
       - name: ipfs
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
         command: ["/usr/local/bin/start_ipfs", "daemon", "--migrate"]
