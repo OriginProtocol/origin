@@ -30,7 +30,7 @@ growthImageTag: 'a7ceead'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '3ad759e'
+messagingImageTag: '9c7ebe9'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -71,11 +71,11 @@ graphqlImageTag: '96f1a62'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '1cc5442'
+t3ClientImageTag: '4716e54'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: 'c09926b'
+t3ServerImageTag: 'df702a1'
 
 # origin-auth
 authImage: origin-auth
