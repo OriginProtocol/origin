@@ -49,8 +49,6 @@ spec:
           - name: LOG_LEVEL
             value: {{ default "INFO" .Values.dshopBackendRinkebyLogLevel }}
         volumeMounts:
-        # - name: "{{ template "dshopBackendRinkeby.fullname" . }}-dshop-cache"
-        #   mountPath: /data/dshop
         - name: "{{ template "dshopBackendRinkeby.fullname" . }}-shared-cache"
           mountPath: /data/dshop-cache
         port:
@@ -97,7 +95,7 @@ spec:
             secretName: dshop-cloudsql-credentials
         - name: "{{ template "dshopBackendRinkeby.fullname" . }}-shared-cache"
           persistentVolumeClaim:
-            claimName: "{{ template "dshopBackendStorage.fullname" . }}-rinkeby"
+            claimName: "{{ template "dshopBackendStorage.fullname" . }}"
             readOnly: false
 
   #volumeClaimTemplates:
