@@ -25,6 +25,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffering: "on"
     nginx.ingress.kubernetes.io/proxy-buffers-number: "16"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
 spec:
   tls:
     - secretName: {{ template "ipfsCluster.host" . }}
