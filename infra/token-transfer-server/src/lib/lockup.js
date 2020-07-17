@@ -31,6 +31,24 @@ const { encryptionSecret, clientUrl } = require('../config')
  * @returns {Promise<Lockup>} Lockup object.
  */
 async function addLockup(userId, amount, early, data = {}) {
+  const unconfirmedLockups = await Lockup.findAll({
+    where: {
+      userId: userId,
+      confirmed: null, // Unconfirmed
+      created_at: {
+        [Sequelize.Op.gte]: moment
+          .utc()
+          .subtract(lockupConfirmationTimeout, 'minutes')
+      }
+    }
+  })
+
+  if (unconfirmedLockups.length > 0) {
+    throw new ReferenceError(
+      'Unconfirmed lockups exist, please confirm or wait until expiry'
+    )
+  }
+
   // Check if user has sufficient balance
   if (early) {
     // This is an early lockup for the next vest so call alternate balance
@@ -65,24 +83,6 @@ async function addLockup(userId, amount, early, data = {}) {
         `Amount of ${amount} OGN exceeds the ${balance} available for lockup for user ${userId}`
       )
     }
-  }
-
-  const unconfirmedLockups = await Lockup.findAll({
-    where: {
-      userId: userId,
-      confirmed: null, // Unconfirmed
-      created_at: {
-        [Sequelize.Op.gte]: moment
-          .utc()
-          .subtract(lockupConfirmationTimeout, 'minutes')
-      }
-    }
-  })
-
-  if (unconfirmedLockups.length > 0) {
-    throw new ReferenceError(
-      'Unconfirmed lockups exist, please confirm or wait until expiry'
-    )
   }
 
   let lockup
