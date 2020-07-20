@@ -113,7 +113,6 @@ function calculateEarnings(lockups) {
  */
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
-    if (!lockup.confirmed) return total
     if (isEarlyLockup(lockup)) {
       if (moment.utc(lockup.data.vest.date) > moment.utc()) {
         // The early lockup vest has not vested, so the balance is these tokens

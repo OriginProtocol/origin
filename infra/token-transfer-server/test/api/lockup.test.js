@@ -334,6 +334,35 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/Unconfirmed/)
   })
 
+  it('should add a lockup if unconfirmed lockup exists older than expiry', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getUnlockDate', unlockFake)
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    await Lockup.create({
+      userId: this.user.id,
+      amount: 1000,
+      start: moment()
+        .subtract(1, 'years')
+        .subtract(1, 'days'),
+      end: moment().subtract(1, 'years'),
+      code: totp.gen(this.otpKey),
+      bonusRate: 10.0,
+      createdAt: moment().subtract(10, 'minutes')
+    })
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 100,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+  })
+
   it('should add a lockup if confirmed lockup exists', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     lockupController.__Rewire__('getUnlockDate', unlockFake)
@@ -477,7 +506,8 @@ describe('Lockup HTTP API', () => {
       end: moment()
         .add(1, 'years')
         .add(1, 'days'),
-      bonusRate: 10.0
+      bonusRate: 10.0,
+      confirmed: true
     })
 
     const response = await request(this.mockApp)
@@ -491,7 +521,7 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/exceeds/)
   })
 
-  it('should not add lockups simultaneously if not enough balance', async () => {
+  it('should not add lockups simultaneously', async () => {
     const sendStub = sinon.stub(sendgridMail, 'send')
 
     const results = await Promise.all([
@@ -511,7 +541,7 @@ describe('Lockup HTTP API', () => {
 
     expect(
       results.filter(
-        result => result.status !== 201 && result.text.match(/exceeds/)
+        result => result.status !== 201 && result.text.match(/Unconfirmed/)
       ).length
     ).to.equal(1)
 
