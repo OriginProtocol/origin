@@ -28,6 +28,8 @@ data:
 
     # Listen on port 9094 (Cluster REST API) on all interfaces
     sed -i -e 's/\/ip4\/127.0.0.1\/tcp\/9094/\/ip4\/0.0.0.0\/tcp\/9094/' /data/ipfs-cluster/service.json
+    # Configure HTTP auth credentials
+    sed -i -e "s/\"basic_auth_credentials\": null,/\"basic_auth_credentials\": \{\"dshop\": \"$BASIC_AUTH_PW\"\},/" /data/ipfs-cluster/service.json
 
     PEER_HOSTNAME=`cat /proc/sys/kernel/hostname`
 
@@ -69,3 +71,4 @@ data:
     ipfs config --json Swarm.ConnMgr.HighWater 2000
     ipfs config --json Datastore.BloomFilterSize 1048576
     ipfs config Datastore.StorageMax 100GB
+    ipfs config Informer.Disk.metric_ttl 100GB

@@ -95,6 +95,8 @@ spec:
         - containerPort: 9096
           name: clusterswarm
         env:
+          - name: IPFS_CLUSTER_LOG_LEVEL
+            value: "debug"
           - name: BOOTSTRAP_PEER_ID
             valueFrom:
               secretKeyRef:
@@ -110,6 +112,11 @@ spec:
               secretKeyRef:
                 name: {{ template "ipfsCluster.fullname" . }}
                 key: CLUSTER_SECRET
+          - name: BASIC_AUTH_PW
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "ipfsCluster.fullname" . }}
+                key: BASIC_AUTH_PW
           - name: CLUSTER_MONITOR_PING_INTERVAL
             value: "3m"
           - name: SVC_NAME
