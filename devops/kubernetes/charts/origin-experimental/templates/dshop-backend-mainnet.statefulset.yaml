@@ -66,16 +66,24 @@ spec:
             memory: 1Gi
         startupProbe:
           httpGet:
-            path: /health/started
+            path: /health/status
             port: 3000
           failureThreshold: 10
-          periodSeconds: 3
+          periodSeconds: 7
         livenessProbe:
           httpGet:
             path: /health/status
             port: 3000
           initialDelaySeconds: 10
-          periodSeconds: 5
+          periodSeconds: 3
+        # Give Kubernetes time to do its thing (race error reduction)
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -c
+              - "sleep 3"
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
@@ -88,6 +96,14 @@ spec:
         - name: dshop-cloudsql-credentials
           mountPath: /secrets/cloudsql
           readOnly: true
+        # Don't kill DB connections before the backend process is terminated
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -c
+              - "sleep 5"
       volumes:
         - name: dshop-cloudsql-credentials
           secret:

@@ -75,7 +75,7 @@ spec:
             path: /health/status
             port: 3000
           initialDelaySeconds: 10
-          periodSeconds: 1
+          periodSeconds: 3
         # Give Kubernetes time to do its thing (race error reduction)
         lifecycle:
           preStop:
