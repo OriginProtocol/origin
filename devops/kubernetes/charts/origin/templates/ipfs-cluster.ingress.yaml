@@ -74,14 +74,18 @@ spec:
             backend: *cluster_api_service
           - path: /pins
             backend: *cluster_api_service
+          - path: /api/v0/id
+            backend: &open_api_service
+              serviceName: "{{ template "ipfsCluster.fullname" . }}-headless"
+              servicePort: 5001
+          - path: /api/v0/dns
+            backend: *open_api_service
+          - path: /api/v0/get
+            backend: *open_api_service
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999
-          - path: /api/v0/id
-            backend: *api_service
-          - path: /api/v0/dns
-            backend: *api_service
           - path: /api/v0/object/links
             backend: *api_service
           - path: /api/v0/object/patch/add-link
@@ -114,15 +118,19 @@ spec:
             backend: *cluster_api_service
           - path: /pins
             backend: *cluster_api_service
+          - path: /api/v0/id
+            backend: &open_api_service
+              serviceName: "{{ template "ipfsCluster.fullname" . }}-headless"
+              servicePort: 5001
+          - path: /api/v0/dns
+            backend: *open_api_service
+          - path: /api/v0/get
+            backend: *open_api_service
           - path: /api/v0/add
             backend: &api_service
               serviceName: {{ template "ipfsCluster.fullname" . }}
               servicePort: 9999
           - path: /api/v0/pin/ls
-            backend: *api_service
-          - path: /api/v0/id
-            backend: *api_service
-          - path: /api/v0/dns
             backend: *api_service
           - path: /api/v0/pin/add
             backend: *api_service
