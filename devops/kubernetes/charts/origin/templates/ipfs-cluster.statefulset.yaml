@@ -139,6 +139,8 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
+          # Changed to 50Gi in prod but changing the chart results in error
+          # storage: {{ default "50Gi" .Values.ipfsClusterStorageRequestSize }}
           storage: {{ default "8Gi" .Values.ipfsClusterStorageRequestSize }}
   {{- if eq .Release.Namespace "prod" }}
   - metadata:
