@@ -4,7 +4,7 @@ clusterIssuer: letsencrypt-prod
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
-ipfsImageTag: "v0.5.1"
+ipfsImageTag: "v0.6.0"
 
 # ipfs-cluster
 ipfsClusterImage: ipfs/ipfs-cluster

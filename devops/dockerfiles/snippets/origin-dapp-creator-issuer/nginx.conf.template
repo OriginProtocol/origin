@@ -69,7 +69,7 @@ http {
   }
 
   server {
-    listen 443 ssl http2;
+    listen 443 ssl;
 
     # Dynamic handler for issuing or returning certs for SNI domains.
     ssl_certificate_by_lua_block {

@@ -39,7 +39,7 @@ data:
       CLUSTER_PRIVATEKEY=${BOOTSTRAP_PEER_PRIV_KEY} \
       exec ipfs-cluster-service daemon --upgrade
     else
-      BOOTSTRAP_ADDR=/dns4/${SVC_NAME}-0/tcp/9096/ipfs/${BOOTSTRAP_PEER_ID}
+      BOOTSTRAP_ADDR=/dns4/${SVC_NAME}-0/tcp/9096/p2p/${BOOTSTRAP_PEER_ID}
 
       if [ -z $BOOTSTRAP_ADDR ]; then
         exit 1
