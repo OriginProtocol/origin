@@ -19,6 +19,7 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/limit-rps: "10"
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error invalid_header"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
 spec:
   tls:
     - secretName: "{{ .Values.dshopBackendMainnetHost }}"
