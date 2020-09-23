@@ -35,7 +35,9 @@ You can then use `kcd dev`, `kcd staging`, or `kcd prod` to quicky change namesp
 
 Helm is a tool used to manage a deployment that consists of many Kubernetes resources rather than interacting with each resource one by one. It consists of a client side tool called `helm` and a server side tool called `tiller`. The cluster already has `tiller` configured and installed.
 
-The instructions for installing Helm are available [here](https://github.com/helm/helm/blob/master/docs/install.md). You can ignore everything from the "Installing Tiller" heading down.
+The instructions for installing Helm are available [here](https://helm.sh/docs/intro/install/).
+
+**NOTE**: Be sure to install helm version `2.x.x`
 
 ## Temporary Deployments
 
