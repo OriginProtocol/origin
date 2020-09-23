@@ -197,10 +197,11 @@ class EventCache {
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
     if (conf.batchSize) {
-      this.batchSize = min(conf.batchSize, DEFAULT_BATCH_SIZE)
+      this.batchSize = Math.min(conf.batchSize, DEFAULT_BATCH_SIZE)
     } else {
       this.batchSize = DEFAULT_BATCH_SIZE
     }
+    debug(`Setting batch size to ${this.batchSize}`)
 
     // If config specifies a cache, it should also have cacheMaxBlock.
     if (
