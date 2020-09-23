@@ -21,6 +21,9 @@ spec:
       port: 4001
     - name: gateway
       port: 8080
+    # Security risk if auth not enabled
+    - name: clusterapi
+      port: 9094
     - name: clusterswarm
       port: 9096
     - name: proxy

@@ -18,6 +18,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-access-log: "false"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error invalid_header"
 spec:
   tls:
     - secretName: "{{ .Values.dshopBackendRinkebyHost }}"

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ template "dshopBackendStorage.fullname" . }}
+  labels:
+    app: {{ template "dshopBackendStorage.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+spec:
+ capacity:
+   storage: {{ default "50Gi" .Values.dshopBackendStorageRequestSize }}
+ accessModes:
+ - ReadWriteMany
+ nfs:
+   path: /dshop_cache
+   server: {{ .Values.dshopStorageIP }}
