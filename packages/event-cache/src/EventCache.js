@@ -18,7 +18,9 @@ if (!process.env.WEBPACK_BUILD) {
 // Note: do not increase over 1,000 which is Alchemy's limit
 const DEFAULT_BATCH_SIZE = 1000
 
-const limiter = new Bottleneck({ maxConcurrent: 25 })
+const MAX_CONCURRENT_REQUESTS = 5
+
+const limiter = new Bottleneck({ maxConcurrent: MAX_CONCURRENT_REQUESTS })
 limiter.on('error', err => {
   debug('Error occurred within rate limiter', err)
 })
@@ -26,9 +28,9 @@ limiter.on('failed', async (err, jobInfo) => {
   debug(`Job ${jobInfo.options.id} failed`, err)
   // Retry 3 times
   if (jobInfo.retryCount < 4) {
-    // 250ms wait for retry
+    // 1sec wait for retry
     debug('Retrying job...')
-    return 250
+    return 1000
   }
 })
 
