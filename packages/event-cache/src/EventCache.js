@@ -15,6 +15,9 @@ if (!process.env.WEBPACK_BUILD) {
   PostgreSQLBackend = require('./backends/PostgreSQLBackend').PostgreSQLBackend
 }
 
+// Note: do not increase over 1,000 which is Alchemy's limit
+const DEFAULT_BATCH_SIZE = 1000
+
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 limiter.on('error', err => {
   debug('Error occurred within rate limiter', err)
@@ -30,7 +33,7 @@ limiter.on('failed', async (err, jobInfo) => {
 })
 
 const getPastEvents = memoize(
-  async function(instance, fromBlock, toBlock, batchSize = 10000) {
+  async function(instance, fromBlock, toBlock, batchSize = DEFAULT_BATCH_SIZE) {
     if (
       instance.ipfsEventCache && // IPFS cache configured.
       !instance.loadedCache && // IPFS cache hasn't been loaded yet.
@@ -193,7 +196,11 @@ class EventCache {
     this.ipfsServer =
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
-    this.batchSize = conf.batchSize || 10000
+    if (conf.batchSize) {
+      this.batchSize = min(conf.batchSize, DEFAULT_BATCH_SIZE)
+    } else {
+      this.batchSize = DEFAULT_BATCH_SIZE
+    }
 
     // If config specifies a cache, it should also have cacheMaxBlock.
     if (
