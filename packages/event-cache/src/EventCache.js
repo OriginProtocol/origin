@@ -18,7 +18,7 @@ if (!process.env.WEBPACK_BUILD) {
 // Note: do not increase over 1,000 which is Alchemy's limit
 const DEFAULT_BATCH_SIZE = 1000
 
-const MAX_CONCURRENT_REQUESTS = 5
+const MAX_CONCURRENT_REQUESTS = 2
 
 const limiter = new Bottleneck({ maxConcurrent: MAX_CONCURRENT_REQUESTS })
 limiter.on('error', err => {
