@@ -87,13 +87,13 @@ class OriginEventSource {
 
     try {
       if (process.env.DISABLE_CACHE === 'true') {
-        console.log(`Fetching listing ${listingId}...`)
+        console.log(`Fetching direct listing ${listingId}...`)
         listing = await getListingDirect(this.contract, listingId)
-        console.log(`Fetched listing ${listingId}`)
+        console.log(`Fetched direct listing ${listingId}`)
       } else {
-        console.log(`Fetching and caching listing ${listingId}...`)
+        console.log(`Fetching listing ${listingId}...`)
         listing = await getListing(this.contract, listingId, cacheBlockNumber)
-        console.log(`Fetched and cached listing ${listingId}`)
+        console.log(`Fetched listing ${listingId}`)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)
