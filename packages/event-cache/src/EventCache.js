@@ -20,7 +20,7 @@ const DEFAULT_BATCH_SIZE = 2000
 
 // Note: Increasing this limit causes more cpu units usage on Alchemy
 // and may cause rate limiting.
-const MAX_CONCURRENT_REQUESTS = 2
+const MAX_CONCURRENT_REQUESTS = 25
 
 const limiter = new Bottleneck({ maxConcurrent: MAX_CONCURRENT_REQUESTS })
 limiter.on('error', err => {
