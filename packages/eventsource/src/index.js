@@ -318,8 +318,6 @@ class OriginEventSource {
   // Returns a listing with offers and any fields that are computed from the
   // offers.
   async withOffers(listingId, listing) {
-    // Franck 24/09/2020 - Disabled fetching offers to try to bring graphql server alive from the dead...
-    /*
     const totalOffers = await this.contract.methods
       .totalOffers(listingId)
       .call()
@@ -333,8 +331,6 @@ class OriginEventSource {
         )
       )
     ).filter(offer => offer !== null)
-    */
-    const allOffers = []
     console.log(`Found ${allOffers.length} for listing ${listingId}`)
 
     // Compute fields from valid offers
