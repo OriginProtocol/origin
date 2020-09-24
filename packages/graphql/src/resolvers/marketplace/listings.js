@@ -112,6 +112,7 @@ async function resultsFromIds({
   }
 
   if (!fields || fields.nodes) {
+    console.log("Fetching listing with ids", listingIds)
     nodes = (
       await Promise.all(
         listingIds.map(async id => {

@@ -69,6 +69,7 @@ class OriginEventSource {
     if (process.env.DISABLE_CACHE !== 'true' && this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
+      console.log(`Returning listing ${listingId} from cache`)
       return Object.assign({}, this.listingCache[cacheKey], {
         id: `${networkId}-${this.version}-${listingId}${
           blockNumber ? `-${blockNumber}` : ''
@@ -84,9 +85,13 @@ class OriginEventSource {
 
     try {
       if (process.env.DISABLE_CACHE === 'true') {
+        console.log(`Fetching and caching listing ${listingId}...`)
         listing = await getListingDirect(this.contract, listingId)
+        console.log(`Fetched and cached listing ${listingId}`)
       } else {
+        console.log(`Fetching but not caching listing ${listingId}...`)
         listing = await getListing(this.contract, listingId, cacheBlockNumber)
+        console.log(`Fetched listing ${listingId}`)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)
