@@ -15,9 +15,11 @@ if (!process.env.WEBPACK_BUILD) {
   PostgreSQLBackend = require('./backends/PostgreSQLBackend').PostgreSQLBackend
 }
 
-// Note: do not increase over 1,000 which is Alchemy's limit
-const DEFAULT_BATCH_SIZE = 1000
+// Note: do not increase over 2,000 which is Alchemy's limit
+const DEFAULT_BATCH_SIZE = 2000
 
+// Note: Increasing this limit causes more cpu units usage on Alchemy
+// and may cause rate limiting.
 const MAX_CONCURRENT_REQUESTS = 2
 
 const limiter = new Bottleneck({ maxConcurrent: MAX_CONCURRENT_REQUESTS })
