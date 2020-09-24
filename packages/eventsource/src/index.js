@@ -75,6 +75,8 @@ class OriginEventSource {
           blockNumber ? `-${blockNumber}` : ''
         }`
       })
+    } else {
+      console.log(`Cache miss for key ${cacheKey}`)
     }
 
     let listing,
@@ -85,21 +87,23 @@ class OriginEventSource {
 
     try {
       if (process.env.DISABLE_CACHE === 'true') {
-        console.log(`Fetching and caching listing ${listingId}...`)
+        console.log(`Fetching listing ${listingId}...`)
         listing = await getListingDirect(this.contract, listingId)
-        console.log(`Fetched and cached listing ${listingId}`)
-      } else {
-        console.log(`Fetching but not caching listing ${listingId}...`)
-        listing = await getListing(this.contract, listingId, cacheBlockNumber)
         console.log(`Fetched listing ${listingId}`)
+      } else {
+        console.log(`Fetching and caching listing ${listingId}...`)
+        listing = await getListing(this.contract, listingId, cacheBlockNumber)
+        console.log(`Fetched and cached listing ${listingId}`)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)
     }
 
+    console.log(`Querying events for listing ${listingId}...`)
     const events = await this.contract.eventCache.getEvents({
       listingID: String(listingId)
     })
+    console.log(`Got ${events.length} events for listing ${listingId}`)
 
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
@@ -279,6 +283,7 @@ class OriginEventSource {
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
+    console.log(`Fetching offer data for listing ${listigId}...`)
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
       __typename,
@@ -302,9 +307,11 @@ class OriginEventSource {
     })
 
     if (process.env.DISABLE_CACHE !== 'true') {
+      console.log(`Caching result of listing ${listingId} with key ${cacheKey}`)
       this.listingCache[cacheKey] = listingWithOffers
     }
 
+    console.log(`Returning listing data for ${listingId}`)
     return listingWithOffers
   }
 
@@ -315,6 +322,9 @@ class OriginEventSource {
       .totalOffers(listingId)
       .call()
 
+    console.log(`Fetching offers for listing ${listingId}`)
+    /*
+    Franck 24/09/2020 - Disabling fetching offers to try to bring graphql server alive from the dead...
     const allOffers = (
       await Promise.all(
         Array.from({ length: totalOffers }, (_, i) => i).map(id =>
@@ -322,6 +332,9 @@ class OriginEventSource {
         )
       )
     ).filter(offer => offer !== null)
+     */
+    const allOffers = []
+    console.log(`Found ${allOffers.length} for listing ${listingId}`)
 
     // Compute fields from valid offers
     // The "deposit" on a listing is actualy the amount of OGN available to
@@ -430,14 +443,18 @@ class OriginEventSource {
     const cacheKey = `${listingId}-${offerId}-${blockNumber}`
     if (process.env.DISABLE_CACHE !== 'true' && this.offerCache[cacheKey]) {
       return this.offerCache[cacheKey]
+    } else {
+      console.log(`Cache miss for offer ${cacheKey}`)
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
 
+    console.log(`Fetching events for offer ${offerId}...`)
     const events = await this.contract.eventCache.getEvents({
       listingID: String(listingId),
       offerID: String(offerId)
     })
+    console.log(`Found ${events.length} events for ${offerId}`)
 
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
