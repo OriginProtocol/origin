@@ -6,3 +6,5 @@ dshopBackendRinkebyDBInstance: origin-214503:us-west1:dshop-rinkeby0
 dshopBackendRinkebyRedisURL: redis://localhost:6379/0
 dshopBackendRinkebyLogLevel: DEBUG
 dshopStorageIP: 10.11.92.98
+dshopIssuerMainnetIp: 35.230.64.141
+dshopIssuerRinkebyIp: 35.233.249.109
