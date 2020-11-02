@@ -14,3 +14,7 @@ dshopBackendStorageRequestSize: 1T
 
 dshopRedisImage: redis
 dshopRedisImageTag: 6.0
+
+# dshop-issuer
+dshopIssuerImage: origin-dapp-creator-issuer
+dshopIssuerImageTag: latest
