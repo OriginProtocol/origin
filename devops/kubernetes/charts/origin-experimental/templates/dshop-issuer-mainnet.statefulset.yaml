@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: dshop-issuer-mainnet
-        image: "{{ .Values.containerRegistry }}/staging/{{ .Values.dshopIssuerImage }}:{{ .Values.dshopIssuerImageTag }}"
+        image: "{{ .Values.containerRegistry }}/prod/{{ .Values.dshopIssuerImage }}:{{ .Values.dshopIssuerImageTag }}"
         imagePullPolicy: Always
         ports:
           - containerPort: 80
