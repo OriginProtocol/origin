@@ -105,7 +105,7 @@ http {
       proxy_buffering off;
 
       more_clear_headers "Server: ";
-      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
       more_set_headers "X-Content-Type-Options: nosniff";
       more_set_headers "X-XSS-Protection: 1";
       more_set_headers "Strict-Transport-Security: max-age=31536000";
