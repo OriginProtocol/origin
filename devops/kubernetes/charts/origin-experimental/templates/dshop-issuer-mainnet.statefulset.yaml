@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "dshop-issuer-mainnet.fullname" . }}
+  labels:
+    app: {{ template "dshop-issuer-mainnet.fullname" . }}
+    app.kubernetes.io/name: dshop
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: dshop-backend-mainnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "dshop-issuer-mainnet.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "dshop-issuer-mainnet.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: dshop-issuer-mainnet
+        image: "{{ .Values.containerRegistry }}/prod/{{ .Values.dshopIssuerImage }}:{{ .Values.dshopIssuerImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        env:
+          - name: SERVER_ENDPOINT
+            value: "{{ template "dshopBackendMainnet.fullname" . }}-balancer.{{ .Release.Namespace }}.svc.cluster.local:3000"
+        volumeMounts:
+          - name: {{ template "dshop-issuer-mainnet.fullname" . }}-data
+            mountPath: /etc/resty-auto-ssl
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "dshop-issuer-mainnet.fullname" . }}-data
+    spec:
+      storageClassName: "standard"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi

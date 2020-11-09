@@ -55,6 +55,8 @@ spec:
             value: /data/dshop-cache/rinkeby
           - name: LOG_LEVEL
             value: {{ default "INFO" .Values.dshopBackendRinkebyLogLevel }}
+          - name: EXTERNAL_IP
+            value: {{ .Values.dshopIssuerRinkebyIp }}
         volumeMounts:
         - name: "{{ template "dshopBackendRinkeby.fullname" . }}-shared-cache"
           mountPath: /data/dshop-cache

@@ -55,6 +55,8 @@ spec:
             value: /data/dshop-cache/mainnet
           - name: LOG_LEVEL
             value: {{ default "INFO" .Values.dshopBackendMainnetLogLevel }}
+          - name: EXTERNAL_IP
+            value: {{ .Values.dshopIssuerMainnetIp }}
         volumeMounts:
         - name: "{{ template "dshopBackendMainnet.fullname" . }}-shared-cache"
           mountPath: /data/dshop-cache
