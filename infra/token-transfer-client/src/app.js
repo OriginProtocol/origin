@@ -47,7 +47,7 @@ const App = () => {
 
   const renderMobileWarning = () => {
     return (
-      <Modal appendToId="main" onClose={dismissMobileWarning} closeBtn={true}>
+      <Modal onClose={dismissMobileWarning} closeBtn={true}>
         <h1 className="mb-4">Small Screen</h1>
         <p>
           The Origin Investor Portal is intended to be used with a larger
