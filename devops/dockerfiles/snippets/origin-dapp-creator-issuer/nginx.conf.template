@@ -105,13 +105,13 @@ http {
       proxy_buffering off;
 
       more_clear_headers "Server: ";
-      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
       more_set_headers "X-Content-Type-Options: nosniff";
       more_set_headers "X-XSS-Protection: 1";
       more_set_headers "Strict-Transport-Security: max-age=31536000";
       more_set_headers "Expect-CT: max-age=86400";
       more_set_headers "Feature-Policy: microphone 'none'";
-      more_set_headers "Content-Security-Policy: default-src https: 'unsafe-inline' 'unsafe-eval'";
+      more_set_headers "Content-Security-Policy: default-src https: 'unsafe-inline' 'unsafe-eval'; img-src https: data: blob:; frame-src https: 'unsafe-inline' 'unsafe-eval';";
     }
   }
 }
