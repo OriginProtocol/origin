@@ -64,7 +64,6 @@ const Dashboard = props => {
   return (
     <>
       {renderModals()}
-
       {displayFullWidthLockupCta && (
         <StakeBanner fullWidth={true} />
       )} 

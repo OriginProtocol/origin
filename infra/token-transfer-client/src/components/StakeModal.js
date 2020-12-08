@@ -3,6 +3,8 @@ import React from 'react'
 import { DataContext } from '@/providers/data'
 import Modal from '@/components/Modal'
 
+const STAKE_URL = process.env.STAKE_URL || "https://ousd.com/stake"
+
 class StakeModel extends React.Component {
   static contextType = DataContext
 
@@ -33,12 +35,13 @@ class StakeModel extends React.Component {
           <div className="actions">
             <div className="row text-center">
               <div className="col">
-                <button
-                  className="btn btn-primary btn-lg"
-                  onClick={() => this.setState({ modalState: 'Form' })}
-                >
-                  Get started
-              </button>
+              <a
+                className="btn btn-primary btn-lg"
+                href={STAKE_URL}
+                target="_blank"
+              >
+                Get started
+              </a>
               </div>
             </div>
           </div>
