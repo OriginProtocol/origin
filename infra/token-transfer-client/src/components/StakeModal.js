@@ -1,0 +1,52 @@
+import React from 'react'
+
+import { DataContext } from '@/providers/data'
+import Modal from '@/components/Modal'
+
+class StakeModel extends React.Component {
+  static contextType = DataContext
+
+  constructor(props, context) {
+    super(props)
+  }
+
+  handleModalClose = () => {
+    if (this.props.onModalClose) {
+      this.props.onModalClose()
+    }
+  }
+
+  render() {
+    return (
+      <Modal
+        appendToId="private"
+        onClose={this.handleModalClose}
+        closeBtn={true}
+        className="stake-model"
+      > 
+        <div className="stake-model-content d-flex flex-column d-flex align-items-center justify-content-end">
+          <div className="stake-model-text">
+
+            <h1>Staking OGN has moved</h1>
+            <p>As part of the Origin Dollar governance project, OGN staking has moved to OUSD.com</p>
+          </div>
+          <div className="actions">
+            <div className="row text-center">
+              <div className="col">
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={() => this.setState({ modalState: 'Form' })}
+                >
+                  Get started
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    )
+  }
+
+}
+
+export default StakeModel

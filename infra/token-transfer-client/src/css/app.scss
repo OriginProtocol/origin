@@ -300,6 +300,151 @@ input, select {
 }
 
 /*
+ * StakeModel
+ */
+ .stake-model {
+  padding: 0px !important;
+ }
+
+ .stake-model-content {
+  background-image: url('../assets/coins-icon.svg');
+  background-position-y: top;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  min-height: 450px;
+ }
+
+ .stake-model-content .actions {
+  margin-bottom: 0px;
+  width: 100%;
+ }
+
+ .stake-model-text {
+  max-width: 400px;
+  padding: 0 10px;
+ }
+
+ .stake-model-text h1 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--white);
+ }
+
+ .stake-model-text p {
+  font-size: 1rem;
+  color: #bdcbd5;
+ }
+
+ .stake-model .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  margin: 0px;
+ }
+
+ @media (max-width: 768px) {
+  .stake-model-content{
+    background-position-y: -30px;
+  }
+}
+
+/*
+ * StakeBanner
+ */
+
+ .card-wrapper.stake {
+  margin-bottom: 10px;
+  background-color: var(--blue);
+  padding: 0px;
+  padding-right: 25px;
+  padding-left:0px;
+  overflow: hidden;
+}
+.card-wrapper.stake-card {
+  flex-direction: column !important;
+  height: 100%;
+  padding: 37px;
+}
+.card-wrapper.stake-banner {
+  background-image: url('../assets/coins-image.svg');
+  background-position-y: top;
+  background-position-x: inherit;
+  background-repeat: no-repeat;
+  min-height: 106px;
+}
+.stake-banner .content {
+  margin-left: 150px;
+}
+ .stake .content h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.04;
+  color: #ffffff;
+  margin: 0 0 5px 0;
+ }
+
+ .stake .content p {
+  font-size: 1rem;
+  color: #dbe6eb;
+  margin: 0px;
+ }
+
+ .stake button {
+  margin-left: auto;
+ }
+
+ .stake-card .content {
+  max-width: 480px;
+ }
+
+ .stake-card .coins-image {
+   display: none;
+ }
+
+ .stake-card button {
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 0px;
+  }
+
+ .stake-card p {
+   margin: 20px 0px !important;
+  }
+
+ @media (max-width: 768px) {
+  .stake .content h1 {
+    font-size: 1.2rem;
+  }
+  .card-wrapper.stake-banner {
+    flex-direction: column !important;
+    background-position-x: center;    
+    background-position-y: 20px;
+    height: auto;
+    padding: 25px;
+  }
+  
+  .stake-banner .content h1 {
+    // font-size: 18px;
+    margin: 17px 0px;
+  }
+  .stake-banner .content p {
+    display: none;
+  }
+  .stake-banner .coins-image{
+    margin: auto;
+  }
+  .stake-banner button {
+    margin-left: unset;
+  }
+  .stake-banner .content {
+    margin-left: unset;
+    margin-top: 105px;
+  }
+}
+
+
+/*
  * Tables
  */
 

@@ -4,13 +4,13 @@ import moment from 'moment'
 import BigNumber from 'bignumber.js'
 
 import { DataContext } from '@/providers/data'
-import BonusModal from '@/components/BonusModal'
+import StakeModal from '@/components/StakeModal'
 import LockupGraph from '@/components/LockupGraph'
 
 const Lockup = () => {
   const data = useContext(DataContext)
 
-  const [displayBonusModal, setDisplayBonusModal] = useState(false)
+  const [displayStakeModel, setDisplayStakeModel] = useState(false)
 
   const renderLockups = lockups => {
     const now = moment.utc()
@@ -108,8 +108,8 @@ const Lockup = () => {
 
   return (
     <>
-      {displayBonusModal && (
-        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
+      {displayStakeModel && (
+        <StakeModal onModalClose={() => setDisplayStakeModel(false)} />
       )}
 
       <div className="row align-items-center">
@@ -135,7 +135,7 @@ const Lockup = () => {
           <div className="col text-md-right">
             <button
               className="btn btn-lg btn-primary mt-4 mt-md-0"
-              onClick={() => setDisplayBonusModal(true)}
+              onClick={() => setDisplayStakeModel(true)}
               disabled={!data.config.lockupsEnabled}
             >
               Start Earning

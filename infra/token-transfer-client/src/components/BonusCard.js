@@ -38,7 +38,6 @@ const BonusCard = ({ onDisplayBonusModal }) => {
 
   return (
     <BorderedCard>
-      <div className="hot-badge bg-red">HOT</div>
       <div className="row">
         <div className="col-12 col-md-6">
           <h2>Bonus Tokens</h2>
