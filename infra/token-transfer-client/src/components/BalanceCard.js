@@ -139,9 +139,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
                   <div className="status-circle bg-blue"></div>
                 </div>
                 <div className="col">
-                  <div>
-                    Locked Bonus Tokens
-                  </div>
+                  <div>Locked Bonus Tokens</div>
                   <div
                     className="mr-1 mb-2 d-inline-block font-weight-bold"
                     style={{ fontSize: '32px' }}

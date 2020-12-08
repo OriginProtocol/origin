@@ -3,7 +3,7 @@ import React from 'react'
 import { DataContext } from '@/providers/data'
 import Modal from '@/components/Modal'
 
-const STAKE_URL = process.env.STAKE_URL || "https://ousd.com/stake"
+const STAKE_URL = process.env.STAKE_URL || 'https://ousd.com/stake'
 
 class StakeModel extends React.Component {
   static contextType = DataContext
@@ -25,23 +25,25 @@ class StakeModel extends React.Component {
         onClose={this.handleModalClose}
         closeBtn={true}
         className="stake-model"
-      > 
+      >
         <div className="stake-model-content d-flex flex-column d-flex align-items-center justify-content-end">
           <div className="stake-model-text">
-
             <h1>Staking OGN has moved</h1>
-            <p>As part of the Origin Dollar governance project, OGN staking has moved to OUSD.com</p>
+            <p>
+              As part of the Origin Dollar governance project, OGN staking has
+              moved to OUSD.com
+            </p>
           </div>
           <div className="actions">
             <div className="row text-center">
               <div className="col">
-              <a
-                className="btn btn-primary btn-lg"
-                href={STAKE_URL}
-                target="_blank"
-              >
-                Get started
-              </a>
+                <a
+                  className="btn btn-primary btn-lg"
+                  href={STAKE_URL}
+                  target="_blank"
+                >
+                  Get started
+                </a>
               </div>
             </div>
           </div>
@@ -49,7 +51,6 @@ class StakeModel extends React.Component {
       </Modal>
     )
   }
-
 }
 
 export default StakeModel

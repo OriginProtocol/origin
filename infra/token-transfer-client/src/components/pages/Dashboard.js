@@ -34,9 +34,7 @@ const Dashboard = props => {
   const renderModals = () => (
     <>
       {displayStakeModel && (
-        <StakeModal
-          onModalClose={() => setDisplayStakeModel(false)}
-        />
+        <StakeModal onModalClose={() => setDisplayStakeModel(false)} />
       )}
       {displayWithdrawModal && (
         <WithdrawModal
@@ -64,9 +62,7 @@ const Dashboard = props => {
   return (
     <>
       {renderModals()}
-      {displayFullWidthLockupCta && (
-        <StakeBanner fullWidth={true} />
-      )} 
+      {displayFullWidthLockupCta && <StakeBanner fullWidth={true} />}
       <div className="row small-gutter">
         <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-10`}>
           <BalanceCard
@@ -74,7 +70,7 @@ const Dashboard = props => {
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
-        
+
         {displayLockupCta && !displayFullWidthLockupCta && (
           <div className="col mb-10">
             <StakeBanner />
