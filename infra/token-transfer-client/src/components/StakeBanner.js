@@ -9,7 +9,9 @@ const StakeBanner = ({ fullWidth }) => {
     <>
       <BorderedCard
         className={`d-flex stake${
-          fullWidth ? ' stake-banner align-items-center' : ' justify-content-between blue stake-card'
+          fullWidth
+            ? ' stake-banner align-items-center'
+            : ' justify-content-between blue stake-card'
         }`}
       >
         {fullWidth && <CoinsIcon />}
