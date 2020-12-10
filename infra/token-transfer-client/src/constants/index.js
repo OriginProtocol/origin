@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
     apiUrl = process.env.INVESTOR_API_URL
   }
 } else {
-  apiUrl = 'http://103.228.153.6:5000'
+  apiUrl = process.env.API_URL || 'http://localhost:5000'
 }
 
 export { apiUrl, pageTitle }

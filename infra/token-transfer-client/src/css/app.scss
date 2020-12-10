@@ -356,7 +356,9 @@ input, select {
 /*
  * CoinIcon
  */
-
+ .coins-icon {
+  min-width: 98px;
+}
 .coins-icon .ogn-coin {
   margin-left: -10px;
 }
@@ -375,6 +377,12 @@ input, select {
   flex-direction: column !important;
   height: 100%;
   padding: 35px;
+}
+.card-wrapper.stake-banner {
+  background-image: url('../assets/coin-waves-rectangle.svg');
+  background-position-y: top;
+  background-position-x: inherit;
+  background-repeat: repeat-y;
 }
 .stake-banner .content {
   margin-left: 25px;
@@ -419,9 +427,10 @@ input, select {
     font-size: 1.2rem;
   }
   .card-wrapper.stake-banner {
+    background-image: url('../assets/coin-waves-circle.svg');
     flex-direction: column !important;
-    background-position-x: center;    
-    background-position-y: 20px;
+    background-position-x: center;
+    background-position-y: top;
     height: auto;
     padding: 25px;
   }
