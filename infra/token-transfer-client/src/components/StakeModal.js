@@ -5,7 +5,7 @@ import Modal from '@/components/Modal'
 
 const STAKE_URL = process.env.STAKE_URL || 'https://ousd.com/stake'
 
-class StakeModel extends React.Component {
+class StakeModal extends React.Component {
   static contextType = DataContext
 
   constructor(props, context) {
@@ -24,10 +24,10 @@ class StakeModel extends React.Component {
         appendToId="private"
         onClose={this.handleModalClose}
         closeBtn={true}
-        className="stake-model"
+        className="stake-modal"
       >
-        <div className="stake-model-content d-flex flex-column d-flex align-items-center justify-content-end">
-          <div className="stake-model-text">
+        <div className="stake-modal-content d-flex flex-column d-flex align-items-center justify-content-end">
+          <div className="stake-modal-text">
             <h1>Staking OGN has moved</h1>
             <p>
               As part of the Origin Dollar governance project, OGN staking has
@@ -53,4 +53,4 @@ class StakeModel extends React.Component {
   }
 }
 
-export default StakeModel
+export default StakeModal

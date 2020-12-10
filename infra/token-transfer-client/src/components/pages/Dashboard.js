@@ -20,21 +20,20 @@ import StakeBanner from '@/components/StakeBanner'
 const Dashboard = props => {
   const data = useContext(DataContext)
 
-  const [displayStakeModel, setDisplayStakeModel] = useState(false)
+  const [displayStakeModal, setDisplayStakeModal] = useState(false)
   const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
   const [displayOtcRequestModal, setDisplayOtcRequestModal] = useState(false)
 
   const isEmployee = !!get(props.user, 'employee')
   const nextVest = getNextVest(data.grants, props.user)
   const hasLockups = data.lockups.length > 0
-  const displayLockupCta =
-    nextVest && data.config.earlyLockupsEnabled && !data.config.isLocked
+  const displayLockupCta = nextVest && data.config.earlyLockupsEnabled && !data.config.isLocked
   const displayFullWidthLockupCta = displayLockupCta && hasLockups
 
   const renderModals = () => (
     <>
-      {displayStakeModel && (
-        <StakeModal onModalClose={() => setDisplayStakeModel(false)} />
+      {displayStakeModal && (
+        <StakeModal onModalClose={() => setDisplayStakeModal(false)} />
       )}
       {displayWithdrawModal && (
         <WithdrawModal
@@ -46,7 +45,7 @@ const Dashboard = props => {
           nextVest={nextVest}
           onCreateLockup={() => {
             setDisplayWithdrawModal(false)
-            setDisplayStakeModel(true)
+            setDisplayStakeModal(true)
           }}
           onModalClose={() => setDisplayWithdrawModal(false)}
         />
@@ -66,7 +65,7 @@ const Dashboard = props => {
       <div className="row small-gutter">
         <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-10`}>
           <BalanceCard
-            onDisplayBonusModal={() => setDisplayStakeModel(true)}
+            onDisplayBonusModal={() => setDisplayStakeModal(true)}
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
@@ -78,7 +77,7 @@ const Dashboard = props => {
         )}
         {hasLockups && (
           <div className="col mb-10">
-            <BonusCard onDisplayBonusModal={() => setDisplayStakeModel(true)} />
+            <BonusCard onDisplayBonusModal={() => setDisplayStakeModal(true)} />
           </div>
         )}
       </div>

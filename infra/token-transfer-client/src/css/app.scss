@@ -300,13 +300,14 @@ input, select {
 }
 
 /*
- * StakeModel
+ * StakeModal
  */
- .stake-model {
+ .stake-modal {
   padding: 0px !important;
  }
 
- .stake-model-content {
+ .stake-modal-content {
+  background-color: #244159;
   background-image: url('../assets/coins-icon.svg');
   background-position-y: top;
   background-position-x: center;
@@ -314,29 +315,31 @@ input, select {
   min-height: 450px;
  }
 
- .stake-model-content .actions {
+ .stake-modal-content .actions {
+  box-shadow: 0 -1px 0 0 #345d7a;;
+  background-color: #244159;
   margin-bottom: 0px;
   width: 100%;
  }
 
- .stake-model-text {
+ .stake-modal-text {
   max-width: 400px;
   padding: 0 10px;
  }
 
- .stake-model-text h1 {
+ .stake-modal-text h1 {
   margin-bottom: 10px;
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--white);
  }
 
- .stake-model-text p {
+ .stake-modal-text p {
   font-size: 1rem;
   color: #bdcbd5;
  }
 
- .stake-model .close {
+ .stake-modal .close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -344,9 +347,18 @@ input, select {
  }
 
  @media (max-width: 768px) {
-  .stake-model-content{
+  .stake-modal-content{
     background-position-y: -30px;
+    min-height: 425px;
   }
+}
+
+/*
+ * CoinIcon
+ */
+
+.coins-icon .ogn-coin {
+  margin-left: -10px;
 }
 
 /*
@@ -355,26 +367,17 @@ input, select {
 
  .card-wrapper.stake {
   margin-bottom: 10px;
-  background-color: var(--blue);
-  padding: 0px;
-  padding-right: 25px;
-  padding-left:0px;
+  background-color: var(--blue);    
+  padding: 25px;
   overflow: hidden;
 }
 .card-wrapper.stake-card {
   flex-direction: column !important;
   height: 100%;
-  padding: 37px;
-}
-.card-wrapper.stake-banner {
-  background-image: url('../assets/coins-image.svg');
-  background-position-y: top;
-  background-position-x: inherit;
-  background-repeat: no-repeat;
-  min-height: 106px;
+  padding: 35px;
 }
 .stake-banner .content {
-  margin-left: 150px;
+  margin-left: 25px;
 }
  .stake .content h1 {
   font-size: 1.5rem;
@@ -383,7 +386,6 @@ input, select {
   color: #ffffff;
   margin: 0 0 5px 0;
  }
-
  .stake .content p {
   font-size: 1rem;
   color: #dbe6eb;
@@ -425,8 +427,7 @@ input, select {
   }
   
   .stake-banner .content h1 {
-    // font-size: 18px;
-    margin: 17px 0px;
+    margin: 25px 0px;
   }
   .stake-banner .content p {
     display: none;
@@ -439,7 +440,6 @@ input, select {
   }
   .stake-banner .content {
     margin-left: unset;
-    margin-top: 105px;
   }
 }
 

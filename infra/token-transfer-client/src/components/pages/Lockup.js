@@ -10,7 +10,7 @@ import LockupGraph from '@/components/LockupGraph'
 const Lockup = () => {
   const data = useContext(DataContext)
 
-  const [displayStakeModel, setDisplayStakeModel] = useState(false)
+  const [displayStakeModal, setDisplayStakeModal] = useState(false)
 
   const renderLockups = lockups => {
     const now = moment.utc()
@@ -108,8 +108,8 @@ const Lockup = () => {
 
   return (
     <>
-      {displayStakeModel && (
-        <StakeModal onModalClose={() => setDisplayStakeModel(false)} />
+      {displayStakeModal && (
+        <StakeModal onModalClose={() => setDisplayStakeModal(false)} />
       )}
 
       <div className="row align-items-center">
@@ -135,7 +135,7 @@ const Lockup = () => {
           <div className="col text-md-right">
             <button
               className="btn btn-lg btn-primary mt-4 mt-md-0"
-              onClick={() => setDisplayStakeModel(true)}
+              onClick={() => setDisplayStakeModal(true)}
               disabled={!data.config.lockupsEnabled}
             >
               Start Earning

@@ -1,5 +1,6 @@
 import React from 'react'
 import BorderedCard from '@/components/BorderedCard'
+import CoinsIcon from '@/components/CoinsIcon'
 
 const STAKE_URL = process.env.STAKE_URL || 'https://ousd.com/stake'
 
@@ -7,11 +8,11 @@ const StakeBanner = ({ fullWidth }) => {
   return (
     <>
       <BorderedCard
-        className={`d-flex stake justify-content-between${
-          fullWidth ? ' stake-banner align-items-center' : ' blue stake-card'
+        className={`d-flex stake${
+          fullWidth ? ' stake-banner align-items-center' : ' justify-content-between blue stake-card'
         }`}
       >
-        {/* <CoinsImage className="coins-image" /> */}
+        {fullWidth && <CoinsIcon />}
         <div className="content">
           <h1>Stake OGN on OUSD.com</h1>
           <p>
@@ -20,7 +21,7 @@ const StakeBanner = ({ fullWidth }) => {
           </p>
         </div>
         <a
-          className={`btn btn-lg btn-dark text-nowrap`}
+          className={`btn btn-lg btn-dark text-nowrap ml-md-auto`}
           href={STAKE_URL}
           target="_blank"
         >
