@@ -86,7 +86,9 @@ function getClientEnvironment(publicUrl) {
         'NODE_ENV',
         'OTC_REQUEST_ENABLED',
         'INVESTOR_UNLOCK_DATE',
-        'TEAM_UNLOCK_DATE'
+        'TEAM_UNLOCK_DATE',
+        'STAKE_URL',
+        'API_URL'
       ]
       if (whitelist.includes(key)) {
         env[key] = JSON.stringify(raw[key])

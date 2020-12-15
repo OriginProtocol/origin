@@ -7,13 +7,11 @@ import moment from 'moment'
 import { DataContext } from '@/providers/data'
 import BorderedCard from '@/components/BorderedCard'
 import DropdownDotsToggle from '@/components/DropdownDotsToggle'
-import LockupDescModal from '@/components/modal/LockupDescModal'
 
 const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
   const data = useContext(DataContext)
 
   const [redirectTo, setRedirectTo] = useState(false)
-  const [displayLockupDescModal, setDisplayLockupDescModal] = useState(false)
 
   const doughnutData = () => {
     return {
@@ -69,15 +67,6 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
 
   return (
     <>
-      {displayLockupDescModal && (
-        <LockupDescModal
-          handleModalClose={() => setDisplayLockupDescModal(false)}
-          onEarnBonusClick={() => {
-            setDisplayLockupDescModal(false)
-            onDisplayBonusModal()
-          }}
-        />
-      )}
       <BorderedCard>
         <div className="row header mb-3">
           <div className="col">
@@ -150,19 +139,7 @@ const BalanceCard = ({ onDisplayBonusModal, onDisplayWithdrawModal }) => {
                   <div className="status-circle bg-blue"></div>
                 </div>
                 <div className="col">
-                  <div>
-                    Locked Bonus Tokens{' '}
-                    <a
-                      href="#"
-                      onClick={event => {
-                        event.preventDefault()
-                        setDisplayLockupDescModal(true)
-                      }}
-                      className="ml-md-2"
-                    >
-                      What is this?
-                    </a>
-                  </div>
+                  <div>Locked Bonus Tokens</div>
                   <div
                     className="mr-1 mb-2 d-inline-block font-weight-bold"
                     style={{ fontSize: '32px' }}

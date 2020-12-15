@@ -136,6 +136,7 @@ const webpackConfig = {
       NODE_ENV: process.env.NODE_ENV || 'development',
       CLIENT_SENTRY_DSN: process.env.CLIENT_SENTRY_DSN || '',
       TEAM_API_URL: process.env.TEAM_API_URL || 'http://localhost:5000',
+      API_URL: process.env.API_URL || 'http://localhost:5000',
       ENABLE_GA: process.env.ENABLE_GA || false,
       INVESTOR_API_URL: process.env.INVESTOR_API_URL || 'http://localhost:5000'
     })

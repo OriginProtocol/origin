@@ -10,34 +10,28 @@ import VestingCard from '@/components/VestingCard'
 import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
-import BonusModal from '@/components/BonusModal'
-import BonusCta from '@/components/BonusCta'
+import StakeModal from '@/components/StakeModal'
 import WithdrawModal from '@/components/WithdrawModal'
 import OtcRequestModal from '@/components/OtcRequestModal'
+import StakeBanner from '@/components/StakeBanner'
 
 const Dashboard = props => {
   const data = useContext(DataContext)
 
-  const [displayBonusModal, setDisplayBonusModal] = useState(false)
+  const [displayStakeModal, setDisplayStakeModal] = useState(false)
   const [displayWithdrawModal, setDisplayWithdrawModal] = useState(false)
   const [displayOtcRequestModal, setDisplayOtcRequestModal] = useState(false)
 
   const isEmployee = !!get(props.user, 'employee')
   const nextVest = getNextVest(data.grants, props.user)
   const hasLockups = data.lockups.length > 0
-  const displayLockupCta =
-    nextVest && data.config.earlyLockupsEnabled && !data.config.isLocked
+  const displayLockupCta = nextVest && !data.config.isLocked
   const displayFullWidthLockupCta = displayLockupCta && hasLockups
-  const isEarlyLockup = displayBonusModal === 'early'
 
   const renderModals = () => (
     <>
-      {displayBonusModal && (
-        <BonusModal
-          nextVest={nextVest}
-          isEarlyLockup={isEarlyLockup}
-          onModalClose={() => setDisplayBonusModal(false)}
-        />
+      {displayStakeModal && (
+        <StakeModal onModalClose={() => setDisplayStakeModal(false)} />
       )}
       {displayWithdrawModal && (
         <WithdrawModal
@@ -49,7 +43,7 @@ const Dashboard = props => {
           nextVest={nextVest}
           onCreateLockup={() => {
             setDisplayWithdrawModal(false)
-            setDisplayBonusModal('early')
+            setDisplayStakeModal(true)
           }}
           onModalClose={() => setDisplayWithdrawModal(false)}
         />
@@ -65,46 +59,23 @@ const Dashboard = props => {
   return (
     <>
       {renderModals()}
-
-      {displayFullWidthLockupCta && (
-        <div className="row small-gutter">
-          <div className="col mb-10">
-            <BonusCta
-              fullWidth={true}
-              nextVest={nextVest}
-              lockupBonusRate={
-                data.config.earlyLockupsEnabled
-                  ? data.config.earlyLockupBonusRate
-                  : data.config.lockupBonusRate
-              }
-              onDisplayBonusModal={() => setDisplayBonusModal('early')}
-            />
-          </div>
-        </div>
-      )}
+      {displayFullWidthLockupCta && <StakeBanner fullWidth={true} />}
       <div className="row small-gutter">
         <div className={`${data.config.isLocked ? 'col-12' : 'col'} mb-10`}>
           <BalanceCard
-            onDisplayBonusModal={() => setDisplayBonusModal(true)}
+            onDisplayBonusModal={() => setDisplayStakeModal(true)}
             onDisplayWithdrawModal={() => setDisplayWithdrawModal(true)}
           />
         </div>
+
         {displayLockupCta && !displayFullWidthLockupCta && (
           <div className="col mb-10">
-            <BonusCta
-              nextVest={nextVest}
-              lockupBonusRate={
-                data.config.earlyLockupsEnabled
-                  ? data.config.earlyLockupBonusRate
-                  : data.config.lockupBonusRate
-              }
-              onDisplayBonusModal={() => setDisplayBonusModal('early')}
-            />
+            <StakeBanner />
           </div>
         )}
         {hasLockups && (
           <div className="col mb-10">
-            <BonusCard onDisplayBonusModal={() => setDisplayBonusModal(true)} />
+            <BonusCard onDisplayBonusModal={() => setDisplayStakeModal(true)} />
           </div>
         )}
       </div>
