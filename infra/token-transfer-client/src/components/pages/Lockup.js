@@ -138,7 +138,7 @@ const Lockup = () => {
               onClick={() => setDisplayStakeModal(true)}
               disabled={!data.config.lockupsEnabled}
             >
-              Start Earning
+              Earn OGN
             </button>
           </div>
         )}
