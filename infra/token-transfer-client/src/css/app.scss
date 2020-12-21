@@ -300,6 +300,160 @@ input, select {
 }
 
 /*
+ * StakeModal
+ */
+ .stake-modal {
+  padding: 0px !important;
+ }
+
+ .stake-modal-content {
+  background-color: #244159;
+  background-image: url('../assets/coins-icon.svg');
+  background-position-y: top;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  min-height: 450px;
+ }
+
+ .stake-modal-content .actions {
+  box-shadow: 0 -1px 0 0 #345d7a;;
+  background-color: #244159;
+  margin-bottom: 0px;
+  width: 100%;
+ }
+
+ .stake-modal-text {
+  max-width: 400px;
+  padding: 0 10px;
+ }
+
+ .stake-modal-text h1 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--white);
+ }
+
+ .stake-modal-text p {
+  font-size: 1rem;
+  color: #bdcbd5;
+ }
+
+ .stake-modal .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  margin: 0px;
+ }
+
+ @media (max-width: 768px) {
+  .stake-modal-content{
+    background-position-y: -30px;
+    min-height: 425px;
+  }
+}
+
+/*
+ * CoinIcon
+ */
+ .coins-icon {
+  min-width: 98px;
+}
+.coins-icon .ogn-coin {
+  margin-left: -10px;
+}
+
+/*
+ * StakeBanner
+ */
+
+ .card-wrapper.stake {
+  margin-bottom: 10px;
+  background-color: var(--blue);    
+  padding: 25px;
+  overflow: hidden;
+}
+.card-wrapper.stake-card {
+  flex-direction: column !important;
+  height: 100%;
+  padding: 35px;
+}
+.card-wrapper.stake-banner {
+  background-image: url('../assets/coin-waves-rectangle.svg');
+  background-position-y: top;
+  background-position-x: inherit;
+  background-repeat: repeat-y;
+}
+.stake-banner .content {
+  margin-left: 25px;
+}
+ .stake .content h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.04;
+  color: #ffffff;
+  margin: 0 0 5px 0;
+ }
+ .stake .content p {
+  font-size: 1rem;
+  color: #dbe6eb;
+  margin: 0px;
+ }
+
+ .stake button {
+  margin-left: auto;
+ }
+
+ .stake-card .content {
+  max-width: 480px;
+ }
+
+ .stake-card .coins-image {
+   display: none;
+ }
+
+ .stake-card button {
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 0px;
+  }
+
+ .stake-card p {
+   margin: 20px 0px !important;
+  }
+
+ @media (max-width: 768px) {
+  .stake .content h1 {
+    font-size: 1.2rem;
+  }
+  .card-wrapper.stake-banner {
+    background-image: url('../assets/coin-waves-circle.svg');
+    flex-direction: column !important;
+    background-position-x: center;
+    background-position-y: top;
+    height: auto;
+    padding: 25px;
+  }
+  
+  .stake-banner .content h1 {
+    margin: 25px 0px;
+  }
+  .stake-banner .content p {
+    display: none;
+  }
+  .stake-banner .coins-image{
+    margin: auto;
+  }
+  .stake-banner button {
+    margin-left: unset;
+  }
+  .stake-banner .content {
+    margin-left: unset;
+  }
+}
+
+
+/*
  * Tables
  */
 

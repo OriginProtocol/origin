@@ -38,7 +38,6 @@ const BonusCard = ({ onDisplayBonusModal }) => {
 
   return (
     <BorderedCard>
-      <div className="hot-badge bg-red">HOT</div>
       <div className="row">
         <div className="col-12 col-md-6">
           <h2>Bonus Tokens</h2>
@@ -82,16 +81,18 @@ const BonusCard = ({ onDisplayBonusModal }) => {
           </div>
         </div>
       </div>
-      <div className="row mt-3">
-        <div className="col text-center">
-          <button
-            className="btn btn-lg btn-primary"
-            onClick={onDisplayBonusModal}
-          >
-            Earn OGN
-          </button>
-        </div>
-      </div>
+      {/*
+          <div className="row mt-3">
+            <div className="col text-center">
+              <button
+                className="btn btn-lg btn-primary"
+                onClick={onDisplayBonusModal}
+              >
+                Earn OGN
+              </button>
+            </div>
+          </div>
+        */}
     </BorderedCard>
   )
 }
