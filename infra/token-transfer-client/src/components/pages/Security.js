@@ -19,18 +19,18 @@ const Security = ({ user }) => {
         <div className="col-xs-12 col-lg-6 mb-4">
           <BorderedCard>
             <div className="row">
-              <div className="col-xl-6">
+              <div className="col-md-10">
                 <strong style={{ fontSize: '18px' }}>
                   {get(user, 'email')}
                 </strong>
               </div>
-              <div className="col-xl-6 text-xl-right">
+              <div className="col-md-2 text-md-right">
                 <a
                   href="mailto:investor-relations@originprotocol.com?subject=Change Investor Email"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Change Email
+                  Change
                 </a>
               </div>
             </div>
@@ -51,9 +51,7 @@ const Security = ({ user }) => {
                 <GoogleAuthenticatorIcon width="100%" height="100%" />
               </div>
               <div className="col-md-8">
-                <strong style={{ fontSize: '18px' }}>
-                  Google Authenticator
-                </strong>
+                <strong style={{ fontSize: '18px' }}>2FA</strong>
               </div>
               <div className="col-md-2 text-md-right">
                 <a
