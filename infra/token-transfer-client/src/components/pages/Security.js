@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import get from 'lodash.get'
 
 import { DataContext } from '@/providers/data'
@@ -6,9 +6,11 @@ import BorderedCard from '@/components/BorderedCard'
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import AccountTable from '@/components/AccountTable'
 import SessionTable from '@/components/SessionTable'
+import OtpModal from '@/components/OtpModal'
 
 const Security = ({ user }) => {
   const data = useContext(DataContext)
+  const [displayOtpModal, setDisplayOtpModal] = useState(false)
 
   return (
     <>
@@ -54,8 +56,14 @@ const Security = ({ user }) => {
                 </strong>
               </div>
               <div className="col-md-2 text-md-right">
-                <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">
-                  Help
+                <a
+                  href=""
+                  onClick={e => {
+                    e.preventDefault()
+                    setDisplayOtpModal(true)
+                  }}
+                >
+                  Change
                 </a>
               </div>
             </div>
@@ -70,6 +78,10 @@ const Security = ({ user }) => {
       <div className="mb-4">
         <SessionTable />
       </div>
+
+      {displayOtpModal && (
+        <OtpModal onModalClose={() => setDisplayOtpModal(false)} />
+      )}
     </>
   )
 }
