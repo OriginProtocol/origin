@@ -34,10 +34,9 @@ function submitOtpUpdatePending() {
   }
 }
 
-function submitOtpUpdateSuccess(payload) {
+function submitOtpUpdateSuccess() {
   return {
-    type: SUBMIT_OTP_UPDATE_SUCCESS,
-    payload
+    type: SUBMIT_OTP_UPDATE_SUCCESS
   }
 }
 
