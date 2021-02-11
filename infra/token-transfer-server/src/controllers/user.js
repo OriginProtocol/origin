@@ -7,7 +7,7 @@ const crypto = require('crypto')
 const qrcode = require('qrcode')
 
 const { discordWebhookUrl } = require('../config')
-const { postToWebhook } = require('./webhook')
+const { postToWebhook } = require('../lib/webhook')
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const {
