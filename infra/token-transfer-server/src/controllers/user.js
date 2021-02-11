@@ -124,8 +124,8 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    if (req.body.newCode) {
-      // If newCode is in body we are updating the uer model with the new
+    if (req.body.newCode && req.body.otpKey) {
+      // If newCode is in body we are updating the user model with the new
       // OTP key
       const encryptedKey = encrypt(req.body.otpKey)
       // Save
