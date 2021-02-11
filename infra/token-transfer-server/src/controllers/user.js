@@ -6,6 +6,8 @@ const base32 = require('thirty-two')
 const crypto = require('crypto')
 const qrcode = require('qrcode')
 
+const { discordWebhookUrl } = require('../config')
+const { postToWebhook } = require('./webhook')
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const {
@@ -19,6 +21,8 @@ const {
   Lockup,
   Sequelize: { Op }
 } = require('../models')
+
+const logger = require('../logger')
 
 /**
  * Returns the authenticated user.
@@ -130,6 +134,20 @@ router.post(
       const encryptedKey = encrypt(req.body.otpKey)
       // Save
       await req.user.update({ otpKey: encryptedKey, otpVerified: true })
+      try {
+        if (discordWebhookUrl) {
+          const webhookData = {
+            embeds: [
+              {
+                title: `2FA reset by \`${req.user.email}\``
+              }
+            ]
+          }
+          await postToWebhook(discordWebhookUrl, JSON.stringify(webhookData))
+        }
+      } catch (e) {
+        logger.error(`Failed sending Discord webhook for 2FA reset:`, e)
+      }
       // Nothing to do now, sucessfully reset
       res.send(200).end()
     } else {
