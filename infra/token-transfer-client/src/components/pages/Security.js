@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import get from 'lodash.get'
 
 import { DataContext } from '@/providers/data'
@@ -6,9 +6,11 @@ import BorderedCard from '@/components/BorderedCard'
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator.svg'
 import AccountTable from '@/components/AccountTable'
 import SessionTable from '@/components/SessionTable'
+import OtpModal from '@/components/OtpModal'
 
 const Security = ({ user }) => {
   const data = useContext(DataContext)
+  const [displayOtpModal, setDisplayOtpModal] = useState(false)
 
   return (
     <>
@@ -17,18 +19,18 @@ const Security = ({ user }) => {
         <div className="col-xs-12 col-lg-6 mb-4">
           <BorderedCard>
             <div className="row">
-              <div className="col-xl-6">
+              <div className="col-md-10">
                 <strong style={{ fontSize: '18px' }}>
                   {get(user, 'email')}
                 </strong>
               </div>
-              <div className="col-xl-6 text-xl-right">
+              <div className="col-md-2 text-md-right">
                 <a
                   href="mailto:investor-relations@originprotocol.com?subject=Change Investor Email"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Change Email
+                  Change
                 </a>
               </div>
             </div>
@@ -49,13 +51,17 @@ const Security = ({ user }) => {
                 <GoogleAuthenticatorIcon width="100%" height="100%" />
               </div>
               <div className="col-md-8">
-                <strong style={{ fontSize: '18px' }}>
-                  Google Authenticator
-                </strong>
+                <strong style={{ fontSize: '18px' }}>2FA</strong>
               </div>
               <div className="col-md-2 text-md-right">
-                <a href="mailto:investor-relations@originprotocol.com?subject=Help with Google Authenticator">
-                  Help
+                <a
+                  href=""
+                  onClick={e => {
+                    e.preventDefault()
+                    setDisplayOtpModal(true)
+                  }}
+                >
+                  Change
                 </a>
               </div>
             </div>
@@ -70,6 +76,10 @@ const Security = ({ user }) => {
       <div className="mb-4">
         <SessionTable />
       </div>
+
+      {displayOtpModal && (
+        <OtpModal onModalClose={() => setDisplayOtpModal(false)} />
+      )}
     </>
   )
 }

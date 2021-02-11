@@ -15,8 +15,7 @@ const { Account } = require('../models')
 const logger = require('../logger')
 
 /**
- * Return users accounts.
- */
+ * Return users accounts.  */
 router.get(
   '/accounts',
   ensureLoggedIn,

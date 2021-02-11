@@ -48,7 +48,7 @@
     "numeral": "2.0.6",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "prettier": "1.19.1",
-    "react": "16.13.1",
+    "react": "16.14.0",
     "react-app-polyfill": "1.0.6",
     "react-bootstrap": "1.0.0",
     "react-chartjs-2": "2.9.0",
