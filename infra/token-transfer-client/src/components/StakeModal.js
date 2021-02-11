@@ -28,7 +28,7 @@ class StakeModal extends React.Component {
       >
         <div className="stake-modal-content d-flex flex-column d-flex align-items-center justify-content-end">
           <div className="stake-modal-text">
-            <h1>Staking OGN has moved</h1>
+            <h1>OGN staking has moved</h1>
             <p>
               As part of the Origin Dollar governance project, OGN staking has
               moved to OUSD.com

@@ -341,4 +341,111 @@ describe('Login HTTP API', () => {
     // TODO stub the return from ip2geo
     expect(events[0].data.location).to.equal(null)
   })
+
+  it('should reject a totp change with an invalid totp', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        twoFA: true,
+        passport: {
+          user: this.user.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    await request(mockApp)
+      .post('/api/user/otp')
+      .send({ code: '123456' })
+      .expect(422)
+  })
+
+  it('should return a new otp key for verification with valid totp', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        twoFA: true,
+        passport: {
+          user: this.user.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    // Uses notp package, which is the same that is used by passport-totp
+    const totpToken = totp.gen(this.otpKey)
+
+    const response = await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode: totpToken })
+      .expect(200)
+
+    expect(response.body.encodedKey).to.be.a('string')
+    expect(response.body.otpKey).to.be.a('string')
+    expect(response.body.otpQrUrl).to.be.a('string')
+  })
+
+  it('should update totp with a valid totp and key combination', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        twoFA: true,
+        passport: {
+          user: this.user.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    // Uses notp package, which is the same that is used by passport-totp
+    const oldCode = totp.gen(this.otpKey)
+
+    const response = await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode })
+      .expect(200)
+
+    const newCode = totp.gen(response.body.otpKey)
+
+    await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode, newCode, otpKey: response.body.otpKey })
+      .expect(200)
+
+    // Send new code to verify it changed
+    await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode: newCode })
+      .expect(200)
+  })
+
+  it('should not update totp with an invalid totp and key combination', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        twoFA: true,
+        passport: {
+          user: this.user.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    // Uses notp package, which is the same that is used by passport-totp
+    const oldCode = totp.gen(this.otpKey)
+
+    const response = await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode })
+      .expect(200)
+
+    await request(mockApp)
+      .post('/api/user/otp')
+      .send({ oldCode, newCode: '123456', otpKey: response.body.otpKey })
+      .expect(422)
+  })
 })

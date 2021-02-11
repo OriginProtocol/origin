@@ -185,7 +185,6 @@ input, select {
 
 .input-group > .form-control {
   background-color: var(--bg-color);
-  border-right: 1px solid var(--card-bg-color);
   color: var(--text);
 }
 
@@ -369,7 +368,7 @@ input, select {
 
  .card-wrapper.stake {
   margin-bottom: 10px;
-  background-color: var(--blue);    
+  background-color: var(--blue);
   padding: 25px;
   overflow: hidden;
 }
@@ -434,7 +433,7 @@ input, select {
     height: auto;
     padding: 25px;
   }
-  
+
   .stake-banner .content h1 {
     margin: 25px 0px;
   }
