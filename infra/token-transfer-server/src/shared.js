@@ -122,8 +122,8 @@ function calculateLocked(lockups) {
       }
     }
     if (
-      lockup.start < moment.utc() && // Lockup has started
-      lockup.end > moment.utc() // Lockup has not yet ended
+      moment.utc(lockup.start).isBefore(moment.utc()) && // Lockup has started
+      moment.utc(lockup.end).isAfter(moment.utc()) // Lockup has not yet ended
     ) {
       // @ts-ignore
       return total.plus(BigNumber(lockup.amount))
