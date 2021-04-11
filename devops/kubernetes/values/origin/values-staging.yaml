@@ -71,11 +71,11 @@ graphqlImageTag: '3fbe4ff'
 
 # origin-t3-client
 t3ClientImage: origin-t3-client
-t3ClientImageTag: '53deaea'
+t3ClientImageTag: 'a8bd23a'
 
 # origin-t3-server
 t3ServerImage: origin-t3-server
-t3ServerImageTag: '1f4cfd1'
+t3ServerImageTag: '8002a1b'
 
 # origin-auth
 authImage: origin-auth
