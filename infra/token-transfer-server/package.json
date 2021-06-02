@@ -53,6 +53,7 @@
     "pg": "^8.0.0",
     "prettier": "^1.19.1",
     "qrcode": "^1.4.4",
+    "rate-limiter-flexible": "^2.2.2",
     "sequelize": "^5.21.5",
     "sequelize-cli": "^5.5.1",
     "sinon": "^9.0.1",

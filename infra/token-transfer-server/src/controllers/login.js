@@ -16,6 +16,7 @@ const { Event } = require('../models')
 const logger = require('../logger')
 const { sendLoginToken } = require('../lib/email')
 const { ensureLoggedIn } = require('../lib/login')
+const { rateLimiterMiddleware } = require('../rateLimiter')
 
 /**
  * Sends a login code by email.
@@ -95,6 +96,7 @@ router.post(
     },
     check('code').custom(isValidTotp)
   ],
+  rateLimiterMiddleware,
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
