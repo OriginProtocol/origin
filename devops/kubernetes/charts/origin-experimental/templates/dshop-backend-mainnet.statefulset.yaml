@@ -49,6 +49,11 @@ spec:
               secretKeyRef:
                 name: {{ template "dshopBackendMainnet.fullname" . }}
                 key: SENTRY_DSN
+          - name: NEW_SHOP_CREATION_DISABLED
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "dshopBackendMainnet.fullname" . }}
+                key: NEW_SHOP_CREATION_DISABLED
           - name: REDIS_URL
             value: "redis://{{ template "dshopRedisMainnet.fullname" . }}-0.{{ template "dshopRedisMainnet.fullname" . }}.experimental.svc.cluster.local:6379/0"
           - name: DSHOP_CACHE
