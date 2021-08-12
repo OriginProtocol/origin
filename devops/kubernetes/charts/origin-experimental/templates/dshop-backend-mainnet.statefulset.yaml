@@ -29,6 +29,8 @@ spec:
         env:
           - name: ENVIRONMENT
             value: prod
+          - name: NEW_SHOP_CREATION_DISABLED
+            value: "true"
           - name: ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
