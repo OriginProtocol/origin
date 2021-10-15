@@ -47,7 +47,7 @@
     "ipfs-pubsub-1on1": "0.0.6",
     "json-stable-stringify": "^1.0.1",
     "logplease": "^1.2.15",
-    "mocha": "^7.0.0",
+    "mocha": "^9.1.2",
     "nock": "^11.3.5",
     "orbit-db": "^0.23.0",
     "per-env": "^1.0.2",
