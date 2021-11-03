@@ -58,7 +58,7 @@
     "prettier": "^1.18.2",
     "redis": "^2.8.0",
     "sequelize": "^5.8.12",
-    "sequelize-cli": "^5.5.0",
+    "sequelize-cli": "^6.3.0",
     "sinon": "^8.0.0",
     "superagent": "^5.1.0",
     "web3": "1.0.0-beta.34"
