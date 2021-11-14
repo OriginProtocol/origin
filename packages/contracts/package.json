@@ -3,7 +3,7 @@
   "version": "0.8.6",
   "description": "",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "scripts": {
     "build": "per-env",

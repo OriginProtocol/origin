@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "API for Origin Investor Portal",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",

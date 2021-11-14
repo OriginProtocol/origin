@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Origin Notifications Service",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "repository": {
     "type": "git",
