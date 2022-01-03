@@ -65,7 +65,7 @@
     "prettier": "^1.18.2",
     "prom-client": "^11.5.3",
     "rlp": "^2.2.3",
-    "subscriptions-transport-ws": "^0.9.16",
+    "subscriptions-transport-ws": "^0.11.0",
     "web3": "1.0.0-beta.34"
   },
   "prettier": {
@@ -96,7 +96,7 @@
     "@babel/preset-env": "7.9.5",
     "@babel/preset-react": "7.9.4",
     "@babel/runtime": "7.9.2",
-    "debug": "4.1.1",
-    "webpack": "4.41.5"
+    "debug": "4.3.3",
+    "webpack": "4.46.0"
   }
 }
