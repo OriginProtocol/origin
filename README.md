@@ -1,21 +1,5 @@
-# ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-
-![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/LICENSE)
-[![origin_circleci_banner](https://img.shields.io/circleci/build/github/OriginProtocol/origin.svg?style=flat-square&colorA=111d28)](https://circleci.com/gh/OriginProtocol/origin)
-
-Origin is empowering developers to build decentralized marketplaces on the
-blockchain!
-
-Visit our [Developer's page](https://www.originprotocol.com/developers) to learn
-more about what we're building and how to get involved.
-
-You can see the Origin ecosystem in action [here](https://www.shoporigin.com).
-
-## Development
-
-Ready to get started? Have a look at our [developer quickstart](DEVELOPMENT.md)
-and our [contributing guidelines](CONTRIBUTING.md).
+# Important
+This repository is no longer actively maintained and is in read-only mode.
 
 ## This repository
 
