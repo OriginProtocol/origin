@@ -156,7 +156,7 @@ async function sendLoginToken(email) {
         email: user.email
       },
       encryptionSecret,
-      { expiresIn: '30m' }
+      { expiresIn: '5m' }
     )
 
     const vars = {
