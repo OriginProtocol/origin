@@ -16,7 +16,7 @@
     "@origin/growth": "^0.1.0",
     "@sendgrid/mail": "6.5.2",
     "bull": "3.12.1",
-    "cross-fetch": "3.0.4",
+    "cross-fetch": "3.1.5",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "logplease": "1.2.15",
