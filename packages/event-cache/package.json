@@ -40,7 +40,7 @@
     "mocha": "^7.0.0",
     "pg": "^7.11.0",
     "sequelize": "^5.8.12",
-    "sequelize-cli": "^5.5.0",
+    "sequelize-cli": "^6.3.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
