@@ -36,7 +36,7 @@
     "babel-plugin-inline-dotenv": "^1.5.0",
     "compare-versions": "^3.5.1",
     "core-js": "^3.4.1",
-    "cross-fetch": "^3.0.4",
+    "cross-fetch": "^3.1.5",
     "eslint": "^6.6.0",
     "ethers": "^4.0.39",
     "fbt-runtime": "^0.9.4",
