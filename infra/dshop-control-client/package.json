@@ -67,7 +67,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "per-env": "^1.0.2",
     "prettier": "^1.19.1",
-    "pullstate": "^1.9.0",
+    "pullstate": "^1.23.0",
     "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
